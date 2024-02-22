@@ -1,0 +1,10 @@
+/* Card.css */
+.content-card {
+    background-color: #f7f7f7;
+    padding: 20px;
+    border: 2px solid rgb(146, 137, 137);
+    box-shadow: 0px 0px 20px 14px rgba(0, 0, 0, 0.1);
+    position: relative; /* Position relative for absolute centering */
+    border-radius: 10px;
+    
+  }
