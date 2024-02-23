@@ -3,6 +3,7 @@ import "./AnythingList.css"
 import PropTypes from 'prop-types';
 import TodoButton from "../TodoButton/TodoButton";
 import TodoModal from "../TodoModal/TodoModal";
+import TodoEntry from "../TodoEntry/TodoEntry";
 
 const AnythingList = ({type, contentList, children}) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -28,7 +29,11 @@ const AnythingList = ({type, contentList, children}) => {
             <h3> {type} </h3>
         </div>
         <div className="list-view">
-        <p> dummy todo tast</p>
+        <TodoEntry type={type}/>
+        <TodoEntry type={type}/>
+        <TodoEntry type={type}/>
+        <TodoEntry type={type}/>
+        
       
 
         </div>
