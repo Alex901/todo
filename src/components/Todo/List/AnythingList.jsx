@@ -5,7 +5,7 @@ import TodoButton from "../TodoButton/TodoButton";
 import TodoModal from "../TodoModal/TodoModal";
 import TodoEntry from "../TodoEntry/TodoEntry";
 
-const AnythingList = ({type, contentList, children}) => {
+const AnythingList = ({type, contentList}) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
 
     const handleClick = () => {

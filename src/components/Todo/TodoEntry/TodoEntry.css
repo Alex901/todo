@@ -11,5 +11,19 @@
 .todo-entry:hover {
 background-color: rgb(102, 98, 92);
 color: white
+}
 
+.time {
+    display: flex;
+    justify-content: space-between;
+}
+
+.time-stamp,
+.completed,
+.time-to-complete {
+    margin: 0; /* Reset default margin */
+}
+
+.time-to-complete {
+    padding-right: 10px;
 }
