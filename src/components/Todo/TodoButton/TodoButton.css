@@ -16,8 +16,19 @@
   .addButton:hover {
     background-color: #45a049; /* Darker green background color on hover */
   }
+
+  .addButton:active {
+    border: 2px solid rgb(144, 57, 57);
+  }
+  
   
   .plus {
     font-size: 24px; /* Increase the size of the plus icon */
     width: 24px; /* Make the icon wider */
+    color: rgb(0, 0, 0);
   }
+
+  .plus:hover {
+    color: white;
+  }
+

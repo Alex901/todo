@@ -1,13 +1,26 @@
-import React from "react";
+import React, { useState } from "react";
 import "./AnythingList.css"
 import PropTypes from 'prop-types';
 import TodoButton from "../TodoButton/TodoButton";
+import TodoModal from "../TodoModal/TodoModal";
 
 const AnythingList = ({type, contentList, children}) => {
+    const [isModalOpen, setIsModalOpen] = useState(false);
+
+    const handleClick = () => {
+        setIsModalOpen(true);
+    }
+
+    const handleCloseModal = () => {
+        setIsModalOpen(false);
+    }
+
     const divStyle = { //test
         background: type === 'todo' ? 'red' : 'blue',
         color: type === 'todo' ? 'black' : 'orange',
     };
+
+
     
     return (
         <div className="list-container">
@@ -21,7 +34,8 @@ const AnythingList = ({type, contentList, children}) => {
         </div>
         {type === 'todo' && ( //later
         <div className="button-view">
-            <TodoButton />
+            <TodoButton onClick={handleClick}/>
+            <TodoModal isOpen={isModalOpen} onRequestClose={handleCloseModal}/>
         </div>
         )}
         </div>

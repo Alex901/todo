@@ -6,8 +6,8 @@ import AnythingList from './components/Todo/List/AnythingList'
 
 function App() {
 const [activeView, setActiveView] = useState('todo');
-const [todoList, setTodoList] = useState([]);
-const [doneList, setDoneList] = useState([]);
+const [todoList, setTodoList] = useState([]); //not yet used
+const [doneList, setDoneList] = useState([]); //not yet used
 
 const switchTodoView = () => {
   setActiveView('todo');

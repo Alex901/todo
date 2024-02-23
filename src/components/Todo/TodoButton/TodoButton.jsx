@@ -1,17 +1,19 @@
 import React from "react";
 import './TodoButton.css';
+import PropTypes from 'prop-types';
 
-const TodoButton = () => {
+const TodoButton = ({ onClick }) => {
 
-    const handleClick = () => {
-        window.alert("button clicked");
-    }
 
     return (
-        <button onClick={handleClick} className="addButton"> 
+        <button onClick={onClick} className="addButton"> 
         <i className="material-icons plus">add</i>
         </button>
     );
+}
+
+TodoButton.propTypes = {
+    onClick: PropTypes.func.isRequired,
 }
 
 export default TodoButton;
