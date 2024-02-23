@@ -10,7 +10,6 @@ body {
 }
 
 .nav {
-
   display: inline-table;
   border-radius: 10px;
 }
@@ -32,5 +31,6 @@ body {
 .app{
   position: relative;
   margin-top: -15em;
+  width: 30em;
 }
 

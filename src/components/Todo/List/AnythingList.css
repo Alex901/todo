@@ -1,0 +1,33 @@
+.button-view {
+    background-color: rgb(65, 140, 206);
+    border-radius: 10px;
+}
+
+.list-container {
+    background-color: rgb(229, 225, 225);
+    display: flex;
+    flex-direction: column;
+    border-radius: 10px;
+}
+
+.title-todo {
+    background-color: rgb(230, 81, 81);
+    color: black;
+    border-radius: 10px;
+    margin-bottom: 3px;
+}
+
+.title-done {
+    background-color: rgb(100, 158, 49);
+    border-radius: 10px;
+    color: white;
+    border: 1px solid black;
+    margin-bottom: 3px;
+}
+
+.list-view {
+    border-radius: 10px;
+    flex: 1;
+    overflow-y: auto;
+    max-height: 500px;
+}

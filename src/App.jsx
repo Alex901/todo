@@ -2,9 +2,12 @@ import './App.css'
 import Header from './components/Layout/header/Header'
 import Card from './components/Layout/card/Card'
 import { useState } from 'react'
+import AnythingList from './components/Todo/List/AnythingList'
 
 function App() {
 const [activeView, setActiveView] = useState('todo');
+const [todoList, setTodoList] = useState([]);
+const [doneList, setDoneList] = useState([]);
 
 const switchTodoView = () => {
   setActiveView('todo');
@@ -24,7 +27,9 @@ const switchDoneView = () => {
         <button onClick={switchDoneView}> done </button>
         </div>
       <Card>
-        <h1> Hello world </h1>
+
+          <AnythingList type={activeView} contentList={activeView === 'todo' ? 'todoList' : 'doneList'} />
+       
       </Card>
       </div>
     </>
