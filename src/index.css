@@ -13,6 +13,22 @@
   -moz-osx-font-smoothing: grayscale;
 }
 
+*:not(input):not(textarea) {
+  cursor: default;
+}
+
+/* Disable text selection for all elements */
+* {
+  user-select: none;
+}
+
+/* Enable text selection for specific elements if needed */
+input,
+textarea,
+.selectable {
+  user-select: auto;
+}
+
 a {
   font-weight: 500;
   color: #646cff;

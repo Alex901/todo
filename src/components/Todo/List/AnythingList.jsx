@@ -1,6 +1,7 @@
 import React from "react";
 import "./AnythingList.css"
 import PropTypes from 'prop-types';
+import TodoButton from "../TodoButton/TodoButton";
 
 const AnythingList = ({type, contentList, children}) => {
     const divStyle = { //test
@@ -20,7 +21,7 @@ const AnythingList = ({type, contentList, children}) => {
         </div>
         {type === 'todo' && ( //later
         <div className="button-view">
-            <i className="material-icons">add</i>
+            <TodoButton />
         </div>
         )}
         </div>

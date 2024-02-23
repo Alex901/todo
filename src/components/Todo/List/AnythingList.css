@@ -1,6 +1,11 @@
 .button-view {
-    background-color: rgb(65, 140, 206);
+    background-color: rgb(218, 221, 223);
     border-radius: 10px;
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: center; /* Center vertically */
+    padding: 3px;
+    border: 1px solid black;
 }
 
 .list-container {

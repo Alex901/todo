@@ -1,0 +1,23 @@
+.addButton {
+    /* Make the button round */
+    border-radius: 50%;
+    width: 40px; 
+    height: 40px; 
+    background-color: #4caf50; 
+    cursor: pointer; /* Add cursor pointer */
+    position: relative; /* Position relative for absolute centering */
+  
+    /* Center the icon */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .addButton:hover {
+    background-color: #45a049; /* Darker green background color on hover */
+  }
+  
+  .plus {
+    font-size: 24px; /* Increase the size of the plus icon */
+    width: 24px; /* Make the icon wider */
+  }
