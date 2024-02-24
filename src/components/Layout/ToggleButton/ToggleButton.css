@@ -1,0 +1,32 @@
+.toggle-container {
+    display: block;
+    align-items: center;
+    text-align-last: right;
+  }
+  
+  .toggle-button {
+    position: relative;
+    width: 60px;
+    height: 30px;
+    border-radius: 15px;
+    border: none;
+    background-color: #ccc;
+    outline: none;
+    cursor: pointer;
+    bottom: 4em;
+  }
+  
+  .toggle-ball {
+    position: absolute;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background-color: #fff;
+    transition: transform 0.3s ease;
+  }
+  
+  .toggle-button.toggled .toggle-ball {
+    transform: translate(calc(100% + 2px), -50%);
+  }
