@@ -23,11 +23,6 @@ body {
   color: white;
 }
 
-.nav button:hover {
-  background-color: #ccc;
-  color: #423f3f;
-}
-
 .app{
   position: relative;
   margin-top: -15em;

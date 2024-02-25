@@ -6,8 +6,7 @@ import AnythingList from './components/Todo/List/AnythingList'
 
 function App() {
 const [activeView, setActiveView] = useState('todo');
-const [todoList, setTodoList] = useState([]); //not yet used
-const [doneList, setDoneList] = useState([]); //not yet used
+
 
 const switchTodoView = () => {
   setActiveView('todo');
@@ -18,17 +17,24 @@ const switchDoneView = () => {
 }
 
 
+
   return (
     <>
       <Header />
       <div className='app'> 
         <div className='nav'>
-        <button onClick={switchTodoView}> todo </button>
-        <button onClick={switchDoneView}> done </button>
+        <button className="navButton" onClick={switchTodoView} style={{ 
+          background: activeView === 'todo' ? '#eaeaef' : '#777474', 
+          color: activeView === 'todo' ? 'black' : 'white'
+        }}> todo </button>
+        <button className="navButton" onClick={switchDoneView} style={{ 
+          background: activeView === 'done' ? '#eaeaef' : '#777474', 
+          color: activeView === 'done' ? 'black' : 'white'
+        }}> done </button>
         </div>
       <Card>
 
-          <AnythingList type={activeView} contentList={activeView === 'todo' ? 'todoList' : 'doneList'} />
+          <AnythingList type={activeView} />
        
       </Card>
       </div>

@@ -1,11 +1,13 @@
 import React, { useState } from 'react';
 import ReactModal from 'react-modal';
 import './TodoModal.css'
+import { useTodoContext } from '../../../contexts/todoContexts';
 
 ReactModal.setAppElement('#root');
 
 const TodoModal = ({ isOpen, onRequestClose }) => {
     const [taskName, setTaskName] = useState('');
+    const { addTodo } = useTodoContext();
 
     const handleInputChange = (event) => {
         setTaskName(event.target.value);
@@ -13,12 +15,14 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
 
     const handleSubmit = () => {
         console.log("Task name: ", taskName);
+        addTodo(taskName);
+        setTaskName('');
         onRequestClose();
     }
 
     return (
-       
-        <ReactModal 
+
+        <ReactModal
             isOpen={isOpen}
             onRequestClose={onRequestClose}
             contentLabel="Add new todo task"
@@ -35,7 +39,7 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
             />
             <button onClick={handleSubmit} className='modal-button'> Submit </button>
         </ReactModal>
-        
+
     )
 }
 

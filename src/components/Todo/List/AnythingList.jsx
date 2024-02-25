@@ -4,9 +4,11 @@ import PropTypes from 'prop-types';
 import TodoButton from "../TodoButton/TodoButton";
 import TodoModal from "../TodoModal/TodoModal";
 import TodoEntry from "../TodoEntry/TodoEntry";
+import { useTodoContext } from "../../../contexts/todoContexts";
 
-const AnythingList = ({type, contentList}) => {
+const AnythingList = ({type}) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const { todoList } = useTodoContext();
 
     const handleClick = () => {
         setIsModalOpen(true);
@@ -15,14 +17,7 @@ const AnythingList = ({type, contentList}) => {
     const handleCloseModal = () => {
         setIsModalOpen(false);
     }
-
-    const divStyle = { //test
-        background: type === 'todo' ? 'red' : 'blue',
-        color: type === 'todo' ? 'black' : 'orange',
-    };
-
-
-    
+  
     return (
         <div className="list-container">
         <div className={`title-${type}`}>
