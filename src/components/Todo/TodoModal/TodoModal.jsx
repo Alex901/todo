@@ -20,6 +20,12 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
         onRequestClose();
     }
 
+    const handleKeyPress = (e) => {
+        if(e.key === 'Enter'){
+            handleSubmit();
+        }
+    }
+
     return (
 
         <ReactModal
@@ -36,6 +42,7 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
                 value={taskName}
                 onChange={handleInputChange}
                 className='modal-input'
+                onKeyDownCapture={handleKeyPress}
             />
             <button onClick={handleSubmit} className='modal-button'> Submit </button>
         </ReactModal>

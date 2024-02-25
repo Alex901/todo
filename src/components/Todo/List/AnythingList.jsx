@@ -24,10 +24,14 @@ const AnythingList = ({type}) => {
             <h3> {type} </h3>
         </div>
         <div className="list-view">
+        {todoList.map(todo => (
+            <TodoEntry key={todo.id} type={type} todoData={todo} />
+        ))}
+
+{/*         <TodoEntry type={type}/>
         <TodoEntry type={type}/>
         <TodoEntry type={type}/>
-        <TodoEntry type={type}/>
-        <TodoEntry type={type}/>
+        <TodoEntry type={type}/> */}
         
       
 
@@ -42,10 +46,8 @@ const AnythingList = ({type}) => {
     );
 };
 
-AnythingList.prototype = {
+AnythingList.prototypes = {
     type: PropTypes.string.isRequired,
-    contentList: PropTypes.array.isRequired,
-    children: PropTypes.node
 }
 
 export default AnythingList;
