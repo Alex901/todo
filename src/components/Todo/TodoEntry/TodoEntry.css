@@ -76,4 +76,14 @@ color: white
 
 .done-text{
     text-decoration: line-through;
+    margin-left: 40px;
+}
+
+.checkbox-c {
+    position: absolute;
+}
+
+.checkbox-and-task {
+    display: flex;
+    align-items: center;
 }

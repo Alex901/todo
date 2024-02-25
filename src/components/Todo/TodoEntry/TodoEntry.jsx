@@ -16,8 +16,8 @@ const TodoEntry = ({ type, todoData }) => {
     }
 
 
-  
-    
+
+
 
     if (type === 'todo' && !isDone) {
         return (
@@ -38,22 +38,25 @@ const TodoEntry = ({ type, todoData }) => {
     } else if (type === 'done' && isDone) {
 
         const durationMS = completed.getTime() - created.getTime();
-        const durationSeconds = Math.floor(durationMS/1000);
-        const durationMinutes =  Math.floor(durationSeconds/60);
-        const durationHours = Math.floor(durationMinutes/60);
-        const remainingSeconds = Math.floor( durationSeconds % 60);
+        const durationSeconds = Math.floor(durationMS / 1000);
+        const durationMinutes = Math.floor(durationSeconds / 60);
+        const durationHours = Math.floor(durationMinutes / 60);
+        const remainingSeconds = Math.floor(durationSeconds % 60);
 
         return (
             <div className="todo-entry">
                 <div className="done-item">
                     <div className="time">
-                        <p className="time-stamp"> <strong>Completed:</strong> 
-                        {completed.toLocaleDateString()} - {completed.toLocaleTimeString()}   
+                        <p className="time-stamp"> <strong>Completed:</strong>
+                            {completed.toLocaleDateString()} - {completed.toLocaleTimeString()}
                         </p>
                         <div className="separator"> </div>
                         <p className="time-stamp"> <strong> Duration: </strong> {durationHours}H:{durationMinutes}M:{remainingSeconds}S: </p>
                     </div>
+                    <div className="checkbox-and-task">
+                    <input className="checkbox-c" type="checkbox" checked={isDone} />
                     <p className="done-text"> {task} </p>
+                    </div>
                 </div>
                 <div className="delete-entry">
                     <button className="deleteButton" onClick={handleDelete}>
