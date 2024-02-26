@@ -41,17 +41,18 @@ const TodoProvider = ({ children }) => {
   };
 
     // Adding some dummy-data
-/*     useEffect(() => {
+    useEffect(() => {
         setTodoList([
-          { id: 1, task: 'Do laundry', isDone: false, created: new Date(), completed: null },
-          { id: 2, task: 'Buy groceries', isDone: false, created: new Date(), completed: null },
-          { id: 3, task: 'Do Dishes', isDone: false, created: new Date(), completed: null },
-          { id: 4, task: 'Conquer the world', isDone: true, created: new Date(), completed: new Date() },
-          { id: 5, task: 'Kill a hooker', isDone: true, created: new Date(), completed: new Date() },
-          { id: 6, task: 'Sell the drugs to the neighbor', isDone: true, created: new Date(), completed: new Date() },
+          { id: 1, task: 'Planera labb2', isDone: false, created: new Date(), completed: null },
+          { id: 2, task: 'todoApp: connect database: firebase?', isDone: false, created: new Date(), completed: null },
+          { id: 3, task: 'todoApp: sub-task', isDone: false, created: new Date(), completed: null },
+          { id: 4, task: 'todoApp: task description', isDone: false, created: new Date(), completed: null },
+          { id: 5, task: 'todoApp: edit todoEntry', isDone: false, created: new Date(), completed: null },
+          { id: 6, task: 'todoApp: count completed', isDone: false, created: new Date(), completed: null },
+          { id: 7, task: 'todoApp: save/load lists from db', isDone: false, created: new Date(), completed: null },
         ]);
       }, []);
- */
+
   return (
     <TodoContext.Provider value={{ todoList, addTodo, removeTodo, toggleTodoComplete }}>
       {children}
