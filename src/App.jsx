@@ -5,38 +5,38 @@ import { useState } from 'react'
 import AnythingList from './components/Todo/List/AnythingList'
 
 function App() {
-const [activeView, setActiveView] = useState('todo');
+  const [activeView, setActiveView] = useState('todo');
 
 
-const switchTodoView = () => {
-  setActiveView('todo');
-}
+  const switchTodoView = () => {
+    setActiveView('todo');
+  }
 
-const switchDoneView = () => {
-  setActiveView('done');
-}
+  const switchDoneView = () => {
+    setActiveView('done');
+  }
 
 
 
   return (
     <>
       <Header />
-      <div className='app'> 
+      <div className='app'>
         <div className='nav'>
-        <button className="navButton" onClick={switchTodoView} style={{ 
-          background: activeView === 'todo' ? '#eaeaef' : '#777474', 
-          color: activeView === 'todo' ? 'black' : 'white'
-        }}> todo </button>
-        <button className="navButton" onClick={switchDoneView} style={{ 
-          background: activeView === 'done' ? '#eaeaef' : '#777474', 
-          color: activeView === 'done' ? 'black' : 'white'
-        }}> done </button>
+          <button className="navButton" onClick={switchTodoView} style={{
+            background: activeView === 'todo' ? '#eaeaef' : '#777474',
+            color: activeView === 'todo' ? 'black' : 'white'
+          }}> todo </button>
+          <button className="navButton" onClick={switchDoneView} style={{
+            background: activeView === 'done' ? '#eaeaef' : '#777474',
+            color: activeView === 'done' ? 'black' : 'white'
+          }}> done </button>
         </div>
-      <Card>
+          <Card>
 
-          <AnythingList type={activeView} />
-       
-      </Card>
+            <AnythingList type={activeView} />
+
+          </Card>
       </div>
     </>
   )

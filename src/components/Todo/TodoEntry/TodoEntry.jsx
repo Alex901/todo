@@ -10,6 +10,14 @@ const TodoEntry = ({ type, todoData }) => {
     const handleDelete = () => {
         removeTodo(id);
     };
+    
+    const handleEdit = () => {
+        console.log("edit entry with id", {id}); 
+    }
+
+    const handleMoreInfromationClick = () => {
+        console.log("more information");
+    }
 
     const handleClick = () => {
         toggleTodoComplete(id);
@@ -28,9 +36,15 @@ const TodoEntry = ({ type, todoData }) => {
                     </div>
                     <p className="todo-text"> {task}</p>
                 </div>
-                <div className="delete-entry">
-                    <button className="deleteButton" onClick={handleDelete}>
-                        <i className="material-icons plus">delete</i>
+                <div className="buttons">
+                <button className="edit-button entryButton" onClick={handleEdit}>
+                        <i className="material-icons pen">edit</i>
+                    </button>
+                    <button className="deleteButton entryButton" onClick={handleDelete}>
+                        <i className="material-icons trash">delete</i>
+                    </button>
+                    <button className="moreButton entryButton" onClick={handleMoreInfromationClick}>
+                        <i className="material-icons arrow"> keyboard_arrow_down </i>
                     </button>
                 </div>
             </div>
@@ -58,10 +72,12 @@ const TodoEntry = ({ type, todoData }) => {
                     <p className="done-text"> {task} </p>
                     </div>
                 </div>
+                <div className="buttons">
                 <div className="delete-entry">
                     <button className="deleteButton" onClick={handleDelete}>
                         <i className="material-icons plus">delete</i>
                     </button>
+                    </div>   
                 </div>
             </div>
         )

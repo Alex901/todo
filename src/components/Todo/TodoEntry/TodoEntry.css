@@ -30,19 +30,22 @@ color: white
     padding-right: 10px;
 }
 
-.deleteButton {
-    /* Make the button round */
-    border-radius: 50%;
+  .entryButton {
+   margin: 1px;
     width: 32px; 
     height: 32px; 
     background-color: #e8300b; 
     cursor: pointer; /* Add cursor pointer */
     position: relative; /* Position relative for absolute centering */
-  
-    /* Center the icon */
+    
     display: flex;
     justify-content: center;
     align-items: center;
+  }
+
+  .entryButton:hover{
+    background-color: #c53535; /* Darker green background color on hover */
+    cursor: pointer;
   }
   
   .deleteButton:hover {
@@ -53,9 +56,10 @@ color: white
     border: 2px solid rgb(144, 57, 57);
   }
 
-  .delete-entry {
+  .buttons {
     margin-left: auto; /* Add some space between task text and delete button */
     padding-right: 10px;
+    
 }
 
 .todo-item {
