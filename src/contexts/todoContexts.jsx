@@ -1,6 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
-// Define the structure of the data
+// Define functions
 const TodoContext = createContext({
   todoList: [],
   addTodo: () => {},
@@ -43,13 +43,13 @@ const TodoProvider = ({ children }) => {
     // Adding some dummy-data
     useEffect(() => {
         setTodoList([
-          { id: 1, task: 'Planera labb2', isDone: false, created: new Date(), completed: null },
-          { id: 2, task: 'todoApp: connect database: firebase?', isDone: false, created: new Date(), completed: null },
-          { id: 3, task: 'todoApp: sub-task', isDone: false, created: new Date(), completed: null },
-          { id: 4, task: 'todoApp: task description', isDone: false, created: new Date(), completed: null },
-          { id: 5, task: 'todoApp: edit todoEntry', isDone: false, created: new Date(), completed: null },
-          { id: 6, task: 'todoApp: count completed', isDone: false, created: new Date(), completed: null },
-          { id: 7, task: 'todoApp: save/load lists from db', isDone: false, created: new Date(), completed: null },
+          { id: 1, task: 'Entry button: finnish look', isDone: false, created: new Date(), completed: null },
+          { id: 2, task: 'toggle arrow', isDone: false, created: new Date(), completed: null },
+          { id: 3, task: 'editEntry (modal)', isDone: false, created: new Date(), completed: null },
+          { id: 4, task: 'Sub tasks', isDone: false, created: new Date(), completed: null },
+          { id: 5, task: 'Count todo/done', isDone: false, created: new Date(), completed: null },
+          { id: 6, task: 'Connect database', isDone: false, created: new Date(), completed: null },
+          { id: 7, task: 'save/load lists from db', isDone: false, created: new Date(), completed: null },
         ]);
       }, []);
 

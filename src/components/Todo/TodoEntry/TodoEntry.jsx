@@ -38,13 +38,13 @@ const TodoEntry = ({ type, todoData }) => {
                 </div>
                 <div className="buttons">
                 <button className="edit-button entryButton" onClick={handleEdit}>
-                        <i className="material-icons pen">edit</i>
+                        <i className="material-icons todo-entry-icon">edit</i>
                     </button>
                     <button className="deleteButton entryButton" onClick={handleDelete}>
-                        <i className="material-icons trash">delete</i>
+                        <i className="material-icons todo-entry-icon">delete</i>
                     </button>
                     <button className="moreButton entryButton" onClick={handleMoreInfromationClick}>
-                        <i className="material-icons arrow"> keyboard_arrow_down </i>
+                        <i className="material-icons todo-entry-icon"> keyboard_arrow_down </i>
                     </button>
                 </div>
             </div>
