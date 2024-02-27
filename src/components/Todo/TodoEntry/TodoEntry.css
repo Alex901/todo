@@ -33,27 +33,22 @@ color: white
   .entryButton {
    margin: 1px;
     width: 32px; 
-    height: 32px; 
-    background-color: #e8300b; 
+    height: 24px; 
+    background-color: #eae4e3; 
+    border: 1px solid rgba(144, 131, 131, 0.856);
     cursor: pointer; /* Add cursor pointer */
     position: relative; /* Position relative for absolute centering */
-    
+    color: #887571;
     display: flex;
     justify-content: center;
     align-items: center;
   }
 
   .entryButton:hover{
-    background-color: #c53535; /* Darker green background color on hover */
+    background-color: #f3b3b3; /* Darker green background color on hover */
+    border: 1px solid rgba(0, 0, 0, 0.856);
     cursor: pointer;
-  }
-  
-  .deleteButton:hover {
-    background-color: #c53535; /* Darker green background color on hover */
-  }
-
-  .deleteButton:active {
-    border: 2px solid rgb(144, 57, 57);
+    color: #000000;
   }
 
   .buttons {
@@ -92,6 +87,6 @@ color: white
     align-items: center;
 }
 
-.todo-entry-icon{
-    
+.moreDoneButton{
+    align-self: self-end;
 }

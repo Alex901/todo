@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import './TodoEntry.css'
 import PropTypes from 'prop-types';
 import { useTodoContext } from "../../../contexts/todoContexts";
@@ -6,6 +6,7 @@ import { useTodoContext } from "../../../contexts/todoContexts";
 const TodoEntry = ({ type, todoData }) => {
     const { id, isDone, task, created, completed } = todoData;
     const { removeTodo, toggleTodoComplete } = useTodoContext();
+    const [isMoreChecked, setIsMoreChecked] = useState(false);
 
     const handleDelete = () => {
         removeTodo(id);
@@ -16,7 +17,8 @@ const TodoEntry = ({ type, todoData }) => {
     }
 
     const handleMoreInfromationClick = () => {
-        console.log("more information");
+        setIsMoreChecked(!isMoreChecked);
+        console.log(isMoreChecked);
     }
 
     const handleClick = () => {
@@ -44,7 +46,7 @@ const TodoEntry = ({ type, todoData }) => {
                         <i className="material-icons todo-entry-icon">delete</i>
                     </button>
                     <button className="moreButton entryButton" onClick={handleMoreInfromationClick}>
-                        <i className="material-icons todo-entry-icon"> keyboard_arrow_down </i>
+                        <i className="material-icons todo-entry-icon"> {isMoreChecked ? "keyboard_arrow_up" : "keyboard_arrow_down"} </i>
                     </button>
                 </div>
             </div>
@@ -73,9 +75,9 @@ const TodoEntry = ({ type, todoData }) => {
                     </div>
                 </div>
                 <div className="buttons">
-                <div className="delete-entry">
-                    <button className="deleteButton" onClick={handleDelete}>
-                        <i className="material-icons plus">delete</i>
+                <div className="moreDoneButton" >
+                    <button className="entryButton" onClick={handleMoreInfromationClick}>
+                        <i className="material-icons todo-entry-icon"> {isMoreChecked ? "keyboard_arrow_up" : "keyboard_arrow_down"} </i>
                     </button>
                     </div>   
                 </div>
