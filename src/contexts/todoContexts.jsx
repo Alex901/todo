@@ -43,8 +43,8 @@ const TodoProvider = ({ children }) => {
     // Adding some dummy-data
     useEffect(() => {
         setTodoList([
-          { id: 1, task: 'Entry button: finnish look', isDone: true, created: new Date(), completed: null },
-          { id: 2, task: 'toggle arrow', isDone: true, created: new Date(), completed: null },
+          { id: 1, task: 'Entry button: finnish look', isDone: true, created: new Date(), completed: new Date() },
+          { id: 2, task: 'toggle arrow', isDone: true, created: new Date(), completed: new Date() },
           { id: 3, task: 'editEntry (modal)', isDone: false, created: new Date(), completed: null },
           { id: 4, task: 'Sub tasks', isDone: false, created: new Date(), completed: null },
           { id: 5, task: 'Count todo/done', isDone: false, created: new Date(), completed: null },
