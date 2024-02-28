@@ -22,6 +22,7 @@ function App() {
     <>
       <Header />
       <div className='app'>
+      <Card>
         <div className='nav'>
           <button className="navButton" onClick={switchTodoView} style={{
             background: activeView === 'todo' ? '#eaeaef' : '#777474',
@@ -32,7 +33,7 @@ function App() {
             color: activeView === 'done' ? 'black' : 'white'
           }}> done </button>
         </div>
-          <Card>
+          
 
             <AnythingList type={activeView} />
 

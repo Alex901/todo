@@ -24,9 +24,9 @@
     height: 24px;
     border-radius: 50%;
     background-color: #fff;
-    transition: transform 0.3s ease;
+    transition: transform 0.5s ease;
   }
   
   .toggle-button.toggled .toggle-ball {
-    transform: translate(calc(100% + 2px), -50%);
+    transform: translate(calc(50%), -50%);
   }
