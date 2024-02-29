@@ -5,7 +5,9 @@ const TodoContext = createContext({
   todoList: [],
   addTodo: () => {},
   removeTodo: () => {},
-  toggleTodoComplete: () => {}
+  toggleTodoComplete: () => {}, 
+  getTodoCount: () => {},
+  getDoneCount: () => {}
 });
 
 const TodoProvider = ({ children }) => {
@@ -40,6 +42,13 @@ const TodoProvider = ({ children }) => {
     setTodoList(updatedTodoList);
   };
 
+  const getTodoCount = () => {
+    return todoList.filter(todo => !todo.isDone).length;
+  }
+
+  const getDoneCount = () => {
+    return todoList.filter(todo => todo.isDone).length;
+  }
     // Adding some dummy-data
     useEffect(() => {
         setTodoList([
@@ -47,14 +56,14 @@ const TodoProvider = ({ children }) => {
           { id: 2, task: 'toggle arrow', isDone: true, created: new Date(), completed: new Date() },
           { id: 3, task: 'editEntry (modal)', isDone: false, created: new Date(), completed: null },
           { id: 4, task: 'Sub tasks', isDone: false, created: new Date(), completed: null },
-          { id: 5, task: 'Count todo/done', isDone: false, created: new Date(), completed: null },
+          { id: 5, task: 'Count todo/done', isDone: true, created: new Date(), completed: new Date() },
           { id: 6, task: 'Connect database', isDone: false, created: new Date(), completed: null },
           { id: 7, task: 'save/load lists from db', isDone: false, created: new Date(), completed: null },
         ]);
       }, []);
 
   return (
-    <TodoContext.Provider value={{ todoList, addTodo, removeTodo, toggleTodoComplete }}>
+    <TodoContext.Provider value={{ todoList, addTodo, removeTodo, toggleTodoComplete, getTodoCount, getDoneCount }}>
       {children}
     </TodoContext.Provider>
   );
