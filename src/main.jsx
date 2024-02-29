@@ -8,9 +8,9 @@ import { UserProvider } from './contexts/UserContext.jsx'
 ReactDOM.createRoot(document.getElementById('root')).render(
   <React.StrictMode>
     <UserProvider>
-    <TodoProvider>
-    <App />
-    </TodoProvider>
+      <TodoProvider>
+        <App />
+      </TodoProvider>
     </UserProvider>
   </React.StrictMode>,
 )

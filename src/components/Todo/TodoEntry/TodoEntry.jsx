@@ -2,18 +2,22 @@ import React, { useState } from "react";
 import './TodoEntry.css'
 import PropTypes from 'prop-types';
 import { useTodoContext } from "../../../contexts/todoContexts";
+import TodoModal from "../TodoModal/TodoModal";
 
-const TodoEntry = ({ type, todoData }) => {
+const TodoEntry = ({ type, todoData, onEdit }) => {
     const { id, isDone, task, created, completed } = todoData;
     const { removeTodo, toggleTodoComplete } = useTodoContext();
     const [isMoreChecked, setIsMoreChecked] = useState(false);
+    const [isModalOpen, setIsModalOpen] = useState(false);
+    const [editingTask, setEditingTask] = useState(null);
+
 
     const handleDelete = () => {
         removeTodo(id);
     };
     
     const handleEdit = () => {
-        console.log("edit entry with id", {id}); 
+        onEdit(todoData);
     }
 
     const handleMoreInfromationClick = () => {
@@ -49,7 +53,10 @@ const TodoEntry = ({ type, todoData }) => {
                         <i className="material-icons todo-entry-icon"> {isMoreChecked ? "keyboard_arrow_up" : "keyboard_arrow_down"} </i>
                     </button>
                 </div>
+                
             </div>
+
+            
         )
     } else if (type === 'done' && isDone) {
 
@@ -84,6 +91,10 @@ const TodoEntry = ({ type, todoData }) => {
             </div>
         )
 
+    } else if(type === 'doing'){
+        return(
+          <div> Coming soon </div>  
+        );
     } else {
         return null
     }

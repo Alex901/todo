@@ -3,11 +3,12 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 // Define functions
 const TodoContext = createContext({
   todoList: [],
-  addTodo: () => {},
-  removeTodo: () => {},
-  toggleTodoComplete: () => {}, 
-  getTodoCount: () => {},
-  getDoneCount: () => {}
+  addTodo: () => { },
+  editTodo: () => { },
+  removeTodo: () => { },
+  toggleTodoComplete: () => { },
+  getTodoCount: () => { },
+  getDoneCount: () => { }
 });
 
 const TodoProvider = ({ children }) => {
@@ -49,21 +50,31 @@ const TodoProvider = ({ children }) => {
   const getDoneCount = () => {
     return todoList.filter(todo => todo.isDone).length;
   }
-    // Adding some dummy-data
-    useEffect(() => {
-        setTodoList([
-          { id: 1, task: 'Entry button: finnish look', isDone: true, created: new Date(), completed: new Date() },
-          { id: 2, task: 'toggle arrow', isDone: true, created: new Date(), completed: new Date() },
-          { id: 3, task: 'editEntry (modal)', isDone: false, created: new Date(), completed: null },
-          { id: 4, task: 'Sub tasks', isDone: false, created: new Date(), completed: null },
-          { id: 5, task: 'Count todo/done', isDone: true, created: new Date(), completed: new Date() },
-          { id: 6, task: 'TODO/DOING/DONE?', isDone: false, created: new Date(), completed: null },
-          { id: 7, task: 'Add userContext', isDone: true, created: new Date(), completed: new Date() },
-        ]);
-      }, []);
+
+  const editTodo = (id, updatedTask) => {
+    setTodoList(prevTodoList => prevTodoList.map(todo => {
+      if(todo.id === id){
+        return {...todo, task: updatedTask}
+      }
+      return todo;
+    }));
+  }
+
+  // Adding some dummy-data
+  useEffect(() => {
+    setTodoList([
+      { id: 1, task: 'Entry button: finnish look', isDone: true, created: new Date(), completed: new Date() },
+      { id: 2, task: 'toggle arrow', isDone: true, created: new Date(), completed: new Date() },
+      { id: 3, task: 'editEntry (modal)', isDone: false, created: new Date(), completed: null },
+      { id: 4, task: 'Sub tasks', isDone: false, created: new Date(), completed: null },
+      { id: 5, task: 'Count todo/done', isDone: true, created: new Date(), completed: new Date() },
+      { id: 6, task: 'Connect database', isDone: false, created: new Date(), completed: null },
+      { id: 7, task: 'save/load lists from db', isDone: false, created: new Date(), completed: null },
+    ]);
+  }, []);
 
   return (
-    <TodoContext.Provider value={{ todoList, addTodo, removeTodo, toggleTodoComplete, getTodoCount, getDoneCount }}>
+    <TodoContext.Provider value={{ todoList, addTodo, removeTodo, toggleTodoComplete, getTodoCount, getDoneCount, editTodo }}>
       {children}
     </TodoContext.Provider>
   );

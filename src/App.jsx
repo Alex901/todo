@@ -17,8 +17,12 @@ function App() {
     setActiveView('done');
   }
 
+  const switchDoingView = () => {
+    setActiveView('doing');
+  }
 
 
+//TODO: Break out these buttons maybe ? 
   return (
     <>
       <Header />
@@ -29,6 +33,12 @@ function App() {
             background: activeView === 'todo' ? '#eaeaef' : '#777474',
             color: activeView === 'todo' ? 'black' : 'white'
           }}> todo ({getTodoCount()}) </button>
+          
+          <button className="navButton" onClick={switchDoingView} style={{
+            background: activeView === 'doing' ? '#eaeaef' : '#777474',
+            color: activeView === 'doing' ? 'black' : 'white'
+          }}> doing (0) </button>
+
           <button className="navButton" onClick={switchDoneView} style={{
             background: activeView === 'done' ? '#eaeaef' : '#777474',
             color: activeView === 'done' ? 'black' : 'white'
