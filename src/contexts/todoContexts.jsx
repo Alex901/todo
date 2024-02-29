@@ -57,8 +57,8 @@ const TodoProvider = ({ children }) => {
           { id: 3, task: 'editEntry (modal)', isDone: false, created: new Date(), completed: null },
           { id: 4, task: 'Sub tasks', isDone: false, created: new Date(), completed: null },
           { id: 5, task: 'Count todo/done', isDone: true, created: new Date(), completed: new Date() },
-          { id: 6, task: 'Connect database', isDone: false, created: new Date(), completed: null },
-          { id: 7, task: 'save/load lists from db', isDone: false, created: new Date(), completed: null },
+          { id: 6, task: 'TODO/DOING/DONE?', isDone: false, created: new Date(), completed: null },
+          { id: 7, task: 'Add userContext', isDone: true, created: new Date(), completed: new Date() },
         ]);
       }, []);
 
