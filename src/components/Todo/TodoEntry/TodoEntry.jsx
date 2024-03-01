@@ -32,7 +32,7 @@ const TodoEntry = ({ type, todoData, onEdit }) => {
 
 
 
-
+    //TODO: this is not pretty, make separate components at some point
 
     if (type === 'todo' && !isDone) {
         return (
@@ -92,9 +92,9 @@ const TodoEntry = ({ type, todoData, onEdit }) => {
             </div>
         )
 
-    } else if(type === 'doing'){
+    } else if(type === 'doing' && todoData.id === 1){ //haha
         return(
-          <div> Coming soon </div>  
+          <div > <h1>Coming soon</h1>  </div>  
         );
     } else {
         return null

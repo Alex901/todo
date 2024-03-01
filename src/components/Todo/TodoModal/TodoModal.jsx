@@ -15,6 +15,11 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
 
     const handleSubmit = () => {
         console.log("Task name: ", taskName);
+        if(!taskName.trim()) {
+            alert("Task name cannot be empty");
+            return;
+        }
+
         addTodo(taskName);
         setTaskName('');
         onRequestClose();
