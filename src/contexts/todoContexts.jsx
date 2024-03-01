@@ -16,7 +16,7 @@ const TodoContext = createContext({
 const TodoProvider = ({ children }) => {
   const [todoList, setTodoList] = useState([]);
 
-  const BASE_URL = import.meta.env.VITE_REACT_APP_PRODUCTION ? 'https://todo-backend-gkdo.onrender.com' : 'http://localhost:5000';
+  const BASE_URL = import.meta.env.VITE_REACT_APP_PRODUCTION === 'true' ? 'https://todo-backend-gkdo.onrender.com' : 'http://localhost:5000';
   console.log("Base_url: ", BASE_URL);
 
 useEffect(() => {
