@@ -51,10 +51,10 @@ const TodoProvider = ({ children }) => {
     return todoList.filter(todo => todo.isDone).length;
   }
 
-  const editTodo = (id, updatedTask) => {
+  const editTodo = (updatedTask) => {
     setTodoList(prevTodoList => prevTodoList.map(todo => {
-      if(todo.id === id){
-        return {...todo, task: updatedTask}
+      if(todo.id === updatedTask.id){
+        return {...todo, ...updatedTask}
       }
       return todo;
     }));

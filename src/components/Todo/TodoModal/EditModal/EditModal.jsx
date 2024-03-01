@@ -15,7 +15,12 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
     };
 
     const handleSubmit = () => {
-        console.log("editData in editModal: ", editData)
+        
+        const updatedTaskData = {
+            id: editData.id,
+            task: taskName
+        }
+        editTodo(updatedTaskData);
         onRequestClose();
     }
 
@@ -30,11 +35,12 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
         <ReactModal
             isOpen={isOpen}
             onRequestClose={onRequestClose}
-            contentLabel="Add new todo task"
+            contentLabel="Edit todo task"
             className="modal-content"
             overlayClassName="modal-overlay"
             shouldCloseOnOverlayClick={true}
         >
+            <div className='modalTitle'> <h3 className="title"> Edit task </h3></div>
             <input
                 type='text'
                 placeholder='Enter task name'
@@ -43,7 +49,7 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
                 className='modal-input'
                 onKeyDownCapture={handleKeyPress}
             />
-            <button onClick={handleSubmit} className='modal-button'> Submit </button>
+            <button onClick={handleSubmit} className='modal-button'> Save Changes </button>
         </ReactModal>
 
     )

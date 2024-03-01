@@ -36,6 +36,8 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
             overlayClassName="modal-overlay"
             shouldCloseOnOverlayClick={true}
         >
+            <div className='modalTitle'> <h3 className="title"> Create task </h3></div>
+
             <input
                 type='text'
                 placeholder='Enter task name'
