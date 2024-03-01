@@ -3,9 +3,10 @@ import './TodoEntry.css'
 import PropTypes from 'prop-types';
 import { useTodoContext } from "../../../contexts/todoContexts";
 import TodoModal from "../TodoModal/TodoModal";
+import { prototype } from "react-modal";
 
 const TodoEntry = ({ type, todoData, onEdit }) => {
-    const { id, isDone, task, created, completed } = todoData;
+    const { id, isDone, task, created, completed, started } = todoData;
     const { removeTodo, toggleTodoComplete } = useTodoContext();
     const [isMoreChecked, setIsMoreChecked] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -77,7 +78,7 @@ const TodoEntry = ({ type, todoData, onEdit }) => {
                         <p className="time-stamp"> <strong> Duration: </strong> {durationHours}H:{durationMinutes}M:{remainingSeconds}S: </p>
                     </div>
                     <div className="checkbox-and-task">
-                    <input className="checkbox-c" type="checkbox" checked={isDone} />
+                    <input className="checkbox-c" type="checkbox" defaultChecked={isDone} />
                     <p className="done-text"> {task} </p>
                     </div>
                 </div>
