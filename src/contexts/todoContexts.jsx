@@ -48,7 +48,8 @@ const TodoProvider = ({ children }) => {
 
   const addTodo = async (task) => {
     try {
-      const newId = todoList.length + 1;
+      const newId = parseInt(Date.now().toString(36) + Math.random().toString(36).substr(2), 36);
+
       const newTodo = {
         id: newId,
         task,
@@ -56,6 +57,8 @@ const TodoProvider = ({ children }) => {
         created: new Date(),
         completed: null,
       };
+
+      console.log("newId", newId);
 
       const response = await axios.post(`${BASE_URL}/api/`, newTodo);
       if (response.status === 201) {
@@ -76,35 +79,54 @@ const TodoProvider = ({ children }) => {
     }
   };
 
-
-
-
-  /*     setTodoList(prevTodoList => {
-        const newTodo = {
-          id: prevTodoList.length + 1,
-          task,
-          isDone: false,
-          created: new Date(),
-          completed: null,
-        };
-        return [...prevTodoList, newTodo];
-      });
-    }; */
-
-  const toggleTodoComplete = (id) => {
-    setTodoList(prevTodoList => prevTodoList.map(todo => {
-      if (todo.id === id) {
-        todo.completed = new Date();
-        console.log(todo)
-        return { ...todo, isDone: !todo.isDone };
+  const toggleTodoComplete = async (id) => {
+    console.log("todoContext > toggleTodoComplete -> id: ", id);
+    try {
+      const todo = todoList.find(todo => todo.id === id);
+      if(!todo) {
+        console.error("Todo not found in database");
+        return;
       }
-      return todo;
-    }));
+      //extract _id
+      const taskId = todo._id;
+
+      const response = await axios.patch(`${BASE_URL}/api/done`, { taskId });
+      if (response.status === 200) {
+        const updatedTodoList = todoList.map(todo => {
+          if (todo.id === id) {
+            return { ...todo, isDone: true, completed: new Date() };
+          }
+          return todo;
+        });
+        setTodoList(updatedTodoList);
+        console.log('Task marked as done successfully');
+      } else {
+        console.error('Error marking task as done:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error marking task as done:', error);
+    }
   };
 
-  const removeTodo = (id) => {
-    const updatedTodoList = todoList.filter(todo => todo.id !== id);
-    setTodoList(updatedTodoList);
+  const removeTodo = async (id) => {
+    try{
+      const todo = todoList.find(todo => todo.id === id);
+      if(!todo) {
+        console.error("Todo not found in database");
+        return;
+      }
+      //extract _id
+      const taskId = todo._id;
+
+      const response = await axios.delete(`${BASE_URL}/api/delete/${taskId}`);
+      if(response.status === 200){
+        setTodoList(prevTodoList => prevTodoList.filter(todo => todo.id !== id));
+      } else {
+        console.error('Error deleting todo ', response.statusText);
+      }
+    } catch(error){
+      console.error('Error deleting todo: ', error);
+    }
   };
 
   const getTodoCount = () => {
@@ -137,6 +159,7 @@ const TodoProvider = ({ children }) => {
       ]);
     }, []);
    */
+
   return (
     <TodoContext.Provider value={{ todoList, addTodo, removeTodo, toggleTodoComplete, getTodoCount, getDoneCount, editTodo }}>
       {children}
