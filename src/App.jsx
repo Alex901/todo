@@ -7,7 +7,7 @@ import { useTodoContext } from './contexts/todoContexts'
 
 function App() {
   const [activeView, setActiveView] = useState('todo');
-  const { getTodoCount, getDoneCount } = useTodoContext();
+  const { getTodoCount, getDoneCount, getDoingCount } = useTodoContext();
 
   const switchTodoView = () => {
     setActiveView('todo');
@@ -37,7 +37,7 @@ function App() {
           <button className="navButton" onClick={switchDoingView} style={{
             background: activeView === 'doing' ? '#eaeaef' : '#777474',
             color: activeView === 'doing' ? 'black' : 'white'
-          }}> doing (0) </button>
+          }}> doing ({getDoingCount()}) </button>
 
           <button className="navButton" onClick={switchDoneView} style={{
             background: activeView === 'done' ? '#eaeaef' : '#777474',

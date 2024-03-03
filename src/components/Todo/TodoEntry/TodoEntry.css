@@ -61,6 +61,7 @@ color: white
     width: 100%;
 }
 
+
 .time-stamp{
     font-size: x-small;
 }
@@ -79,7 +80,7 @@ color: white
 }
 
 .checkbox-c {
-    position: absolute;
+    position: relative;
 }
 
 .checkbox-and-task {

@@ -6,12 +6,13 @@ import TodoModal from "../TodoModal/TodoModal";
 import { prototype } from "react-modal";
 
 const TodoEntry = ({ type, todoData, onEdit }) => {
-    const { id, isDone, task, created, completed, started } = todoData;
-    const { removeTodo, toggleTodoComplete } = useTodoContext();
+    const { id, isDone, task, created, completed, started, isStarted } = todoData;
+    const { removeTodo, toggleTodoComplete, toggleTodoStart } = useTodoContext();
     const [isMoreChecked, setIsMoreChecked] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingTask, setEditingTask] = useState(null);
 
+    //console.log(todoData);
 
     const handleDelete = () => {
         removeTodo(id);
@@ -43,7 +44,8 @@ const TodoEntry = ({ type, todoData, onEdit }) => {
 
     //TODO: this is not pretty, make separate components at some point
 
-    if (type === 'todo' && !isDone) {
+    if (type === 'todo' && !isDone && !isStarted) {
+        // console.log(todoData);
         return (
             <div className="todo-entry">
                 <div className="todo-item" onClick={handleClickToStart}>
@@ -68,13 +70,14 @@ const TodoEntry = ({ type, todoData, onEdit }) => {
 
 
         )
-    } else if (type === 'done' && isDone) {
+    } else if (type === 'done' && isDone && isStarted) {
 
-        const durationMS = completed.getTime() - created.getTime();
-        const durationSeconds = Math.floor(durationMS / 1000);
-        const durationMinutes = Math.floor(durationSeconds / 60);
-        const durationHours = Math.floor(durationMinutes / 60);
-        const remainingSeconds = Math.floor(durationSeconds % 60);
+        const durationMS = completed.getTime() - started.getTime();
+        const remainingMS = durationMS > 0 ? durationMS : 0;
+        const remainingSeconds = Math.floor(remainingMS / 1000);
+        const remainingMinutes = Math.floor(remainingSeconds / 60);
+        const remainingHours = Math.floor(remainingMinutes / 60);
+        const remainingDays = Math.floor(remainingHours / 24);
 
         return (
             <div className="todo-entry">
@@ -84,7 +87,13 @@ const TodoEntry = ({ type, todoData, onEdit }) => {
                             {completed.toLocaleDateString()} - {completed.toLocaleTimeString()}
                         </p>
                         <div className="separator"> </div>
-                        <p className="time-stamp"> <strong> Duration: </strong> {durationHours}H:{durationMinutes}M:{remainingSeconds}S: </p>
+                        <p className="time-stamp">
+                            <strong> Duration: </strong>
+                            {remainingDays > 0 && `${remainingDays}D:`}
+                            {remainingHours > 0 && `${remainingHours}H:`}
+                            {remainingMinutes > 0 && `${remainingMinutes}M:`}
+                            {remainingSeconds}S:
+                        </p>
                     </div>
                     <div className="checkbox-and-task">
                         <input className="checkbox-c" type="checkbox" defaultChecked={isDone} />
@@ -101,18 +110,18 @@ const TodoEntry = ({ type, todoData, onEdit }) => {
             </div>
         )
 
-    } else if (type === 'doing' && !isDone) {
+    } else if (type === 'doing' && isStarted && !isDone) {
         return (
             <div className="todo-entry">
-                <div className="doing-item" onClick={handleClicktoComplete}>
+                <div className="todo-item doing-item" onClick={handleClicktoComplete}>
                     <div className="time">
-                    <p className="time-stamp"> <strong>created:</strong> {created.toLocaleDateString()} - {created.toLocaleTimeString()} </p>                 
+                        <p className="time-stamp"> <strong>Started:</strong> {started.toLocaleDateString()} - {started.toLocaleTimeString()} </p>
                     </div>
                     <p className="doing-text"> {task} </p>
                 </div>
                 <div className="buttons">
                     <button className="entryButton" onClick={handleCancel}>
-                        <i className="material-icons todo-entry-icon">close_small</i> 
+                        <i className="material-icons todo-entry-icon">close_small</i>
                     </button>
                     <button className="entryButton" onClick={handleMoreInfromationClick}>
                         <i className="material-icons todo-entry-icon"> {isMoreChecked ? "keyboard_arrow_up" : "keyboard_arrow_down"} </i>
@@ -135,6 +144,8 @@ TodoEntry.propTypes = {
         isDone: PropTypes.bool.isRequired,
         created: PropTypes.instanceOf(Date).isRequired,
         completed: PropTypes.instanceOf(Date),
+        sterted: PropTypes.instanceOf(Date),
+        IsStarted: PropTypes.bool
     }).isRequired,
     type: PropTypes.string.isRequired,
 };

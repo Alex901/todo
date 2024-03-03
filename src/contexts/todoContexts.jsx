@@ -11,6 +11,7 @@ const TodoContext = createContext({
   toggleTodoComplete: () => { },
   getTodoCount: () => { },
   getDoneCount: () => { },
+  getDoingCount: () => { },
   toggleTodoStart: () => { }, 
   fetchTodoList: () => { },
   refreshTodoList: () => { }
@@ -23,13 +24,15 @@ const TodoProvider = ({ children }) => {
   const BASE_URL = import.meta.env.VITE_REACT_APP_PRODUCTION === 'true' ? 'https://todo-backend-gkdo.onrender.com' : 'http://localhost:5000';
   //console.log("Base_url: ", BASE_URL);
 
+  //Straight forward but remember to parse dates
   const fetchTodoList = async () => {
     try {
       const response = await axios.get(`${BASE_URL}/api/todos`);
-      const parsedData = response.data.map(todo => ({
+      const parsedData = response.data.map(todo => ({ 
         ...todo,
         created: new Date(todo.created),
-        completed: todo.completed ? new Date(todo.completed) : null
+        completed: todo.completed ? new Date(todo.completed) : null,
+        started: todo.started ? new Date(todo.started) : null
       }));
       setTodoList(parsedData);
     } catch (error) {
@@ -92,7 +95,7 @@ const TodoProvider = ({ children }) => {
   };
 
   const toggleTodoComplete = async (id) => {
-    console.log("todoContext > toggleTodoComplete -> id: ", id);
+    //console.log("todoContext > toggleTodoComplete -> id: ", id);
     try {
       const todo = todoList.find(todo => todo.id === id);
       if (!todo) {
@@ -111,6 +114,7 @@ const TodoProvider = ({ children }) => {
           return todo;
         });
         setTodoList(updatedTodoList);
+        fetchTodoList();
         console.log('Task marked as done successfully');
       } else {
         console.error('Error marking task as done:', response.statusText);
@@ -149,6 +153,10 @@ const TodoProvider = ({ children }) => {
     return todoList.filter(todo => todo.isDone).length;
   }
 
+  const getDoingCount = () => {
+    return todoList.filter(todo => todo.isStarted && !todo.isDone).length;
+  }
+
   const editTodo = (updatedTask) => {
     setTodoList(prevTodoList => prevTodoList.map(todo => {
       if (todo.id === updatedTask.id) {
@@ -158,8 +166,34 @@ const TodoProvider = ({ children }) => {
     }));
   }
 
-  const toggleTodoStart = (id) => {
+  const toggleTodoStart = async (id) => {
+    console.log("todoContext > toggleTodoStart -> id: ", id);
+    try {
+      const todo = todoList.find(todo => todo.id === id);
+      if (!todo) {
+        console.error("Todo not found in database");
+        return;
+      }
+      //extract _id
+      const taskId = todo._id;
 
+      const response = await axios.patch(`${BASE_URL}/api/start`, { taskId });
+      if (response.status === 200) {
+        const updatedTodoList = todoList.map(todo => {
+          if (todo.id === id) {
+            return { ...todo, isStarted: true, started: new Date() };
+          }
+          return todo;
+        });
+        setTodoList(updatedTodoList);
+        fetchTodoList();
+        console.log('Task started successfully');
+      } else {
+        console.error('Error marking task as done:', response.statusText);
+      }
+    } catch (error) {
+      console.error('Error marking task as done:', error);
+    }
   }
 
   // Adding some dummy-data
@@ -177,7 +211,7 @@ const TodoProvider = ({ children }) => {
    */
 
   return (
-    <TodoContext.Provider value={{ todoList, addTodo, removeTodo, toggleTodoComplete, getTodoCount, getDoneCount, editTodo, toggleTodoStart, refreshTodoList }}>
+    <TodoContext.Provider value={{ todoList, addTodo, removeTodo, toggleTodoComplete, getTodoCount, getDoneCount, getDoingCount, editTodo, toggleTodoStart, refreshTodoList }}>
       {children}
     </TodoContext.Provider>
   );
