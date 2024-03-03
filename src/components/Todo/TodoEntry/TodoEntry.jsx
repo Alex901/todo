@@ -3,11 +3,11 @@ import './TodoEntry.css'
 import PropTypes from 'prop-types';
 import { useTodoContext } from "../../../contexts/todoContexts";
 import TodoModal from "../TodoModal/TodoModal";
-import { prototype } from "react-modal";
+import ConfirmationModal from "../TodoModal/ConfirmationModal/ConfirmationModal";
 
 const TodoEntry = ({ type, todoData, onEdit }) => {
     const { id, isDone, task, created, completed, started, isStarted } = todoData;
-    const { removeTodo, toggleTodoComplete, toggleTodoStart } = useTodoContext();
+    const { removeTodo, toggleTodoComplete, toggleTodoStart, getDoingCount } = useTodoContext();
     const [isMoreChecked, setIsMoreChecked] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingTask, setEditingTask] = useState(null);
@@ -32,12 +32,36 @@ const TodoEntry = ({ type, todoData, onEdit }) => {
     }
 
     const handleClickToStart = () => {
-        toggleTodoStart(id);
+        console.log("doing count: ", getDoingCount())
+        if (getDoingCount() > 2) {
+            setIsModalOpen(true);
+        } else {
+            toggleTodoStart(id);
+        }
+
     }
+
+    const addLineBreak = (str) =>
+        str.split('\n').map((subStr) => {
+            return (
+                <>
+                    {subStr}
+                    <br />
+                </>
+            );
+        });
 
     const handleCancel = () => {
         console.log('Canel task with', id)
         //cancelDoingTask(id);
+    }
+
+    const cancelConfirm = () => {
+        setIsModalOpen(false);
+    }
+
+    const confirmStart = () => {
+        toggleTodoStart(id);
     }
 
 
@@ -65,7 +89,15 @@ const TodoEntry = ({ type, todoData, onEdit }) => {
                         <i className="material-icons todo-entry-icon"> {isMoreChecked ? "keyboard_arrow_up" : "keyboard_arrow_down"} </i>
                     </button>
                 </div>
-
+                <ConfirmationModal
+                    onRequestClose={cancelConfirm}
+                    isOpen={isModalOpen}
+                    onConfirm={confirmStart}
+                    onClose={cancelConfirm}
+                    message={addLineBreak(`You are already working on ${getDoingCount()} tasks already,
+                    and "${task}" is estemated to be a difficult task.\n\nAre you sure you wish to proceed?
+                    `)}
+                />
             </div>
 
 
@@ -101,11 +133,12 @@ const TodoEntry = ({ type, todoData, onEdit }) => {
                     </div>
                 </div>
                 <div className="buttons">
-                    <div className="moreDoneButton" >
-                        <button className="entryButton" onClick={handleMoreInfromationClick}>
-                            <i className="material-icons todo-entry-icon"> {isMoreChecked ? "keyboard_arrow_up" : "keyboard_arrow_down"} </i>
-                        </button>
-                    </div>
+                    <button className="deleteButton entryButton" onClick={handleDelete}>
+                        <i className="material-icons todo-entry-icon">delete</i>
+                    </button>
+                    <button className="entryButton" onClick={handleMoreInfromationClick}>
+                        <i className="material-icons todo-entry-icon"> {isMoreChecked ? "keyboard_arrow_up" : "keyboard_arrow_down"} </i>
+                    </button>
                 </div>
             </div>
         )
@@ -120,6 +153,9 @@ const TodoEntry = ({ type, todoData, onEdit }) => {
                     <p className="doing-text"> {task} </p>
                 </div>
                 <div className="buttons">
+                    <button className="deleteButton entryButton" onClick={handleDelete}>
+                        <i className="material-icons todo-entry-icon">delete</i>
+                    </button>
                     <button className="entryButton" onClick={handleCancel}>
                         <i className="material-icons todo-entry-icon">close_small</i>
                     </button>

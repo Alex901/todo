@@ -49,7 +49,7 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
                 className='modal-input'
                 onKeyDownCapture={handleKeyPress}
             />
-            <button onClick={handleSubmit} className='modal-button'> Save Changes </button>
+            <button onClick={handleSubmit} className='modal-button'> Save </button>
         </ReactModal>
 
     )

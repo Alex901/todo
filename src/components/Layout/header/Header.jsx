@@ -18,9 +18,6 @@ const Header = () => {
       <h1> Todoify </h1>
       <div>
         {time.getHours()}:{time.getMinutes()}:{time.getSeconds()}
-        <div className="dark-mode-toggle">
-          <ToggleButton />
-        </div>
       </div>
     </div>
   );
