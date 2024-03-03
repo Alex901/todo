@@ -16,7 +16,7 @@ const TodoEntry = ({ type, todoData, onEdit }) => {
     const handleDelete = () => {
         removeTodo(id);
     };
-    
+
     const handleEdit = () => {
         onEdit(todoData);
     }
@@ -26,8 +26,17 @@ const TodoEntry = ({ type, todoData, onEdit }) => {
         console.log(isMoreChecked);
     }
 
-    const handleClick = () => {
+    const handleClicktoComplete = () => {
         toggleTodoComplete(id);
+    }
+
+    const handleClickToStart = () => {
+        toggleTodoStart(id);
+    }
+
+    const handleCancel = () => {
+        console.log('Canel task with', id)
+        //cancelDoingTask(id);
     }
 
 
@@ -37,14 +46,14 @@ const TodoEntry = ({ type, todoData, onEdit }) => {
     if (type === 'todo' && !isDone) {
         return (
             <div className="todo-entry">
-                <div className="todo-item" onClick={handleClick}>
+                <div className="todo-item" onClick={handleClickToStart}>
                     <div className="time">
                         <p className="time-stamp"> <strong>created:</strong> {created.toLocaleDateString()} - {created.toLocaleTimeString()} </p>
                     </div>
                     <p className="todo-text"> {task}</p>
                 </div>
                 <div className="buttons">
-                <button className="edit-button entryButton" onClick={handleEdit}>
+                    <button className="edit-button entryButton" onClick={handleEdit}>
                         <i className="material-icons todo-entry-icon">edit</i>
                     </button>
                     <button className="deleteButton entryButton" onClick={handleDelete}>
@@ -54,10 +63,10 @@ const TodoEntry = ({ type, todoData, onEdit }) => {
                         <i className="material-icons todo-entry-icon"> {isMoreChecked ? "keyboard_arrow_up" : "keyboard_arrow_down"} </i>
                     </button>
                 </div>
-                
+
             </div>
 
-            
+
         )
     } else if (type === 'done' && isDone) {
 
@@ -78,26 +87,42 @@ const TodoEntry = ({ type, todoData, onEdit }) => {
                         <p className="time-stamp"> <strong> Duration: </strong> {durationHours}H:{durationMinutes}M:{remainingSeconds}S: </p>
                     </div>
                     <div className="checkbox-and-task">
-                    <input className="checkbox-c" type="checkbox" defaultChecked={isDone} />
-                    <p className="done-text"> {task} </p>
+                        <input className="checkbox-c" type="checkbox" defaultChecked={isDone} />
+                        <p className="done-text"> {task} </p>
                     </div>
                 </div>
                 <div className="buttons">
-                <div className="moreDoneButton" >
-                    <button className="entryButton" onClick={handleMoreInfromationClick}>
-                        <i className="material-icons todo-entry-icon"> {isMoreChecked ? "keyboard_arrow_up" : "keyboard_arrow_down"} </i>
-                    </button>
-                    </div>   
+                    <div className="moreDoneButton" >
+                        <button className="entryButton" onClick={handleMoreInfromationClick}>
+                            <i className="material-icons todo-entry-icon"> {isMoreChecked ? "keyboard_arrow_up" : "keyboard_arrow_down"} </i>
+                        </button>
+                    </div>
                 </div>
             </div>
         )
 
-    } else if(type === 'doing' && todoData.id === 1){ //haha
-        return(
-          <div > <h1>Coming soon</h1>  </div>  
+    } else if (type === 'doing' && !isDone) {
+        return (
+            <div className="todo-entry">
+                <div className="doing-item" onClick={handleClicktoComplete}>
+                    <div className="time">
+                    <p className="time-stamp"> <strong>created:</strong> {created.toLocaleDateString()} - {created.toLocaleTimeString()} </p>                 
+                    </div>
+                    <p className="doing-text"> {task} </p>
+                </div>
+                <div className="buttons">
+                    <button className="entryButton" onClick={handleCancel}>
+                        <i className="material-icons todo-entry-icon">close_small</i> 
+                    </button>
+                    <button className="entryButton" onClick={handleMoreInfromationClick}>
+                        <i className="material-icons todo-entry-icon"> {isMoreChecked ? "keyboard_arrow_up" : "keyboard_arrow_down"} </i>
+                    </button>
+
+                </div>
+            </div>
         );
     } else {
-        return null
+        return null;
     }
 
 }

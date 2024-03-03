@@ -90,3 +90,7 @@ color: white
 .moreDoneButton{
     align-self: self-end;
 }
+
+.material-icons.todo-entry-icon {
+    width: 24px;
+}

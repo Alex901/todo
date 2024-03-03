@@ -10,55 +10,64 @@ const TodoContext = createContext({
   removeTodo: () => { },
   toggleTodoComplete: () => { },
   getTodoCount: () => { },
-  getDoneCount: () => { }
+  getDoneCount: () => { },
+  toggleTodoStart: () => { }, 
+  fetchTodoList: () => { },
+  refreshTodoList: () => { }
 });
 
 const TodoProvider = ({ children }) => {
   const [todoList, setTodoList] = useState([]);
+  const [dataFetched, setDataFetched] = useState(false);
 
   const BASE_URL = import.meta.env.VITE_REACT_APP_PRODUCTION === 'true' ? 'https://todo-backend-gkdo.onrender.com' : 'http://localhost:5000';
   //console.log("Base_url: ", BASE_URL);
 
-  useEffect(() => {
-    const fetchTodoList = async () => {
-      try {
-        const response = await axios.get(`${BASE_URL}/api/todos`);
-        //console.log("fetchTodoList: response: ", response.data)
-        const parsedData = response.data.map(todo => ({
-          ...todo,
-          created: new Date(todo.created),
-          completed: todo.completed ? new Date(todo.completed) : null
-        }));
-        //console.log("fetchTodoList: parseData: ", parsedData);
-        setTodoList(parsedData);
-
-      } catch (error) {
-        console.error('Error fetching data', error);
-      }
+  const fetchTodoList = async () => {
+    try {
+      const response = await axios.get(`${BASE_URL}/api/todos`);
+      const parsedData = response.data.map(todo => ({
+        ...todo,
+        created: new Date(todo.created),
+        completed: todo.completed ? new Date(todo.completed) : null
+      }));
+      setTodoList(parsedData);
+    } catch (error) {
+      console.error('Error fetching data', error);
     }
+  };
 
-    fetchTodoList();
-  }, [todoList]);
-
-
-  //Just for logging
   useEffect(() => {
-    //console.log("useEffect: todoList: ", todoList)
-  }, [todoList]);
+    if(!dataFetched){
+      fetchTodoList();
+    }
+  }, [dataFetched]);
+
+  const refreshTodoList = () => {
+    setDataFetched(false); // Set dataFetched to false to trigger re-fetching
+  };
 
   const addTodo = async (task) => {
     try {
       const newId = parseInt(Date.now().toString(36) + Math.random().toString(36).substr(2), 36);
 
+      //TODO: some typesafety here
       const newTodo = {
         id: newId,
         task,
         isDone: false,
         created: new Date(),
         completed: null,
+        isStarted: false,
+        started: null,
+        // owner: null,
+        //  assignee: null,
+        //  subTasks: [],
+        //  priority: null,
+        //  observer: null
       };
 
-      console.log("newId", newId);
+      console.log("newTodo", newTodo);
 
       const response = await axios.post(`${BASE_URL}/api/`, newTodo);
       if (response.status === 201) {
@@ -67,10 +76,13 @@ const TodoProvider = ({ children }) => {
           {
             ...response.data,
             comleted: response.data.completed ? new Date(response.data.comleted) : null,
-            created: new Date(response.data.created)
+            created: new Date(response.data.created),
+            isStarted: response.data.isStarted ? true : false,
+            started: response.data.completed ? new Date(response.data.started) : null
           }
         ];
         setTodoList(updatedTodoList);
+        fetchTodoList();
       } else {
         console.error('Error adding todo:', response.statusText)
       }
@@ -83,7 +95,7 @@ const TodoProvider = ({ children }) => {
     console.log("todoContext > toggleTodoComplete -> id: ", id);
     try {
       const todo = todoList.find(todo => todo.id === id);
-      if(!todo) {
+      if (!todo) {
         console.error("Todo not found in database");
         return;
       }
@@ -109,9 +121,9 @@ const TodoProvider = ({ children }) => {
   };
 
   const removeTodo = async (id) => {
-    try{
+    try {
       const todo = todoList.find(todo => todo.id === id);
-      if(!todo) {
+      if (!todo) {
         console.error("Todo not found in database");
         return;
       }
@@ -119,12 +131,12 @@ const TodoProvider = ({ children }) => {
       const taskId = todo._id;
 
       const response = await axios.delete(`${BASE_URL}/api/delete/${taskId}`);
-      if(response.status === 200){
+      if (response.status === 200) {
         setTodoList(prevTodoList => prevTodoList.filter(todo => todo.id !== id));
       } else {
         console.error('Error deleting todo ', response.statusText);
       }
-    } catch(error){
+    } catch (error) {
       console.error('Error deleting todo: ', error);
     }
   };
@@ -146,6 +158,10 @@ const TodoProvider = ({ children }) => {
     }));
   }
 
+  const toggleTodoStart = (id) => {
+
+  }
+
   // Adding some dummy-data
   /*   useEffect(() => {
       setTodoList([
@@ -161,7 +177,7 @@ const TodoProvider = ({ children }) => {
    */
 
   return (
-    <TodoContext.Provider value={{ todoList, addTodo, removeTodo, toggleTodoComplete, getTodoCount, getDoneCount, editTodo }}>
+    <TodoContext.Provider value={{ todoList, addTodo, removeTodo, toggleTodoComplete, getTodoCount, getDoneCount, editTodo, toggleTodoStart, refreshTodoList }}>
       {children}
     </TodoContext.Provider>
   );
