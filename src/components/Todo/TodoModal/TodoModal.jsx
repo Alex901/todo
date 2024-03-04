@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import ReactModal from 'react-modal';
 import './TodoModal.css'
 import { useTodoContext } from '../../../contexts/todoContexts';
@@ -8,6 +8,15 @@ ReactModal.setAppElement('#root');
 const TodoModal = ({ isOpen, onRequestClose }) => {
     const [taskName, setTaskName] = useState('');
     const { addTodo } = useTodoContext();
+    const inputRef = useRef(null);
+
+/*     useEffect(() => {
+        console.log("isOpen: ", isOpen);
+        console.log("inputRef: ", inputRef);
+        if(isOpen && inputRef.current) {
+            inputRef.current.focus()
+        }
+    },[isOpen]); */
 
     const handleInputChange = (event) => {
         setTaskName(event.target.value);
@@ -50,6 +59,7 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
                 onChange={handleInputChange}
                 className='modal-input'
                 onKeyDownCapture={handleKeyPress}
+                autoFocus
             />
             <button onClick={handleSubmit} className='modal-button'> Submit </button>
         </ReactModal>
