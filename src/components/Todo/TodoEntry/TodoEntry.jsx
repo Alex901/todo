@@ -75,7 +75,7 @@ const TodoEntry = ({ type, todoData, onEdit }) => {
             <div className="todo-entry">
                 <div className="todo-item" onClick={handleClickToStart}>
                     <div className="time">
-                        <p className="time-stamp"> <strong>created:</strong> {created.toLocaleDateString()} - {created.toLocaleTimeString()} </p>
+                        <p className="time-stamp"> <strong>Created:</strong> {created.toLocaleDateString()} - {created.toLocaleTimeString()} </p>
                     </div>
                     <p className="todo-text"> {task}</p>
                 </div>
@@ -109,9 +109,9 @@ const TodoEntry = ({ type, todoData, onEdit }) => {
         const remainingMS = durationMS > 0 ? durationMS : 0;
         const seconds = Math.floor(remainingMS / 1000);
         const remainingSeconds = seconds%60;
-        const remainingMinutes = Math.floor(seconds / 60);
-        const remainingHours = Math.floor(remainingMinutes / 60);
-        const remainingDays = Math.floor(remainingHours / 24);
+        const remainingMinutes = Math.floor(seconds / 60)%60;
+        const remainingHours = Math.floor((seconds / 3600)%24);
+        const remainingDays = Math.floor((seconds / 3600/24));
 
         return (
             <div className="todo-entry">
