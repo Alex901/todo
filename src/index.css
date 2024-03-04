@@ -39,7 +39,7 @@ a:hover {
 }
 
 body {
- height: 100em
+ min-height: 120vh;
 }
 
 h1 {
