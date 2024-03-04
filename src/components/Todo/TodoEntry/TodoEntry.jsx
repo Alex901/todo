@@ -7,7 +7,7 @@ import ConfirmationModal from "../TodoModal/ConfirmationModal/ConfirmationModal"
 
 const TodoEntry = ({ type, todoData, onEdit }) => {
     const { id, isDone, task, created, completed, started, isStarted } = todoData;
-    const { removeTodo, toggleTodoComplete, toggleTodoStart, getDoingCount } = useTodoContext();
+    const { removeTodo, toggleTodoComplete, toggleTodoStart, getDoingCount, cancelTodo } = useTodoContext();
     const [isMoreChecked, setIsMoreChecked] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingTask, setEditingTask] = useState(null);
@@ -41,20 +41,11 @@ const TodoEntry = ({ type, todoData, onEdit }) => {
 
     }
 
-    const addLineBreak = (str) =>
-        str.split('\n').map((subStr) => {
-            return (
-                <>
-                    {subStr}
-                    <br />
-                </>
-            );
-        });
-
     const handleCancel = () => {
-        console.log('Canel task with', id)
-        //cancelDoingTask(id);
+        cancelTodo(id);
     }
+
+    //Modals
 
     const cancelConfirm = () => {
         setIsModalOpen(false);
@@ -63,6 +54,16 @@ const TodoEntry = ({ type, todoData, onEdit }) => {
     const confirmStart = () => {
         toggleTodoStart(id);
     }
+
+    const addLineBreak = (str) =>
+    str.split('\n').map((subStr) => {
+        return (
+            <>
+                {subStr}
+                <br />
+            </>
+        );
+    });
 
 
 

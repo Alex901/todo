@@ -12,9 +12,10 @@ const TodoContext = createContext({
   getTodoCount: () => { },
   getDoneCount: () => { },
   getDoingCount: () => { },
-  toggleTodoStart: () => { }, 
+  toggleTodoStart: () => { },
   fetchTodoList: () => { },
-  refreshTodoList: () => { }
+  refreshTodoList: () => { },
+  cancelTodo: () => { }
 });
 
 const TodoProvider = ({ children }) => {
@@ -28,7 +29,7 @@ const TodoProvider = ({ children }) => {
   const fetchTodoList = async () => {
     try {
       const response = await axios.get(`${BASE_URL}/api/todos`);
-      const parsedData = response.data.map(todo => ({ 
+      const parsedData = response.data.map(todo => ({
         ...todo,
         created: new Date(todo.created),
         completed: todo.completed ? new Date(todo.completed) : null,
@@ -41,7 +42,7 @@ const TodoProvider = ({ children }) => {
   };
 
   useEffect(() => {
-    if(!dataFetched){
+    if (!dataFetched) {
       fetchTodoList();
     }
   }, [dataFetched]);
@@ -49,6 +50,8 @@ const TodoProvider = ({ children }) => {
   const refreshTodoList = () => {
     setDataFetched(false); // Set dataFetched to false to trigger re-fetching
   };
+
+  //API functions
 
   const addTodo = async (task) => {
     try {
@@ -142,29 +145,9 @@ const TodoProvider = ({ children }) => {
       }
     } catch (error) {
       console.error('Error deleting todo: ', error);
+      return;
     }
   };
-
-  const getTodoCount = () => {
-    return todoList.filter(todo => !todo.isDone).length;
-  }
-
-  const getDoneCount = () => {
-    return todoList.filter(todo => todo.isDone).length;
-  }
-
-  const getDoingCount = () => {
-    return todoList.filter(todo => todo.isStarted && !todo.isDone).length;
-  }
-
-  const editTodo = (updatedTask) => {
-    setTodoList(prevTodoList => prevTodoList.map(todo => {
-      if (todo.id === updatedTask.id) {
-        return { ...todo, ...updatedTask }
-      }
-      return todo;
-    }));
-  }
 
   const toggleTodoStart = async (id) => {
     console.log("todoContext > toggleTodoStart -> id: ", id);
@@ -196,25 +179,88 @@ const TodoProvider = ({ children }) => {
     }
   }
 
-  // Adding some dummy-data
-  /*   useEffect(() => {
-      setTodoList([
-        { id: 1, task: 'Entry button: finnish look', isDone: true, created: new Date(), completed: new Date() },
-        { id: 2, task: 'toggle arrow', isDone: true, created: new Date(), completed: new Date() },
-        { id: 3, task: 'editEntry (modal)', isDone: true, created: new Date(), completed: new Date() },
-        { id: 4, task: 'Sub tasks', isDone: false, created: new Date(), completed: null },
-        { id: 5, task: 'Count todo/done', isDone: true, created: new Date(), completed: new Date() },
-        { id: 6, task: 'Connect database', isDone: false, created: new Date(), completed: null },
-        { id: 7, task: 'save/load lists from db', isDone: false, created: new Date(), completed: null },
-      ]);
-    }, []);
-   */
+  const cancelTodo = async (id) => {
+    try {
+      const todo = todoList.find(todo => todo.id === id);
+      if (!todo) {
+        console.error("Todo not found in database");
+        return;
+      }
+      //extract _id
+      const taskId = todo._id;
 
-  return (
-    <TodoContext.Provider value={{ todoList, addTodo, removeTodo, toggleTodoComplete, getTodoCount, getDoneCount, getDoingCount, editTodo, toggleTodoStart, refreshTodoList }}>
-      {children}
-    </TodoContext.Provider>
-  );
+      const response = await axios.patch(`${BASE_URL}/api/cancel`, { taskId });
+      //console.log("cancelTask: response", response);
+      if (response.status === 200) {
+        const updatedTodoList = todoList.map(todo => {
+          if (todo.id === id) {
+            console.log("todo: ", todo);
+            return { ...todo, isStarted: false, started: null };
+          }
+          return todo;
+        });
+        setTodoList(updatedTodoList);
+        fetchTodoList();
+        console.log('Task canceled successfully');
+
+        
+      } else {
+        console.error('Error Cancling task', response.statusText);
+      }
+    } catch(error) {
+      console.log('Error Canceling todoTask', error);
+      return;
+    }
+  };
+
+  const editTodo = (updatedTask) => {
+    setTodoList(prevTodoList => prevTodoList.map(todo => {
+      if (todo.id === updatedTask.id) {
+        return { ...todo, ...updatedTask }
+      }
+      return todo;
+    }));
+  }
+
+  //Other functions
+
+  const getTodoCount = () => {
+    return todoList.filter(todo => !todo.isDone).length;
+  }
+
+  const getDoneCount = () => {
+    return todoList.filter(todo => todo.isDone).length;
+  }
+
+  const getDoingCount = () => {
+    return todoList.filter(todo => todo.isStarted && !todo.isDone).length;
+  }
+
+  
+
+
+
+
+
+// Adding some dummy-data
+/*   useEffect(() => {
+    setTodoList([
+      { id: 1, task: 'Entry button: finnish look', isDone: true, created: new Date(), completed: new Date() },
+      { id: 2, task: 'toggle arrow', isDone: true, created: new Date(), completed: new Date() },
+      { id: 3, task: 'editEntry (modal)', isDone: true, created: new Date(), completed: new Date() },
+      { id: 4, task: 'Sub tasks', isDone: false, created: new Date(), completed: null },
+      { id: 5, task: 'Count todo/done', isDone: true, created: new Date(), completed: new Date() },
+      { id: 6, task: 'Connect database', isDone: false, created: new Date(), completed: null },
+      { id: 7, task: 'save/load lists from db', isDone: false, created: new Date(), completed: null },
+    ]);
+  }, []);
+ */
+
+return (
+  <TodoContext.Provider value={{ todoList, addTodo, cancelTodo, removeTodo, toggleTodoComplete, getTodoCount, getDoneCount, getDoingCount, editTodo, toggleTodoStart, refreshTodoList }}>
+    {children}
+  </TodoContext.Provider>
+);
 };
 
 const useTodoContext = () => useContext(TodoContext);
