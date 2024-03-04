@@ -1,21 +1,62 @@
-/* Header.css */
-.header {
-    background-color: #636363;
-    color: #e1b2b2;
-    padding: 10px;
+.mdl-layout__header-row.top-row {
+  height: 8em;
+  background-color: #5265d1; 
+}
 
-    position: absolute;
-    top: 10px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 80%;
-    height: 130px;
-    border-radius: 30px;
-    box-shadow: -3px -6px 14px 3px rgba(0, 0, 0, 0.1);
-    border: 2px solid rgb(211, 206, 206);
-  }
+.mdl-layout__header {
+  background-color: #3f51b5; /* Change background color as needed */
+}
 
-  .header h1 {
-    color: rgb(255, 255, 255);
-    margin: 15px;
-  }
+
+.mdl-navigation__link {
+  color: white; /* Change link color as needed */
+}
+
+.mdl-button--raised.mdl-button--accent {
+  margin-left: 10px; /* Add margin to the register button */
+}
+
+.mdl-layout__header.header_layout{
+  margin-top: 10px;
+  border-radius: 10px;
+}
+
+.mdl-layout__header{
+  border-radius: 10px;
+}
+
+.center-content {
+  display: flex;
+  align-items: center;
+}
+
+.todoButton {
+  /* Make the button round */
+  color: rgb(80, 60, 60);
+  font-weight: 600;
+  border-radius: 15px;
+  width: 6em; 
+  height: 36px; 
+  background-color: #ff9d00; 
+  cursor: pointer; /* Add cursor pointer */
+  position: relative; /* Position relative for absolute centering */
+
+  /* Center the icon */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  border: 1px solid rgb(75, 57, 57);
+}
+
+.todoButton:hover {
+  background-color: #e1900e; 
+  color: rgb(255, 255, 255);  /* Darker green background color on hover */
+  border: 2px solid rgb(235, 194, 137);
+}
+
+.todoButton:active {
+  border: 2px solid rgb(144, 57, 57);
+}
+
+

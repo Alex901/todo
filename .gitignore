@@ -12,6 +12,7 @@ dist
 dist-ssr
 *.local
 todo-backend/
+pb_data
 
 # Editor directories and files
 .vscode/*
