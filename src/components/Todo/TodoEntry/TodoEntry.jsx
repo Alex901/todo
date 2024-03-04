@@ -45,7 +45,7 @@ const TodoEntry = ({ type, todoData, onEdit }) => {
         cancelTodo(id);
     }
 
-    //Modals
+    //Confirmation modal functions
 
     const cancelConfirm = () => {
         setIsModalOpen(false);
@@ -107,8 +107,9 @@ const TodoEntry = ({ type, todoData, onEdit }) => {
 
         const durationMS = completed.getTime() - started.getTime();
         const remainingMS = durationMS > 0 ? durationMS : 0;
-        const remainingSeconds = Math.floor(remainingMS / 1000);
-        const remainingMinutes = Math.floor(remainingSeconds / 60);
+        const seconds = Math.floor(remainingMS / 1000);
+        const remainingSeconds = seconds%60;
+        const remainingMinutes = Math.floor(seconds / 60);
         const remainingHours = Math.floor(remainingMinutes / 60);
         const remainingDays = Math.floor(remainingHours / 24);
 

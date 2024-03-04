@@ -203,17 +203,42 @@ const TodoProvider = ({ children }) => {
         fetchTodoList();
         console.log('Task canceled successfully');
 
-        
+
       } else {
         console.error('Error Cancling task', response.statusText);
       }
-    } catch(error) {
+    } catch (error) {
       console.log('Error Canceling todoTask', error);
       return;
     }
   };
 
-  const editTodo = (updatedTask) => {
+  const editTodo = async (updatedTask) => {
+    console.log("editTodo updatedTask:", updatedTask);
+    try {
+      const taskId = todoList.find(todo => todo.id === updatedTask.id)._id;
+      console.log("editTodo > taskId to edit:", taskId);
+
+      const response = await axios.patch(`${BASE_URL}/api/edit`, {
+        taskId,
+        updatedTask
+      });
+
+      if (response.status === 200) {
+        setTodoList(prevTodoList => prevTodoList.map(todo => {
+          if(todo._id === taskId){
+            return{...todo, ...updatedTask}
+          }
+          return todo;
+        }));
+        console.log('Updated task successfully');
+      } else {
+        console.error("Error updating task: ", response.statusText);
+      }
+    } catch (error) {
+      console.error('Internal Server error: ', error);
+    }
+
     setTodoList(prevTodoList => prevTodoList.map(todo => {
       if (todo.id === updatedTask.id) {
         return { ...todo, ...updatedTask }
@@ -236,31 +261,31 @@ const TodoProvider = ({ children }) => {
     return todoList.filter(todo => todo.isStarted && !todo.isDone).length;
   }
 
-  
 
 
 
 
 
-// Adding some dummy-data
-/*   useEffect(() => {
-    setTodoList([
-      { id: 1, task: 'Entry button: finnish look', isDone: true, created: new Date(), completed: new Date() },
-      { id: 2, task: 'toggle arrow', isDone: true, created: new Date(), completed: new Date() },
-      { id: 3, task: 'editEntry (modal)', isDone: true, created: new Date(), completed: new Date() },
-      { id: 4, task: 'Sub tasks', isDone: false, created: new Date(), completed: null },
-      { id: 5, task: 'Count todo/done', isDone: true, created: new Date(), completed: new Date() },
-      { id: 6, task: 'Connect database', isDone: false, created: new Date(), completed: null },
-      { id: 7, task: 'save/load lists from db', isDone: false, created: new Date(), completed: null },
-    ]);
-  }, []);
- */
 
-return (
-  <TodoContext.Provider value={{ todoList, addTodo, cancelTodo, removeTodo, toggleTodoComplete, getTodoCount, getDoneCount, getDoingCount, editTodo, toggleTodoStart, refreshTodoList }}>
-    {children}
-  </TodoContext.Provider>
-);
+  // Adding some dummy-data
+  /*   useEffect(() => {
+      setTodoList([
+        { id: 1, task: 'Entry button: finnish look', isDone: true, created: new Date(), completed: new Date() },
+        { id: 2, task: 'toggle arrow', isDone: true, created: new Date(), completed: new Date() },
+        { id: 3, task: 'editEntry (modal)', isDone: true, created: new Date(), completed: new Date() },
+        { id: 4, task: 'Sub tasks', isDone: false, created: new Date(), completed: null },
+        { id: 5, task: 'Count todo/done', isDone: true, created: new Date(), completed: new Date() },
+        { id: 6, task: 'Connect database', isDone: false, created: new Date(), completed: null },
+        { id: 7, task: 'save/load lists from db', isDone: false, created: new Date(), completed: null },
+      ]);
+    }, []);
+   */
+
+  return (
+    <TodoContext.Provider value={{ todoList, addTodo, cancelTodo, removeTodo, toggleTodoComplete, getTodoCount, getDoneCount, getDoingCount, editTodo, toggleTodoStart, refreshTodoList }}>
+      {children}
+    </TodoContext.Provider>
+  );
 };
 
 const useTodoContext = () => useContext(TodoContext);
