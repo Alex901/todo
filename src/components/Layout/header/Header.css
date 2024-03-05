@@ -1,8 +1,11 @@
 .mdl-layout__header-row.top-row {
   height: 8em;
-  background-color: #5265d1; 
+  background-color: #3f51b5 
 }
-
+.mdl-layout__header-row.nav-row {
+  position: sticky;
+  top: 100px;
+}
 .mdl-layout__header {
   background-color: #3f51b5; /* Change background color as needed */
 }
@@ -17,7 +20,6 @@
 }
 
 .mdl-layout__header.header_layout{
-  margin-top: 10px;
   border-radius: 10px;
 }
 

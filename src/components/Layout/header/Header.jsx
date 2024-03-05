@@ -29,7 +29,7 @@ const Header = () => {
           </div>
         </div>
         {/* Second row */}
-        <div className="mdl-layout__header-row" style={{height: '48px'}}>
+        <div className="mdl-layout__header-row nav-row" style={{height: '48px'}}>
           {/* Navigation section */}
           <div className="mdl-layout-spacer"></div>
           <nav className="mdl-navigation">
