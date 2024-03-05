@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import ReactModal from 'react-modal';
-import './LoginModal.css'
+import './HeaderModal.css';
 import { useUserContext } from '../../../../contexts/UserContext';
 
 ReactModal.setAppElement('#root');

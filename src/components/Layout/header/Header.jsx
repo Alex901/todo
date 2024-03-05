@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from "react";
 import "./Header.css";
-import LoginModal from "./LoginModal/LoginModal";
+import LoginModal from "./HeaderModals/LoginModal";
 
 const Header = () => {
   const [time, setTime] = useState(new Date());
