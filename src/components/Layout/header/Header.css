@@ -61,4 +61,9 @@
   border: 2px solid rgb(144, 57, 57);
 }
 
+.mdl-navigation__link.login-link:hover {
+  color: #ff9d00; /* Change link color on hover */
+  transform: scale(1.2);
+}
+
 

@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
 import "./Header.css";
-import ToggleButton from "../ToggleButton/ToggleButton";
+import LoginModal from "./LoginModal/LoginModal";
 
 const Header = () => {
   const [time, setTime] = useState(new Date());
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
 
   useEffect(() => {
     const intervall = setInterval(() => {
@@ -15,6 +16,15 @@ const Header = () => {
 
   const comingSoon = () => {
     alert("This feature is in development, but coming soon!")
+  }
+
+  const openLoginModal = (event) => {
+    event.preventDefault();
+    setIsLoginModalOpen(true);
+  }
+
+  const closeLoginModal = () => { 
+    setIsLoginModalOpen(false);
   }
 
   return (
@@ -34,11 +44,12 @@ const Header = () => {
           <div className="mdl-layout-spacer"></div>
           <nav className="mdl-navigation">
             {/* Add navigation links/icons here */}
-            <a href="#" className="mdl-navigation__link">Login</a>
+            <a href="#" className="mdl-navigation__link login-link" onClick={openLoginModal}>Login</a>
           </nav>
           <button className="todoButton" onClick={comingSoon}>Register</button>
         </div>
       </header>
+      <LoginModal isOpen={isLoginModalOpen} onRequestClose={closeLoginModal} />
     </div>
   );
 };

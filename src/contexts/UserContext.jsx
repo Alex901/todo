@@ -5,20 +5,37 @@ const UserContext = createContext();
 
 const UserProvider = ({ children }) => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
-    const [username, setUsername] = useState('');
+    const [loggedInUser, setLoggedInUser] = useState({
+        userName: '',
+        email: '',
+        password: '',
+        role: 'user',
+        listNames: ['defaultList', 'dailyList', 'all', 'sharedWithMe']
+    });
 
-    const login = () => {
+    const login = (userData) => {
+        console.log("userDate in usercontext> login:", userData);
         setIsLoggedIn(true);
-        setUsername("Ghost");
+        //try to authenticate user here
+        //if successful, grab user data from server
+        //and set user data
+        setLoggedInUser(userData);
     };
 
     const logout = () => {
         setIsLoggedIn(false);
-        setUsername('');
+        setLoggedInUser({
+            userName: '',
+            email: '',
+            password: '',
+            role: 'user',
+            listNames: ['defaultList', 'dailyList', 'all', 'sharedWithMe']
+        });
+        //Clear logged in user in the server ?
     }
 
     return (
-        <UserContext.Provider value={{ isLoggedIn, username, login, logout}} >
+        <UserContext.Provider value={{ isLoggedIn, loggedInUser, login, logout}} >
             {children}
         </UserContext.Provider>
     );
