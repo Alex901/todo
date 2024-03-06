@@ -13,13 +13,22 @@ const UserProvider = ({ children }) => {
         listNames: ['defaultList', 'dailyList', 'all', 'sharedWithMe']
     });
 
+    const registerNewUser = (userData) => {
+        console.log("userDate in usercontext> registerNewUser:", userData);
+        //try to register user here
+        //if successful, grab user data from server
+        //and set user data
+    }
+
     const login = (userData) => {
         console.log("userDate in usercontext> login:", userData);
-        setIsLoggedIn(true);
+        //setIsLoggedIn(true);
         //try to authenticate user here
         //if successful, grab user data from server
         //and set user data
         setLoggedInUser(userData);
+        console.log("loggedInUser: ", loggedInUser);
+        setIsLoggedIn(true); //remember to do that on complete
     };
 
     const logout = () => {
@@ -28,14 +37,14 @@ const UserProvider = ({ children }) => {
             userName: '',
             email: '',
             password: '',
-            role: 'user',
-            listNames: ['defaultList', 'dailyList', 'all', 'sharedWithMe']
+            role: '',
+            listNames: []
         });
         //Clear logged in user in the server ?
     }
 
     return (
-        <UserContext.Provider value={{ isLoggedIn, loggedInUser, login, logout}} >
+        <UserContext.Provider value={{ isLoggedIn, loggedInUser, login, logout, registerNewUser}} >
             {children}
         </UserContext.Provider>
     );

@@ -8,8 +8,12 @@
     align-items: left;
 }
 
+.error {
+    color: red;
+}
+
 .modal-input {
-    width:70%;
+    width:80%;
     height: 36px;
     border-radius: 5px;
     border: 1px solid black;

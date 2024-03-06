@@ -1,10 +1,14 @@
 import React, { useState, useEffect } from "react";
 import "./Header.css";
 import LoginModal from "./HeaderModals/LoginModal";
+import RegisterModal from "./HeaderModals/RegisterModal";
+import { useUserContext } from "../../../contexts/UserContext";
 
 const Header = () => {
   const [time, setTime] = useState(new Date());
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
+  const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
+  const { isLoggedIn, loggedInUser, logout } = useUserContext();
 
   useEffect(() => {
     const intervall = setInterval(() => {
@@ -19,12 +23,29 @@ const Header = () => {
   }
 
   const openLoginModal = (event) => {
+    console.log(isLoggedIn);
     event.preventDefault();
     setIsLoginModalOpen(true);
   }
 
   const closeLoginModal = () => { 
     setIsLoginModalOpen(false);
+    console.log(isLoggedIn)
+    setIsLoginModalOpen(false);
+  }
+
+  const openRegisterModal = (event) => {
+    event.preventDefault();
+    setIsRegisterModalOpen(true);
+  }
+
+  const closeRegisterModal = () => {
+    setIsRegisterModalOpen(false);
+  }
+
+  const handleLogout = () => {
+    logout();
+    console.log("Logging out");
   }
 
   return (
@@ -44,12 +65,13 @@ const Header = () => {
           <div className="mdl-layout-spacer"></div>
           <nav className="mdl-navigation">
             {/* Add navigation links/icons here */}
-            <a href="#" className="mdl-navigation__link login-link" onClick={openLoginModal}>Login</a>
+            <a href="#" className="mdl-navigation__link login-link" onClick={isLoggedIn ? handleLogout : openLoginModal}>{isLoggedIn ? 'Logout' : 'Login'} </a>
           </nav>
-          <button className="todoButton" onClick={comingSoon}>Register</button>
+         {!isLoggedIn && <button className="todoButton" onClick={openRegisterModal}>Register</button>}
         </div>
       </header>
       <LoginModal isOpen={isLoginModalOpen} onRequestClose={closeLoginModal} />
+      <RegisterModal isOpen={isRegisterModalOpen} onRequestClose={closeRegisterModal} />
     </div>
   );
 };

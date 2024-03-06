@@ -67,12 +67,14 @@ const TodoEntry = ({ type, todoData, onEdit }) => {
 
 
 
-    //TODO: this is not pretty, make separate components at some point
+    //TODO: this is not pretty, make commonTodoEntry component and use it on all cases. 
+    //Making changes on three places is not good practice and confusing in the long run.
 
     if (type === 'todo' && !isDone && !isStarted) {
         // console.log(todoData);
         return (
             <div className="todo-entry">
+             
                 <div className="todo-item" onClick={handleClickToStart}>
                     <div className="time">
                         <p className="time-stamp"> <strong>Created:</strong> {created.toLocaleDateString()} - {created.toLocaleTimeString()} </p>
@@ -90,6 +92,7 @@ const TodoEntry = ({ type, todoData, onEdit }) => {
                         <i className="material-icons todo-entry-icon"> {isMoreChecked ? "keyboard_arrow_up" : "keyboard_arrow_down"} </i>
                     </button>
                 </div>
+             
                 <ConfirmationModal
                     onRequestClose={cancelConfirm}
                     isOpen={isModalOpen}

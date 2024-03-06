@@ -31,11 +31,12 @@ const LoginModal = ({ isOpen, onRequestClose }) => {
         event.preventDefault();
         const userData = { userName: username, password: password };
         console.log("LoginModal> handleLogin: ", userData);
-        login( userData );
-        
-        
+        login(userData);
+
+
         setUsername("");
         setPassword("");
+        onRequestClose();
     };
 
     return (
@@ -49,29 +50,29 @@ const LoginModal = ({ isOpen, onRequestClose }) => {
         >
             <h3 className="title">Login</h3>
             <form className='modal-form' onSubmit={handleLogin}>
-            <input
-                type="text"
-                value={username}
-                onChange={e => setUsername(e.target.value)}
-                className="modal-input"
-                placeholder="Username"
-                autoFocus
-            />
-            <div className='password-container'>
-            <input
-                type={showPassword ? "text" : "password"}
-                value={password}
-                onChange={e => setPassword(e.target.value)}
-                className="modal-input"
-                placeholder="Password"
-            />
-             <button className='show-password-button' type="button" onClick={() => setShowPassword(!showPassword)}>
-                    <i className="material-icons show-password-icon">
-        {showPassword ? "visibility_off" : "visibility"}
-    </i>
-                </button>
-            </div>
-            <button className='modal-button'>Login</button>
+                <input
+                    type="text"
+                    value={username}
+                    onChange={e => setUsername(e.target.value)}
+                    className="modal-input"
+                    placeholder="Username"
+                    autoFocus
+                />
+                <div className='password-container'>
+                    <input
+                        type={showPassword ? "text" : "password"}
+                        value={password}
+                        onChange={e => setPassword(e.target.value)}
+                        className="modal-input"
+                        placeholder="Password"
+                    />
+                    <button className='show-password-button' type="button" onClick={() => setShowPassword(!showPassword)}>
+                        <i className="material-icons show-password-icon">
+                            {showPassword ? "visibility_off" : "visibility"}
+                        </i>
+                    </button>
+                </div>
+                <button className='modal-button'>Login</button>
             </form>
         </ReactModal>
     );
