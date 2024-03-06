@@ -6,12 +6,14 @@ import TodoModal from "../TodoModal/TodoModal";
 import EditModal from "../TodoModal/EditModal/EditModal";
 import TodoEntry from "../TodoEntry/TodoEntry";
 import { useTodoContext } from "../../../contexts/todoContexts";
+import { useUserContext } from "../../../contexts/UserContext";
 
 const AnythingList = ({type}) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const { todoList } = useTodoContext();
     const [editingTask, setEditingTask] = useState(null);
+    const { loggedInUser, isLoggedIn } = useUserContext();
 
     useEffect(() => {
         if (editingTask !== null) {
@@ -40,7 +42,7 @@ const AnythingList = ({type}) => {
     return (
         <div className="list-container">
         <div className={`title-${type}`}>
-            <h3> {type} </h3>
+          <h3> {isLoggedIn ? loggedInUser.activeList : type} </h3>
         </div>
         <div className="list-view">
         {todoList.map(todo => (

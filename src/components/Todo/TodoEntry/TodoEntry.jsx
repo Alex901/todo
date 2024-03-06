@@ -4,10 +4,12 @@ import PropTypes from 'prop-types';
 import { useTodoContext } from "../../../contexts/todoContexts";
 import TodoModal from "../TodoModal/TodoModal";
 import ConfirmationModal from "../TodoModal/ConfirmationModal/ConfirmationModal";
+import { useUserContext } from "../../../contexts/UserContext";
 
 const TodoEntry = ({ type, todoData, onEdit }) => {
     const { id, isDone, task, created, completed, started, isStarted } = todoData;
     const { removeTodo, toggleTodoComplete, toggleTodoStart, getDoingCount, cancelTodo } = useTodoContext();
+    const { loggedInUser, isLoggedIn } = useUserContext();
     const [isMoreChecked, setIsMoreChecked] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingTask, setEditingTask] = useState(null);

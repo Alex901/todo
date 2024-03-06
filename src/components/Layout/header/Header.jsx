@@ -51,17 +51,20 @@ const Header = () => {
   return (
     <div className="mdl-layout" style={{ overflow: 'hidden'}}>
       <header className="mdl-layout__header header_layout">
-        <div className="mdl-layout__header-row top-row" style={{ borderTopRightRadius: '10px', borderTopLeftRadius: '10px'}}>
+        <div className="mdl-layout__header-row top-row" style={{ borderTopRightRadius: '10px', borderTopLeftRadius: '10px', display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
           {/* First row */}
-          <span className="mdl-layout-title" style={{ fontSize: '30px'}}>TaskForge</span>
-          <div className="mdl-layout-spacer"></div>
+          <span className="mdl-layout-title" style={{ fontSize: '42px', marginTop: '16px', color: "orange"}}>TaskForge</span>
           <div>
-            {time.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" })}
+            
+            <hr/>
+            {isLoggedIn && <div>Welcome back, {loggedInUser.username}</div>}
           </div>
+          
         </div>
         {/* Second row */}
         <div className="mdl-layout__header-row nav-row" style={{height: '48px'}}>
           {/* Navigation section */}
+          {time.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" })}
           <div className="mdl-layout-spacer"></div>
           <nav className="mdl-navigation">
             {/* Add navigation links/icons here */}
