@@ -56,14 +56,14 @@ const TodoEntry = ({ type, todoData, onEdit }) => {
     }
 
     const addLineBreak = (str) =>
-    str.split('\n').map((subStr) => {
-        return (
-            <>
-                {subStr}
-                <br />
-            </>
-        );
-    });
+        str.split('\n').map((subStr) => {
+            return (
+                <>
+                    {subStr}
+                    <br />
+                </>
+            );
+        });
 
 
 
@@ -74,7 +74,7 @@ const TodoEntry = ({ type, todoData, onEdit }) => {
         // console.log(todoData);
         return (
             <div className="todo-entry">
-             
+
                 <div className="todo-item" onClick={handleClickToStart}>
                     <div className="time">
                         <p className="time-stamp"> <strong>Created:</strong> {created.toLocaleDateString()} - {created.toLocaleTimeString()} </p>
@@ -92,7 +92,7 @@ const TodoEntry = ({ type, todoData, onEdit }) => {
                         <i className="material-icons todo-entry-icon"> {isMoreChecked ? "keyboard_arrow_up" : "keyboard_arrow_down"} </i>
                     </button>
                 </div>
-             
+
                 <ConfirmationModal
                     onRequestClose={cancelConfirm}
                     isOpen={isModalOpen}
@@ -111,10 +111,10 @@ const TodoEntry = ({ type, todoData, onEdit }) => {
         const durationMS = completed.getTime() - started.getTime();
         const remainingMS = durationMS > 0 ? durationMS : 0;
         const seconds = Math.floor(remainingMS / 1000);
-        const remainingSeconds = seconds%60;
-        const remainingMinutes = Math.floor(seconds / 60)%60;
-        const remainingHours = Math.floor((seconds / 3600)%24);
-        const remainingDays = Math.floor((seconds / 3600/24));
+        const remainingSeconds = seconds % 60;
+        const remainingMinutes = Math.floor(seconds / 60) % 60;
+        const remainingHours = Math.floor((seconds / 3600) % 24);
+        const remainingDays = Math.floor((seconds / 3600 / 24));
 
         return (
             <div className="todo-entry">

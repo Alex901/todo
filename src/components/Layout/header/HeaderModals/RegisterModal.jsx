@@ -49,7 +49,7 @@ const LoginModal = ({ isOpen, onRequestClose }) => {
         }
 
         if(emailError === "" && passwordError === "") {
-        const userData = { userName: username, email: email, password: password };
+        const userData = { username: username, email: email, password: password };
         console.log("RegisterModal> handleregister: ", userData);
         registerNewUser(userData);
 

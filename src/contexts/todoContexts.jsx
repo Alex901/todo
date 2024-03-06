@@ -25,7 +25,19 @@ const TodoProvider = ({ children }) => {
   const BASE_URL = import.meta.env.VITE_REACT_APP_PRODUCTION === 'true' ? 'https://todo-backend-gkdo.onrender.com' : 'http://localhost:5000';
   //console.log("Base_url: ", BASE_URL);
 
-  //Straight forward but remember to parse dates
+  //Not sure if i need it, but it works :shrug:
+  useEffect(() => {
+    if (!dataFetched) {
+      fetchTodoList();
+    }
+  }, [dataFetched]);
+
+  const refreshTodoList = () => {
+    setDataFetched(false); // Set dataFetched to false to trigger re-fetching
+  };
+
+  //API functions
+
   const fetchTodoList = async () => {
     try {
       const response = await axios.get(`${BASE_URL}/api/todos`);
@@ -40,18 +52,6 @@ const TodoProvider = ({ children }) => {
       console.error('Error fetching data', error);
     }
   };
-
-  useEffect(() => {
-    if (!dataFetched) {
-      fetchTodoList();
-    }
-  }, [dataFetched]);
-
-  const refreshTodoList = () => {
-    setDataFetched(false); // Set dataFetched to false to trigger re-fetching
-  };
-
-  //API functions
 
   const addTodo = async (task) => {
     try {
@@ -70,7 +70,8 @@ const TodoProvider = ({ children }) => {
         //  assignee: null,
         //  subTasks: [],
         //  priority: null,
-        //  observer: null
+        //  observer: null,
+        //  dueDate: null
       };
 
       console.log("newTodo", newTodo);

@@ -29,7 +29,7 @@ const LoginModal = ({ isOpen, onRequestClose }) => {
 
     const handleLogin = (event) => {
         event.preventDefault();
-        const userData = { userName: username, password: password };
+        const userData = { username: username, password: password };
         console.log("LoginModal> handleLogin: ", userData);
         login(userData);
 
