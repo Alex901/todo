@@ -14,8 +14,6 @@ function App() {
   const [activeView, setActiveView] = useState('todo');
   const { getTodoCount, getDoneCount, getDoingCount } = useTodoContext();
   const { loggedInUser, isLoggedIn, setLoggedInUser } = useUserContext();
-  const [ isSearchable, setIsSearchable] = useState(true);
-  const [ isClearable, setIsClearable ] = useState(true);
 
 
   const switchTodoView = () => {
@@ -37,9 +35,9 @@ function App() {
     } else {
       setLoggedInUser({ ...loggedInUser, activeList: loggedInUser.listNames[2] });
     }
-  
 
-  
+
+
 
   }
 
@@ -53,25 +51,27 @@ function App() {
           <div className='nav' style={{ display: 'flex', flexDirection: 'column' }}>
             {/* First row */}
             {isLoggedIn && (
-              <div style={{ display: 'flex', justifyContent: 'left', margin: '1em 0 2em 0' }}>
+              <div style={{ display: 'flex', justifyContent: 'center', margin: '1em 0 2em 0' }}>
                 <Select
                   styles={{ control: (base) => ({ ...base, width: '22em', borderRadius: '10px' }) }}
                   className="select-list"
-                  isSearchable={isSearchable}
-                  isClearable={isClearable}
+                  isSearchable={true}
+                  isClearable={true}
                   options={loggedInUser.listNames.map(listName => ({ label: listName, value: listName }))}
                   value={typeof loggedInUser.activeList === 'string' ? { label: loggedInUser.activeList, value: loggedInUser.activeList } : null}
                   onChange={handleListChange}
                 />
-              
-                
-           
-                <button>Create New List</button>
-                <button>Delete List</button>
+
+                <div style={{ margin: '0 1em 0 1em' }}></div>
+
+                <button className="create-list-button"> Create new list
+
+                </button>
+                <button className="delete-list-button">Delete List</button>
               </div>
             )}
 
-            <hr style={{ width: '80%', margin:'1em auto'}}></hr>
+            {isLoggedIn && <hr style={{ width: '80%', margin: '1em auto' }}></hr>}
 
             {/* Second row */}
             <div style={{ display: 'flex', justifyContent: 'center' }}>

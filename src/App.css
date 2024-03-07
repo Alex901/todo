@@ -21,11 +21,17 @@ body {
 
 .nav button {
   padding: 5px;
-  margin: 1px;
+  margin: 2px;
   border: 2px solid rgb(146, 137, 137);
   background-color: #777474;
   cursor: pointer;
   color: white;
+}
+
+.nav button:hover {
+  background-color: #4d4d4d;
+  transform: scale(1.1);
+  border: 1px solid rgb(194, 188, 188);
 }
 
 .app {
@@ -33,13 +39,4 @@ body {
   flex-direction: column;
 
 }
-
-.navButton{
-  margin: 50px;
-  background-color: black;
-}
-
-
-
-
 

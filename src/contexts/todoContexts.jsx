@@ -1,5 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
+import { useUserContext } from './UserContext';
 
 
 // Define functions
@@ -21,6 +22,7 @@ const TodoContext = createContext({
 const TodoProvider = ({ children }) => {
   const [todoList, setTodoList] = useState([]);
   const [dataFetched, setDataFetched] = useState(false);
+  const { loggedInUser } = useUserContext(); //Logged in username&&list
 
   const BASE_URL = import.meta.env.VITE_REACT_APP_PRODUCTION === 'true' ? 'https://todo-backend-gkdo.onrender.com' : 'http://localhost:5000';
   //console.log("Base_url: ", BASE_URL);
