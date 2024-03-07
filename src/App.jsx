@@ -5,6 +5,7 @@ import { useState } from 'react'
 import AnythingList from './components/Todo/List/AnythingList'
 import { useTodoContext } from './contexts/todoContexts'
 import { useUserContext } from './contexts/UserContext'
+import Select from 'react-select'
 
 import 'material-design-lite/dist/material.min.css';
 import 'material-design-lite/dist/material.min.js';
@@ -12,7 +13,9 @@ import 'material-design-lite/dist/material.min.js';
 function App() {
   const [activeView, setActiveView] = useState('todo');
   const { getTodoCount, getDoneCount, getDoingCount } = useTodoContext();
-  const { loggedInUser, isLoggedIn } = useUserContext();
+  const { loggedInUser, isLoggedIn, setLoggedInUser } = useUserContext();
+  const [ isSearchable, setIsSearchable] = useState(true);
+  const [ isClearable, setIsClearable ] = useState(true);
 
 
   const switchTodoView = () => {
@@ -27,6 +30,19 @@ function App() {
     setActiveView('doing');
   }
 
+  const handleListChange = (selectedOption) => {
+    console.log("selectedOption: ", selectedOption);
+    if (selectedOption) {
+      setLoggedInUser({ ...loggedInUser, activeList: selectedOption.value });
+    } else {
+      setLoggedInUser({ ...loggedInUser, activeList: loggedInUser.listNames[2] });
+    }
+  
+
+  
+
+  }
+
 
   //TODO: Break out these buttons maybe ? 
   return (
@@ -37,16 +53,25 @@ function App() {
           <div className='nav' style={{ display: 'flex', flexDirection: 'column' }}>
             {/* First row */}
             {isLoggedIn && (
-              <div style={{ display: 'flex', justifyContent: 'left', margin: '10px'}}>
-                <select>
-                  {loggedInUser.listNames.map((listName, index) => (
-                    <option key={index} value={listName}>{listName}</option>
-                  ))}
-                </select>
+              <div style={{ display: 'flex', justifyContent: 'left', margin: '1em 0 2em 0' }}>
+                <Select
+                  styles={{ control: (base) => ({ ...base, width: '22em', borderRadius: '10px' }) }}
+                  className="select-list"
+                  isSearchable={isSearchable}
+                  isClearable={isClearable}
+                  options={loggedInUser.listNames.map(listName => ({ label: listName, value: listName }))}
+                  value={typeof loggedInUser.activeList === 'string' ? { label: loggedInUser.activeList, value: loggedInUser.activeList } : null}
+                  onChange={handleListChange}
+                />
+              
+                
+           
                 <button>Create New List</button>
                 <button>Delete List</button>
               </div>
             )}
+
+            <hr style={{ width: '80%', margin:'1em auto'}}></hr>
 
             {/* Second row */}
             <div style={{ display: 'flex', justifyContent: 'center' }}>

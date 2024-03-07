@@ -4,8 +4,6 @@ import axios from "axios";
 
 const UserContext = createContext();
 
-
-
 const UserProvider = ({ children }) => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [loggedInUser, setLoggedInUser] = useState({});
@@ -75,8 +73,14 @@ const UserProvider = ({ children }) => {
         //Clear logged in user in the server ?
     }
 
+    const setActiveList = (listName) => {
+        setLoggedInUser({...loggedInUser, activeList: listName});
+        console.log("Active list set to: ", listName);
+        console.log("loggedInUser: ", loggedInUser.listName);
+    }
+
     return (
-        <UserContext.Provider value={{ isLoggedIn, loggedInUser, login, logout, registerNewUser}} >
+        <UserContext.Provider value={{ isLoggedIn, loggedInUser, login, logout, registerNewUser, setLoggedInUser}} >
             {children}
         </UserContext.Provider>
     );
