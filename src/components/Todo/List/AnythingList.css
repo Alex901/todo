@@ -45,4 +45,13 @@
     flex: 1;
     overflow: auto;
     max-height: 600px;
+    overflow-x: hidden;
+}
+
+.doing-item .doing-text {
+    transition: text-decoration 200ms ease-out 200ms;
+}
+
+.doing-item:hover .doing-text {
+    text-decoration: line-through;
 }
