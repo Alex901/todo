@@ -27,8 +27,6 @@ const AnythingList = ({type}) => {
 
     const handleEdit = (taskData) => {
         setEditingTask(taskData);
-        console.log('handleEdit-> taskdata: anythinglist: ', taskData)
-        console.log('handleEdit: anythinglist: ', editingTask)
         setIsEditModalOpen(true);
     }
 
@@ -36,7 +34,6 @@ const AnythingList = ({type}) => {
         setIsModalOpen(false);
         setIsEditModalOpen(false);
         setEditingTask(null);
-        console.log("Close Modal data: ", editingTask);
     }
   
     return (

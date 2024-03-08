@@ -13,7 +13,7 @@ import 'material-design-lite/dist/material.min.js';
 function App() {
   const [activeView, setActiveView] = useState('todo');
   const { getTodoCount, getDoneCount, getDoingCount } = useTodoContext();
-  const { loggedInUser, isLoggedIn, setLoggedInUser } = useUserContext();
+  const { loggedInUser, isLoggedIn, setLoggedInUser, setActiveList } = useUserContext();
 
 
   const switchTodoView = () => {
@@ -32,8 +32,10 @@ function App() {
     console.log("selectedOption: ", selectedOption);
     if (selectedOption) {
       setLoggedInUser({ ...loggedInUser, activeList: selectedOption.value });
-    } else {
-      setLoggedInUser({ ...loggedInUser, activeList: loggedInUser.listNames[2] });
+      setActiveList(selectedOption.value);
+    } else { 
+      setLoggedInUser({ ...loggedInUser, activeList: loggedInUser.listNames[2]});
+      setActiveList(loggedInUser.listNames[2]);
     }
 
 

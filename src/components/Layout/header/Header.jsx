@@ -23,14 +23,14 @@ const Header = () => {
   }
 
   const openLoginModal = (event) => {
-    console.log(isLoggedIn);
+   // console.log(isLoggedIn);
     event.preventDefault();
     setIsLoginModalOpen(true);
   }
 
   const closeLoginModal = () => { 
     setIsLoginModalOpen(false);
-    console.log(isLoggedIn)
+   // console.log(isLoggedIn)
     setIsLoginModalOpen(false);
   }
 
@@ -45,7 +45,7 @@ const Header = () => {
 
   const handleLogout = () => {
     logout();
-    console.log("Logging out");
+    //console.log("Logging out");
   }
 
   return (

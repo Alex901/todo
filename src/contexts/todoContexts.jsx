@@ -41,13 +41,15 @@ const TodoProvider = ({ children }) => {
   //API functions
 
   const fetchTodoList = async () => {
+    //updateDatabase();
     try {
       const response = await axios.get(`${BASE_URL}/api/todos`);
       const parsedData = response.data.map(todo => ({
         ...todo,
         created: new Date(todo.created),
         completed: todo.completed ? new Date(todo.completed) : null,
-        started: todo.started ? new Date(todo.started) : null
+        started: todo.started ? new Date(todo.started) : null,
+        dueDate: todo.dueDate ? new Date(todo.dueDate) : null
       }));
       setTodoList(parsedData);
     } catch (error) {
@@ -57,7 +59,9 @@ const TodoProvider = ({ children }) => {
 
   const addTodo = async (task) => {
     try {
-      const newId = parseInt(Date.now().toString(36) + Math.random().toString(36).substr(2), 36);
+      const newId = parseInt(Date.now().toString(36) + Math.random().toString(36).substr(2), 36); //but why? xD
+
+      console.log("loggedInUser: ", loggedInUser);
 
       //TODO: some typesafety here
       const newTodo = {
@@ -68,12 +72,15 @@ const TodoProvider = ({ children }) => {
         completed: null,
         isStarted: false,
         started: null,
-        // owner: null,
-        //  assignee: null,
-        //  subTasks: [],
-        //  priority: null,
-        //  observer: null,
-        //  dueDate: null
+        owner: loggedInUser ? loggedInUser.username : null, //TODO: _id 
+        //  assignee: [...User],
+        steps: [],
+        priority: "NORMAL",
+        //  observers: [...User],
+        dueDate: new Date(), //TODO: rember to change
+        description: null,
+        isUrgent: false, //And this one
+        inList:  loggedInUser ? ['all'] : []
       };
 
       console.log("newTodo", newTodo);
@@ -87,7 +94,8 @@ const TodoProvider = ({ children }) => {
             comleted: response.data.completed ? new Date(response.data.comleted) : null,
             created: new Date(response.data.created),
             isStarted: response.data.isStarted ? true : false,
-            started: response.data.completed ? new Date(response.data.started) : null
+            started: response.data.completed ? new Date(response.data.started) : null,
+            dueDate: response.data.dueDate ? new Date(response.data.dueDate) : null //TODO: remember to change this
           }
         ];
         setTodoList(updatedTodoList);
@@ -229,8 +237,8 @@ const TodoProvider = ({ children }) => {
 
       if (response.status === 200) {
         setTodoList(prevTodoList => prevTodoList.map(todo => {
-          if(todo._id === taskId){
-            return{...todo, ...updatedTask}
+          if (todo._id === taskId) {
+            return { ...todo, ...updatedTask }
           }
           return todo;
         }));
@@ -248,6 +256,30 @@ const TodoProvider = ({ children }) => {
       }
       return todo;
     }));
+  }
+
+  //Helper function to easilly update my database
+  const updateDatabase = async () => {
+    try {
+      const updatedData = {
+        owner: 'Alzner',
+        steps: [],
+        dueDate: new Date(),
+        inList: ['all'],
+        isUrgent: false,
+        priority: 'NORMAL',
+        description: null
+      };
+
+      const response = await axios.patch(`${BASE_URL}/api/update`, updatedData);
+      if (response.status === 200) {
+        console.log("Database updated successfully");
+      } else {
+        console.error("Error updating database: ", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error updating database: ", error);
+    }
   }
 
   //Other functions
