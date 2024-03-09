@@ -11,15 +11,20 @@ import { useUserContext } from "../../../contexts/UserContext";
 const AnythingList = ({type}) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
-    const { todoList } = useTodoContext();
+    const [activeTodoList, setActiveTodoList] = useState([]);
     const [editingTask, setEditingTask] = useState(null);
     const { loggedInUser, isLoggedIn } = useUserContext();
+    const { todoList } = useTodoContext();
 
     useEffect(() => {
         if (editingTask !== null) {
             setIsEditModalOpen(true);
         }
     }, [editingTask]);
+
+    useEffect(() => {
+        filterTodoList();
+    }, [todoList, loggedInUser]);
 
     const handleClick = () => {
         setIsModalOpen(true);
@@ -35,6 +40,15 @@ const AnythingList = ({type}) => {
         setIsEditModalOpen(false);
         setEditingTask(null);
     }
+
+    const filterTodoList = () => {
+        if (isLoggedIn && loggedInUser.activeList) {
+            const filteredList = todoList.filter(todo => todo.inList.includes(loggedInUser.activeList));
+            setActiveTodoList(filteredList);
+        } else {
+            setActiveTodoList(todoList);
+        }
+    };
   
     return (
         <div className="list-container">
@@ -42,7 +56,7 @@ const AnythingList = ({type}) => {
           <h3> {isLoggedIn ? loggedInUser.activeList : type} </h3>
         </div>
         <div className="list-view">
-        {todoList.map(todo => (
+        {activeTodoList.map(todo => (
             <TodoEntry key={todo.id} type={type} todoData={todo} onEdit={handleEdit} />
         ))}
         </div>

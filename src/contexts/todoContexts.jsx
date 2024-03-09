@@ -16,7 +16,10 @@ const TodoContext = createContext({
   toggleTodoStart: () => { },
   fetchTodoList: () => { },
   refreshTodoList: () => { },
-  cancelTodo: () => { }
+  cancelTodo: () => { },
+  getActiveListDoingCount: () => { },
+  getActiveListDoneCount: () => { },
+  getActiveListTodoCount: () => { }
 });
 
 const TodoProvider = ({ children }) => {
@@ -27,12 +30,12 @@ const TodoProvider = ({ children }) => {
   const BASE_URL = import.meta.env.VITE_REACT_APP_PRODUCTION === 'true' ? 'https://todo-backend-gkdo.onrender.com' : 'http://localhost:5000';
   //console.log("Base_url: ", BASE_URL);
 
-  //Not sure if i need it, but it works :shrug:
+  //Not sure if this is the best solution
   useEffect(() => {
-    if (!dataFetched) {
+    if (!dataFetched || loggedInUser) {
       fetchTodoList();
     }
-  }, [dataFetched]);
+  }, [dataFetched, loggedInUser]);
 
   const refreshTodoList = () => {
     setDataFetched(false); // Set dataFetched to false to trigger re-fetching
@@ -41,16 +44,23 @@ const TodoProvider = ({ children }) => {
   //API functions
 
   const fetchTodoList = async () => {
-    //updateDatabase();
     try {
       const response = await axios.get(`${BASE_URL}/api/todos`);
-      const parsedData = response.data.map(todo => ({
+      let parsedData = response.data.map(todo => ({
         ...todo,
         created: new Date(todo.created),
         completed: todo.completed ? new Date(todo.completed) : null,
         started: todo.started ? new Date(todo.started) : null,
         dueDate: todo.dueDate ? new Date(todo.dueDate) : null
       }));
+  
+      // Filter the parsedData array
+      if (loggedInUser) {
+        parsedData = parsedData.filter(todo => todo.owner === loggedInUser.username);
+      } else {
+        parsedData = parsedData.filter(todo => todo.owner === null);
+      }
+  
       setTodoList(parsedData);
     } catch (error) {
       console.error('Error fetching data', error);
@@ -98,7 +108,7 @@ const TodoProvider = ({ children }) => {
             dueDate: response.data.dueDate ? new Date(response.data.dueDate) : null //TODO: remember to change this
           }
         ];
-        setTodoList(updatedTodoList);
+       
         fetchTodoList();
       } else {
         console.error('Error adding todo:', response.statusText)
@@ -285,7 +295,7 @@ const TodoProvider = ({ children }) => {
   //Other functions
 
   const getTodoCount = () => {
-    return todoList.filter(todo => !todo.isDone).length;
+    return todoList.filter(todo => !todo.isDone && !todo.isStarted).length;
   }
 
   const getDoneCount = () => {
@@ -295,6 +305,18 @@ const TodoProvider = ({ children }) => {
   const getDoingCount = () => {
     return todoList.filter(todo => todo.isStarted && !todo.isDone).length;
   }
+
+  const getActiveListTodoCount = () => {
+    return todoList.filter(todo => todo.inList.includes(loggedInUser.activeList) && !todo.isDone && !todo.isStarted).length;
+}
+
+const getActiveListDoneCount = () => {
+    return todoList.filter(todo => todo.inList.includes(loggedInUser.activeList) && todo.isDone).length;
+}
+
+const getActiveListDoingCount = () => {
+    return todoList.filter(todo => todo.inList.includes(loggedInUser.activeList) && todo.isStarted && !todo.isDone).length;
+}
 
 
 
@@ -317,7 +339,9 @@ const TodoProvider = ({ children }) => {
    */
 
   return (
-    <TodoContext.Provider value={{ todoList, addTodo, cancelTodo, removeTodo, toggleTodoComplete, getTodoCount, getDoneCount, getDoingCount, editTodo, toggleTodoStart, refreshTodoList }}>
+    <TodoContext.Provider value={{ todoList, addTodo, cancelTodo, removeTodo, toggleTodoComplete, 
+    getTodoCount, getDoneCount, getDoingCount, editTodo, toggleTodoStart, refreshTodoList,
+    getActiveListDoingCount, getActiveListTodoCount, getActiveListDoneCount }}>
       {children}
     </TodoContext.Provider>
   );

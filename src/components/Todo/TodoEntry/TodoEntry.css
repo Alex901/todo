@@ -92,6 +92,11 @@ color: white
     align-items: center;
 }
 
+
+.checkbox-and-task:hover {
+    animation: strikethrough 500ms linear;
+}
+
 .moreDoneButton{
     align-self: self-end;
 }

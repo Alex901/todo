@@ -12,9 +12,10 @@ import 'material-design-lite/dist/material.min.js';
 
 function App() {
   const [activeView, setActiveView] = useState('todo');
-  const { getTodoCount, getDoneCount, getDoingCount } = useTodoContext();
+  const { getTodoCount, getDoneCount, getDoingCount, getActiveListTodoCount, getActiveListDoingCount, getActiveListDoneCount } = useTodoContext();
   const { loggedInUser, isLoggedIn, setLoggedInUser, setActiveList } = useUserContext();
 
+    console.log("isLoggedIn: ", isLoggedIn);
 
   const switchTodoView = () => {
     setActiveView('todo');
@@ -37,10 +38,6 @@ function App() {
       setLoggedInUser({ ...loggedInUser, activeList: loggedInUser.listNames[2]});
       setActiveList(loggedInUser.listNames[2]);
     }
-
-
-
-
   }
 
 
@@ -81,19 +78,19 @@ function App() {
                 background: activeView === 'todo' ? '#eaeaef' : '#777474',
                 color: activeView === 'todo' ? 'black' : 'white',
                 flexGrow: '1'
-              }}> todo ({getTodoCount()}) </button>
+              }}> todo ({isLoggedIn ? getActiveListTodoCount() : getTodoCount()}) </button>
 
               <button className="navButton" onClick={switchDoingView} style={{
                 background: activeView === 'doing' ? '#eaeaef' : '#777474',
                 color: activeView === 'doing' ? 'black' : 'white',
                 flexGrow: '1'
-              }}> doing ({getDoingCount()}) </button>
+              }}> doing ({isLoggedIn ? getActiveListDoingCount(): getDoingCount()}) </button>
 
               <button className="navButton" onClick={switchDoneView} style={{
                 background: activeView === 'done' ? '#eaeaef' : '#777474',
                 color: activeView === 'done' ? 'black' : 'white',
                 flexGrow: '1'
-              }}> done ({getDoneCount()}) </button>
+              }}> done ({isLoggedIn ? getActiveListDoneCount() : getDoneCount()}) </button>
             </div>
           </div>
 

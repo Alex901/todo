@@ -1,20 +1,21 @@
 import React, { useState } from "react";
 import './TodoEntry.css'
 import PropTypes from 'prop-types';
-import { useTodoContext } from "../../../contexts/todoContexts";
 import TodoModal from "../TodoModal/TodoModal";
 import ConfirmationModal from "../TodoModal/ConfirmationModal/ConfirmationModal";
 import { useUserContext } from "../../../contexts/UserContext";
+import { useTodoContext } from "../../../contexts/todoContexts";
 
 const TodoEntry = ({ type, todoData, onEdit }) => {
     const { id, isDone, task, created, completed, started, isStarted } = todoData;
-    const { removeTodo, toggleTodoComplete, toggleTodoStart, getDoingCount, cancelTodo } = useTodoContext();
-    const { loggedInUser, isLoggedIn } = useUserContext();
     const [isMoreChecked, setIsMoreChecked] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingTask, setEditingTask] = useState(null);
+    const [isChecked, setIsChecked] = useState(false);
 
-    //console.log(todoData);
+    //Contexts
+    const { removeTodo, toggleTodoComplete, toggleTodoStart, getDoingCount, cancelTodo, getActiveListDoingCount } = useTodoContext();
+    const { isLoggedIn } = useUserContext();
 
     const handleDelete = () => {
         removeTodo(id);
@@ -35,7 +36,7 @@ const TodoEntry = ({ type, todoData, onEdit }) => {
 
     const handleClickToStart = () => {
         console.log("doing count: ", getDoingCount())
-        if (getDoingCount() > 2) {
+        if ((isLoggedIn ? getActiveListDoingCount() : getDoingCount()) > 2) {
             setIsModalOpen(true);
         } else {
             toggleTodoStart(id);
@@ -67,7 +68,11 @@ const TodoEntry = ({ type, todoData, onEdit }) => {
             );
         });
 
-
+    const handleAnimationEnd = () => {
+        console.log(isChecked);
+        setIsChecked(true);
+        console.log(isChecked)
+    };
 
     //TODO: this is not pretty, make commonTodoEntry component and use it on all cases. 
     //Making changes on three places is not good practice and confusing in the long run.
@@ -100,7 +105,7 @@ const TodoEntry = ({ type, todoData, onEdit }) => {
                     isOpen={isModalOpen}
                     onConfirm={confirmStart}
                     onClose={cancelConfirm}
-                    message={addLineBreak(`You are already working on ${getDoingCount()} tasks already,
+                    message={addLineBreak(`You are already working on ${isLoggedIn ? getActiveListDoingCount() : getDoingCount()} tasks already,
                     and "${task}" is estemated to be a difficult task.\n\nAre you sure you wish to proceed?
                     `)}
                 />
@@ -140,10 +145,10 @@ const TodoEntry = ({ type, todoData, onEdit }) => {
                     </div>
                 </div>
                 <div className="buttons">
-                    <button className="deleteButton entryButton" onClick={handleDelete}>
+                    <button className="deleteButton entryButton" onClick={handleDelete} style={{ marginTop: '26px' }}>
                         <i className="material-icons todo-entry-icon">delete</i>
                     </button>
-                    
+
                     <button className="entryButton" onClick={handleMoreInfromationClick}>
                         <i className="material-icons todo-entry-icon"> {isMoreChecked ? "keyboard_arrow_up" : "keyboard_arrow_down"} </i>
                     </button>
@@ -159,8 +164,8 @@ const TodoEntry = ({ type, todoData, onEdit }) => {
                         <p className="time-stamp"> <strong>Started:</strong> {started.toLocaleDateString()} - {started.toLocaleTimeString()} </p>
                     </div>
                     <div className="checkbox-and-task">
-                        <input className="checkbox-c" type="checkbox" />
-                        <p className="doing-text"> {task} </p>
+                        <input className="checkbox-c doing-checkbox" type="checkbox" checked={isChecked} readOnly />
+                        <p className="doing-text" onAnimationEnd={handleAnimationEnd}> {task} </p>
                     </div>
                 </div>
                 <div className="buttons">
