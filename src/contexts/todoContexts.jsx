@@ -80,7 +80,7 @@ const TodoProvider = ({ children }) => {
         dueDate: new Date(), //TODO: rember to change
         description: null,
         isUrgent: false, //And this one
-        inList:  loggedInUser ? ['all'] : []
+        inList: loggedInUser ? ['all'].concat(loggedInUser.activeList !== 'all' ? [loggedInUser.activeList] : []) : []
       };
 
       console.log("newTodo", newTodo);
