@@ -143,6 +143,7 @@ const TodoEntry = ({ type, todoData, onEdit }) => {
                     <button className="deleteButton entryButton" onClick={handleDelete}>
                         <i className="material-icons todo-entry-icon">delete</i>
                     </button>
+                    
                     <button className="entryButton" onClick={handleMoreInfromationClick}>
                         <i className="material-icons todo-entry-icon"> {isMoreChecked ? "keyboard_arrow_up" : "keyboard_arrow_down"} </i>
                     </button>
@@ -157,7 +158,10 @@ const TodoEntry = ({ type, todoData, onEdit }) => {
                     <div className="time">
                         <p className="time-stamp"> <strong>Started:</strong> {started.toLocaleDateString()} - {started.toLocaleTimeString()} </p>
                     </div>
-                    <p className="doing-text"> {task} </p>
+                    <div className="checkbox-and-task">
+                        <input className="checkbox-c" type="checkbox" />
+                        <p className="doing-text"> {task} </p>
+                    </div>
                 </div>
                 <div className="buttons">
                     <button className="deleteButton entryButton" onClick={handleDelete}>

@@ -82,11 +82,13 @@ color: white
 }
 
 .checkbox-c {
-    position: relative;
+    margin-left: 1em;
+    margin-right: 3em;
 }
 
 .checkbox-and-task {
     display: flex;
+    flex-direction: row;
     align-items: center;
 }
 
@@ -96,4 +98,8 @@ color: white
 
 .material-icons.todo-entry-icon {
     width: 24px;
+}
+
+.checkbox-and-task p{
+    margin: 0px;
 }
