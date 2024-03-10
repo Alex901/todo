@@ -49,7 +49,7 @@ const AnythingList = ({type}) => {
             setActiveTodoList(todoList);
         }
     };
-  
+    //Create the todo lists
     return (
         <div className="list-container">
         <div className={`title-${type}`}>

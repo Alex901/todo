@@ -91,8 +91,13 @@ const UserProvider = ({ children }) => {
         }
     }
 
+    const addList = async (listName) => {   
+        console.log("add new list with name: ", listName);
+    }
+
     return (
-        <UserContext.Provider value={{ isLoggedIn, loggedInUser, login, logout, registerNewUser, setLoggedInUser, setActiveList }} >
+        <UserContext.Provider value={{ isLoggedIn, loggedInUser, login, logout, registerNewUser, 
+        setLoggedInUser, setActiveList, addList }} >
             {children}
         </UserContext.Provider>
     );

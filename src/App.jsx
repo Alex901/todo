@@ -6,6 +6,7 @@ import AnythingList from './components/Todo/List/AnythingList'
 import { useTodoContext } from './contexts/todoContexts'
 import { useUserContext } from './contexts/UserContext'
 import Select from 'react-select'
+import CreateListModal from './components/Todo/TodoModal/CreateListModal/CreateListModal'
 
 import 'material-design-lite/dist/material.min.css';
 import 'material-design-lite/dist/material.min.js';
@@ -14,6 +15,7 @@ function App() {
   const [activeView, setActiveView] = useState('todo');
   const { getTodoCount, getDoneCount, getDoingCount, getActiveListTodoCount, getActiveListDoingCount, getActiveListDoneCount } = useTodoContext();
   const { loggedInUser, isLoggedIn, setLoggedInUser, setActiveList } = useUserContext();
+  const [isCreateListModalOpen, setIsCreateListModalOpen] = useState(false);
 
     console.log("isLoggedIn: ", isLoggedIn);
 
@@ -40,6 +42,15 @@ function App() {
     }
   }
 
+  const openRegisterModal = (event) => {
+    event.preventDefault();
+    setIsCreateListModalOpen(true);
+  };
+
+  const closeRegisterModal = () => { 
+    setIsCreateListModalOpen(false);
+  };
+
 
   //TODO: Break out these buttons maybe ? 
   return (
@@ -63,9 +74,12 @@ function App() {
 
                 <div style={{ margin: '0 1em 0 1em' }}></div>
 
-                <button className="create-list-button" > Create new list
-
+                <button className="create-list-button" onClick={openRegisterModal}> Create new list
                 </button>
+                <CreateListModal 
+                isOpen={isCreateListModalOpen} 
+                onRequestClose={closeRegisterModal} />
+
                 <button className="delete-list-button">Delete List</button>
               </div>
             )}
