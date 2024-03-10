@@ -3,6 +3,7 @@ import "./Header.css";
 import LoginModal from "./HeaderModals/LoginModal";
 import RegisterModal from "./HeaderModals/RegisterModal";
 import { useUserContext } from "../../../contexts/UserContext";
+import logo from "../../../assets/Anvil_logo_v1.png";
 
 const Header = () => {
   const [time, setTime] = useState(new Date());
@@ -53,8 +54,9 @@ const Header = () => {
         <div className="mdl-layout__header-row nav-row" style={{ display: 'flex', justifyContent: 'space-between' }}>
           {/* Left section */}
           <div style={{ display: 'flex', alignItems: 'center' }}>
+          <img src={logo} alt="Logo" style={{ marginRight: '12px', width: '5%', height: 'auto', position: 'relative', top: '-3px' }} />
             <span className="mdl-layout-title" style={{ fontSize: '32px', color: "white" }}>TaskForge</span>
-            <img src="src\assets\Anvil_logo_v1.png" alt="Logo" style={{ marginLeft: '12px', width: '5%', height: 'auto', position: 'relative', top: '-3px' }} />
+            
           </div>
 
           {/* Middle section */}

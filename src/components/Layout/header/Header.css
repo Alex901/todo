@@ -1,10 +1,9 @@
-.mdl-layout__header-row.top-row {
-  height: 8em;
-  background-color: #3f51b5;
-}
 .mdl-layout__header-row.nav-row {
+  padding: 0 80px 0 80px;
+}
+.mdl-layout__header-row {
   position: sticky;
-  top: 100px;
+ 
 }
 .mdl-layout__header {
   background-color: #3f51b5; /* Change background color as needed */
