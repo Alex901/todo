@@ -16,7 +16,7 @@ const Header = () => {
       setShowWelcome(true);
       setTimeout(() => {
         setShowWelcome(false);
-      }, 5000); // hide welcome message after 5 seconds
+      }, 7000); // hide welcome message after 5 seconds
     }
   }, [isLoggedIn]);
 
@@ -73,7 +73,7 @@ const Header = () => {
       <RegisterModal isOpen={isRegisterModalOpen} onRequestClose={closeRegisterModal} />
       <div className="mdl-layout" style={{ overflow: 'hidden' }}>
         {showWelcome ? (
-          <div className="welcome-card">Welcome back, {loggedInUser.username}</div>
+          <div className="welcome-card">Welcome back, {loggedInUser.username}. <br/><br/> You  have new tasks waiting for you today!</div>
         ) : (
           <div className="welcome-clock">{time.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" })}</div>
         )}

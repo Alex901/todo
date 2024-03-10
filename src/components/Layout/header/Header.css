@@ -68,12 +68,12 @@
 
 .welcome-card {
   display: inline-block;
-  background-color: #16127b;
+  background-color: #287141;
   color: rgb(255, 255, 255);
   border-radius: 20px;
   margin-top: 2px;
   border: 1px solid #c8cad1;
-  animation: fade-out 5s ease-in-out forwards;
+  animation: fade-out 7s ease-in forwards;
   font-size: large;
   padding: 1em;
 }
