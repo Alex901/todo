@@ -1,6 +1,7 @@
 //At least i got the naming right this time!!!
 import React, { createContext, useContext, useState, useEffect } from "react";
 import axios from "axios";
+import { useTodoContext } from "./todoContexts";
 
 const UserContext = createContext();
 
@@ -93,11 +94,52 @@ const UserProvider = ({ children }) => {
 
     const addList = async (listName) => {   
         console.log("add new list with name: ", listName);
+        try { 
+            if (!isLoggedIn) {
+                console.log("User not logged in");
+                return;
+            }
+            const _id = loggedInUser._id;
+            const response = await axios.patch(`${BASE_URL}/users/addlist/${_id}`, { listName });
+            if (response.status === 200) {
+                console.log("List added: ", listName);
+                setLoggedInUser({ ...loggedInUser, listNames: [...loggedInUser.listNames, listName], activeList: listName});
+            } else if (response.status === 404) {
+                console.log("User not found");
+            } else {
+                console.log("Internal server error");
+            }
+        } catch (error) {
+            console.error('Error adding list', error);
+        }   
+    }
+
+    const deleteList = async (listName) => {    
+        console.log("delete list with name: ", listName);
+        try {
+            if (!isLoggedIn) {
+                console.log("User not logged in");
+                return;
+            }
+            const _id = loggedInUser._id;
+            const response = await axios.delete(`${BASE_URL}/users/deletelist/${_id}`,  { data: { listName }});
+            if (response.status === 200) {
+                console.log("List deleted: ", listName);
+                setLoggedInUser({ ...loggedInUser, listNames: loggedInUser.listNames.filter((name) => name !== listName), 
+                    activeList: loggedInUser.listNames[0]}); //This should always be 'all'
+            } else if (response.status === 404) {
+                console.log("User not found");
+            } else {
+                console.log("Internal server error");
+            }
+        } catch (error) {
+            console.error('Error deleting list', error);
+        }
     }
 
     return (
         <UserContext.Provider value={{ isLoggedIn, loggedInUser, login, logout, registerNewUser, 
-        setLoggedInUser, setActiveList, addList }} >
+        setLoggedInUser, setActiveList, addList, deleteList }} >
             {children}
         </UserContext.Provider>
     );
