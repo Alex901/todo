@@ -14,7 +14,8 @@ import 'material-design-lite/dist/material.min.js';
 
 function App() {
   const [activeView, setActiveView] = useState('todo');
-  const { getTodoCount, getDoneCount, getDoingCount, getActiveListTodoCount, getActiveListDoingCount, getActiveListDoneCount } = useTodoContext();
+  const { getTodoCount, getDoneCount, getDoingCount, getActiveListTodoCount, getActiveListDoingCount, getActiveListDoneCount,
+  getListDoingCount, getListDoneCount, getListTodoCount } = useTodoContext();
   const { loggedInUser, isLoggedIn, setLoggedInUser, setActiveList, deleteList } = useUserContext();
   const [isCreateListModalOpen, setIsCreateListModalOpen] = useState(false);
   const [isdDeleteListModalOpen, setIsDeleteListModalOpen] = useState(false);
@@ -86,7 +87,21 @@ function App() {
                   className="select-list"
                   isSearchable={true}
                   isClearable={true}
-                  options={loggedInUser.listNames.map(listName => ({ label: listName, value: listName }))}
+                  options={loggedInUser.listNames.map(listName => {
+                    const todoCount = getListTodoCount(listName);
+                    const doingCount = getListDoingCount(listName);
+                    const doneCount = getListDoneCount(listName);
+                
+                    return {
+                      label: (
+                        <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+                            <span>{listName}</span>
+                            <span>({todoCount},{doingCount},{doneCount})</span>
+                        </div>
+                    ),
+                    value: listName
+                };
+            })}
                   value={typeof loggedInUser.activeList === 'string' ? { label: loggedInUser.activeList, value: loggedInUser.activeList } : null}
                   onChange={handleListChange}
                 />

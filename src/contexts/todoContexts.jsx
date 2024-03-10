@@ -19,7 +19,10 @@ const TodoContext = createContext({
   cancelTodo: () => { },
   getActiveListDoingCount: () => { },
   getActiveListDoneCount: () => { },
-  getActiveListTodoCount: () => { }
+  getActiveListTodoCount: () => { },
+  getListTodoCount: () => { },
+  getListDoneCount: () => { },
+  getListDoingCount: () => { }
 });
 
 const TodoProvider = ({ children }) => {
@@ -53,14 +56,14 @@ const TodoProvider = ({ children }) => {
         started: todo.started ? new Date(todo.started) : null,
         dueDate: todo.dueDate ? new Date(todo.dueDate) : null
       }));
-  
+
       // Filter the parsedData array
       if (loggedInUser) {
         parsedData = parsedData.filter(todo => todo.owner === loggedInUser.username);
       } else {
         parsedData = parsedData.filter(todo => todo.owner === null);
       }
-    
+
       setTodoList(parsedData);
       console.log("TodoList: ", todoList);
     } catch (error) {
@@ -109,7 +112,7 @@ const TodoProvider = ({ children }) => {
             dueDate: response.data.dueDate ? new Date(response.data.dueDate) : null //TODO: remember to change this
           }
         ];
-       
+
         fetchTodoList();
       } else {
         console.error('Error adding todo:', response.statusText)
@@ -309,19 +312,27 @@ const TodoProvider = ({ children }) => {
 
   const getActiveListTodoCount = () => {
     return todoList.filter(todo => todo.inList.includes(loggedInUser.activeList) && !todo.isDone && !todo.isStarted).length;
-}
+  }
 
-const getActiveListDoneCount = () => {
+  const getActiveListDoneCount = () => {
     return todoList.filter(todo => todo.inList.includes(loggedInUser.activeList) && todo.isDone).length;
-}
+  }
 
-const getActiveListDoingCount = () => {
+  const getActiveListDoingCount = () => {
     return todoList.filter(todo => todo.inList.includes(loggedInUser.activeList) && todo.isStarted && !todo.isDone).length;
+  }
+
+  const getListTodoCount = (listName) => {
+    return todoList.filter(todo => todo.inList.includes(listName) && !todo.isDone && !todo.isStarted).length;
 }
 
+const getListDoneCount = (listName) => {
+    return todoList.filter(todo => todo.inList.includes(listName) && todo.isDone).length;
+}
 
-
-
+const getListDoingCount = (listName) => {
+    return todoList.filter(todo => todo.inList.includes(listName) && todo.isStarted && !todo.isDone).length;
+}
 
 
 
@@ -340,9 +351,12 @@ const getActiveListDoingCount = () => {
    */
 
   return (
-    <TodoContext.Provider value={{ todoList, addTodo, cancelTodo, removeTodo, toggleTodoComplete, 
-    getTodoCount, getDoneCount, getDoingCount, editTodo, toggleTodoStart, refreshTodoList,
-    getActiveListDoingCount, getActiveListTodoCount, getActiveListDoneCount }}>
+    <TodoContext.Provider value={{
+      todoList, addTodo, cancelTodo, removeTodo, toggleTodoComplete,
+      getTodoCount, getDoneCount, getDoingCount, editTodo, toggleTodoStart, refreshTodoList,
+      getActiveListDoingCount, getActiveListTodoCount, getActiveListDoneCount, getListDoingCount,
+      getListDoneCount, getListTodoCount
+    }}>
       {children}
     </TodoContext.Provider>
   );

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import './TodoEntry.css'
 import PropTypes from 'prop-types';
 import TodoModal from "../TodoModal/TodoModal";
@@ -16,6 +16,17 @@ const TodoEntry = ({ type, todoData, onEdit }) => {
     //Contexts
     const { todoList, removeTodo, toggleTodoComplete, toggleTodoStart, getDoingCount, cancelTodo, getActiveListDoingCount } = useTodoContext();
     const { isLoggedIn } = useUserContext();
+    const [currentTime, setCurrentTime] = useState(Date.now());
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setCurrentTime(Date.now());
+        }, 1000);
+
+        return () => clearInterval(interval);
+    }, []);
+
+
 
     const handleDelete = () => {
         removeTodo(id);
@@ -73,7 +84,15 @@ const TodoEntry = ({ type, todoData, onEdit }) => {
         setIsChecked(true);
         console.log(isChecked)
     };
-   
+
+    const formatTime = (seconds) => {
+        const days = Math.floor(seconds / (60 * 60 * 24));
+        const hours = Math.floor((seconds / (60 * 60)) % 24);
+        const minutes = Math.floor((seconds / 60) % 60);
+        seconds = seconds % 60;
+        return `${days}d ${hours}h ${minutes}m ${seconds}s`;
+    }
+
     //TODO: this is not pretty, make commonTodoEntry component and use it on all cases. 
     //Making changes on three places is not good practice and confusing in the long run.
     if (type === 'todo' && !isDone && !isStarted) {
@@ -113,7 +132,7 @@ const TodoEntry = ({ type, todoData, onEdit }) => {
 
         )
     } else if (type === 'done' && isDone && isStarted) {
-
+        //This though :'D
         const durationMS = completed.getTime() - started.getTime();
         const remainingMS = durationMS > 0 ? durationMS : 0;
         const seconds = Math.floor(remainingMS / 1000);
@@ -158,9 +177,11 @@ const TodoEntry = ({ type, todoData, onEdit }) => {
     } else if (type === 'doing' && isStarted && !isDone) {
         return (
             <div className="todo-entry">
-                <div className="todo-item doing-item" onClick={handleClicktoComplete}>
+                <div className="doing-item" onClick={handleClicktoComplete}>
                     <div className="time">
                         <p className="time-stamp"> <strong>Started:</strong> {started.toLocaleDateString()} - {started.toLocaleTimeString()} </p>
+                        <div className="separator"> </div>
+                        <p className="time-stamp times-pent"> <strong>Time spent:</strong> { formatTime(Math.floor((currentTime - started) / 1000))} </p>
                     </div>
                     <div className="checkbox-and-task">
                         <input className="checkbox-c doing-checkbox" type="checkbox" checked={isChecked} readOnly />

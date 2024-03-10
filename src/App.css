@@ -21,11 +21,12 @@ body {
 
 .nav button {
   padding: 5px;
-  margin: 2px;
+  margin: 1px;
   border: 2px solid rgb(146, 137, 137);
   background-color: #777474;
   cursor: pointer;
   color: white;
+  border-radius: 15px;
 }
 
 .nav button:hover {
@@ -40,12 +41,16 @@ body {
 
 }
 
-.create-list-button {
+
+.nav button.create-list-button {
   width: 120px;
+  background-color: #5045c8;
+  color: rgb(255, 255, 255);
 }
 
-.delete-list-button {
+.nav button.delete-list-button {
   width: 120px;
+  background-color: #d62525;
+  color: rgb(255, 255, 255);
 }
-
 

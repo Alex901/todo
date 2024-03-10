@@ -62,7 +62,7 @@
 }
 
 .mdl-navigation__link.login-link:hover {
-  color: #ff9d00; /* Change link color on hover */
+  color: #e8b962; /* Change link color on hover */
   transform: scale(1.2);
 }
 
