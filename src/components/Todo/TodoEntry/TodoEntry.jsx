@@ -14,7 +14,7 @@ const TodoEntry = ({ type, todoData, onEdit }) => {
     const [isChecked, setIsChecked] = useState(false);
 
     //Contexts
-    const { removeTodo, toggleTodoComplete, toggleTodoStart, getDoingCount, cancelTodo, getActiveListDoingCount } = useTodoContext();
+    const { todoList, removeTodo, toggleTodoComplete, toggleTodoStart, getDoingCount, cancelTodo, getActiveListDoingCount } = useTodoContext();
     const { isLoggedIn } = useUserContext();
 
     const handleDelete = () => {
@@ -73,10 +73,9 @@ const TodoEntry = ({ type, todoData, onEdit }) => {
         setIsChecked(true);
         console.log(isChecked)
     };
-
+   
     //TODO: this is not pretty, make commonTodoEntry component and use it on all cases. 
     //Making changes on three places is not good practice and confusing in the long run.
-
     if (type === 'todo' && !isDone && !isStarted) {
         // console.log(todoData);
         return (

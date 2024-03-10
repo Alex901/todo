@@ -60,8 +60,9 @@ const TodoProvider = ({ children }) => {
       } else {
         parsedData = parsedData.filter(todo => todo.owner === null);
       }
-  
+    
       setTodoList(parsedData);
+      console.log("TodoList: ", todoList);
     } catch (error) {
       console.error('Error fetching data', error);
     }

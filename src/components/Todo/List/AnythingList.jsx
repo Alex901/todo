@@ -8,7 +8,7 @@ import TodoEntry from "../TodoEntry/TodoEntry";
 import { useTodoContext } from "../../../contexts/todoContexts";
 import { useUserContext } from "../../../contexts/UserContext";
 
-const AnythingList = ({type}) => {
+const AnythingList = ({ type }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [activeTodoList, setActiveTodoList] = useState([]);
@@ -52,29 +52,41 @@ const AnythingList = ({type}) => {
     //Create the todo lists
     return (
         <div className="list-container">
-        <div className={`title-${type}`}>
-          <h3> {isLoggedIn ? loggedInUser.activeList : type} </h3>
-        </div>
-        <div className="list-view">
-        {activeTodoList.map(todo => (
-            <TodoEntry key={todo.id} type={type} todoData={todo} onEdit={handleEdit} />
-        ))}
-        </div>
+            <div className={`title-${type}`}>
+                <h3> {isLoggedIn ? loggedInUser.activeList : type} </h3>
+            </div>
+            <div className="list-view">
+                {
+                    (type === 'todo' && activeTodoList.filter(todo => !todo.isStarted && !todo.isDone).length > 0) ||
+                        (type === 'doing' && activeTodoList.filter(todo => todo.isStarted && !todo.isDone).length > 0) ||
+                        (type === 'done' && activeTodoList.filter(todo => todo.isDone).length > 0) ? (
+                        activeTodoList.map(todo => (
+                            <TodoEntry key={todo.id} type={type} todoData={todo} onEdit={handleEdit} />
+                        ))
+                    ) : (
+                        <div style={{ width: '100%', height: '20em', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                            {type === 'todo' && <strong>"To create new a new activity, use the '+'-button."</strong>}
+                            {type === 'doing' && "Looks like you are not doing anything at the moment. Go to 'todo' to start a task."}
+                            {type === 'done' && "No finished tasks yet."}
+                        </div>
+                    )
+                }
+            </div>
 
-        {isEditModalOpen && editingTask && (
-            <EditModal
-            isOpen={isEditModalOpen}
-            onRequestClose={handleCloseModal}
-            editData={editingTask}
-            />
-        )}
+            {isEditModalOpen && editingTask && (
+                <EditModal
+                    isOpen={isEditModalOpen}
+                    onRequestClose={handleCloseModal}
+                    editData={editingTask}
+                />
+            )}
 
-        {type === 'todo' && ( 
-        <div className="button-view">
-            <TodoButton onClick={handleClick}/>
-            <TodoModal isOpen={isModalOpen} onRequestClose={handleCloseModal}/>
-        </div>
-        )}
+            {type === 'todo' && (
+                <div className="button-view">
+                    <TodoButton onClick={handleClick} />
+                    <TodoModal isOpen={isModalOpen} onRequestClose={handleCloseModal} />
+                </div>
+            )}
         </div>
     );
 };

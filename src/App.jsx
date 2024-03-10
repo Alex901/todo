@@ -36,10 +36,12 @@ function App() {
     console.log("selectedOption: ", selectedOption);
     if (selectedOption) {
       setLoggedInUser({ ...loggedInUser, activeList: selectedOption.value });
+      //TODO: this is a bad function name, change it
       setActiveList(selectedOption.value);
     } else { 
-      setLoggedInUser({ ...loggedInUser, activeList: loggedInUser.listNames[2]});
-      setActiveList(loggedInUser.listNames[2]);
+      //0 can never be deleted, so we prevent the nullpointer here
+      setLoggedInUser({ ...loggedInUser, activeList: loggedInUser.listNames[0]}); 
+      setActiveList(loggedInUser.listNames[0]);
     }
   }
 
