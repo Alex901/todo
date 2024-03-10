@@ -66,4 +66,36 @@
   transform: scale(1.2);
 }
 
+.welcome-card {
+  display: inline-block;
+  background-color: #16127b;
+  color: rgb(255, 255, 255);
+  border-radius: 20px;
+  margin-top: 2px;
+  border: 1px solid #c8cad1;
+  animation: fade-out 5s ease-in-out forwards;
+  font-size: large;
+  padding: 1em;
+}
 
+.welcome-clock {
+  display: inline-block;
+  background-color: #ffffff;
+  color: rgb(0, 0, 0);
+  padding: 10px;
+  border-radius: 20px;
+  margin-top: 1px;
+  border: 1px solid #c8cad1;
+}
+
+.mdl-layout {
+  /* ...existing styles... */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@keyframes fade-out {
+  0% { opacity: 1; }
+  100% { opacity: 0; }
+}
