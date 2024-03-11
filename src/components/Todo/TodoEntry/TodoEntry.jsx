@@ -189,10 +189,10 @@ const TodoEntry = ({ type, todoData, onEdit }) => {
                     </div>
                 </div>
                 <div className="buttons">
-                    <button className="deleteButton entryButton" onClick={handleDelete}>
+                    <button className="deleteButton entryButton" onClick={handleDelete} >
                         <i className="material-icons todo-entry-icon">delete</i>
                     </button>
-                    <button className="entryButton" onClick={handleCancel}>
+                    <button className="entryButton" onClick={handleCancel} title="cancel task">
                         <i className="material-icons todo-entry-icon">close_small</i>
                     </button>
                     <button className="entryButton" onClick={handleMoreInfromationClick}>
