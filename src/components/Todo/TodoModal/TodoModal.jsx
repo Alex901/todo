@@ -132,7 +132,7 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
                     onChange={handleInputChange}
                 // Add your onChange handler here
                 />
-                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginBottom: '10px',     width: '-webkit-fill-available' }}>
                     <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginRight: '20px' }}>
                         <label htmlFor='priority' style={{ marginRight: '10px' }}>Priority</label>
                         <Select
@@ -151,28 +151,31 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
                             }}
                         />
                     </div>
-                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
                         <label htmlFor='urgent' style={{ marginRight: '10px' }}>Urgent?</label>
                         <input type='checkbox' id='urgent' name='urgent' onChange={handleCheckboxChange} />
                     </div>
                 </div>
-                <input
-                    type='datetime-local'
-                    className='modal-input'
-                    onChange={handleInputChange}
-                />
+                <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'left' }}>
+                    <label style={{ marginRight: '10px' }}>Deadline</label>
+                    <input
+                        type='datetime-local'
+                        className='modal-input'
+                        onChange={handleInputChange}
+                    />
+                </div>
                 <hr style={{ width: '80%', margin: '10px auto' }} />
 
                 <div className='steps' style={{ width: '100%', justifyContent: 'center' }}>
                     {newTaskData.steps.map(step => (
-                        <div key={step.id} style={{display: 'flex', flexDirection: 'row'}}>
+                        <div key={step.id} style={{ display: 'flex', flexDirection: 'row' }}>
                             <label style={{ display: 'flex', alignItems: 'center' }}>{`Step${step.id}`}</label>
-                            <input className='create-modal-input' type='text' placeholder={`Enter subTask`} 
-                             onChange={event => handleInputChangeStep(step.id, event)} value={newTaskData.steps[step.id-1].value} />
+                            <input className='create-modal-input' type='text' placeholder={`Enter subTask`}
+                                onChange={event => handleInputChangeStep(step.id, event)} value={newTaskData.steps[step.id - 1].value} />
                         </div>
                     ))}
                     <div style={{ display: 'flex', justifyContent: 'center' }}>
-                        <p className='add-step' onClick={handleAddStep} style={{ }}> <strong> add step </strong> </p> </div>
+                        <p className='add-step' onClick={handleAddStep} style={{}}> <strong> add step </strong> </p> </div>
                 </div>
                 <hr style={{ width: '80%', margin: '10px auto' }} />
 
