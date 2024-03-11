@@ -9,7 +9,7 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
     const [taskName, setTaskName] = useState('');
     const { addTodo } = useTodoContext();
     const inputRef = useRef(null);
-
+    const [errorMessage, setErrorMessage] = useState('');
 /*     useEffect(() => {
         console.log("isOpen: ", isOpen);
         console.log("inputRef: ", inputRef);
@@ -20,23 +20,27 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
 
     const handleInputChange = (event) => {
         setTaskName(event.target.value);
+        setErrorMessage('');
     };
 
     const handleSubmit = () => {
         console.log("Task name: ", taskName);
         if(!taskName.trim()) {
-            alert("Task name cannot be empty");
+            setErrorMessage('Task name cannot be empty');
             return;
         }
 
         addTodo(taskName);
         setTaskName('');
         onRequestClose();
+        setErrorMessage('');
     }
 
     const handleKeyPress = (e) => {
         if(e.key === 'Enter'){
             handleSubmit();
+            onrejectionhandled();
+            setErrorMessage('');
         }
     }
 
@@ -61,6 +65,7 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
                 onKeyDownCapture={handleKeyPress}
                 autoFocus
             />
+             {errorMessage && <p className="error">{errorMessage}</p>}
             <button onClick={handleSubmit} className='modal-button'> Submit </button>
         </ReactModal>
 

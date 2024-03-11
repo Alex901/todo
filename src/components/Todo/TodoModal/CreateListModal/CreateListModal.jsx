@@ -8,19 +8,21 @@ ReactModal.setAppElement('#root');
 const CreateListModal = ({ isOpen, onRequestClose }) => {
   const [listName, setListName] = useState('');
   const { addList } = useUserContext();
+  const [error, setError] = useState('');
 
   const handleInputChange = (event) => {
     setListName(event.target.value);
+    setError('');
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
     console.log("List name: ", listName);
     if(!listName.trim()) {
-      alert("List name cannot be empty");
+      setError('List name cannot be empty');
       return;
     }
-
+    setError('');
     addList(listName);
     setListName('');
     onRequestClose();
@@ -41,6 +43,7 @@ const CreateListModal = ({ isOpen, onRequestClose }) => {
       className="modal-content"
       overlayClassName="modal-overlay"
       shouldCloseOnOverlayClick={true}
+      onChange={handleInputChange}
     >
       <div className='modalTitle'> <h3 className="title"> Create list </h3></div>
 
@@ -54,6 +57,7 @@ const CreateListModal = ({ isOpen, onRequestClose }) => {
           onKeyDownCapture={handleKeyPress}
           autoFocus
         />
+        {error && <p className='error'>{error}</p>}
         <button type="submit" className='modal-button'> Submit </button>
       </form>
     </ReactModal>
