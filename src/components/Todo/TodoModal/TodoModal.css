@@ -10,7 +10,7 @@
 }
 
 .modal-content {
-    width: 400px;
+    width: 00px;
     position: absolute;
     top: 50%;
     left: 50%;
@@ -24,11 +24,21 @@
 }
 
 
-.modal-input {
-    width:70%;
-    height: 36px;
+.create-modal-input {
+    width:100%;
+    height: 30px;
     border-radius: 5px;
     border: 1px solid black;
+    margin: 8px;
+    border-radius: 10px;
+}
+
+.create-modal-input-description {
+    width:100%;
+    border-radius: 5px;
+    border: 1px solid black;
+    margin: 8px;
+    border-radius: 10px;
 }
 
 .modal-button {
@@ -44,3 +54,29 @@
   background-color: #26783a;
   color: white;
 }
+
+.create-entry-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.create-entry-form.modal-input {
+    width: 10;
+}
+
+.add-step {
+    margin:8px;
+    color: #827ea3;
+    transition: transform 0.2s ease-in-out;
+}
+
+.add-step:hover {
+    transform: scale(1.3);
+    color: black;
+}
+
+.add-step:active {
+    transform: scale(1.1);
+    color: rgb(55, 30, 218);
+  }
