@@ -63,8 +63,7 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
             return;
         }
 
-        // addTodo(taskName);
-
+        addTodo(newTaskData);
         onRequestClose();
         setErrorMessage('');
     }
@@ -123,6 +122,7 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
                     onKeyDownCapture={handleKeyPress}
                     autoFocus
                     maxLength={30}
+                    name='taskName'
                 />
                 <textarea
                     placeholder='Enter task description(optional)'
@@ -130,11 +130,12 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
                     rows={3}
                     className='create-modal-input-description'
                     onChange={handleInputChange}
+                    name="description"
                 // Add your onChange handler here
                 />
-                <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginBottom: '10px',     width: '-webkit-fill-available' }}>
-                    <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginRight: '20px' }}>
-                        <label htmlFor='priority' style={{ marginRight: '10px' }}>Priority</label>
+                <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'left', marginBottom: '10px',     width: '-webkit-fill-available' }}>
+                    <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'left', marginRight: '20px' }}>
+                        <label htmlFor='priority' style={{ marginRight: '30px' }}>Priority</label>
                         <Select
                             id='priority'
                             options={options}
@@ -147,26 +148,36 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
                                     minHeight: 30,
                                     width: 150,
                                     borderRadius: 10,
+                                    border: '1px solid black',
                                 }),
+                                singleValue: (provided) => ({
+                                    ...provided,
+                                    textAlign: 'center',
+                                    margin: '0 auto',
+                                    padding: '0'
+                                  }),
+                                  
                             }}
                         />
                     </div>
-                    <div style={{ display: 'flex', alignItems: 'center', width: '100%' }}>
+                    <div className="checkbox-container" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%' }}>
                         <label htmlFor='urgent' style={{ marginRight: '10px' }}>Urgent?</label>
-                        <input type='checkbox' id='urgent' name='urgent' onChange={handleCheckboxChange} />
+                        <input type='checkbox' id='isUrgent' name='isUrgent' onChange={handleCheckboxChange} />
                     </div>
                 </div>
-                <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'left' }}>
+                <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
                     <label style={{ marginRight: '10px' }}>Deadline</label>
                     <input
                         type='datetime-local'
-                        className='modal-input'
+                        className='modal-input-date'
                         onChange={handleInputChange}
+                        name='dueDate'
+                        style={{  width: '200px' }}
                     />
                 </div>
                 <hr style={{ width: '80%', margin: '10px auto' }} />
 
-                <div className='steps' style={{ width: '100%', justifyContent: 'center' }}>
+                <div className='steps' style={{ width: '100%', justifyContent: 'left' }}>
                     {newTaskData.steps.map(step => (
                         <div key={step.id} style={{ display: 'flex', flexDirection: 'row' }}>
                             <label style={{ display: 'flex', alignItems: 'center' }}>{`Step${step.id}`}</label>

@@ -26,7 +26,16 @@
 
 .create-modal-input {
     width:100%;
-    height: 30px;
+    height: 36px;
+    border-radius: 5px;
+    border: 1px solid black;
+    margin: 8px;
+    border-radius: 10px;
+}
+
+.modal-input-date{
+    width:100%;
+    height: 36px;
     border-radius: 5px;
     border: 1px solid black;
     margin: 8px;
