@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import ReactModal from 'react-modal';
 import './TodoModal.css'
 import { useTodoContext } from '../../../contexts/todoContexts';
+import { useUserContext } from '../../../contexts/UserContext';
 import Select from 'react-select'
 
 ReactModal.setAppElement('#root');
@@ -10,6 +11,7 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
     const [taskName, setTaskName] = useState('');
     const { addTodo } = useTodoContext();
     const [errorMessage, setErrorMessage] = useState('');
+    const { isLoggedIn } = useUserContext();
     const options = [
         { value: 'VERY LOW', label: 'VERY LOW' },
         { value: 'LOW', label: 'LOW' },
@@ -18,18 +20,28 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
         { value: 'VERY HIGH', label: 'VERY HIGH' }
     ];
 
+    const optionsDiff = [
+        { value: 'VERY EASY', label: 'VERY EASY' },
+        { value: 'EASY', label: 'EASY' },
+        { value: 'NORMAL', label: 'NORMAL' },
+        { value: 'HARD', label: 'HARD' },
+        { value: 'VERY HARD', label: 'VERY HARD' },
+    ];
+
+
     const [newTaskData, setNewTaskData] = useState({
         taskName: '',
         description: '',
-        priority: options[2], //preselect 'NORMAL'
+        priority: '',
         isUrgent: false,
         dueDate: null,
-        steps: []
+        steps: [],
+        difficulty: "",
+        estimatedTime: 0,
+
     });
 
     const handleInputChange = (event) => {
-        console.log("TodoModal -> handleInputChange -> newTaskData", newTaskData);
-        console.log("TodoModal -> handleInputChange -> event", event.target.value);
         setNewTaskData({
             ...newTaskData,
             [event.target.name]: event.target.value,
@@ -38,8 +50,6 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
     };
 
     const handleCheckboxChange = (event) => {
-        console.log("TodoModal -> handleInputChange -> newTaskData", newTaskData);
-        console.log("TodoModal -> handleInputChange -> event", event.target.checked);
         setNewTaskData({
             ...newTaskData,
             [event.target.name]: event.target.checked,
@@ -47,8 +57,6 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
     };
 
     const handleSelectChange = (selectedOption) => {
-        console.log("TodoModal -> handleInputChange -> newTaskData", newTaskData);
-        console.log("TodoModal -> handleInputChange -> event", event.target.value);
         setNewTaskData({
             ...newTaskData,
             priority: selectedOption.value,
@@ -57,12 +65,12 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
 
 
     const handleSubmit = () => {
+        event.preventDefault();
         console.log("TodoModal -> newTaskData", newTaskData);
-        if (!taskName.trim()) {
+        if (!newTaskData.taskName.trim()) {
             setErrorMessage('You need to enter a task name');
             return;
         }
-
         addTodo(newTaskData);
         onRequestClose();
         setErrorMessage('');
@@ -78,14 +86,14 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
 
     const handleAddStep = () => {
         console.log("newTaskData.steps.length: ", newTaskData.steps.length);
-        if (newTaskData.steps.length < 5) {
+        if (newTaskData.steps.length < 10) {
             console.log("prevData add step: ")
             setNewTaskData(prevData => ({
                 ...prevData,
                 steps: [...prevData.steps, { id: prevData.steps.length + 1, taskName: '', isDone: false }]
             }));
         } else {
-            setErrorMessage('You can only add 5 steps');
+            setErrorMessage('You can only add 10 steps');
             setTimeout(() => { setErrorMessage('') }, 5000);
             return;
         }
@@ -98,6 +106,13 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
                 step.id === id ? { ...step, taskName: event.target.value } : step
             ),
         }));
+    };
+
+    const handleDiffChange = (selectedOption) => {
+        setNewTaskData({
+            ...newTaskData,
+            difficulty: selectedOption.value,
+        });
     };
 
 
@@ -121,7 +136,7 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
                     className='create-modal-input'
                     onKeyDownCapture={handleKeyPress}
                     autoFocus
-                    maxLength={30}
+                    maxLength={60}
                     name='taskName'
                 />
                 <textarea
@@ -133,13 +148,17 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
                     name="description"
                 // Add your onChange handler here
                 />
-                <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'left', marginBottom: '10px',     width: '-webkit-fill-available' }}>
-                    <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'left', marginRight: '20px' }}>
+                <hr style={{ width: '80%', margin: '10px auto' }} />
+                <div style={{
+                    display: 'flex', flexDirection: 'row', alignItems: 'center',
+                    marginBottom: '10px', width: '-webkit-fill-available'
+                }}>
+                    <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginRight: '20px' }}>
                         <label htmlFor='priority' style={{ marginRight: '30px' }}>Priority</label>
                         <Select
                             id='priority'
                             options={options}
-                            defaultValue={options[2]} // Preselect 'NORMAL'
+                            defaultValue='' // Preselect 'NORMAL'
                             onChange={handleSelectChange}
                             styles={{
                                 control: (provided) => ({
@@ -155,24 +174,62 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
                                     textAlign: 'center',
                                     margin: '0 auto',
                                     padding: '0'
-                                  }),
-                                  
+                                }),
+
                             }}
                         />
                     </div>
+
                     <div className="checkbox-container" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%' }}>
                         <label htmlFor='urgent' style={{ marginRight: '10px' }}>Urgent?</label>
                         <input type='checkbox' id='isUrgent' name='isUrgent' onChange={handleCheckboxChange} />
                     </div>
                 </div>
-                <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center', width: '100%' }}>
+                <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'left', width: '100%' }}>
                     <label style={{ marginRight: '10px' }}>Deadline</label>
                     <input
                         type='datetime-local'
                         className='modal-input-date'
                         onChange={handleInputChange}
                         name='dueDate'
-                        style={{  width: '200px' }}
+                        style={{ width: '200px', textAlign: 'center' }}
+                    />
+                </div>
+
+                <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'left', width: '100%' }}>
+                    <label style={{ marginRight: '10px', textAlign: '' }}>Est. Time</label>
+                    <input
+                        type='number'
+                        className='modal-input-date'
+                        onChange={handleInputChange}
+                        name='difficulty'
+                        style={{ width: '200px', textAlign: 'center' }}
+                        placeholder='Estimated duration (hours)'
+                        min='0'
+                    />
+                </div>
+
+                <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'left', width: '100%' }}>
+                    <label style={{ marginRight: '22px', textAlign: '' }}>Difficulty</label>
+                    <Select
+                        options={optionsDiff}
+                        onChange={handleDiffChange} // replace with your own handler
+                        styles={{
+                            control: (provided) => ({
+                                ...provided,
+                                height: 36,
+                                minHeight: 36,
+                                width: 150,
+                                borderRadius: 10,
+                                border: '1px solid black',
+                            }),
+                            singleValue: (provided) => ({
+                                ...provided,
+                                textAlign: 'center',
+                                margin: '0 auto',
+                                padding: '0'
+                            }),
+                        }}
                     />
                 </div>
                 <hr style={{ width: '80%', margin: '10px auto' }} />
@@ -182,16 +239,17 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
                         <div key={step.id} style={{ display: 'flex', flexDirection: 'row' }}>
                             <label style={{ display: 'flex', alignItems: 'center' }}>{`Step${step.id}`}</label>
                             <input className='create-modal-input' type='text' placeholder={`Enter subTask`}
-                                onChange={event => handleInputChangeStep(step.id, event)} value={newTaskData.steps[step.id - 1].value} />
+                                onChange={event => handleInputChangeStep(step.id, event)} value={newTaskData.steps[step.id - 1].value} maxLength='50' />
                         </div>
                     ))}
                     <div style={{ display: 'flex', justifyContent: 'center' }}>
                         <p className='add-step' onClick={handleAddStep} style={{}}> <strong> add step </strong> </p> </div>
                 </div>
                 <hr style={{ width: '80%', margin: '10px auto' }} />
+                
 
                 {errorMessage && <p className="error">{errorMessage}</p>}
-                <button onClick={handleSubmit} className='modal-button'> Submit </button>
+                <button className='modal-button'> Submit </button>
             </form>
         </ReactModal>
 

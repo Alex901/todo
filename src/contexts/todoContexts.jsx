@@ -71,7 +71,8 @@ const TodoProvider = ({ children }) => {
     }
   };
 
-  const addTodo = async (task) => {
+  const addTodo = async (newTaskData) => {
+    console.log("addTodo: newTaskData", newTaskData);
     try {
       const newId = parseInt(Date.now().toString(36) + Math.random().toString(36).substr(2), 36); //but why? xD
 
@@ -80,20 +81,21 @@ const TodoProvider = ({ children }) => {
       //TODO: some typesafety here
       const newTodo = {
         id: newId,
-        task,
+        task: newTaskData.taskName,
         isDone: false,
         created: new Date(),
         completed: null,
         isStarted: false,
         started: null,
         owner: loggedInUser ? loggedInUser.username : null, //TODO: _id 
+        difficulty: newTaskData.difficulty || "",
         //  assignee: [...User],
-        steps: [],
+        steps: newTaskData.steps || [],
         priority: "NORMAL",
         //  observers: [...User],
-        dueDate: new Date(), //TODO: rember to change
-        description: null,
-        isUrgent: false, //And this one
+        dueDate: new Date(newTaskData.dueDate) || null, //TODO: remember to parse
+        description: newTaskData.description || null,
+        isUrgent: newTaskData.isUrgent || false, //And this one
         inList: loggedInUser ? ['all'].concat(loggedInUser.activeList !== 'all' ? [loggedInUser.activeList] : []) : []
       };
 
