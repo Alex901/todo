@@ -164,13 +164,13 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
                         className='create-modal-input'
                         onKeyDownCapture={handleKeyPress}
                         autoFocus
-                        maxLength={60}
+                        maxLength={70}
                         name='taskName'
                     />
                     <textarea
                         placeholder='Enter task description(optional)'
-                        maxLength={255}
-                        rows={3}
+                        maxLength={500}
+                        rows={4}
                         className='create-modal-input-description'
                         onChange={handleInputChange}
                         name="description"
@@ -290,13 +290,13 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
                         className='create-modal-input'
                         onKeyDownCapture={handleKeyPress}
                         autoFocus
-                        maxLength={60}
+                        maxLength={1000}
                         name='taskName'
                     />
                     <textarea
                         placeholder='Enter task description(optional)'
-                        maxLength={255}
-                        rows={3}
+                        maxLength={500}
+                        rows={4}
                         className='create-modal-input-description'
                         onChange={handleInputChange}
                         name="description"

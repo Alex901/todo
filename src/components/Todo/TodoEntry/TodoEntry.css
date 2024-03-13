@@ -1,3 +1,12 @@
+/* Todo Colums */
+.todo-columns{
+    display: flex;
+    flex-direction: column;
+    border: 1px solid rgb(200, 187, 187);
+    border-radius: 10px;
+    margin: 2px;
+}
+
 /* TodoEntry */
 .todo-entry {
     background-color: rgb(187, 186, 186);
@@ -6,6 +15,7 @@
     border-radius: 10px;
     margin: 5px;
     display: flex;
+    flex-direction: row;
     align-items: center;
 }
 
@@ -19,6 +29,10 @@
 .done-item,
 .doing-item {
     width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    flex-wrap: wrap;
 }
 
 .done-text {
@@ -85,9 +99,9 @@
     display: flex;
     flex-direction: row;
     justify-content: center;
-    height: auto;
+    height: fit-content;
     align-items: flex-start;
-    margin-top: -25px;
+   
 }
 
 .time-stamp {
@@ -161,4 +175,78 @@
     width: auto;
     height: auto;
     padding: 4px;
+}
+
+.information {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: auto;
+    height: auto;
+}
+/* More Info */
+.more-information {
+    background-color: rgb(187, 186, 186);
+    margin-bottom: 3px;
+    padding: 10px;
+    border-radius: 10px;
+    display: grid;
+    grid-template-columns: 2fr 1fr;
+    align-items: center;
+    align-self: center;
+    width: 90%;
+    gap: 5px;
+}
+
+.more-information p {
+    margin: 0
+}
+
+.steps-container, 
+.description-container {
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    justify-content: center;
+    width: auto;
+    height: 100%;
+    text-align: top;
+    background-color: rgb(205, 205, 209);
+    border-radius: 10px;
+}
+
+.steps-label,
+.description-label {
+padding: 2px
+}
+
+.step-entry {
+    display: flex;
+    align-items: center;
+    margin: 4px;
+    background-color: #eae4e3;
+    border-radius: 10px;
+    padding: 4px;
+
+}
+
+.step-id {
+    margin-right: 10px; /* Adjust this value based on your needs */
+}
+
+.step-name {
+    flex-grow: 1;
+    cursor: pointer;
+}
+
+.step-name:hover {
+    background-color: #f3b3b3;
+    cursor: pointer;
+}
+
+.add-step {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
 }

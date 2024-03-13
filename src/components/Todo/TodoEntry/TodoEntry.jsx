@@ -49,7 +49,7 @@ const TodoEntry = ({ type, todoData, onEdit }) => {
     };
 
     const difficultyIcons = {
-        '' : [mdiCircleOutline, mdiCircleOutline, mdiCircleOutline, mdiCircleOutline, mdiCircleOutline],
+        '': [mdiCircleOutline, mdiCircleOutline, mdiCircleOutline, mdiCircleOutline, mdiCircleOutline],
         'VERY EASY': [mdiCircle, mdiCircleOutline, mdiCircleOutline, mdiCircleOutline, mdiCircleOutline],
         'EASY': [mdiCircle, mdiCircle, mdiCircleOutline, mdiCircleOutline, mdiCircleOutline],
         'NORMAL': [mdiCircle, mdiCircle, mdiCircle, mdiCircleOutline, mdiCircleOutline],
@@ -62,7 +62,7 @@ const TodoEntry = ({ type, todoData, onEdit }) => {
     const { isLoggedIn } = useUserContext();
     const [currentTime, setCurrentTime] = useState(Date.now());
 
-    let isDueSoon = dueDate && ((dueDate.getTime() - new Date().getTime()) < 24*60*60*1000); // less than 24 hours left
+    let isDueSoon = dueDate && ((dueDate.getTime() - new Date().getTime()) < 24 * 60 * 60 * 1000); // less than 24 hours left
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -137,55 +137,80 @@ const TodoEntry = ({ type, todoData, onEdit }) => {
         return `${days}d ${hours}h ${minutes}m ${seconds}s`;
     }
 
-    
+    const handleStepClick = (stepId) => {
+        console.log("Step clicked: ", stepId, todoData._id);
+    }
+
+
 
     //TODO: this is not pretty, make commonTodoEntry component and use it on all cases. 
     //Making changes on three places is not good practice and confusing in the long run.
     if (type === 'todo' && !isDone && !isStarted) {
         // console.log(todoData);
         return (
-          
-            <div className="todo-entry">
-                  {isLoggedIn && (
-                <div className="information-container">
-                    <div className="information-top">
-                {isUrgent && <Icon path={mdiRunFast} size={1} color={'red'} />}
-                <Icon path={priorityIcons[priority]} size={1} />
-                </div>
-                <div className="information-time">
-                <Icon path={mdiClockOutline} size={1} /> {estimatedTime}h
-                </div>
-                <div className="information-dif">
-                {difficultyIcons[difficulty].map((icon, index) => (
-                <Icon key={index} path={icon} size={0.3} />
-            ))}
-                </div>
-                </div>
-                )}
-                <div className="todo-item" onClick={handleClickToStart}>
-                    <div className="time">
-                        <p className="time-stamp"> <strong>Created:</strong> {created.toLocaleDateString()} - {created.toLocaleTimeString()} </p>
-                        {dueDate ? (
-                            <>
-                                <div className="separator"> </div>
-                                <p className={`time-stamp ${isDueSoon ? 'due-soon' : ''}`}> <strong>Deadline:</strong> {dueDate.toLocaleDateString()} - {dueDate.toLocaleTimeString()} </p>
-                            </>
-                        ) : null}
+            <div className="todo-columns">
+                <div className="todo-entry">
+                    {isLoggedIn && (
+                        <div className="information-container">
+                            <div className="information-top">
+                                {isUrgent && <Icon path={mdiRunFast} size={1} color={'red'} />}
+                                <Icon path={priorityIcons[priority]} size={1} />
+                            </div>
+                            <div className="information-time">
+                                <Icon path={mdiClockOutline} size={1} /> {estimatedTime ? `${estimatedTime}h` : '-'}
+                            </div>
+                            <div className="information-dif">
+                                {difficultyIcons[difficulty].map((icon, index) => (
+                                    <Icon key={index} path={icon} size={0.3} />
+                                ))}
+                            </div>
+                        </div>
+                    )}
+                    <div className="todo-item" onClick={handleClickToStart}>
+                        <div className="time">
+                            <p className="time-stamp"> <strong>Created:</strong> {created.toLocaleDateString()} - {created.toLocaleTimeString()} </p>
+                            {dueDate ? (
+                                <>
+                                    <div className="separator"> </div>
+                                    <p className={`time-stamp ${isDueSoon ? 'due-soon' : ''}`}> <strong>Deadline:</strong> {dueDate.toLocaleDateString()} - {dueDate.toLocaleTimeString()} </p>
+                                </>
+                            ) : null}
+                        </div>
+                        <p className="todo-text"> {task}</p>
                     </div>
-                    <p className="todo-text"> {task}</p>
+                    <div className="buttons">
+                        <button className="edit-button entryButton" onClick={handleEdit}>
+                            <i className="material-icons todo-entry-icon">edit</i>
+                        </button>
+                        <button className="deleteButton entryButton" onClick={handleDelete}>
+                            <i className="material-icons todo-entry-icon">delete</i>
+                        </button>
+                        <button className="moreButton entryButton" onClick={handleMoreInfromationClick}>
+                            <i className="material-icons todo-entry-icon"> {isMoreChecked ? "keyboard_arrow_up" : "keyboard_arrow_down"} </i>
+                        </button>
+                    </div>
                 </div>
-                <div className="buttons">
-                    <button className="edit-button entryButton" onClick={handleEdit}>
-                        <i className="material-icons todo-entry-icon">edit</i>
-                    </button>
-                    <button className="deleteButton entryButton" onClick={handleDelete}>
-                        <i className="material-icons todo-entry-icon">delete</i>
-                    </button>
-                    <button className="moreButton entryButton" onClick={handleMoreInfromationClick}>
-                        <i className="material-icons todo-entry-icon"> {isMoreChecked ? "keyboard_arrow_up" : "keyboard_arrow_down"} </i>
-                    </button>
-                    
-                </div>
+                {isMoreChecked && (
+                    <div className={`more-information ${isMoreChecked ? 'open' : ''}`}>
+                        <div className="steps-container">
+                            {steps && steps.length > 0 ? (
+                                steps.map((step, index) => (
+                                    <div key={index} className="step-entry" onClick={() => handleStepClick(step.id)}>
+                                        <p className="step-id">{`Step ${index + 1}`}</p>
+                                        <p className="step-name">{step.taskName}</p>
+                                    </div>
+                                ))
+                            ) : (
+                                <div className="add-step">Add step</div>
+                            )}
+                        </div>
+
+                        <div className="description-container">
+                            <p className="description-label"> <strong>Description </strong> </p>
+                            <p> {description} </p>
+                        </div>
+                    </div>
+                )}
 
                 <ConfirmationModal
                     onRequestClose={cancelConfirm}
@@ -196,9 +221,8 @@ const TodoEntry = ({ type, todoData, onEdit }) => {
                     and "${task}" is estemated to be a difficult task.\n\nAre you sure you wish to proceed?
                     `)}
                 />
+
             </div>
-
-
         )
     } else if (type === 'done' && isDone && isStarted) {
         //This though :'D
