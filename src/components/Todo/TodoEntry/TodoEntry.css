@@ -6,79 +6,73 @@
     padding-left: 20px;
     border-radius: 10px;
     margin: 5px;
-    display: flex; 
+    display: flex;
     align-items: center;
 }
 
 .todo-entry:hover {
-transform: scale(1.02);
-background-color: rgb(102, 98, 92);
-color: white
+    transform: scale(1.02);
+    background-color: rgb(102, 98, 92);
+    color: white
 }
 
-.time {
-    display: flex;
-    justify-content: space-between;
-}
 
-.time-stamp,
-.completed,
-.time-to-complete {
-    margin: 0; /* Reset default margin */
-}
 
-.time-to-complete {
-    padding-right: 10px;
-}
 
-  .entryButton {
-   margin: 1px;
-    width: 32px; 
-    height: 24px; 
-    background-color: #eae4e3; 
+.entryButton {
+    margin: 1px;
+    width: 32px;
+    height: 24px;
+    background-color: #eae4e3;
     border: 1px solid rgba(144, 131, 131, 0.856);
-    cursor: pointer; /* Add cursor pointer */
-    position: relative; /* Position relative for absolute centering */
+    cursor: pointer;
+    /* Add cursor pointer */
+    position: relative;
+    /* Position relative for absolute centering */
     color: #887571;
     display: flex;
     justify-content: center;
     align-items: center;
-  }
+}
 
-  .entryButton:hover{
-    background-color: #f3b3b3; /* Darker green background color on hover */
+.entryButton:hover {
+    background-color: #f3b3b3;
+    /* Darker green background color on hover */
     border: 1px solid rgba(0, 0, 0, 0.856);
     cursor: pointer;
     color: #000000;
-    
-  }
 
-  .buttons {
-    margin-left: auto; /* Add some space between task text and delete button */
-    padding-right: 10px;
-    
 }
 
-.todo-item {
+
+
+.todo-item, .done-item, .doing-item {
     width: 100%;
 }
 
 
-.time-stamp{
-    font-size: x-small;
-}
 
-.separator {
-    border-left: 1px solid rgb(0, 0, 0);
-    margin-left: 10px;
-    margin-right: 10px;
-    height: 10px;
-    align-self: center;
-}
 
-.done-text{
+.done-text {
     text-decoration: line-through;
     margin-left: 40px;
+}
+
+
+
+
+
+.material-icons.todo-entry-icon {
+    width: 24px;
+}
+/* button */
+.moreDoneButton {
+    align-self: self-end;
+}
+
+/* Checkbox */
+.checkbox-and-task p {
+    margin: 0px;
 }
 
 .checkbox-c {
@@ -92,19 +86,41 @@ color: white
     align-items: center;
 }
 
-
 .checkbox-and-task:hover {
     animation: strikethrough 500ms linear;
 }
 
-.moreDoneButton{
-    align-self: self-end;
+/* timestamps */
+.time {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
 }
 
-.material-icons.todo-entry-icon {
-    width: 24px;
+
+.time-stamp,
+.completed,
+.time-to-complete {
+    margin: 0;
 }
 
-.checkbox-and-task p{
-    margin: 0px;
+.time-stamp {
+    font-size: x-small;
+
+}
+
+.separator {
+    border-left: 1px solid rgb(0, 0, 0);
+    margin-left: 10px;
+    margin-right: 10px;
+    height: 10px;
+    align-self: center;
+}
+
+/* ButtonPanel */
+.buttons {
+    margin-left: auto;
+    /* Add some space between task text and delete button */
+    padding-right: 10px;
+
 }

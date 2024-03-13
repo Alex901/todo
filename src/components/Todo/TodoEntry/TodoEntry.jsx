@@ -7,14 +7,27 @@ import { useUserContext } from "../../../contexts/UserContext";
 import { useTodoContext } from "../../../contexts/todoContexts";
 
 const TodoEntry = ({ type, todoData, onEdit }) => {
-    const { id, isDone, task, created, completed, started, isStarted } = todoData;
+    const { id,
+        task,
+        isDone,
+        created,
+        completed,
+        started,
+        isStarted,
+        updatedAt,
+        description,
+        dueDate,
+        inList,
+        owner,
+        priority,
+        steps } = todoData;
     const [isMoreChecked, setIsMoreChecked] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingTask, setEditingTask] = useState(null);
     const [isChecked, setIsChecked] = useState(false);
 
     //Contexts
-    const { todoList, removeTodo, toggleTodoComplete, toggleTodoStart, getDoingCount, cancelTodo, getActiveListDoingCount } = useTodoContext();
+    const { removeTodo, toggleTodoComplete, toggleTodoStart, getDoingCount, cancelTodo, getActiveListDoingCount } = useTodoContext();
     const { isLoggedIn } = useUserContext();
     const [currentTime, setCurrentTime] = useState(Date.now());
 
@@ -80,9 +93,7 @@ const TodoEntry = ({ type, todoData, onEdit }) => {
         });
 
     const handleAnimationEnd = () => {
-        console.log(isChecked);
         setIsChecked(true);
-        console.log(isChecked)
     };
 
     const formatTime = (seconds) => {
@@ -103,6 +114,12 @@ const TodoEntry = ({ type, todoData, onEdit }) => {
                 <div className="todo-item" onClick={handleClickToStart}>
                     <div className="time">
                         <p className="time-stamp"> <strong>Created:</strong> {created.toLocaleDateString()} - {created.toLocaleTimeString()} </p>
+                        {dueDate ? (
+                            <>
+                                <div className="separator"> </div>
+                                <p className="time-stamp"> <strong>Deadline:</strong> {dueDate.toLocaleDateString()} - {dueDate.toLocaleTimeString()} </p>
+                            </>
+                        ) : null}
                     </div>
                     <p className="todo-text"> {task}</p>
                 </div>
@@ -180,8 +197,14 @@ const TodoEntry = ({ type, todoData, onEdit }) => {
                 <div className="doing-item" onClick={handleClicktoComplete}>
                     <div className="time">
                         <p className="time-stamp"> <strong>Started:</strong> {started.toLocaleDateString()} - {started.toLocaleTimeString()} </p>
+                        {dueDate ? (
+                            <>
+                                <div className="separator"> </div>
+                                <p className="time-stamp"> <strong>Deadline:</strong> {dueDate.toLocaleDateString()} - {dueDate.toLocaleTimeString()} </p>
+                            </>
+                        ) : null}
                         <div className="separator"> </div>
-                        <p className="time-stamp times-pent"> <strong>Time spent:</strong> { formatTime(Math.floor((currentTime - started) / 1000))} </p>
+                        <p className="time-stamp"> <strong>Time spent:</strong> {formatTime(Math.floor((currentTime - started) / 1000))} </p>
                     </div>
                     <div className="checkbox-and-task">
                         <input className="checkbox-c doing-checkbox" type="checkbox" checked={isChecked} readOnly />
@@ -211,13 +234,26 @@ const TodoEntry = ({ type, todoData, onEdit }) => {
 
 TodoEntry.propTypes = {
     todoData: PropTypes.shape({
+        _id: PropTypes.string.isRequired,
         id: PropTypes.number.isRequired,
         task: PropTypes.string.isRequired,
         isDone: PropTypes.bool.isRequired,
         created: PropTypes.instanceOf(Date).isRequired,
         completed: PropTypes.instanceOf(Date),
-        sterted: PropTypes.instanceOf(Date),
-        IsStarted: PropTypes.bool
+        started: PropTypes.instanceOf(Date),
+        isStarted: PropTypes.bool,
+        updatedAt: PropTypes.instanceOf(Date),
+        description: PropTypes.string,
+        dueDate: PropTypes.instanceOf(Date),
+        inList: PropTypes.arrayOf(PropTypes.string),
+        owner: PropTypes.string,
+        priority: PropTypes.string,
+        steps: PropTypes.arrayOf(PropTypes.shape({
+            _id: PropTypes.string.isRequired,
+            taskName: PropTypes.string.isRequired,
+            isDone: PropTypes.bool.isRequired,
+            id: PropTypes.number.isRequired,
+        })),
     }).isRequired,
     type: PropTypes.string.isRequired,
 };

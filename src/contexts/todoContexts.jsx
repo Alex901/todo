@@ -93,7 +93,7 @@ const TodoProvider = ({ children }) => {
         steps: newTaskData.steps || [],
         priority: "NORMAL",
         //  observers: [...User],
-        dueDate: new Date(newTaskData.dueDate) || null, //TODO: remember to parse
+        dueDate: newTaskData.dueDate ? new Date(newTaskData.dueDate) : null, //TODO: remember to parse
         description: newTaskData.description || null,
         isUrgent: newTaskData.isUrgent || false, //And this one
         inList: loggedInUser ? ['all'].concat(loggedInUser.activeList !== 'all' ? [loggedInUser.activeList] : []) : []

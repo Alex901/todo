@@ -42,9 +42,11 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
     });
 
     const handleInputChange = (event) => {
+        let value = event.target.value;
+
         setNewTaskData({
             ...newTaskData,
-            [event.target.name]: event.target.value,
+            [event.target.name]: value,
         });
         setErrorMessage('');
     };
@@ -78,10 +80,24 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
             setErrorMessage('You need to enter all step names');
             return;
         }
-
+        console.log("newTaskData.dueDate: ", newTaskData.dueDate);
+     /*    if (newTaskData.dueDate ===) {
+            newTaskData.dueDate = null;
+        }
+ */
         addTodo(newTaskData);
         onRequestClose();
         setErrorMessage('');
+        setNewTaskData({
+            taskName: '',
+            description: '',
+            priority: '',
+            isUrgent: false,
+            dueDate: null,
+            steps: [],
+            difficulty: "",
+            estimatedTime: 0,
+        });
     }
 
     const handleKeyPress = (e) => {
