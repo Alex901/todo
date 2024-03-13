@@ -13,11 +13,11 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
     const [errorMessage, setErrorMessage] = useState('');
     const { isLoggedIn } = useUserContext();
     const options = [
-        { value: 'VERY LOW', label: 'VERY LOW' },
-        { value: 'LOW', label: 'LOW' },
-        { value: 'NORMAL', label: 'NORMAL' },
+        { value: 'VERY HIGH', label: 'VERY HIGH' },
         { value: 'HIGH', label: 'HIGH' },
-        { value: 'VERY HIGH', label: 'VERY HIGH' }
+        { value: 'NORMAL', label: 'NORMAL' },
+        { value: 'LOW', label: 'LOW' },
+        { value: 'VERY LOW', label: 'VERY LOW' }
     ];
 
     const optionsDiff = [
@@ -84,7 +84,8 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
      /*    if (newTaskData.dueDate ===) {
             newTaskData.dueDate = null;
         }
- */
+ */ 
+        console.log("newTaskData.dueDate: ", newTaskData.dueDate);
         addTodo(newTaskData);
         onRequestClose();
         setErrorMessage('');
@@ -96,7 +97,7 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
             dueDate: null,
             steps: [],
             difficulty: "",
-            estimatedTime: 0,
+            estimatedTime: null,
         });
     }
 
@@ -219,7 +220,7 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
                             className='modal-input-date'
                             onChange={handleInputChange}
                             name='dueDate'
-                            style={{ width: '200px', textAlign: 'center' }}
+                            style={{ width: '200px', height:'36px', textAlign: 'center' }}
                         />
                     </div>
 
@@ -229,8 +230,8 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
                             type='number'
                             className='modal-input-date'
                             onChange={handleInputChange}
-                            name='difficulty'
-                            style={{ width: '200px', textAlign: 'center' }}
+                            name='estimatedTime'
+                            style={{ width: '200px', height: '35px', textAlign: 'center' }}
                             placeholder='Estimated duration (hours)'
                             min='0'
                             
@@ -245,9 +246,9 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
                             styles={{
                                 control: (provided) => ({
                                     ...provided,
-                                    height: 36,
+                                    height: 40,
                                     minHeight: 36,
-                                    width: '200px',
+                                    width: '208px',
                                     borderRadius: 10,
                                     border: '1px solid black',
                                     marginLeft: '8px'

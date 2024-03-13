@@ -47,6 +47,10 @@ const TodoProvider = ({ children }) => {
   //API functions
 
   const fetchTodoList = async () => {
+ /*    if (loggedInUser.username === 'Alzner') {
+      console.log("Updating database");
+      updateDatabase();
+    } */
     try {
       const response = await axios.get(`${BASE_URL}/api/todos`);
       let parsedData = response.data.map(todo => ({
@@ -86,12 +90,13 @@ const TodoProvider = ({ children }) => {
         created: new Date(),
         completed: null,
         isStarted: false,
+        estimatedTime: newTaskData.estimatedTime || null,
         started: null,
         owner: loggedInUser ? loggedInUser.username : null, //TODO: _id 
         difficulty: newTaskData.difficulty || "",
         //  assignee: [...User],
         steps: newTaskData.steps || [],
-        priority: "NORMAL",
+        priority: newTaskData.priority || "NORMAL",
         //  observers: [...User],
         dueDate: newTaskData.dueDate ? new Date(newTaskData.dueDate) : null, //TODO: remember to parse
         description: newTaskData.description || null,
@@ -281,10 +286,12 @@ const TodoProvider = ({ children }) => {
         owner: 'Alzner',
         steps: [],
         dueDate: new Date(),
-        inList: ['all'],
+        inList: ['all', 'TaskForge'],
         isUrgent: false,
         priority: 'NORMAL',
-        description: null
+        description: null,
+        difficulty: 'EASY',
+        estimatedTime: null,
       };
 
       const response = await axios.patch(`${BASE_URL}/api/update`, updatedData);

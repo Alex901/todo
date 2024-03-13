@@ -5,6 +5,16 @@ import TodoModal from "../TodoModal/TodoModal";
 import ConfirmationModal from "../TodoModal/ConfirmationModal/ConfirmationModal";
 import { useUserContext } from "../../../contexts/UserContext";
 import { useTodoContext } from "../../../contexts/todoContexts";
+import { mdiRunFast } from '@mdi/js';
+import { mdiArrowDownBold } from '@mdi/js';
+import { mdiArrowDownThin } from '@mdi/js';
+import { mdiArrowUpBold } from '@mdi/js';
+import { mdiArrowUpThin } from '@mdi/js';
+import { mdiMinus } from '@mdi/js';
+import { mdiCircleOutline } from '@mdi/js';
+import { mdiClockOutline } from '@mdi/js';
+import { mdiCircle } from '@mdi/js';
+import Icon from '@mdi/react';
 
 const TodoEntry = ({ type, todoData, onEdit }) => {
     const { id,
@@ -16,20 +26,43 @@ const TodoEntry = ({ type, todoData, onEdit }) => {
         isStarted,
         updatedAt,
         description,
+        difficulty,
         dueDate,
+        isUrgent,
         inList,
         owner,
         priority,
-        steps } = todoData;
+        steps,
+        estimatedTime } = todoData;
     const [isMoreChecked, setIsMoreChecked] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingTask, setEditingTask] = useState(null);
     const [isChecked, setIsChecked] = useState(false);
 
+    //Icon mapping
+    const priorityIcons = {
+        'VERY HIGH': mdiArrowUpBold,
+        'HIGH': mdiArrowUpThin,
+        'NORMAL': mdiMinus,
+        'LOW': mdiArrowDownThin,
+        'VERY LOW': mdiArrowDownBold,
+    };
+
+    const difficultyIcons = {
+        '' : [mdiCircleOutline, mdiCircleOutline, mdiCircleOutline, mdiCircleOutline, mdiCircleOutline],
+        'VERY EASY': [mdiCircle, mdiCircleOutline, mdiCircleOutline, mdiCircleOutline, mdiCircleOutline],
+        'EASY': [mdiCircle, mdiCircle, mdiCircleOutline, mdiCircleOutline, mdiCircleOutline],
+        'NORMAL': [mdiCircle, mdiCircle, mdiCircle, mdiCircleOutline, mdiCircleOutline],
+        'HARD': [mdiCircle, mdiCircle, mdiCircle, mdiCircle, mdiCircleOutline],
+        'VERY HARD': [mdiCircle, mdiCircle, mdiCircle, mdiCircle, mdiCircle],
+    };
+
     //Contexts
     const { removeTodo, toggleTodoComplete, toggleTodoStart, getDoingCount, cancelTodo, getActiveListDoingCount } = useTodoContext();
     const { isLoggedIn } = useUserContext();
     const [currentTime, setCurrentTime] = useState(Date.now());
+
+    let isDueSoon = dueDate && ((dueDate.getTime() - new Date().getTime()) < 24*60*60*1000); // less than 24 hours left
 
     useEffect(() => {
         const interval = setInterval(() => {
@@ -104,20 +137,38 @@ const TodoEntry = ({ type, todoData, onEdit }) => {
         return `${days}d ${hours}h ${minutes}m ${seconds}s`;
     }
 
+    
+
     //TODO: this is not pretty, make commonTodoEntry component and use it on all cases. 
     //Making changes on three places is not good practice and confusing in the long run.
     if (type === 'todo' && !isDone && !isStarted) {
         // console.log(todoData);
         return (
+          
             <div className="todo-entry">
-
+                  {isLoggedIn && (
+                <div className="information-container">
+                    <div className="information-top">
+                {isUrgent && <Icon path={mdiRunFast} size={1} color={'red'} />}
+                <Icon path={priorityIcons[priority]} size={1} />
+                </div>
+                <div className="information-time">
+                <Icon path={mdiClockOutline} size={1} /> {estimatedTime}h
+                </div>
+                <div className="information-dif">
+                {difficultyIcons[difficulty].map((icon, index) => (
+                <Icon key={index} path={icon} size={0.3} />
+            ))}
+                </div>
+                </div>
+                )}
                 <div className="todo-item" onClick={handleClickToStart}>
                     <div className="time">
                         <p className="time-stamp"> <strong>Created:</strong> {created.toLocaleDateString()} - {created.toLocaleTimeString()} </p>
                         {dueDate ? (
                             <>
                                 <div className="separator"> </div>
-                                <p className="time-stamp"> <strong>Deadline:</strong> {dueDate.toLocaleDateString()} - {dueDate.toLocaleTimeString()} </p>
+                                <p className={`time-stamp ${isDueSoon ? 'due-soon' : ''}`}> <strong>Deadline:</strong> {dueDate.toLocaleDateString()} - {dueDate.toLocaleTimeString()} </p>
                             </>
                         ) : null}
                     </div>
@@ -133,6 +184,7 @@ const TodoEntry = ({ type, todoData, onEdit }) => {
                     <button className="moreButton entryButton" onClick={handleMoreInfromationClick}>
                         <i className="material-icons todo-entry-icon"> {isMoreChecked ? "keyboard_arrow_up" : "keyboard_arrow_down"} </i>
                     </button>
+                    
                 </div>
 
                 <ConfirmationModal
@@ -242,12 +294,15 @@ TodoEntry.propTypes = {
         completed: PropTypes.instanceOf(Date),
         started: PropTypes.instanceOf(Date),
         isStarted: PropTypes.bool,
-        updatedAt: PropTypes.instanceOf(Date),
+        updatedAt: PropTypes.string,
         description: PropTypes.string,
         dueDate: PropTypes.instanceOf(Date),
         inList: PropTypes.arrayOf(PropTypes.string),
         owner: PropTypes.string,
         priority: PropTypes.string,
+        isUrgent: PropTypes.bool,
+        difficulty: PropTypes.string,
+        estimatedTime: PropTypes.number,
         steps: PropTypes.arrayOf(PropTypes.shape({
             _id: PropTypes.string.isRequired,
             taskName: PropTypes.string.isRequired,

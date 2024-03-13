@@ -1,9 +1,8 @@
+/* TodoEntry */
 .todo-entry {
     background-color: rgb(187, 186, 186);
     margin-bottom: 3px;
-    text-align: left;
-    padding: 2px;
-    padding-left: 20px;
+    padding: 10px;
     border-radius: 10px;
     margin: 5px;
     display: flex;
@@ -16,8 +15,25 @@
     color: white
 }
 
+.todo-item,
+.done-item,
+.doing-item {
+    width: 100%;
+}
 
+.done-text {
+    text-decoration: line-through;
+    margin-left: 40px;
+}
 
+.material-icons.todo-entry-icon {
+    width: 24px;
+}
+
+/* button */
+.moreDoneButton {
+    align-self: self-end;
+}
 
 .entryButton {
     margin: 1px;
@@ -42,32 +58,6 @@
     cursor: pointer;
     color: #000000;
 
-}
-
-
-
-.todo-item, .done-item, .doing-item {
-    width: 100%;
-}
-
-
-
-
-.done-text {
-    text-decoration: line-through;
-    margin-left: 40px;
-}
-
-
-
-
-
-.material-icons.todo-entry-icon {
-    width: 24px;
-}
-/* button */
-.moreDoneButton {
-    align-self: self-end;
 }
 
 /* Checkbox */
@@ -95,32 +85,80 @@
     display: flex;
     flex-direction: row;
     justify-content: center;
-}
-
-
-.time-stamp,
-.completed,
-.time-to-complete {
-    margin: 0;
+    height: auto;
+    align-items: flex-start;
+    margin-top: -25px;
 }
 
 .time-stamp {
     font-size: x-small;
-
+    line-height: 1;
 }
 
 .separator {
     border-left: 1px solid rgb(0, 0, 0);
     margin-left: 10px;
     margin-right: 10px;
-    height: 10px;
-    align-self: center;
+    height: auto;
+    padding: 5px 0;
+}
+
+.due-soon {
+    color: red;
+    transform: scale(1.1);
+    margin-left: 7px;
 }
 
 /* ButtonPanel */
 .buttons {
-    margin-left: auto;
-    /* Add some space between task text and delete button */
-    padding-right: 10px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
 
+}
+
+/* Information-container */
+
+.information-container {
+    display: flex;
+    flex-direction: column;
+    align-items: left;
+    justify-content: center;
+    width: auto;
+    height: auto;
+}
+
+.information-top {
+    display: flex;
+    flex-direction: row;
+    align-items: left;
+    justify-content: left;
+    width: auto;
+    height: auto;
+}
+
+.information-time {
+    display: flex;
+    flex-direction: row;
+    align-items: left;
+    justify-content: left;
+    width: auto;
+    height: auto;
+    gap: 8px;
+}
+
+.information-container p {
+    font-size: small;
+}
+
+.information-container > * {
+    margin: 4px;
+}
+
+.information-dif {
+    display: flex;
+    flex-direction: row;
+    width: auto;
+    height: auto;
+    padding: 4px;
 }
