@@ -134,19 +134,19 @@ function App() {
                 background: activeView === 'todo' ? '#eaeaef' : '#777474',
                 color: activeView === 'todo' ? 'black' : 'white',
                 flexGrow: '1'
-              }}> todo ({isLoggedIn ? getActiveListTodoCount() : getTodoCount()}) </button>
+              }}> Todo ({isLoggedIn ? getActiveListTodoCount() : getTodoCount()}) </button>
 
               <button className="navButton" onClick={switchDoingView} style={{
                 background: activeView === 'doing' ? '#eaeaef' : '#777474',
                 color: activeView === 'doing' ? 'black' : 'white',
                 flexGrow: '1'
-              }}> doing ({isLoggedIn ? getActiveListDoingCount(): getDoingCount()}) </button>
+              }}> Started ({isLoggedIn ? getActiveListDoingCount(): getDoingCount()}) </button>
 
               <button className="navButton" onClick={switchDoneView} style={{
                 background: activeView === 'done' ? '#eaeaef' : '#777474',
                 color: activeView === 'done' ? 'black' : 'white',
                 flexGrow: '1'
-              }}> done ({isLoggedIn ? getActiveListDoneCount() : getDoneCount()}) </button>
+              }}> Done ({isLoggedIn ? getActiveListDoneCount() : getDoneCount()}) </button>
             </div>
           </div>
 

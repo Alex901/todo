@@ -17,6 +17,10 @@
   cursor: default;
 }
 
+.modal-overlay {
+  z-index: 10;
+}
+
 /* Disable text selection for all elements */
 * {
   user-select: none;
