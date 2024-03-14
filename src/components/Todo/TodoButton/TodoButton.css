@@ -6,11 +6,11 @@
     background-color: #4caf50; 
     cursor: pointer; /* Add cursor pointer */
     position: relative; /* Position relative for absolute centering */
-  
     /* Center the icon */
     display: flex;
     justify-content: center;
     align-items: center;
+    margin: 5px;
   }
   
   .addButton:hover {

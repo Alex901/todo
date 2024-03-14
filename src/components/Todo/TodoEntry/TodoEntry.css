@@ -76,7 +76,10 @@
 
 /* Checkbox */
 .checkbox-and-task p {
-    margin: 0px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
 }
 
 .checkbox-c {
@@ -129,6 +132,10 @@
     flex-direction: column;
     justify-content: space-between;
 
+}
+
+.has-data {
+    border: 1px solid #ffffff; /* Replace #000 with the color you want */
 }
 
 /* Information-container */
@@ -211,8 +218,12 @@
     width: auto;
     height: 100%;
     text-align: top;
-    background-color: rgb(205, 205, 209);
+    background-color: rgb(201, 201, 202);
     border-radius: 10px;
+    padding: 5px;
+}
+
+.description-container p {
 }
 
 .steps-label,
@@ -224,10 +235,9 @@ padding: 2px
     display: flex;
     align-items: center;
     margin: 5px;
-    background-color: #eae4e3;
+    background-color: #e1d7d7;
     border-radius: 10px;
-    padding: 6px;
-
+    padding: 6px;;
 }
 
 .step-entry:hover {
@@ -274,3 +284,4 @@ padding: 2px
     align-self: center;
     width: 90%;
 }
+
