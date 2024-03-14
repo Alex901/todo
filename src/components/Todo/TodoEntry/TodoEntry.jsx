@@ -5,15 +5,19 @@ import TodoModal from "../TodoModal/TodoModal";
 import ConfirmationModal from "../TodoModal/ConfirmationModal/ConfirmationModal";
 import { useUserContext } from "../../../contexts/UserContext";
 import { useTodoContext } from "../../../contexts/todoContexts";
-import { mdiRunFast } from '@mdi/js';
-import { mdiArrowDownBold } from '@mdi/js';
-import { mdiArrowDownThin } from '@mdi/js';
-import { mdiArrowUpBold } from '@mdi/js';
-import { mdiArrowUpThin } from '@mdi/js';
-import { mdiMinus } from '@mdi/js';
-import { mdiCircleOutline } from '@mdi/js';
-import { mdiClockOutline } from '@mdi/js';
-import { mdiCircle } from '@mdi/js';
+import { 
+    mdiRunFast, 
+    mdiArrowDownBold, 
+    mdiArrowDownThin, 
+    mdiArrowUpBold, 
+    mdiArrowUpThin, 
+    mdiMinus, 
+    mdiCircleOutline, 
+    mdiClockOutline, 
+    mdiCircle, 
+    mdiRewind, 
+    mdiPlay
+} from '@mdi/js';
 import Icon from '@mdi/react';
 
 const TodoEntry = ({ type, todoData, onEdit }) => {
@@ -154,7 +158,7 @@ const TodoEntry = ({ type, todoData, onEdit }) => {
                         <div className="information-container">
                             <div className="information-top">
                                 {isUrgent && <Icon path={mdiRunFast} size={1} color={'red'} />}
-                                <Icon path={priorityIcons[priority]} size={1} />
+                                <Icon path={priorityIcons[priority]} size={priority === 'NORMAL' ? 0.7 : 1} />
                             </div>
                             <div className="information-time">
                                 <Icon path={mdiClockOutline} size={1} /> {estimatedTime ? `${estimatedTime}h` : '-'}
@@ -213,7 +217,9 @@ const TodoEntry = ({ type, todoData, onEdit }) => {
                         <div className="description-container">
                             <p className="description-label"> <strong>Description </strong> </p>
                             <p> {description} </p>
+                            
                         </div>
+                        
                     </div>
                 )}
 
