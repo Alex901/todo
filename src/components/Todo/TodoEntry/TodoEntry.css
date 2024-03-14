@@ -223,11 +223,18 @@ padding: 2px
 .step-entry {
     display: flex;
     align-items: center;
-    margin: 4px;
+    margin: 5px;
     background-color: #eae4e3;
     border-radius: 10px;
-    padding: 4px;
+    padding: 6px;
 
+}
+
+.step-entry:hover {
+    transform: scale(1.05);
+    background-color: rgb(102, 98, 92);
+    color: white;
+    cursor: pointer;
 }
 
 .step-id {
@@ -239,14 +246,31 @@ padding: 2px
     cursor: pointer;
 }
 
-.step-name:hover {
-    background-color: #f3b3b3;
-    cursor: pointer;
-}
-
 .add-step {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100%;
+}
+
+.more-information-loggedOut-message {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100%;
+    text-align: center;
+    width: 100%;
+    padding: 10px;
+}
+
+.more-information-loggedOut{
+    background-color: rgb(187, 186, 186);
+    margin-bottom: 3px;
+    padding: 10px;
+    border-radius: 10px;
+    display: flex;
+    flex: column;
+    align-items: center;
+    align-self: center;
+    width: 90%;
 }

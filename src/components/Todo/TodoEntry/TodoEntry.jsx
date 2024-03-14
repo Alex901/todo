@@ -190,24 +190,35 @@ const TodoEntry = ({ type, todoData, onEdit }) => {
                         </button>
                     </div>
                 </div>
-                {isMoreChecked && (
+                {isMoreChecked && isLoggedIn && (
                     <div className={`more-information ${isMoreChecked ? 'open' : ''}`}>
                         <div className="steps-container">
                             {steps && steps.length > 0 ? (
-                                steps.map((step, index) => (
-                                    <div key={index} className="step-entry" onClick={() => handleStepClick(step.id)}>
-                                        <p className="step-id">{`Step ${index + 1}`}</p>
-                                        <p className="step-name">{step.taskName}</p>
-                                    </div>
-                                ))
+                                <>
+                                    {steps.map((step, index) => (
+                                        <div key={index} className="step-entry" onClick={() => handleStepClick(step.id)}>
+                                            <p className="step-id"><strong>{`Step ${index + 1}`}</strong></p>
+                                            <p className="step-name">{step.taskName}</p>
+                                        </div>
+                                    ))}
+                                    <p className="add-step" style={{ margin: '12px' }}><strong>Add another step</strong></p>
+                                </>
                             ) : (
-                                <div className="add-step">Add step</div>
+                                <div className="add-step"><strong>Add step</strong></div>
                             )}
                         </div>
 
                         <div className="description-container">
                             <p className="description-label"> <strong>Description </strong> </p>
                             <p> {description} </p>
+                        </div>
+                    </div>
+                )}
+
+                {isMoreChecked && !isLoggedIn && (
+                    <div className={`more-information-loggedOut ${isMoreChecked ? 'open' : ''}`}>
+                        <div className="more-information-loggedOut-message">
+                            <p> <strong>Log in to access this feature </strong> </p>
                         </div>
                     </div>
                 )}
