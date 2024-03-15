@@ -16,7 +16,8 @@ import {
     mdiClockOutline, 
     mdiCircle, 
     mdiRewind, 
-    mdiPlay
+    mdiPlay,
+    mdiCancel
 } from '@mdi/js';
 import Icon from '@mdi/react';
 
@@ -371,12 +372,13 @@ const TodoEntry = ({ type, todoData, onEdit }) => {
                             <p className="doing-text" onAnimationEnd={handleAnimationEnd}> {task} </p>
                         </div>
                     </div>
+                    
                     <div className="buttons">
                         <button className="deleteButton entryButton" onClick={handleDelete} >
                             <i className="material-icons todo-entry-icon">delete</i>
                         </button>
                         <button className="entryButton" onClick={handleCancel} title="cancel task">
-                            <i className="material-icons todo-entry-icon">close_small</i>
+                            <i className="material-icons todo-entry-icon">keyboard_backspace</i>
                         </button>
                         <button className="entryButton" onClick={handleMoreInfromationClick}>
                             <i className="material-icons todo-entry-icon"> {isMoreChecked ? "keyboard_arrow_up" : "keyboard_arrow_down"} </i>
