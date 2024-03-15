@@ -52,3 +52,21 @@
   background-color: #26783a;
   color: white;
 }
+
+.add-list-button {
+    margin: 5px;
+    background-color: #5045c8;
+    height: auto;
+    color: #ffffff;
+    cursor: pointer;
+    border: 1px solid black;
+    margin-left: 3px;
+    bottom: 0;
+}
+
+.add-list-button:hover {
+    background-color: #5045c8;
+    color: #ffffff;
+    cursor: pointer;
+    transform: scale(1.1);
+}

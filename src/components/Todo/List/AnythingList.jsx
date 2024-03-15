@@ -31,6 +31,7 @@ const AnythingList = ({ type }) => {
     }
 
     const handleEdit = (taskData) => {
+        console.log('editData', taskData)
         setEditingTask(taskData);
         setIsEditModalOpen(true);
     }

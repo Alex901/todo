@@ -90,4 +90,11 @@
     color: rgb(55, 30, 218);
   }
 
+  /* Form */
+.edit-entry-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
   
