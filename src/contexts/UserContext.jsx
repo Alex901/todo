@@ -1,6 +1,7 @@
 //At least i got the naming right this time!!!
 import React, { createContext, useContext, useState, useEffect } from "react";
 import axios from "axios";
+import Cookies from 'js-cookie';
 import { useTodoContext } from "./todoContexts";
 
 const UserContext = createContext();
@@ -27,46 +28,50 @@ const UserProvider = ({ children }) => {
         //and set user data
     }
 
-    const login = async (userData) => {
-        //try to authenticate user here
-        //!! - on login fail, dont exit modal, show error message
-        //if successful, grab user data from server
-        //and set user data
-        try {
-            const response = await axios.post(`${BASE_URL}/auth/login`, userData);
-            //console.log("response: ", response);
+    const login = (userData) => {
+        axios.post(`${BASE_URL}/auth/login`, userData, { 
+            withCredentials: true 
+        })
+        .then(response => {
             if (response.status === 200) {
-                // console.log("User authenticated, loading user data");
-
-                const userResponse = await axios.get(`${BASE_URL}/users/${userData.username}`);
-                console.log("userResponse: ", userResponse);
-                if (userResponse.status === 200) {
-
-                    setLoggedInUser(userResponse.data);
-                    console.log("User data loaded", loggedInUser);
-                    setIsLoggedIn(true);
-                    // console.log("user successfully logged in");
-                } else {
-                    console.log("could not load user data, login terminated");
-                    return;
-                }
-
+                axios.get(`${BASE_URL}/users/${userData.username}`, { withCredentials: true })
+                .then(userResponse => {
+                    if (userResponse.status === 200) {
+                        setLoggedInUser(userResponse.data);
+                        console.log("User data loaded", loggedInUser);
+                        setIsLoggedIn(true);
+                    } else {
+                        console.log("could not load user data, login terminated");
+                    }
+                })
+                .catch(error => {
+                    console.error('Error loading user data', error);
+                });
             } else if (response.status === 401) {
                 console.log("User not found");
             } else {
                 console.log("Internal server error");
             }
-        } catch (error) {
-            console.error('Error logging in', error.response);
-        }
-
-        //remember to do that on complete
+        })
+        .catch(error => {
+            console.error('Error logging in', error);
+        });
     };
 
-    const logout = () => {
-        setIsLoggedIn(false);
-        setLoggedInUser(null);
-        //Clear logged in user in the server ?
+    const logout = async () => {
+        try {
+            const response = await axios.post(`${BASE_URL}/auth/logout`);
+            if (response.status === 200) {
+                console.log(response.data.message);
+                setLoggedInUser(null);
+                setIsLoggedIn(false);
+                localStorage.removeItem('token');
+            } else {
+                console.error('Error logging out');
+            }
+        } catch (error) {
+            console.error('Error logging out', error);
+        }
     }
 
     const setActiveList = async (listName) => {

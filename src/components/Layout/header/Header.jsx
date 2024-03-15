@@ -54,9 +54,9 @@ const Header = () => {
         <div className="mdl-layout__header-row nav-row" style={{ display: 'flex', justifyContent: 'space-between' }}>
           {/* Left section */}
           <div style={{ display: 'flex', alignItems: 'center' }}>
-          <img src={logo} alt="Logo" style={{ marginRight: '12px', width: '5%', height: 'auto', position: 'relative', top: '-3px' }} />
+            <img src={logo} alt="Logo" style={{ marginRight: '12px', width: '5%', height: 'auto', position: 'relative', top: '-3px' }} />
             <span className="mdl-layout-title" style={{ fontSize: '32px', color: "white" }}>TaskForge</span>
-            
+
           </div>
 
           {/* Middle section */}
@@ -75,7 +75,7 @@ const Header = () => {
       <RegisterModal isOpen={isRegisterModalOpen} onRequestClose={closeRegisterModal} />
       <div className="mdl-layout" style={{ overflow: 'hidden' }}>
         {showWelcome ? (
-          <div className="welcome-card">Welcome back, {loggedInUser.username}. <br/><br/> You  have new tasks waiting for you today!</div>
+          <div className="welcome-card">Welcome back, {loggedInUser ? loggedInUser.username : ''}. <br /><br /> You  have new tasks waiting for you today!</div>
         ) : (
           <div className="welcome-clock">{time.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" })}</div>
         )}
