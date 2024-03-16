@@ -144,6 +144,11 @@ const TodoEntry = ({ type, todoData, onEdit }) => {
 
     const handleStepClick = (stepId) => {
         console.log("Step clicked: ", stepId, todoData._id);
+        if (type === 'doing') {
+            console.log("Step clicked: ", stepId, todoData._id);
+        } else {
+            console.log("nothing should happen");
+        }
     }
 
 
@@ -312,10 +317,10 @@ const TodoEntry = ({ type, todoData, onEdit }) => {
                                             <p className="step-name">{step.taskName}</p>
                                         </div>
                                     ))}
-                                    <p className="add-step" style={{ margin: '12px' }}><strong>Add another step</strong></p>
+                                   <></>
                                 </>
                             ) : (
-                                <div className="add-step"><strong>Add step</strong></div>
+                                <></>
                             )}
                         </div>
 
@@ -396,10 +401,10 @@ const TodoEntry = ({ type, todoData, onEdit }) => {
                                             <p className="step-name">{step.taskName}</p>
                                         </div>
                                     ))}
-                                    <p className="add-step" style={{ margin: '12px' }}><strong>Add another step</strong></p>
+                                    <></>
                                 </>
                             ) : (
-                                <div className="add-step"><strong>Add step</strong></div>
+                                <></>
                             )}
                         </div>
 

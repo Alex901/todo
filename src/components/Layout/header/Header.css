@@ -3,7 +3,7 @@
 }
 .mdl-layout__header-row {
   position: sticky;
- 
+ height: 23px;
 }
 .mdl-layout__header {
   background-color: #3f51b5; /* Change background color as needed */

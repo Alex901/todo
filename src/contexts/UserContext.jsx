@@ -1,7 +1,6 @@
 //At least i got the naming right this time!!!
 import React, { createContext, useContext, useState, useEffect } from "react";
 import axios from "axios";
-import Cookies from 'js-cookie';
 import { useTodoContext } from "./todoContexts";
 
 const UserContext = createContext();
@@ -13,8 +12,24 @@ const UserProvider = ({ children }) => {
         'https://todo-backend-gkdo.onrender.com' :
         'http://localhost:5000';
 
+    useEffect(() => {
+        checkLogin();
+    }, []);
+
     console.log("loggedInUser: ", loggedInUser);
-    //  console.log("isLoggedIn: ", isLoggedIn);    
+
+    const checkLogin = async () => {
+        try {
+            const response = await axios.get(`${BASE_URL}/auth/checkLogin`, { withCredentials: true });
+            console.log("checkLogin response: ", response); 
+            if (response.data.valid){
+                setLoggedInUser(response.data.user);
+                setIsLoggedIn(true);
+            }
+        } catch (error) {
+            console.error('Error verifying token', error);
+        }
+    }
 
     const registerNewUser = async (userData) => {
 
@@ -29,33 +44,33 @@ const UserProvider = ({ children }) => {
     }
 
     const login = (userData) => {
-        axios.post(`${BASE_URL}/auth/login`, userData, { 
-            withCredentials: true 
+        axios.post(`${BASE_URL}/auth/login`, userData, {
+            withCredentials: true
         })
-        .then(response => {
-            if (response.status === 200) {
-                axios.get(`${BASE_URL}/users/${userData.username}`, { withCredentials: true })
-                .then(userResponse => {
-                    if (userResponse.status === 200) {
-                        setLoggedInUser(userResponse.data);
-                        console.log("User data loaded", loggedInUser);
-                        setIsLoggedIn(true);
-                    } else {
-                        console.log("could not load user data, login terminated");
-                    }
-                })
-                .catch(error => {
-                    console.error('Error loading user data', error);
-                });
-            } else if (response.status === 401) {
-                console.log("User not found");
-            } else {
-                console.log("Internal server error");
-            }
-        })
-        .catch(error => {
-            console.error('Error logging in', error);
-        });
+            .then(response => {
+                if (response.status === 200) {
+                    axios.get(`${BASE_URL}/users/${userData.username}`, { withCredentials: true })
+                        .then(userResponse => {
+                            if (userResponse.status === 200) {
+                                setLoggedInUser(userResponse.data);
+                                console.log("User data loaded", loggedInUser);
+                                setIsLoggedIn(true);
+                            } else {
+                                console.log("could not load user data, login terminated");
+                            }
+                        })
+                        .catch(error => {
+                            console.error('Error loading user data', error);
+                        });
+                } else if (response.status === 401) {
+                    console.log("User not found");
+                } else {
+                    console.log("Internal server error");
+                }
+            })
+            .catch(error => {
+                console.error('Error logging in', error);
+            });
     };
 
     const logout = async () => {
@@ -81,7 +96,7 @@ const UserProvider = ({ children }) => {
                 return;
             }
             const _id = loggedInUser._id;
-    
+
             console.log(`baseUR: ${BASE_URL}/users/setlist/${_id}`);
             const response = await axios.patch(`${BASE_URL}/users/setlist/${_id}`, { activeList: listName });
             if (response.status === 200) {
@@ -96,9 +111,9 @@ const UserProvider = ({ children }) => {
         }
     }
 
-    const addList = async (listName) => {   
+    const addList = async (listName) => {
         console.log("add new list with name: ", listName);
-        try { 
+        try {
             if (!isLoggedIn) {
                 console.log("User not logged in");
                 return;
@@ -107,7 +122,7 @@ const UserProvider = ({ children }) => {
             const response = await axios.patch(`${BASE_URL}/users/addlist/${_id}`, { listName });
             if (response.status === 200) {
                 console.log("List added: ", listName);
-                setLoggedInUser({ ...loggedInUser, listNames: [...loggedInUser.listNames, listName], activeList: listName});
+                setLoggedInUser({ ...loggedInUser, listNames: [...loggedInUser.listNames, listName], activeList: listName });
             } else if (response.status === 404) {
                 console.log("User not found");
             } else {
@@ -115,10 +130,10 @@ const UserProvider = ({ children }) => {
             }
         } catch (error) {
             console.error('Error adding list', error);
-        }   
+        }
     }
 
-    const deleteList = async (listName) => {    
+    const deleteList = async (listName) => {
         console.log("delete list with name: ", listName);
         try {
             if (!isLoggedIn) {
@@ -126,11 +141,13 @@ const UserProvider = ({ children }) => {
                 return;
             }
             const _id = loggedInUser._id;
-            const response = await axios.delete(`${BASE_URL}/users/deletelist/${_id}`,  { data: { listName }});
+            const response = await axios.delete(`${BASE_URL}/users/deletelist/${_id}`, { data: { listName } });
             if (response.status === 200) {
                 console.log("List deleted: ", listName);
-                setLoggedInUser({ ...loggedInUser, listNames: loggedInUser.listNames.filter((name) => name !== listName), 
-                    activeList: loggedInUser.listNames[0]}); //This should always be 'all'
+                setLoggedInUser({
+                    ...loggedInUser, listNames: loggedInUser.listNames.filter((name) => name !== listName),
+                    activeList: loggedInUser.listNames[0]
+                }); //This should always be 'all'
             } else if (response.status === 404) {
                 console.log("User not found");
             } else {
@@ -141,9 +158,17 @@ const UserProvider = ({ children }) => {
         }
     }
 
+    function getCookie(name) {
+        const value = `; ${document.cookie}`;
+        const parts = value.split(`; ${name}=`);
+        if (parts.length === 2) return parts.pop().split(';').shift();
+    }
+
     return (
-        <UserContext.Provider value={{ isLoggedIn, loggedInUser, login, logout, registerNewUser, 
-        setLoggedInUser, setActiveList, addList, deleteList }} >
+        <UserContext.Provider value={{
+            isLoggedIn, loggedInUser, login, logout, registerNewUser,
+            setLoggedInUser, setActiveList, addList, deleteList
+        }} >
             {children}
         </UserContext.Provider>
     );
