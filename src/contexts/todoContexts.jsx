@@ -1,7 +1,6 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 import { useUserContext } from './UserContext';
-import Cookies from 'js-cookie';
 
 // Define functions
 const TodoContext = createContext({
@@ -48,7 +47,6 @@ const TodoProvider = ({ children }) => {
 
   const fetchTodoList = async () => {
     try {
-      const token = Cookies.get('token'); // Get the token from the cookie storage
       const response = await axios.get(`${BASE_URL}/api/todos`, {
         withCredentials: true,
       });
