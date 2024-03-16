@@ -89,7 +89,7 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
         addTodo(newTaskData);
         onRequestClose();
         setErrorMessage('');
-        setNewTaskData({
+        setNewTaskData({ //Reset the form
             taskName: '',
             description: '',
             priority: '',

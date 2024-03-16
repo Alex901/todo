@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 import { useUserContext } from './UserContext';
-
+import Cookies from 'js-cookie';
 
 // Define functions
 const TodoContext = createContext({
@@ -47,12 +47,14 @@ const TodoProvider = ({ children }) => {
   //API functions
 
   const fetchTodoList = async () => {
- /*    if (loggedInUser.username === 'Alzner') {
-      console.log("Updating database");
-      updateDatabase();
-    } */
     try {
-      const response = await axios.get(`${BASE_URL}/api/todos`);
+      const token = Cookies.get('token'); // Get the token from the cookie storage
+      const response = await axios.get(`${BASE_URL}/api/todos`, {
+        headers: {
+          Authorization: `Bearer ${token}` // Attach the token to the Authorization header
+        }
+      });
+  
       let parsedData = response.data.map(todo => ({
         ...todo,
         created: new Date(todo.created),
@@ -60,16 +62,15 @@ const TodoProvider = ({ children }) => {
         started: todo.started ? new Date(todo.started) : null,
         dueDate: todo.dueDate ? new Date(todo.dueDate) : null
       }));
-
+  
       // Filter the parsedData array
       if (loggedInUser) {
         parsedData = parsedData.filter(todo => todo.owner === loggedInUser.username);
       } else {
         parsedData = parsedData.filter(todo => todo.owner === null);
       }
-
+  
       setTodoList(parsedData);
-      console.log("TodoList: ", todoList);
     } catch (error) {
       console.error('Error fetching data', error);
     }

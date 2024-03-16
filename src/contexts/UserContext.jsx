@@ -65,7 +65,7 @@ const UserProvider = ({ children }) => {
                 console.log(response.data.message);
                 setLoggedInUser(null);
                 setIsLoggedIn(false);
-                localStorage.removeItem('token');
+                Cookies.remove('token')
             } else {
                 console.error('Error logging out');
             }
