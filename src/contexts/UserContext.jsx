@@ -60,12 +60,11 @@ const UserProvider = ({ children }) => {
 
     const logout = async () => {
         try {
-            const response = await axios.post(`${BASE_URL}/auth/logout`);
+            const response = await axios.post(`${BASE_URL}/auth/logout`, {}, { withCredentials: true });
             if (response.status === 200) {
                 console.log(response.data.message);
                 setLoggedInUser(null);
                 setIsLoggedIn(false);
-                Cookies.remove('token')
             } else {
                 console.error('Error logging out');
             }

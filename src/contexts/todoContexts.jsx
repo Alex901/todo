@@ -50,9 +50,7 @@ const TodoProvider = ({ children }) => {
     try {
       const token = Cookies.get('token'); // Get the token from the cookie storage
       const response = await axios.get(`${BASE_URL}/api/todos`, {
-        headers: {
-          Authorization: `Bearer ${token}` // Attach the token to the Authorization header
-        }
+        withCredentials: true,
       });
   
       let parsedData = response.data.map(todo => ({
