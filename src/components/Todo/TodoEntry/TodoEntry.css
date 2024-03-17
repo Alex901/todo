@@ -42,6 +42,7 @@
 
 .material-icons.todo-entry-icon {
     width: 24px;
+    cursor: pointer;
 }
 
 /* button */
@@ -107,7 +108,8 @@
 .buttons {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: space-evenly;
+    height: 100px;
 
 }
 
@@ -135,7 +137,9 @@
     height: auto;
 }
 
-.information-time {
+.information-time, 
+.information-diff, 
+.information-steps {
     display: flex;
     flex-direction: row;
     align-items: left;

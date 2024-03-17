@@ -17,7 +17,8 @@ import {
     mdiCircle,
     mdiRewind,
     mdiPlay,
-    mdiCancel
+    mdiCancel,
+    mdiShoePrint
 } from '@mdi/js';
 import Icon from '@mdi/react';
 
@@ -175,6 +176,12 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
                             <div className="information-time">
                                 <Icon path={mdiClockOutline} size={1} /> {estimatedTime ? `${estimatedTime}h` : '-'}
                             </div>
+                            {steps.length > 0 && (
+                                <div className="information-steps">
+                                    <Icon path={mdiShoePrint} size={1} />
+                                    {steps.length}
+                                </div>
+                            )}
                             <div className="information-dif">
                                 {difficultyIcons[difficulty].map((icon, index) => (
                                     <Icon key={index} path={icon} size={0.3} />
@@ -277,6 +284,12 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
                             <div className="information-time">
                                 <Icon path={mdiClockOutline} size={1} /> {estimatedTime ? `${estimatedTime}h` : '-'}
                             </div>
+                            {steps.length > 0 && (
+                                <div className="information-steps">
+                                    <Icon path={mdiShoePrint} size={1} />
+                                    {steps.length}
+                                </div>
+                            )}
                             <div className="information-dif">
                                 {difficultyIcons[difficulty].map((icon, index) => (
                                     <Icon key={index} path={icon} size={0.3} />
@@ -357,6 +370,12 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
                             <div className="information-time">
                                 <Icon path={mdiClockOutline} size={1} /> {estimatedTime ? `${estimatedTime}h` : '-'}
                             </div>
+                            {steps.length > 0 && (
+                                <div className="information-steps">
+                                    <Icon path={mdiShoePrint} size={1} />
+                                    {`${steps.filter(step => step.isDone).length}/${steps.length}`}
+                                </div>
+                            )}
                             <div className="information-dif">
                                 {difficultyIcons[difficulty].map((icon, index) => (
                                     <Icon key={index} path={icon} size={0.3} />
