@@ -407,7 +407,9 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
                         <button className="entryButton" onClick={handleCancel} title="cancel task">
                             <i className="material-icons todo-entry-icon">keyboard_backspace</i>
                         </button>
-                        <button className="entryButton" onClick={handleMoreInfromationClick}>
+                        <button className="entryButton" 
+                        onClick={handleMoreInfromationClick} 
+                        disabled={!(steps.length > 0 || description)} >
                             <i className="material-icons todo-entry-icon"> {isMoreChecked ? "keyboard_arrow_up" : "keyboard_arrow_down"} </i>
                         </button>
                     </div>

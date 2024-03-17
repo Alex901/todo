@@ -46,6 +46,15 @@
 }
 
 /* button */
+
+.entryButton:disabled {
+    background-color: #eae4e3;
+    border: 1px solid rgba(144, 131, 131, 0.856);
+    cursor: not-allowed;
+    color: #887571;
+    opacity: 0.5;
+}
+
 .moreDoneButton {
     align-self: self-end;
 }
