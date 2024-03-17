@@ -4,6 +4,8 @@ import './EditModal.css'
 import { useTodoContext } from '../../../../contexts/todoContexts';
 import { useUserContext } from '../../../../contexts/UserContext';
 import Select from 'react-select'
+import { mdiDelete, mdiDeleteEmpty } from '@mdi/js';
+import Icon from '@mdi/react';
 
 ReactModal.setAppElement('#root');
 
@@ -12,6 +14,7 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
     const [errorMessage, setErrorMessage] = useState('');
     const { loggedInUser, isLoggedIn } = useUserContext();
     const [selectedOption, setSelectedOption] = useState(null);
+    const [hoveredStepId, setHoveredStepId] = useState(null);
     const [taskData, setTaskData] = useState({
         id: editData.id,
         task: editData.task,
@@ -114,12 +117,11 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
     }
 
     const handleInputChangeStep = (id, event) => {
-        setErrorMessage('');
         setTaskData(prevData => ({
             ...prevData,
-            steps: prevData.steps.map(step =>
-                step.id === id ? { ...step, taskName: event.target.value } : step
-            ),
+            steps: prevData.steps.map(step => 
+                step._id === id ? { ...step, taskName: event.target.value } : step
+            )
         }));
     };
 
@@ -128,7 +130,7 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
         if (taskData.steps.length < 10) {
             setTaskData(prevData => ({
                 ...prevData,
-                steps: [...prevData.steps, { id: prevData.steps.length + 1, taskName: '', isDone: false }]
+                steps: [...prevData.steps, { taskName: '', isDone: false, _id: generateNewId() }]
             }));
         } else {
             setErrorMessage('You can only add 10 steps');
@@ -169,6 +171,18 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
         }));
     }
 
+    const handleDeleteStep = (stepId) => {
+        console.log("Delete step", stepId);
+        setTaskData(prevState => ({
+            ...prevState,
+            steps: prevState.steps.filter(step => step._id !== stepId)
+        }));
+    };
+
+    const generateNewId = () => {
+        return [...Array(24)].map(() => Math.floor(Math.random() * 16).toString(16)).join('');
+    };
+
     //I steal the ccs classes from my create modal -- don't judge me, haha
     return (
 
@@ -176,7 +190,7 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
             isOpen={isOpen}
             onRequestClose={onRequestClose}
             contentLabel="Edit todo task"
-            className="modal-content"
+            className="modal-content modal"
             overlayClassName="modal-overlay"
             shouldCloseOnOverlayClick={true}
         >
@@ -331,12 +345,20 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
                     </div>
                     <hr style={{ width: '80%', margin: '10px auto' }} />
                     <div className='steps' style={{ width: '100%', justifyContent: 'left' }}>
-                        {taskData.steps.map(step => (
-                            <div key={step.id} style={{ display: 'flex', flexDirection: 'row' }}>
-                                <label style={{ display: 'flex', alignItems: 'center' }}>{`Step${step.id}`}</label>
+                        {taskData.steps.map((step, index) => (
+                            <div key={step.id} style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                                <label style={{ display: 'flex', alignItems: 'center' }}>{`Step${index + 1}`}</label>
                                 <input className='create-modal-input' type='text' placeholder={`Enter subTask`}
-                                    onChange={event => handleInputChangeStep(step.id, event)}
-                                    defaultValue={taskData.steps[step.id - 1].taskName} maxLength='50' />
+                                    onChange={event => handleInputChangeStep(step._id, event)}
+                                    defaultValue={taskData.steps.find(s => s._id === step._id).taskName || ''} maxLength='50' />
+                                <div onMouseEnter={() => setHoveredStepId(step._id)} onMouseLeave={() => setHoveredStepId(null)}>
+                                    <Icon
+                                        path={hoveredStepId === step._id ? mdiDeleteEmpty : mdiDelete}
+                                        size={1.2}
+                                        color={hoveredStepId === step._id ? "initial" : "gray"}
+                                        onClick={() => handleDeleteStep(step._id)}
+                                    />
+                                </div>
                             </div>
                         ))}
                         <div style={{ display: 'flex', justifyContent: 'center' }}>

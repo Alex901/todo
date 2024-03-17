@@ -175,6 +175,8 @@
     padding: 10px;
     border-radius: 10px;
     display: grid;
+    grid-auto-rows: min-content;
+    grid-template-rows: auto 1fr;
     grid-template-columns: 2fr 1fr;
     align-items: center;
     align-self: center;
@@ -190,7 +192,7 @@
 .description-container {
     display: flex;
     flex-direction: column;
-    align-items: left;
+    align-items: auto;
     justify-content: center;
     width: auto;
     height: 100%;
@@ -234,7 +236,12 @@ padding: 2px
     cursor: pointer;
 }
 
-.step-name:hover {
+.step-name-doing {
+    flex-grow: 1;
+    cursor: pointer;
+}
+
+.step-name-doing:hover {
     text-decoration: line-through ;
 }
 

@@ -5,17 +5,17 @@ import TodoModal from "../TodoModal/TodoModal";
 import ConfirmationModal from "../TodoModal/ConfirmationModal/ConfirmationModal";
 import { useUserContext } from "../../../contexts/UserContext";
 import { useTodoContext } from "../../../contexts/todoContexts";
-import { 
-    mdiRunFast, 
-    mdiArrowDownBold, 
-    mdiArrowDownThin, 
-    mdiArrowUpBold, 
-    mdiArrowUpThin, 
-    mdiMinus, 
-    mdiCircleOutline, 
-    mdiClockOutline, 
-    mdiCircle, 
-    mdiRewind, 
+import {
+    mdiRunFast,
+    mdiArrowDownBold,
+    mdiArrowDownThin,
+    mdiArrowUpBold,
+    mdiArrowUpThin,
+    mdiMinus,
+    mdiCircleOutline,
+    mdiClockOutline,
+    mdiCircle,
+    mdiRewind,
     mdiPlay,
     mdiCancel
 } from '@mdi/js';
@@ -96,7 +96,7 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
     const handleClicktoComplete = () => {
         // Assuming steps is an array of step objects for the todo with id
         const allStepsCompleted = steps.every(step => step.isDone);
-    
+
         if (allStepsCompleted) {
             toggleTodoComplete(id);
         } else {
@@ -229,9 +229,9 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
                         <div className="description-container">
                             <p className="description-label"> <strong>Description </strong> </p>
                             <p> {description} </p>
-                            
+
                         </div>
-                        
+
                     </div>
                 )}
 
@@ -268,7 +268,7 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
         return (
             <div className="todo-columns">
                 <div className="todo-entry">
-                {isLoggedIn && (
+                    {isLoggedIn && (
                         <div className="information-container">
                             <div className="information-top">
                                 {isUrgent && <Icon path={mdiRunFast} size={1} color={'red'} />}
@@ -313,27 +313,24 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
                     </div>
                 </div>
                 {isMoreChecked && isLoggedIn && (
-                    <div className={`more-information ${isMoreChecked ? 'open' : ''}`}>
-                        <div className="steps-container">
-                            {steps && steps.length > 0 ? (
-                                <>
-                                    {steps.map((step, index) => (
-                                        <div key={index} className="step-entry" onClick={() => handleStepClick(step.id)}>
-                                            <p className="step-id"><strong>{`Step ${index + 1}`}</strong></p>
-                                            <p className="step-name">{step.taskName}</p>
-                                        </div>
-                                    ))}
-                                   <></>
-                                </>
-                            ) : (
-                                <></>
-                            )}
-                        </div>
+                    <div className={`more-information ${isMoreChecked ? 'open' : ''}`} style={{ gridTemplateColumns: (steps && steps.length > 0 && description) ? '2fr 1fr' : '1fr' }}>
+                        {steps && steps.length > 0 && (
+                            <div className="steps-container">
+                                {steps.map((step, index) => (
+                                    <div key={index} className="step-entry" onClick={() => handleStepClick(step.id)}>
+                                        <p className="step-id"><strong>{`Step ${index + 1}`}</strong></p>
+                                        <p className={`step-name ${step.isDone ? 'step-completed' : ''}`}>{step.taskName}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
 
-                        <div className="description-container">
-                            <p className="description-label"> <strong>Description </strong> </p>
-                            <p> {description} </p>
-                        </div>
+                        {description && (
+                            <div className="description-container">
+                                <p className="description-label"> <strong>Description </strong> </p>
+                                <p> {description} </p>
+                            </div>
+                        )}
                     </div>
                 )}
 
@@ -351,7 +348,7 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
         return (
             <div className="todo-columns">
                 <div className="todo-entry">
-                {isLoggedIn && (
+                    {isLoggedIn && (
                         <div className="information-container">
                             <div className="information-top">
                                 {isUrgent && <Icon path={mdiRunFast} size={1} color={'red'} />}
@@ -383,7 +380,7 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
                             <p ref={entry} className="doing-text"> {task} </p>
                         </div>
                     </div>
-                    
+
                     <div className="buttons">
                         <button className="deleteButton entryButton" onClick={handleDelete} >
                             <i className="material-icons todo-entry-icon">delete</i>
@@ -397,27 +394,24 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
                     </div>
                 </div>
                 {isMoreChecked && isLoggedIn && (
-                    <div className={`more-information ${isMoreChecked ? 'open' : ''}`}>
-                        <div className="steps-container">
-                            {steps && steps.length > 0 ? (
-                                <>
-                                    {steps.map((step, index) => (
-                                        <div key={index} className="step-entry" onClick={() => handleStepClick(step.id)}>
-                                            <p className="step-id"><strong>{`Step ${index + 1}`}</strong></p>
-                                            <p className={`step-name ${step.isDone ? 'step-completed' : ''}`}>{step.taskName}</p>
-                                        </div>
-                                    ))}
-                                    <></>
-                                </>
-                            ) : (
-                                <></>
-                            )}
-                        </div>
+                    <div className={`more-information ${isMoreChecked ? 'open' : ''}`} style={{ gridTemplateColumns: (steps && steps.length > 0 && description) ? '2fr 1fr' : '1fr' }}>
+                        {steps && steps.length > 0 && (
+                            <div className="steps-container">
+                                {steps.map((step, index) => (
+                                    <div key={index} className="step-entry" onClick={() => handleStepClick(step.id)}>
+                                        <p className="step-id"><strong>{`Step ${index + 1}`}</strong></p>
+                                        <p className={`step-name-doing ${step.isDone ? 'step-completed' : ''}`}>{step.taskName}</p>
+                                    </div>
+                                ))}
+                            </div>
+                        )}
 
-                        <div className="description-container">
-                            <p className="description-label"> <strong>Description </strong> </p>
-                            <p> {description} </p>
-                        </div>
+                        {description && (
+                            <div className="description-container">
+                                <p className="description-label"> <strong>Description </strong> </p>
+                                <p> {description} </p>
+                            </div>
+                        )}
                     </div>
                 )}
 
@@ -428,8 +422,8 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
                         </div>
                     </div>
                 )}
-                </div>
-                );
+            </div>
+        );
     } else {
         return null;
     }
@@ -437,33 +431,33 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
 }
 
 
-                TodoEntry.propTypes = {
-                    todoData: PropTypes.shape({
-                    _id: PropTypes.string.isRequired,
-                id: PropTypes.number.isRequired,
-                task: PropTypes.string.isRequired,
-                isDone: PropTypes.bool.isRequired,
-                created: PropTypes.instanceOf(Date).isRequired,
-                completed: PropTypes.instanceOf(Date),
-                started: PropTypes.instanceOf(Date),
-                isStarted: PropTypes.bool,
-                updatedAt: PropTypes.string,
-                description: PropTypes.string,
-                dueDate: PropTypes.instanceOf(Date),
-                inList: PropTypes.arrayOf(PropTypes.string),
-                owner: PropTypes.string,
-                priority: PropTypes.string,
-                isUrgent: PropTypes.bool,
-                difficulty: PropTypes.string,
-                estimatedTime: PropTypes.number,
-                steps: PropTypes.arrayOf(PropTypes.shape({
-                    _id: PropTypes.string.isRequired,
-                taskName: PropTypes.string.isRequired,
-                isDone: PropTypes.bool.isRequired,
-                id: PropTypes.number.isRequired,
+TodoEntry.propTypes = {
+    todoData: PropTypes.shape({
+        _id: PropTypes.string.isRequired,
+        id: PropTypes.number.isRequired,
+        task: PropTypes.string.isRequired,
+        isDone: PropTypes.bool.isRequired,
+        created: PropTypes.instanceOf(Date).isRequired,
+        completed: PropTypes.instanceOf(Date),
+        started: PropTypes.instanceOf(Date),
+        isStarted: PropTypes.bool,
+        updatedAt: PropTypes.string,
+        description: PropTypes.string,
+        dueDate: PropTypes.instanceOf(Date),
+        inList: PropTypes.arrayOf(PropTypes.string),
+        owner: PropTypes.string,
+        priority: PropTypes.string,
+        isUrgent: PropTypes.bool,
+        difficulty: PropTypes.string,
+        estimatedTime: PropTypes.number,
+        steps: PropTypes.arrayOf(PropTypes.shape({
+            _id: PropTypes.string.isRequired,
+            taskName: PropTypes.string.isRequired,
+            isDone: PropTypes.bool.isRequired,
+            id: PropTypes.number
         })),
     }).isRequired,
-                type: PropTypes.string.isRequired,
+    type: PropTypes.string.isRequired,
 };
 
-                export default TodoEntry;
+export default TodoEntry;
