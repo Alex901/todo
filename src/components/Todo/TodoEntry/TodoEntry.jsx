@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import './TodoEntry.css'
 import PropTypes from 'prop-types';
 import TodoModal from "../TodoModal/TodoModal";
@@ -21,7 +21,7 @@ import {
 } from '@mdi/js';
 import Icon from '@mdi/react';
 
-const TodoEntry = ({ type, todoData, onEdit }) => {
+const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should use state. Maybe fix?
     const { id,
         task,
         isDone,
@@ -43,6 +43,7 @@ const TodoEntry = ({ type, todoData, onEdit }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [editingTask, setEditingTask] = useState(null);
     const [isChecked, setIsChecked] = useState(false);
+    const entry = useRef(null);
 
     //Icon mapping
     const priorityIcons = {
@@ -63,7 +64,7 @@ const TodoEntry = ({ type, todoData, onEdit }) => {
     };
 
     //Contexts
-    const { removeTodo, toggleTodoComplete, toggleTodoStart, getDoingCount, cancelTodo, getActiveListDoingCount } = useTodoContext();
+    const { removeTodo, toggleTodoComplete, toggleTodoStart, getDoingCount, cancelTodo, getActiveListDoingCount, setStepCompleted } = useTodoContext();
     const { isLoggedIn } = useUserContext();
     const [currentTime, setCurrentTime] = useState(Date.now());
 
@@ -93,7 +94,16 @@ const TodoEntry = ({ type, todoData, onEdit }) => {
     }
 
     const handleClicktoComplete = () => {
-        toggleTodoComplete(id);
+        // Assuming steps is an array of step objects for the todo with id
+        const allStepsCompleted = steps.every(step => step.isDone);
+    
+        if (allStepsCompleted) {
+            toggleTodoComplete(id);
+        } else {
+            entry.current.classList.add('vibrate');
+            setTimeout(() => entry.current.classList.remove('vibrate'), 1000);
+            console.log("There are uncompleted steps remaining.");
+        }
     }
 
     const handleClickToStart = () => {
@@ -130,10 +140,6 @@ const TodoEntry = ({ type, todoData, onEdit }) => {
             );
         });
 
-    const handleAnimationEnd = () => {
-        setIsChecked(true);
-    };
-
     const formatTime = (seconds) => {
         const days = Math.floor(seconds / (60 * 60 * 24));
         const hours = Math.floor((seconds / (60 * 60)) % 24);
@@ -143,9 +149,9 @@ const TodoEntry = ({ type, todoData, onEdit }) => {
     }
 
     const handleStepClick = (stepId) => {
-        console.log("Step clicked: ", stepId, todoData._id);
-        if (type === 'doing') {
-            console.log("Step clicked: ", stepId, todoData._id);
+        const step = steps.find(step => step.id === stepId);
+        if (type === 'doing' && !step.isDone) {
+            setStepCompleted(todoData._id, stepId)
         } else {
             console.log("nothing should happen");
         }
@@ -210,7 +216,7 @@ const TodoEntry = ({ type, todoData, onEdit }) => {
                                     {steps.map((step, index) => (
                                         <div key={index} className="step-entry" onClick={() => handleStepClick(step.id)}>
                                             <p className="step-id"><strong>{`Step ${index + 1}`}</strong></p>
-                                            <p className="step-name">{step.taskName}</p>
+                                            <p className={`step-name ${step.isDone ? 'step-completed' : ''}`}>{step.taskName}</p>
                                         </div>
                                     ))}
                                     <p className="add-step" style={{ margin: '12px' }}><strong>Add another step</strong></p>
@@ -374,7 +380,7 @@ const TodoEntry = ({ type, todoData, onEdit }) => {
                             <p className="time-stamp"> <strong>Time spent:</strong> {formatTime(Math.floor((currentTime - started) / 1000))} </p>
                         </div>
                         <div className="todo-text">
-                            <p className="doing-text" onAnimationEnd={handleAnimationEnd}> {task} </p>
+                            <p ref={entry} className="doing-text"> {task} </p>
                         </div>
                     </div>
                     
@@ -398,7 +404,7 @@ const TodoEntry = ({ type, todoData, onEdit }) => {
                                     {steps.map((step, index) => (
                                         <div key={index} className="step-entry" onClick={() => handleStepClick(step.id)}>
                                             <p className="step-id"><strong>{`Step ${index + 1}`}</strong></p>
-                                            <p className="step-name">{step.taskName}</p>
+                                            <p className={`step-name ${step.isDone ? 'step-completed' : ''}`}>{step.taskName}</p>
                                         </div>
                                     ))}
                                     <></>

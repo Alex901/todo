@@ -301,6 +301,35 @@ const TodoProvider = ({ children }) => {
       console.error("Error updating database: ", error);
     }
   }
+  //Find task with id -> step id and set it to completed
+  const setStepCompleted = async (taskId, stepId) => {
+    console.log("todoContext: setStepCompleted: taskId, stepId", taskId, stepId);
+    try {
+        const response = await axios.patch(`${BASE_URL}/api/stepComplete`, { taskId, stepId });
+        if (response.status === 200) {
+            console.log("Step marked as done successfully");
+
+            // Update local state here
+            setTodoList(prevTodoList => {
+                const updatedTodoList = prevTodoList.map(todo => { //TODO: this is quite inefficient
+                    if (todo._id === taskId) {
+                        const updatedSteps = todo.steps.map(step => 
+                            step.id === stepId ? { ...step, isDone: true } : step
+                        );
+                        return { ...todo, steps: updatedSteps };
+                    } else {
+                        return todo;
+                    }
+                });
+                return updatedTodoList;
+            });
+        } else {
+            console.error("Error marking step as done: ", response.statusText);
+        }
+    } catch (error) {
+        console.error("Error marking step as done: ", error);
+    }
+}
 
   //Other functions
 
@@ -361,7 +390,7 @@ const getListDoingCount = (listName) => {
       todoList, addTodo, cancelTodo, removeTodo, toggleTodoComplete,
       getTodoCount, getDoneCount, getDoingCount, editTodo, toggleTodoStart, refreshTodoList,
       getActiveListDoingCount, getActiveListTodoCount, getActiveListDoneCount, getListDoingCount,
-      getListDoneCount, getListTodoCount
+      getListDoneCount, getListTodoCount, setStepCompleted
     }}>
       {children}
     </TodoContext.Provider>

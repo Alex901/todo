@@ -74,29 +74,6 @@
 
 }
 
-/* Checkbox */
-.checkbox-and-task p {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
-}
-
-.checkbox-c {
-    margin-left: 1em;
-    margin-right: 3em;
-}
-
-.checkbox-and-task {
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-}
-
-.checkbox-and-task:hover {
-    animation: strikethrough 500ms linear;
-}
-
 /* timestamps */
 .time {
     display: flex;
@@ -226,6 +203,7 @@
 .description-container p {
 }
 
+/* Steps */
 .steps-label,
 .description-label {
 padding: 2px
@@ -256,12 +234,20 @@ padding: 2px
     cursor: pointer;
 }
 
+.step-name:hover {
+    text-decoration: line-through ;
+}
+
 .add-step {
     display: flex;
     justify-content: center;
     align-items: center;
     height: 100%;
 }
+
+.step-completed {
+    text-decoration: line-through;
+  }
 
 .more-information-loggedOut-message {
     display: flex;
@@ -285,3 +271,21 @@ padding: 2px
     width: 90%;
 }
 
+/* Animations */
+@keyframes vibrate {
+    0% { transform: translate(0); }
+    10% { transform: translate(-2px, 2px); }
+    20% { transform: translate(-2px, -2px); }
+    30% { transform: translate(2px, 2px); }
+    40% { transform: translate(2px, -2px); }
+    50% { transform: translate(-2px, 2px); }
+    60% { transform: translate(-2px, -2px); }
+    70% { transform: translate(2px, 2px); }
+    80% { transform: translate(2px, -2px); }
+    90% { transform: translate(-2px, 2px); }
+    100% { transform: translate(0); }
+}
+
+.vibrate {
+    animation: vibrate 0.5s linear;
+}
