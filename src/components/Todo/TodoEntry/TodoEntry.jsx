@@ -389,7 +389,8 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
                             {dueDate ? (
                                 <>
                                     <div className="separator"> </div>
-                                    <p className={`time-stamp ${isDueSoon ? 'due-soon' : ''}`}> <strong>Deadline:</strong> {dueDate.toLocaleDateString()} - {dueDate.toLocaleTimeString()} </p>
+                                    <p className="time-stamp"> <strong>Deadline:</strong> {dueDate.toLocaleDateString()} - {dueDate.toLocaleTimeString()} </p>
+                                </>
                             ) : null}
                             <div className="separator"> </div>
                             <p className="time-stamp"> <strong>Time spent:</strong> {formatTime(Math.floor((currentTime - started) / 1000))} </p>

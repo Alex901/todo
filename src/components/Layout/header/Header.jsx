@@ -13,13 +13,15 @@ const Header = () => {
   const [showWelcome, setShowWelcome] = useState(false);
 
   useEffect(() => {
-    if (isLoggedIn) {
-      setShowWelcome(true);
-      setTimeout(() => {
-        setShowWelcome(false);
-      }, 7000); // hide welcome message after 5 seconds
-    }
-  }, [isLoggedIn]);
+    const timer = setInterval(() => {
+        setTime(new Date());
+    }, 1000); // update time every second
+
+    // cleanup function
+    return () => {
+        clearInterval(timer);
+    };
+}, []);
 
 
   const openLoginModal = (event) => {
