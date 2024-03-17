@@ -8,6 +8,7 @@ import { useUserContext } from './contexts/UserContext'
 import Select from 'react-select'
 import CreateListModal from './components/Todo/TodoModal/CreateListModal/CreateListModal'
 import DeleteListModal from './components/Todo/TodoModal/DeleteListModal/DeleteListModal'
+import CookieConsent from './components/CookieConsent/CookieConsent'
 
 import 'material-design-lite/dist/material.min.css';
 import 'material-design-lite/dist/material.min.js';
@@ -72,16 +73,19 @@ function App() {
     setIsDeleteListModalOpen(false);
   }
 
-  //TODO: Break out these buttons maybe ? 
+  //TODO: This shouldbe moved to a separate component
   return (
     <div className='app'>
       <Header />
+      <>
+      <CookieConsent/>
+      </>
       <div className="content">
         <Card>
           <div className='nav' style={{ display: 'flex', flexDirection: 'column' }}>
             {/* First row */}
             {isLoggedIn && (
-              <div style={{ display: 'flex', justifyContent: 'center', margin: '1em 0 2em 0' }}>
+              <div style={{ display: 'flex', justifyContent: 'center', margin: '1em 0 2em 0', gap: '5px' }}>
                 <Select
                   styles={{ control: (base) => ({ ...base, width: '22em', borderRadius: '10px' }) }}
                   className="select-list"
@@ -106,7 +110,7 @@ function App() {
                   onChange={handleListChange}
                 />
 
-                <div style={{ margin: '0 1em 0 1em' }}></div>
+                <div style={{ margin: '0 1em 0 1em' }}></div> {/* Best solution ever :D */}
 
                 <button className="create-list-button" onClick={openCreateListModal}> Create new list
                 </button>

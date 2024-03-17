@@ -26,7 +26,7 @@ body {
   background-color: #777474;
   cursor: pointer;
   color: white;
-  border-radius: 15px;
+  border-radius: 10px;
 }
 
 .nav button:hover {
