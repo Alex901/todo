@@ -42,6 +42,8 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
         estimatedTime } = todoData;
     const [isMoreChecked, setIsMoreChecked] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
+    const [isConfirmDeleteModalOpen, setIsConfirmDeleteModalOpen] = useState(false);
+    const [isConfirmCancelModalOpen, setIsConfirmCancelModalOpen] = useState(false);
     const [editingTask, setEditingTask] = useState(null);
     const [isChecked, setIsChecked] = useState(false);
     const entry = useRef(null);
@@ -158,6 +160,32 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
         }
     }
 
+    const confrimeDelete = () => {
+        removeTodo(id);
+        setIsConfirmDeleteModalOpen(false);
+    }
+
+    const cancelDelete = () => {
+        setIsConfirmDeleteModalOpen(false);
+    }
+
+    const openDeleteModal = () => {
+        setIsConfirmDeleteModalOpen(true);
+    }
+
+    const openCancelModal = () => {
+        setIsConfirmCancelModalOpen(true);
+    }
+
+    const cancelCancel = () => {
+        setIsConfirmCancelModalOpen(false);
+    }
+
+    const confirmCancel = () => {
+        cancelTodo(id);
+        setIsConfirmCancelModalOpen(false);
+    }
+
 
 
     //TODO: this is not pretty, make commonTodoEntry component and use it on all cases. 
@@ -205,7 +233,7 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
                         <button className="edit-button entryButton" onClick={handleEdit}>
                             <i className="material-icons todo-entry-icon">edit</i>
                         </button>
-                        <button className="deleteButton entryButton" onClick={handleDelete}>
+                        <button className="deleteButton entryButton" onClick={openDeleteModal}>
                             <i className="material-icons todo-entry-icon">delete</i>
                         </button>
                         <button className={`moreButton entryButton ${steps.length > 0 || description ? 'has-data' : ''}`} onClick={handleMoreInfromationClick}>
@@ -255,9 +283,17 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
                     isOpen={isModalOpen}
                     onConfirm={confirmStart}
                     onClose={cancelConfirm}
-                    message={addLineBreak(`You are already working on ${isLoggedIn ? getActiveListDoingCount() : getDoingCount()} tasks already,
-                    and "${task}" is estemated to be a difficult task.\n\nAre you sure you wish to proceed?
+                    message={addLineBreak(`You are already working on ${isLoggedIn ? getActiveListDoingCount() : getDoingCount()} tasks. 
+                    \n Are you sure you want to start another one?
                     `)}
+                />
+
+                <ConfirmationModal
+                    onRequestClose={cancelDelete}
+                    isOpen={isConfirmDeleteModalOpen}
+                    onConfirm={confrimeDelete}
+                    onClose={cancelDelete}
+                    message={<span>Are you sure you wish to remove <strong>{todoData.task}</strong>?</span>}
                 />
 
             </div>
@@ -316,7 +352,7 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
                         </div>
                     </div>
                     <div className="buttons">
-                        <button className="deleteButton entryButton" onClick={handleDelete} style={{ marginTop: '26px' }}>
+                        <button className="deleteButton entryButton" onClick={openDeleteModal} style={{ marginTop: '26px' }}>
                             <i className="material-icons todo-entry-icon">delete</i>
                         </button>
 
@@ -354,6 +390,14 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
                         </div>
                     </div>
                 )}
+
+                <ConfirmationModal
+                    onRequestClose={cancelDelete}
+                    isOpen={isConfirmDeleteModalOpen}
+                    onConfirm={confrimeDelete}
+                    onClose={cancelDelete}
+                    message={<span>Are you sure you wish to remove <strong>{todoData.task}</strong>?</span>}
+                />
             </div>
         )
 
@@ -401,15 +445,15 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
                     </div>
 
                     <div className="buttons">
-                        <button className="deleteButton entryButton" onClick={handleDelete} >
+                        <button className="deleteButton entryButton" onClick={openDeleteModal} >
                             <i className="material-icons todo-entry-icon">delete</i>
                         </button>
-                        <button className="entryButton" onClick={handleCancel} title="cancel task">
+                        <button className="entryButton" onClick={openCancelModal} title="cancel task">
                             <i className="material-icons todo-entry-icon">keyboard_backspace</i>
                         </button>
-                        <button className="entryButton" 
-                        onClick={handleMoreInfromationClick} 
-                        disabled={!(steps.length > 0 || description)} >
+                        <button className="entryButton"
+                            onClick={handleMoreInfromationClick}
+                            disabled={!(steps.length > 0 || description)} >
                             <i className="material-icons todo-entry-icon"> {isMoreChecked ? "keyboard_arrow_up" : "keyboard_arrow_down"} </i>
                         </button>
                     </div>
@@ -443,6 +487,21 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
                         </div>
                     </div>
                 )}
+                    <ConfirmationModal
+                    onRequestClose={cancelDelete}
+                    isOpen={isConfirmDeleteModalOpen}
+                    onConfirm={confrimeDelete}
+                    onClose={cancelDelete}
+                    message={<span>Are you sure you wish to remove <strong>{todoData.task}</strong> ?  <br/><br/> This will permanently remove this task.</span>}
+                />
+
+                <ConfirmationModal
+                    onRequestClose={cancelCancel}
+                    isOpen={isConfirmCancelModalOpen}
+                    onConfirm={confirmCancel}
+                    onClose={cancelCancel}
+                    message={<span>Are you sure you wish to cancel <strong>{todoData.task}</strong> ? <br/><br/> This will reset the time spent on this task, and steps will be reset.</span>}
+                />
             </div>
         );
     } else {

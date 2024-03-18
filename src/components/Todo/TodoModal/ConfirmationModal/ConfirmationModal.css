@@ -36,6 +36,14 @@
     border: 1px solid black;
 }
 
+.modal-buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+}
+
 .modal-button {
     width: 6em;
     margin: 5px;
