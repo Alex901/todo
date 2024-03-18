@@ -4,6 +4,7 @@ import './TodoModal.css'
 import { useTodoContext } from '../../../contexts/todoContexts';
 import { useUserContext } from '../../../contexts/UserContext';
 import Select from 'react-select'
+import { toast } from 'react-toastify';
 
 ReactModal.setAppElement('#root');
 
@@ -80,13 +81,9 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
             setErrorMessage('You need to enter all step names');
             return;
         }
-        console.log("newTaskData.dueDate: ", newTaskData.dueDate);
-     /*    if (newTaskData.dueDate ===) {
-            newTaskData.dueDate = null;
-        }
- */ 
-        console.log("newTaskData.dueDate: ", newTaskData.dueDate);
+
         addTodo(newTaskData);
+        toast.info('Task successfully created');
         onRequestClose();
         setErrorMessage('');
         setNewTaskData({ //Reset the form

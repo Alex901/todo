@@ -23,6 +23,7 @@
     "react-dom": "^18.2.0",
     "react-modal": "^3.16.1",
     "react-select": "^5.8.0",
+    "react-toastify": "^10.0.5",
     "react-tooltip": "^5.26.3",
     "uuid": "^9.0.1"
   },

@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import ReactModal from 'react-modal';
 import './HeaderModal.css';
 import { useUserContext } from '../../../../contexts/UserContext';
+import { toast } from 'react-toastify';
 
 ReactModal.setAppElement('#root');
 
@@ -14,6 +15,7 @@ const LoginModal = ({ isOpen, onRequestClose }) => {
     const [emailError, setEmailError] = React.useState("");
     const [passwordError, setPasswordError] = React.useState("");
     const { registerNewUser } = useUserContext();
+    const [usernameError, setUserNameError] = React.useState("");
 
     useEffect(() => {
         const handleOverlayClick = (event) => {
@@ -44,7 +46,7 @@ const LoginModal = ({ isOpen, onRequestClose }) => {
         event.preventDefault();
 
         if (username === "" || email === "" || password === "" || repeatPassword === "") {
-            console.log("All fields must be filled out"); //TODO: fix proper error handling, this is not nice
+            toast.error("All fields needs to be filled out");
             return;
         }
 
@@ -52,7 +54,7 @@ const LoginModal = ({ isOpen, onRequestClose }) => {
         const userData = { username: username, email: email, password: password };
         console.log("RegisterModal> handleregister: ", userData);
         registerNewUser(userData);
-
+        toast.success(`Registration successfull!`);
         setEmail("");
         setUsername("");
         setPassword("");
@@ -80,7 +82,7 @@ const LoginModal = ({ isOpen, onRequestClose }) => {
     return (
         <ReactModal
             isOpen={isOpen}
-            onRequestClose={onRequestClose}
+            onRequestClose={() => { toast.warn("registration canceled"); onRequestClose(); }}
             contentLabel="Register Modal"
             className="modal-content"
             overlayClassName="modal-overlay"

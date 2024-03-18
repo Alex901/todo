@@ -4,6 +4,7 @@ import LoginModal from "./HeaderModals/LoginModal";
 import RegisterModal from "./HeaderModals/RegisterModal";
 import { useUserContext } from "../../../contexts/UserContext";
 import logo from "../../../assets/Anvil_logo_v1.png";
+import { toast } from "react-toastify";
 
 const Header = () => {
   const [time, setTime] = useState(new Date());
@@ -47,6 +48,7 @@ const Header = () => {
 
   const handleLogout = () => {
     logout();
+    toast.success("Bye, see you soon!");
     //console.log("Logging out");
   }
 

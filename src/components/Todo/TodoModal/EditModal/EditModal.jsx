@@ -6,6 +6,7 @@ import { useUserContext } from '../../../../contexts/UserContext';
 import Select from 'react-select'
 import { mdiDelete, mdiDeleteEmpty } from '@mdi/js';
 import Icon from '@mdi/react';
+import { toast } from 'react-toastify';
 
 ReactModal.setAppElement('#root');
 
@@ -86,6 +87,7 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
 
         console.log("taskData: ", taskData);
         editTodo(taskData);
+        toast.success('Changes saved');
         onRequestClose();
     }
 
@@ -188,11 +190,15 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
 
         <ReactModal
             isOpen={isOpen}
-            onRequestClose={onRequestClose}
             contentLabel="Edit todo task"
             className="modal-content modal"
+            onRequestClose={() => {
+                toast.warn('Edit canceled -- changes not saved');
+                onRequestClose();
+            }}
             overlayClassName="modal-overlay"
             shouldCloseOnOverlayClick={true}
+            
         >
 
             {isLoggedIn ? (
@@ -207,6 +213,7 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
                         className='create-modal-input'
                         onKeyDownCapture={handleKeyPress}
                         autoFocus
+                        
                     />
                     <textarea
                         placeholder='Enter task description(optional)'

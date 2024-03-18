@@ -2,6 +2,7 @@ import React, { useEffect } from 'react';
 import ReactModal from 'react-modal';
 import './HeaderModal.css';
 import { useUserContext } from '../../../../contexts/UserContext';
+import { toast } from 'react-toastify';
 
 ReactModal.setAppElement('#root');
 
@@ -49,6 +50,7 @@ const LoginModal = ({ isOpen, onRequestClose }) => {
         }
 
         login(userData);
+        toast.success(`welcome back ${username}!`); 
         setUsername("");
         setPassword("");
         onRequestClose();

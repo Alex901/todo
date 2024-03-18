@@ -21,7 +21,8 @@ const TodoContext = createContext({
   getActiveListTodoCount: () => { },
   getListTodoCount: () => { },
   getListDoneCount: () => { },
-  getListDoingCount: () => { }
+  getListDoingCount: () => { },
+  setStepUncomplete: () => { },
 });
 
 const TodoProvider = ({ children }) => {
@@ -50,7 +51,7 @@ const TodoProvider = ({ children }) => {
       const response = await axios.get(`${BASE_URL}/api/todos`, {
         withCredentials: true,
       });
-  
+
       let parsedData = response.data.map(todo => ({
         ...todo,
         created: new Date(todo.created),
@@ -58,14 +59,14 @@ const TodoProvider = ({ children }) => {
         started: todo.started ? new Date(todo.started) : null,
         dueDate: todo.dueDate ? new Date(todo.dueDate) : null
       }));
-  
+
       // Filter the parsedData array
       if (loggedInUser) {
         parsedData = parsedData.filter(todo => todo.owner === loggedInUser.username);
       } else {
         parsedData = parsedData.filter(todo => todo.owner === null);
       }
-  
+
       setTodoList(parsedData);
     } catch (error) {
       console.error('Error fetching data', error);
@@ -305,16 +306,45 @@ const TodoProvider = ({ children }) => {
   const setStepCompleted = async (taskId, stepId) => {
     console.log("todoContext: setStepCompleted: taskId, stepId", taskId, stepId);
     try {
-        const response = await axios.patch(`${BASE_URL}/api/stepComplete`, { taskId, stepId });
-        if (response.status === 200) {
-            console.log("Step marked as done successfully");
+      const response = await axios.patch(`${BASE_URL}/api/stepComplete`, { taskId, stepId });
+      if (response.status === 200) {
+        console.log("Step marked as done successfully");
 
+        // Update local state here
+        setTodoList(prevTodoList => {
+          const updatedTodoList = prevTodoList.map(todo => { //TODO: this is quite inefficient
+            if (todo._id === taskId) {
+              const updatedSteps = todo.steps.map(step =>
+                step.id === stepId ? { ...step, isDone: true } : step
+              );
+              return { ...todo, steps: updatedSteps };
+            } else {
+              return todo;
+            }
+          });
+          return updatedTodoList;
+        });
+      } else {
+        console.error("Error marking step as done: ", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error marking step as done: ", error);
+    }
+  }
+
+  const setStepUncomplete = async (taskId, stepId) => {
+    console.log("todoContext: setStepUncompleted: taskId, stepId", taskId, stepId);
+    try {
+        const response = await axios.patch(`${BASE_URL}/api/stepUncomplete`, { taskId, stepId });
+        if (response.status === 200) {
+            console.log("Step marked as undone successfully");
+  
             // Update local state here
             setTodoList(prevTodoList => {
                 const updatedTodoList = prevTodoList.map(todo => { //TODO: this is quite inefficient
                     if (todo._id === taskId) {
                         const updatedSteps = todo.steps.map(step => 
-                            step.id === stepId ? { ...step, isDone: true } : step
+                            step.id === stepId ? { ...step, isDone: false } : step
                         );
                         return { ...todo, steps: updatedSteps };
                     } else {
@@ -324,12 +354,15 @@ const TodoProvider = ({ children }) => {
                 return updatedTodoList;
             });
         } else {
-            console.error("Error marking step as done: ", response.statusText);
+            console.error("Error marking step as undone: ", response.statusText);
         }
     } catch (error) {
-        console.error("Error marking step as done: ", error);
+        console.error("Error marking step as undone: ", error);
     }
-}
+  }
+
+
+
 
   //Other functions
 
@@ -359,15 +392,15 @@ const TodoProvider = ({ children }) => {
 
   const getListTodoCount = (listName) => {
     return todoList.filter(todo => todo.inList.includes(listName) && !todo.isDone && !todo.isStarted).length;
-}
+  }
 
-const getListDoneCount = (listName) => {
+  const getListDoneCount = (listName) => {
     return todoList.filter(todo => todo.inList.includes(listName) && todo.isDone).length;
-}
+  }
 
-const getListDoingCount = (listName) => {
+  const getListDoingCount = (listName) => {
     return todoList.filter(todo => todo.inList.includes(listName) && todo.isStarted && !todo.isDone).length;
-}
+  }
 
 
 
@@ -390,7 +423,7 @@ const getListDoingCount = (listName) => {
       todoList, addTodo, cancelTodo, removeTodo, toggleTodoComplete,
       getTodoCount, getDoneCount, getDoingCount, editTodo, toggleTodoStart, refreshTodoList,
       getActiveListDoingCount, getActiveListTodoCount, getActiveListDoneCount, getListDoingCount,
-      getListDoneCount, getListTodoCount, setStepCompleted
+      getListDoneCount, getListTodoCount, setStepCompleted, setStepUncomplete
     }}>
       {children}
     </TodoContext.Provider>

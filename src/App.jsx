@@ -9,6 +9,7 @@ import Select from 'react-select'
 import CreateListModal from './components/Todo/TodoModal/CreateListModal/CreateListModal'
 import DeleteListModal from './components/Todo/TodoModal/DeleteListModal/DeleteListModal'
 import CookieConsent from './components/CookieConsent/CookieConsent'
+import { toast } from "react-toastify";
 
 import 'material-design-lite/dist/material.min.css';
 import 'material-design-lite/dist/material.min.js';
@@ -63,12 +64,14 @@ function App() {
 
   const handleDelete = () => {
     const lisToDelete = loggedInUser.activeList
-    if(lisToDelete === 'all'){
-      setDeleteListError(`You cannnot delete this list this list`);
-      return
+    if(lisToDelete === 'all' || lisToDelete === 'shared' || lisToDelete === 'today'){
+      toast.error(`You cannot delete the list "${lisToDelete}"!`);
+      setIsDeleteListModalOpen(false);
+      return;
     }
 
     deleteList(lisToDelete);
+    toast.success(`List "${lisToDelete}" deleted!`);
     setDeleteListError("");
     setIsDeleteListModalOpen(false);
   }
