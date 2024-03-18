@@ -161,7 +161,7 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
                         type='text'
                         placeholder='Enter task name'
                         onChange={handleInputChange}
-                        className='create-modal-input'
+                        className='create-modal-input create-modal-name-input'
                         onKeyDownCapture={handleKeyPress}
                         autoFocus
                         maxLength={70}

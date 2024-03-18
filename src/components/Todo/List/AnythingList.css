@@ -5,7 +5,8 @@
     justify-content: center; /* Center horizontally */
     align-items: center; /* Center vertically */
     padding: 3px;
-    
+    margin: 2px;
+    border-top: 2px solid #9b8c8c;
 }
 
 .list-container {

@@ -119,7 +119,7 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
     const handleInputChangeStep = (id, event) => {
         setTaskData(prevData => ({
             ...prevData,
-            steps: prevData.steps.map(step => 
+            steps: prevData.steps.map(step =>
                 step._id === id ? { ...step, taskName: event.target.value } : step
             )
         }));
@@ -331,7 +331,7 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
                                 }),
                             }}
                         />
-                        <button className="create-list-button" style={{ marginLeft: '10px' }} onClick={handleAddToList}>Add</button>
+                        <button className="add-list-button" style={{ marginLeft: '10px' }} onClick={handleAddToList}>Add</button>
                     </div>
                     <div className="input-container" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%', padding: '10px' }}>
                         <label style={{ width: '65px', textAlign: '' }}>In lists</label>
@@ -368,8 +368,9 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
 
 
                     {errorMessage && <p className="error">{errorMessage}</p>}
-
-                    <button className='modal-button'> Save </button>
+                    <div className='save-button-div'>
+                        <button className='modal-button'> Save </button>
+                    </div>
                 </form>
             ) : (
                 <form className='edit-entry-form' onSubmit={handleSubmit}>
