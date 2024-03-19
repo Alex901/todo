@@ -10,6 +10,10 @@ import CreateListModal from './components/Todo/TodoModal/CreateListModal/CreateL
 import DeleteListModal from './components/Todo/TodoModal/DeleteListModal/DeleteListModal'
 import CookieConsent from './components/CookieConsent/CookieConsent'
 import { toast } from "react-toastify";
+import Icon from '@mdi/react';
+import { mdiPlus } from '@mdi/js';
+import { mdiMinus } from '@mdi/js';
+
 
 import 'material-design-lite/dist/material.min.css';
 import 'material-design-lite/dist/material.min.js';
@@ -17,7 +21,7 @@ import 'material-design-lite/dist/material.min.js';
 function App() {
   const [activeView, setActiveView] = useState('todo');
   const { getTodoCount, getDoneCount, getDoingCount, getActiveListTodoCount, getActiveListDoingCount, getActiveListDoneCount,
-  getListDoingCount, getListDoneCount, getListTodoCount } = useTodoContext();
+    getListDoingCount, getListDoneCount, getListTodoCount } = useTodoContext();
   const { loggedInUser, isLoggedIn, setLoggedInUser, setActiveList, deleteList } = useUserContext();
   const [isCreateListModalOpen, setIsCreateListModalOpen] = useState(false);
   const [isdDeleteListModalOpen, setIsDeleteListModalOpen] = useState(false);
@@ -41,9 +45,9 @@ function App() {
       setLoggedInUser({ ...loggedInUser, activeList: selectedOption.value });
       //TODO: this is a bad function name, change it
       setActiveList(selectedOption.value);
-    } else { 
+    } else {
       //0 can never be deleted, so we prevent the nullpointer here
-      setLoggedInUser({ ...loggedInUser, activeList: loggedInUser.listNames[0]}); 
+      setLoggedInUser({ ...loggedInUser, activeList: loggedInUser.listNames[0] });
       setActiveList(loggedInUser.listNames[0]);
     }
   }
@@ -53,7 +57,7 @@ function App() {
     setIsCreateListModalOpen(true);
   };
 
-  const closeCreateListModal = () => { 
+  const closeCreateListModal = () => {
     setIsCreateListModalOpen(false);
   };
 
@@ -64,7 +68,7 @@ function App() {
 
   const handleDelete = () => {
     const lisToDelete = loggedInUser.activeList
-    if(lisToDelete === 'all' || lisToDelete === 'shared' || lisToDelete === 'today'){
+    if (lisToDelete === 'all' || lisToDelete === 'shared' || lisToDelete === 'today') {
       toast.error(`You cannot delete the list "${lisToDelete}"!`);
       setIsDeleteListModalOpen(false);
       return;
@@ -81,7 +85,7 @@ function App() {
     <div className='app'>
       <Header />
       <>
-      <CookieConsent/>
+        <CookieConsent />
       </>
       <div className="content">
         <Card>
@@ -98,37 +102,42 @@ function App() {
                     const todoCount = getListTodoCount(listName);
                     const doingCount = getListDoingCount(listName);
                     const doneCount = getListDoneCount(listName);
-                
+
                     return {
                       label: (
                         <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-                            <span>{listName}</span>
-                            <span>({todoCount},{doingCount},{doneCount})</span>
+                          <span>{listName}</span>
+                          <span>({todoCount},{doingCount},{doneCount})</span>
                         </div>
-                    ),
-                    value: listName
-                };
-            })}
+                      ),
+                      value: listName
+                    };
+                  })}
                   value={typeof loggedInUser.activeList === 'string' ? { label: loggedInUser.activeList, value: loggedInUser.activeList } : null}
                   onChange={handleListChange}
                 />
 
                 <div style={{ margin: '0 1em 0 1em' }}></div> {/* Best solution ever :D */}
 
-                <button className="create-list-button" onClick={openCreateListModal}> Create new list
-                </button>
-                <CreateListModal 
-                isOpen={isCreateListModalOpen} 
-                onRequestClose={closeCreateListModal} />
+                <div className="icon-button" onClick={openCreateListModal}>
+                  <Icon path={mdiPlus} size={1.6} />
+                </div>
 
-                <button className="delete-list-button" onClick={openDeleteListModal}>Delete List</button>
-                <DeleteListModal 
-                isOpen={isdDeleteListModalOpen}
-                onRequestClose={() => {setIsDeleteListModalOpen(false); setDeleteListError("")}}
-                listName = {loggedInUser.activeList}
-                onDelete = {handleDelete}
-                onCancel = {() => {setIsDeleteListModalOpen(false); setDeleteListError("")}}
-                errorMessage={deleteListError}
+                <div className="icon-button" onClick={openDeleteListModal}>
+                  <Icon path={mdiMinus} size={1.6} />
+                </div>
+
+                <CreateListModal
+                  isOpen={isCreateListModalOpen}
+                  onRequestClose={closeCreateListModal} />
+
+                <DeleteListModal
+                  isOpen={isdDeleteListModalOpen}
+                  onRequestClose={() => { setIsDeleteListModalOpen(false); setDeleteListError("") }}
+                  listName={loggedInUser.activeList}
+                  onDelete={handleDelete}
+                  onCancel={() => { setIsDeleteListModalOpen(false); setDeleteListError("") }}
+                  errorMessage={deleteListError}
                 />
               </div>
             )}
@@ -141,19 +150,19 @@ function App() {
                 background: activeView === 'todo' ? '#eaeaef' : '#777474',
                 color: activeView === 'todo' ? 'black' : 'white',
                 flexGrow: '1'
-              }}> Todo ({isLoggedIn ? getActiveListTodoCount() : getTodoCount()}) </button>
+              }}> Prepared ({isLoggedIn ? getActiveListTodoCount() : getTodoCount()}) </button>
 
               <button className="navButton" onClick={switchDoingView} style={{
                 background: activeView === 'doing' ? '#eaeaef' : '#777474',
                 color: activeView === 'doing' ? 'black' : 'white',
                 flexGrow: '1'
-              }}> Started ({isLoggedIn ? getActiveListDoingCount(): getDoingCount()}) </button>
+              }}> Ongoing ({isLoggedIn ? getActiveListDoingCount() : getDoingCount()}) </button>
 
               <button className="navButton" onClick={switchDoneView} style={{
                 background: activeView === 'done' ? '#eaeaef' : '#777474',
                 color: activeView === 'done' ? 'black' : 'white',
                 flexGrow: '1'
-              }}> Done ({isLoggedIn ? getActiveListDoneCount() : getDoneCount()}) </button>
+              }}> Review ({isLoggedIn ? getActiveListDoneCount() : getDoneCount()}) </button>
             </div>
           </div>
 

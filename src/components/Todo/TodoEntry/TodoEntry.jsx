@@ -89,7 +89,6 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
 
     const handleMoreInfromationClick = () => {
         setIsMoreChecked(!isMoreChecked);
-        console.log(isMoreChecked);
     }
 
     const handleClicktoComplete = () => {
@@ -102,12 +101,10 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
         } else {
             entry.current.classList.add('vibrate');
             setTimeout(() => entry.current.classList.remove('vibrate'), 1000);
-            console.log("There are uncompleted steps remaining.");
         }
     }
 
     const handleClickToStart = () => {
-        console.log("doing count: ", getDoingCount())
         if ((isLoggedIn ? getActiveListDoingCount() : getDoingCount()) > 2) {
             setIsModalOpen(true);
         } else {
@@ -153,7 +150,7 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
         } else if(step.isDone){
             setStepUncomplete(todoData._id, stepId)
         } else {
-            console.log("nothing should happen");
+            return;
         }
     }
 

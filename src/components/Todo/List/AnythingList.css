@@ -56,3 +56,19 @@
 .doing-item:hover .doing-text {
     text-decoration: line-through;
 }
+
+.list-settings {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 4px;
+    border: 1px solid rgb(163, 160, 160);
+    border-radius: 10px;
+    background-color: #dedada;
+}
+
+
+.toggle-order-button:hover {
+    cursor: pointer;
+    transform: scale(1.2);
+}

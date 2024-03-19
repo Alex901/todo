@@ -102,7 +102,6 @@ const TodoProvider = ({ children }) => {
         inList: loggedInUser ? ['all'].concat(loggedInUser.activeList !== 'all' ? [loggedInUser.activeList] : []) : []
       };
 
-      console.log("newTodo", newTodo);
 
       const response = await axios.post(`${BASE_URL}/api/`, newTodo);
       if (response.status === 201) {
@@ -180,7 +179,6 @@ const TodoProvider = ({ children }) => {
   };
 
   const toggleTodoStart = async (id) => {
-    console.log("todoContext > toggleTodoStart -> id: ", id);
     try {
       const todo = todoList.find(todo => todo.id === id);
       if (!todo) {
@@ -200,7 +198,6 @@ const TodoProvider = ({ children }) => {
         });
         setTodoList(updatedTodoList);
         fetchTodoList();
-        console.log('Task started successfully');
       } else {
         console.error('Error marking task as done:', response.statusText);
       }
@@ -231,23 +228,19 @@ const TodoProvider = ({ children }) => {
         });
         setTodoList(updatedTodoList);
         fetchTodoList();
-        console.log('Task canceled successfully');
 
 
       } else {
         console.error('Error Cancling task', response.statusText);
       }
     } catch (error) {
-      console.log('Error Canceling todoTask', error);
       return;
     }
   };
 
   const editTodo = async (updatedTask) => {
-    console.log("editTodo updatedTask:", updatedTask);
     try {
       const taskId = todoList.find(todo => todo.id === updatedTask.id)._id;
-      console.log("editTodo > taskId to edit:", taskId);
 
       const response = await axios.patch(`${BASE_URL}/api/edit`, {
         taskId,
@@ -261,7 +254,6 @@ const TodoProvider = ({ children }) => {
           }
           return todo;
         }));
-        console.log('Updated task successfully');
       } else {
         console.error("Error updating task: ", response.statusText);
       }
@@ -304,7 +296,6 @@ const TodoProvider = ({ children }) => {
   }
   //Find task with id -> step id and set it to completed
   const setStepCompleted = async (taskId, stepId) => {
-    console.log("todoContext: setStepCompleted: taskId, stepId", taskId, stepId);
     try {
       const response = await axios.patch(`${BASE_URL}/api/stepComplete`, { taskId, stepId });
       if (response.status === 200) {
@@ -333,11 +324,10 @@ const TodoProvider = ({ children }) => {
   }
 
   const setStepUncomplete = async (taskId, stepId) => {
-    console.log("todoContext: setStepUncompleted: taskId, stepId", taskId, stepId);
+    console.log("todoContext: setStepUncomplete: taskId, stepId", taskId, stepId);
     try {
         const response = await axios.patch(`${BASE_URL}/api/stepUncomplete`, { taskId, stepId });
         if (response.status === 200) {
-            console.log("Step marked as undone successfully");
   
             // Update local state here
             setTodoList(prevTodoList => {

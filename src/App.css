@@ -4,6 +4,13 @@
   text-align: center;
 }
 
+
+.app {
+  display: flex;
+  flex-direction: column;
+
+}
+
 body {
   background-color: rgb(241, 237, 237);
 }
@@ -35,12 +42,6 @@ body {
   border: 1px solid rgb(194, 188, 188);
 }
 
-.app {
-  display: flex;
-  flex-direction: column;
-
-}
-
 
 .nav button.create-list-button {
   width: 120px;
@@ -53,4 +54,22 @@ body {
   background-color: #d62525;
   color: rgb(255, 255, 255);
 }
+
+
+
+/* Icons */
+.icon-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+  color: #9f9ea4;
+}
+
+.icon-button:hover {
+  transform: scale(1.4);
+  color: black;
+}
+
 
