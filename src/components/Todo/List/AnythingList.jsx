@@ -7,7 +7,6 @@ import EditModal from "../TodoModal/EditModal/EditModal";
 import TodoEntry from "../TodoEntry/TodoEntry";
 import { useTodoContext } from "../../../contexts/todoContexts";
 import { useUserContext } from "../../../contexts/UserContext";
-import { toast } from "react-toastify";
 
 const AnythingList = ({ type }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);

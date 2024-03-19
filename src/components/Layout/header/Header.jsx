@@ -78,11 +78,7 @@ const Header = () => {
       <LoginModal isOpen={isLoginModalOpen} onRequestClose={closeLoginModal} />
       <RegisterModal isOpen={isRegisterModalOpen} onRequestClose={closeRegisterModal} />
       <div className="mdl-layout" style={{ overflow: 'hidden' }}>
-        {showWelcome ? (
-          <div className="welcome-card">Welcome back, {loggedInUser ? loggedInUser.username : ''}. <br /><br /> You  have new tasks waiting for you today!</div>
-        ) : (
-          <div className="welcome-clock">{time.toLocaleTimeString([], { hour: "2-digit", minute: "2-digit", second: "2-digit" })}</div>
-        )}
+    
       </div>
     </div>
   );
