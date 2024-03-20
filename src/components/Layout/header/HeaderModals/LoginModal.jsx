@@ -34,7 +34,6 @@ const LoginModal = ({ isOpen, onRequestClose }) => {
         let isError = false;
         event.preventDefault();
         const userData = { username: username, password: password };
-        // console.log("LoginModal> handleLogin: ", userData);
         if (!username.trim()) {
             setUserNameError("Username cannot be empty");
             isError = true;

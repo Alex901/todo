@@ -26,14 +26,12 @@ const Header = () => {
 
 
   const openLoginModal = (event) => {
-    // console.log(isLoggedIn);
     event.preventDefault();
     setIsLoginModalOpen(true);
   }
 
   const closeLoginModal = () => {
     setIsLoginModalOpen(false);
-    // console.log(isLoggedIn)
     setIsLoginModalOpen(false);
   }
 
@@ -49,7 +47,6 @@ const Header = () => {
   const handleLogout = () => {
     logout();
     toast.success("Bye, see you soon!");
-    //console.log("Logging out");
   }
 
   return (

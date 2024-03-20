@@ -59,18 +59,14 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
 
 
     const handleInputChange = (event) => {
-        console.log(event.target);
-
         setErrorMessage('');
         setTaskData({
             ...taskData,
             [event.target.name]: event.target.value
         });
-        console.log(taskData);
     };
 
     const handleSubmit = () => {
-        console.log("ListNames ", optionsListNames);
         event.preventDefault();
         console.log("TodoModal -> newTaskData", taskData);
         if (!taskData.task.trim()) {
@@ -84,8 +80,6 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
             setErrorMessage('You need to enter all step names');
             return;
         }
-
-        console.log("taskData: ", taskData);
         editTodo(taskData);
         toast.success('Changes saved');
         onRequestClose();
@@ -128,7 +122,6 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
     };
 
     const handleAddStep = () => {
-        console.log("newTaskData.steps.length: ", taskData.steps.length);
         if (taskData.steps.length < 10) {
             setTaskData(prevData => ({
                 ...prevData,
@@ -143,7 +136,6 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
 
     const handleAddToList = (event) => {
         event.preventDefault();
-        console.log("Add to list", selectedOption);
         if (selectedOption === null) {
             setErrorMessage('You need to select a list');
             setTimeout(() => { setErrorMessage('') }, 5000);
@@ -161,7 +153,6 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
     }
 
     const handleRemoveFromList = (listName) => {
-        console.log("Remove from list", listName);
         if (listName === "all") {
             setErrorMessage('You cannot remove this list');
             setTimeout(() => { setErrorMessage('') }, 5000);

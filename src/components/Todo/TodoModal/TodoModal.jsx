@@ -69,7 +69,6 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
 
     const handleSubmit = () => {
         event.preventDefault();
-        console.log("TodoModal -> newTaskData", newTaskData);
         if (!newTaskData.taskName.trim()) {
             setErrorMessage('You need to enter a task name');
             return;
@@ -107,9 +106,7 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
     }
 
     const handleAddStep = () => {
-        console.log("newTaskData.steps.length: ", newTaskData.steps.length);
         if (newTaskData.steps.length < 10) {
-            console.log("prevData add step: ")
             setNewTaskData(prevData => ({
                 ...prevData,
                 steps: [...prevData.steps, { id: prevData.steps.length + 1, taskName: '', isDone: false }]

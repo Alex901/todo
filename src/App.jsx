@@ -93,6 +93,7 @@ function App() {
             {/* First row */}
             {isLoggedIn && (
               <div style={{ display: 'flex', justifyContent: 'center', margin: '1em 0 2em 0', gap: '5px' }}>
+                <label style={{ fontWeight: 'bold', display: 'flex', alignItems: 'center', margin: '10px' }}> Active list: </label>
                 <Select
                   styles={{ control: (base) => ({ ...base, width: '22em', borderRadius: '10px' }) }}
                   className="select-list"

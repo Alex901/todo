@@ -16,12 +16,10 @@ const UserProvider = ({ children }) => {
         checkLogin();
     }, []);
 
-    console.log("loggedInUser: ", loggedInUser);
 
     const checkLogin = async () => {
         try {
             const response = await axios.get(`${BASE_URL}/auth/checkLogin`, { withCredentials: true });
-            console.log("checkLogin response: ", response); 
             if (response.data.valid){
                 setLoggedInUser(response.data.user);
                 setIsLoggedIn(true);
@@ -53,7 +51,6 @@ const UserProvider = ({ children }) => {
                         .then(userResponse => {
                             if (userResponse.status === 200) {
                                 setLoggedInUser(userResponse.data);
-                                console.log("User data loaded", loggedInUser);
                                 setIsLoggedIn(true);
                             } else {
                                 console.log("could not load user data, login terminated");
@@ -89,7 +86,6 @@ const UserProvider = ({ children }) => {
     }
 
     const setActiveList = async (listName) => {
-        console.log("logged in user", loggedInUser)
         try {
             if (!isLoggedIn) {
                 console.log("User not logged in");
@@ -97,7 +93,6 @@ const UserProvider = ({ children }) => {
             }
             const _id = loggedInUser._id;
 
-            console.log(`baseUR: ${BASE_URL}/users/setlist/${_id}`);
             const response = await axios.patch(`${BASE_URL}/users/setlist/${_id}`, { activeList: listName });
             if (response.status === 200) {
                 console.log("Active list set to: ", listName);
@@ -164,10 +159,35 @@ const UserProvider = ({ children }) => {
         if (parts.length === 2) return parts.pop().split(';').shift();
     }
 
+    const toggleUrgent = async (newUrgentStatus) => {
+        try {
+            if (!isLoggedIn) {
+                console.log("User not logged in");
+                return;
+            }
+            const _id = loggedInUser._id;
+            const response = await axios.patch(`${BASE_URL}/users/toggleurgent/${_id}`, 
+            { "settings.todoList.urgentOnly": newUrgentStatus });
+
+            if (response.status === 200) {
+                console.log("Urgent setting toggled");
+                console.log("loggedInUser, " , loggedInUser)
+                console.log("response.data, ", response.data)
+                setLoggedInUser(response.data);
+            } else if (response.status === 404) {
+                console.log("User not found");
+            } else {
+                console.log("Internal server error");
+            }
+        } catch (error) {
+            console.error('Error toggling urgent setting', error);
+        }
+    };
+
     return (
         <UserContext.Provider value={{
             isLoggedIn, loggedInUser, login, logout, registerNewUser,
-            setLoggedInUser, setActiveList, addList, deleteList
+            setLoggedInUser, setActiveList, addList, deleteList, toggleUrgent
         }} >
             {children}
         </UserContext.Provider>

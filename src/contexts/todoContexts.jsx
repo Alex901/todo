@@ -78,8 +78,6 @@ const TodoProvider = ({ children }) => {
     try {
       const newId = parseInt(Date.now().toString(36) + Math.random().toString(36).substr(2), 36); //but why? xD
 
-      console.log("loggedInUser: ", loggedInUser);
-
       //TODO: some typesafety here
       const newTodo = {
         id: newId,
@@ -356,17 +354,17 @@ const TodoProvider = ({ children }) => {
 
   //Other functions
 
-  const getTodoCount = () => {
-    return todoList.filter(todo => !todo.isDone && !todo.isStarted).length;
-  }
+  const getTodoCount = (isUrgent = false) => {
+    return todoList.filter(todo => !todo.isDone && !todo.isStarted && (!isUrgent || todo.isUrgent)).length;
+}
 
-  const getDoneCount = () => {
-    return todoList.filter(todo => todo.isDone).length;
-  }
+const getDoneCount = (isUrgent = false) => {
+    return todoList.filter(todo => todo.isDone && (!isUrgent || todo.isUrgent)).length;
+}
 
-  const getDoingCount = () => {
-    return todoList.filter(todo => todo.isStarted && !todo.isDone).length;
-  }
+const getDoingCount = (isUrgent = false) => {
+    return todoList.filter(todo => todo.isStarted && !todo.isDone && (!isUrgent || todo.isUrgent)).length;
+}
 
   const getActiveListTodoCount = () => {
     return todoList.filter(todo => todo.inList.includes(loggedInUser.activeList) && !todo.isDone && !todo.isStarted).length;

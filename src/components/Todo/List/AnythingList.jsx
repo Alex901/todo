@@ -11,17 +11,19 @@ import Select from 'react-select'; // or '@material-ui/core/Select'
 import Icon from '@mdi/react';
 import { mdiMenuUp } from '@mdi/js';
 import { mdiMenuDown } from '@mdi/js';
+import axios from "axios";
 
 const AnythingList = ({ type }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [activeTodoList, setActiveTodoList] = useState([]);
     const [editingTask, setEditingTask] = useState(null);
-    const { loggedInUser, isLoggedIn } = useUserContext();
+    const { loggedInUser, isLoggedIn, toggleUrgent } = useUserContext();
     const { todoList } = useTodoContext();
     const [isAscending, setIsAscending] = useState(true);
     const [isUrgentOnly, setIsUrgentOnly] = useState(false);
-    const [isNewestOnTop, setIsNewestOnTop] = useState(false);
+    const [isDeadlineOnly, setIsDeadlineOnly] = useState(false);
+    const [deadlineListOnly, setDeadlineListOnly] = useState([]);
     const [selectedOptionSort, setSelectedOptionSort] = useState({ value: 'created', label: 'Created' });
     const [filteredTodoList, setFilteredTodoList] = useState([]);
     const [sortedTodoList, setSortedTodoList] = useState([]);
@@ -48,18 +50,32 @@ const AnythingList = ({ type }) => {
         }
     }, [editingTask]);
 
+    //Everytime todoList(or loggedInUser) changes, i want to grab only the logged in users entries
     useEffect(() => {
         filterTodoList();
-        setIsUrgentOnly(false);
     }, [todoList, loggedInUser]);
 
-    useEffect(() => {
-        filterUrgentTasks();
-    }, [isUrgentOnly]);
-
+    //if the user selects a different sorting option, i want to sort the list
     useEffect(() => {
         filterActiveList();
     }, [selectedOptionSort, isAscending, activeTodoList, loggedInUser]);
+
+    //When i load a new user, i want that users settings to be loaded
+    useEffect(() => {
+        if (loggedInUser && loggedInUser.settings && loggedInUser.settings.todoList) {
+            setIsUrgentOnly(loggedInUser.settings.todoList.urgentOnly);
+            console.log("DEBUG: anythingList > useEffect> isUrgentOnly: ", isUrgentOnly);
+        }
+    }, [loggedInUser]);
+
+    //Only after the activeTodoList has been set, i want to filters based on user settingws
+   
+    useEffect(() => {
+        console.log("DEBUG: useEffect activeTodoList");
+        if (activeTodoList.length > 0) {
+            filterUrgentTasks(isUrgentOnly);
+        }
+    }, [isUrgentOnly, activeTodoList]);
 
     const handleClick = () => {
         setIsModalOpen(true);
@@ -79,14 +95,17 @@ const AnythingList = ({ type }) => {
     const filterTodoList = () => {
         if (isLoggedIn && loggedInUser.activeList) {
             const filteredList = todoList.filter(todo => todo.inList.includes(loggedInUser.activeList));
+            if(JSON.stringify(filteredList) !== JSON.stringify(activeTodoList)) {
             setActiveTodoList(filteredList);
+            }
         } else {
+            if(JSON.stringify(todoList) !== JSON.stringify(activeTodoList)) {
             setActiveTodoList(todoList);
+            }
         }
     };
 
     const filterActiveList = () => {
-        console.log("selectedOptionSort function: ", selectedOptionSort);
         if (selectedOptionSort.value === 'task') {
             const sortedList = [...activeTodoList].sort((a, b) => {
                 if (isAscending) {
@@ -97,7 +116,6 @@ const AnythingList = ({ type }) => {
 
             })
 
-            console.log("sortedList: ", sortedList);
             if (JSON.stringify(sortedList) !== JSON.stringify(activeTodoList)) {
                 setActiveTodoList(sortedList);
             }
@@ -109,7 +127,6 @@ const AnythingList = ({ type }) => {
                     return b.created - a.created;
                 }
             })
-            console.log("sortedList: ", sortedList);
             if (JSON.stringify(sortedList) !== JSON.stringify(activeTodoList)) {
                 setActiveTodoList(sortedList);
             }
@@ -121,7 +138,6 @@ const AnythingList = ({ type }) => {
                     return priorityMapping[b.priority] - priorityMapping[a.priority];
                 }
             })
-            console.log("sortedList: ", sortedList);
             if (JSON.stringify(sortedList) !== JSON.stringify(activeTodoList)) {
                 setActiveTodoList(sortedList);
             }
@@ -133,7 +149,6 @@ const AnythingList = ({ type }) => {
                     return b.steps.length - a.steps.length;
                 }
             })
-            console.log("sortedList: ", sortedList);
             if (JSON.stringify(sortedList) !== JSON.stringify(activeTodoList)) {
                 setActiveTodoList(sortedList);
             }
@@ -145,7 +160,6 @@ const AnythingList = ({ type }) => {
                     return difficultyMapping[b.difficulty] - difficultyMapping[a.difficulty];
                 }
             })
-            console.log("sortedList: ", sortedList);
             if (JSON.stringify(sortedList) !== JSON.stringify(activeTodoList)) {
                 setActiveTodoList(sortedList);
             }
@@ -158,7 +172,6 @@ const AnythingList = ({ type }) => {
                     return b.dueDate - a.dueDate;
                 }
             })
-            console.log("sortedList: ", sortedList);
             if (JSON.stringify(sortedList) !== JSON.stringify(activeTodoList)) {
                 setActiveTodoList(sortedList);
             }
@@ -170,7 +183,6 @@ const AnythingList = ({ type }) => {
                     return b.estimatedTime - a.estimatedTime;
                 }
             })
-            console.log("sortedList: ", sortedList);
             if (JSON.stringify(sortedList) !== JSON.stringify(activeTodoList)) {
                 setActiveTodoList(sortedList);
             }
@@ -179,20 +191,26 @@ const AnythingList = ({ type }) => {
         }
     }
 
-    const filterUrgentTasks = () => {
+    const filterUrgentTasks = (urgentOnly) => {
+        console.log("activeTodoList: ", activeTodoList);
         console.log("isUrgentOnly: ", isUrgentOnly);
-        if (isUrgentOnly) {
+        if (urgentOnly) {
             const urgentTasks = activeTodoList.filter(task => task.isUrgent);
             console.log("urgentTasks: ", urgentTasks);
+            if (JSON.stringify(urgentTasks) !== JSON.stringify(activeTodoList)) {
             setActiveTodoList(urgentTasks);
+            }
         } else {
+            if (JSON.stringify(activeTodoList) !== JSON.stringify(activeTodoList)) {
             filterTodoList();
-            setIsUrgentOnly(false);
+            }
         }
     };
 
     const handleSortChange = (selectedOption) => {
         console.log("selectedOption: ", selectedOption);
+        
+    
         setSelectedOptionSort(selectedOption);
     }
 
@@ -202,11 +220,13 @@ const AnythingList = ({ type }) => {
     }
 
     const toggleUrgentTasks = () => {
-        setIsUrgentOnly(!isUrgentOnly);
+        const newUrgentOnly = !isUrgentOnly; // Toggle the value
+        // Perform API call or any other side effects here
+        toggleUrgent(newUrgentOnly); //API call
     }
 
-    const toggleNewestOnTop = () => {
-        setIsNewestOnTop(!isNewestOnTop);
+    const toggleDeadlineOnly = () => {
+       setIsDeadlineOnly(!isDeadlineOnly);
     }
     //Create the todo lists
     return (
@@ -260,8 +280,8 @@ const AnythingList = ({ type }) => {
                         <label>Urgent only</label>
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', margin: '3px 20px' }}>
-                        <input type="checkbox" onChange={toggleNewestOnTop} checked={isNewestOnTop} />
-                        <label>New on top</label>
+                        <input type="checkbox" onChange={toggleDeadlineOnly} checked={isDeadlineOnly} />
+                        <label>Dadline only</label>
                     </div>
                 </div>
             )}
