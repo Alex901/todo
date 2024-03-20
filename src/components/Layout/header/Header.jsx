@@ -5,6 +5,7 @@ import RegisterModal from "./HeaderModals/RegisterModal";
 import { useUserContext } from "../../../contexts/UserContext";
 import logo from "../../../assets/Anvil_logo_v1.png";
 import { toast } from "react-toastify";
+import UserAvatar from "./UserAvatar/UserAvatar";
 
 const Header = () => {
   const [time, setTime] = useState(new Date());
@@ -15,14 +16,14 @@ const Header = () => {
 
   useEffect(() => {
     const timer = setInterval(() => {
-        setTime(new Date());
+      setTime(new Date());
     }, 1000); // update time every second
 
     // cleanup function
     return () => {
-        clearInterval(timer);
+      clearInterval(timer);
     };
-}, []);
+  }, []);
 
 
   const openLoginModal = (event) => {
@@ -50,7 +51,7 @@ const Header = () => {
   }
 
   return (
-    <div className="mdl-layout" style={{ overflow: 'hidden' }}>
+    <div className="mdl-layout" style={{ overflow: "visible" }}>
       <header className="mdl-layout__header header_layout">
         <div className="mdl-layout__header-row nav-row" style={{ display: 'flex', justifyContent: 'space-between' }}>
           {/* Left section */}
@@ -66,8 +67,10 @@ const Header = () => {
           </nav>
 
           {/* Right section */}
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <a href="#" className="mdl-navigation__link login-link" onClick={isLoggedIn ? handleLogout : openLoginModal}>{isLoggedIn ? 'Logout' : 'Login'} </a>
+          <div style={{ display: 'flex', alignItems: 'center', position: 'relative' }}>
+          
+          {isLoggedIn ? <UserAvatar /> : null}
+          {!isLoggedIn && <a href="#" className="mdl-navigation__link login-link" onClick={openLoginModal}>Login</a>}
             {!isLoggedIn && <button className="todoButton" onClick={openRegisterModal}>Register</button>}
           </div>
         </div>
@@ -75,7 +78,7 @@ const Header = () => {
       <LoginModal isOpen={isLoginModalOpen} onRequestClose={closeLoginModal} />
       <RegisterModal isOpen={isRegisterModalOpen} onRequestClose={closeRegisterModal} />
       <div className="mdl-layout" style={{ overflow: 'hidden' }}>
-    
+
       </div>
     </div>
   );
