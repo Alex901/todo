@@ -13,6 +13,7 @@ const UserProvider = ({ children }) => {
         'http://localhost:5000';
 
     useEffect(() => {
+     
         checkLogin();
     }, []);
 
@@ -86,6 +87,7 @@ const UserProvider = ({ children }) => {
     }
 
     const setActiveList = async (listName) => {
+        console.log("listname: ", listName);
         try {
             if (!isLoggedIn) {
                 console.log("User not logged in");
@@ -117,7 +119,12 @@ const UserProvider = ({ children }) => {
             const response = await axios.patch(`${BASE_URL}/users/addlist/${_id}`, { listName });
             if (response.status === 200) {
                 console.log("List added: ", listName);
-                setLoggedInUser({ ...loggedInUser, listNames: [...loggedInUser.listNames, listName], activeList: listName });
+                setLoggedInUser({ 
+                    ...loggedInUser, 
+                    listNames: [...loggedInUser.listNames, { name: listName }], 
+                    activeList: listName 
+                  });
+                  console.log("loggedInUser: ", loggedInUser);
             } else if (response.status === 404) {
                 console.log("User not found");
             } else {
@@ -131,27 +138,28 @@ const UserProvider = ({ children }) => {
     const deleteList = async (listName) => {
         console.log("delete list with name: ", listName);
         try {
-            if (!isLoggedIn) {
-                console.log("User not logged in");
-                return;
-            }
-            const _id = loggedInUser._id;
-            const response = await axios.delete(`${BASE_URL}/users/deletelist/${_id}`, { data: { listName } });
-            if (response.status === 200) {
-                console.log("List deleted: ", listName);
-                setLoggedInUser({
-                    ...loggedInUser, listNames: loggedInUser.listNames.filter((name) => name !== listName),
-                    activeList: loggedInUser.listNames[0]
-                }); //This should always be 'all'
-            } else if (response.status === 404) {
-                console.log("User not found");
-            } else {
-                console.log("Internal server error");
-            }
+          if (!isLoggedIn) {
+            console.log("User not logged in");
+            return;
+          }
+          const _id = loggedInUser._id;
+          const response = await axios.delete(`${BASE_URL}/users/deletelist/${_id}`, { data: { listName } });
+          if (response.status === 200) {
+            console.log("List deleted: ", listName);
+            setLoggedInUser({
+              ...loggedInUser, 
+              listNames: loggedInUser.listNames.filter((item) => item.name !== listName),
+              activeList: loggedInUser.listNames[0].name
+            }); //This should always be 'all'
+          } else if (response.status === 404) {
+            console.log("User not found");
+          } else {
+            console.log("Internal server error");
+          }
         } catch (error) {
-            console.error('Error deleting list', error);
+          console.error('Error deleting list', error);
         }
-    }
+      }
 
     function getCookie(name) {
         const value = `; ${document.cookie}`;

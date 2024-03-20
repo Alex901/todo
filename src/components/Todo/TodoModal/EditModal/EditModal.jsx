@@ -46,15 +46,15 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
     ];
 
     const optionsListNames = isLoggedIn && loggedInUser.listNames
-        ? loggedInUser.listNames
-            .filter(name => !taskData.inList.includes(name))
-            .map(name => ({ value: name, label: name }))
-        : [];
+    ? loggedInUser.listNames
+        .filter(item => !taskData.inList.includes(item.name))
+        .map(item => ({ value: item.name, label: item.name }))
+    : [];
 
-    const includedListNames = isLoggedIn && loggedInUser.listNames
+        const includedListNames = isLoggedIn && loggedInUser.listNames
         ? loggedInUser.listNames
-            .filter(name => taskData.inList.includes(name))
-            .map(name => ({ value: name, label: name }))
+            .filter(item => taskData.inList.includes(item.name))
+            .map(item => ({ value: item.name, label: item.name }))
         : [];
 
 

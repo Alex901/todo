@@ -100,18 +100,18 @@ function App() {
                   isSearchable={true}
                   isClearable={true}
                   options={loggedInUser.listNames.map(listName => {
-                    const todoCount = getListTodoCount(listName);
-                    const doingCount = getListDoingCount(listName);
-                    const doneCount = getListDoneCount(listName);
+                    const todoCount = getListTodoCount(listName.name);
+                    const doingCount = getListDoingCount(listName.name);
+                    const doneCount = getListDoneCount(listName.name);
 
                     return {
                       label: (
                         <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-                          <span>{listName}</span>
+                          <span>{listName.name}</span>
                           <span>({todoCount},{doingCount},{doneCount})</span>
                         </div>
                       ),
-                      value: listName
+                      value: listName.name
                     };
                   })}
                   value={typeof loggedInUser.activeList === 'string' ? { label: loggedInUser.activeList, value: loggedInUser.activeList } : null}
