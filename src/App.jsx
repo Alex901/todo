@@ -107,14 +107,14 @@ function App() {
                     return {
                       label: (
                         <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-                          <span>{listName.name}</span>
+                          <span>{listName.name.charAt(0).toUpperCase() + listName.name.slice(1)}</span>
                           <span>({todoCount},{doingCount},{doneCount})</span>
                         </div>
                       ),
                       value: listName.name
                     };
                   })}
-                  value={typeof loggedInUser.activeList === 'string' ? { label: loggedInUser.activeList, value: loggedInUser.activeList } : null}
+                  value={typeof loggedInUser.activeList === 'string' ? { label: loggedInUser.activeList.charAt(0).toUpperCase() + loggedInUser.activeList.slice(1), value: loggedInUser.activeList } : null}
                   onChange={handleListChange}
                 />
 
