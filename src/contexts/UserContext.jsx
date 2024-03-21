@@ -2,6 +2,7 @@
 import React, { createContext, useContext, useState, useEffect } from "react";
 import axios from "axios";
 import { useTodoContext } from "./todoContexts";
+import { toast } from "react-toastify";
 
 const UserContext = createContext();
 
@@ -192,10 +193,63 @@ const UserProvider = ({ children }) => {
         }
     };
 
+    const addTag = async (tagName, tagColor, textColor) => {
+        try {
+            if (!isLoggedIn) {
+                console.log("User not logged in");
+                return;
+            }
+            const _id = loggedInUser._id;
+            const activeList = loggedInUser.activeList;
+            console.log("activeList: ", activeList);
+            const response = await axios.patch(`${BASE_URL}/users/addtag/${_id}`, { tagName, tagColor, textColor, activeList });
+            if (response.status === 200) {
+                console.log("Tag added: ", tagName);
+                setLoggedInUser(response.data);
+                toast.success("Tag added");
+            } else if (response.status === 404) {
+                console.log("User not found");
+            } else {
+                console.log("Internal server error");
+                toast.error("Failed to add tag -- internal server error");
+            }
+        } catch (error) {
+            console.error('Error adding tag', error);
+            toast.error("Failed to add tag");
+        }   
+    }
+
+    const deleteTag = async (tagName) => {
+        console.log("delete tag with ", tagName);
+        try {
+            if (!isLoggedIn) {
+                console.log("User not logged in");
+                return;
+            }
+            const _id = loggedInUser._id;
+            const activeList = loggedInUser.activeList;
+            const response = await axios.delete(`${BASE_URL}/users/deletetag/${_id}`, { data: { tagName, activeList } });
+            if (response.status === 200) {
+                console.log("Tag deleted: ", tagName);
+                setLoggedInUser(response.data);
+                toast.success("Tag deleted");
+            } else if (response.status === 404) {
+                console.log("User not found");
+            } else {
+                console.log("Internal server error");
+                toast.error("Failed to delete tag -- internal server error");
+            }
+        } catch (error) {
+            console.error('Error deleting tag', error);
+            toast.error("Failed to delete tag");
+        }
+    }
+
     return (
         <UserContext.Provider value={{
             isLoggedIn, loggedInUser, login, logout, registerNewUser,
-            setLoggedInUser, setActiveList, addList, deleteList, toggleUrgent
+            setLoggedInUser, setActiveList, addList, deleteList, toggleUrgent, addTag,
+            deleteTag
         }} >
             {children}
         </UserContext.Provider>

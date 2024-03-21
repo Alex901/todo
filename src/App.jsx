@@ -1,7 +1,7 @@
 import './App.css'
 import Header from './components/Layout/header/Header'
 import Card from './components/Layout/card/Card'
-import { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import AnythingList from './components/Todo/List/AnythingList'
 import { useTodoContext } from './contexts/todoContexts'
 import { useUserContext } from './contexts/UserContext'
@@ -13,6 +13,11 @@ import { toast } from "react-toastify";
 import Icon from '@mdi/react';
 import { mdiPlus } from '@mdi/js';
 import { mdiMinus } from '@mdi/js';
+import Chip from '@mui/material/Chip';
+import Popper from '@mui/material/Popper';
+import { SketchPicker } from 'react-color';
+import TextField from '@mui/material/TextField';
+import Button from '@mui/material/Button';
 
 
 import 'material-design-lite/dist/material.min.css';
@@ -22,10 +27,12 @@ function App() {
   const [activeView, setActiveView] = useState('todo');
   const { getTodoCount, getDoneCount, getDoingCount, getActiveListTodoCount, getActiveListDoingCount, getActiveListDoneCount,
     getListDoingCount, getListDoneCount, getListTodoCount } = useTodoContext();
-  const { loggedInUser, isLoggedIn, setLoggedInUser, setActiveList, deleteList } = useUserContext();
+  const { loggedInUser, isLoggedIn, setLoggedInUser, setActiveList, deleteList, addTag, deleteTag } = useUserContext();
   const [isCreateListModalOpen, setIsCreateListModalOpen] = useState(false);
   const [isdDeleteListModalOpen, setIsDeleteListModalOpen] = useState(false);
   const [deleteListError, setDeleteListError] = useState("");
+  const [isNewTagPopperOpen, setIsNewTagPopperOpen] = useState(false);
+  const newTagAnchorRef = React.useRef(null);
 
   const switchTodoView = () => {
     setActiveView('todo');
@@ -66,6 +73,8 @@ function App() {
     setIsDeleteListModalOpen(true);
   };
 
+  console.debug("DEBUG: loggedInUser: ", loggedInUser);
+
   const handleDelete = () => {
     const lisToDelete = loggedInUser.activeList
     if (lisToDelete === 'all' || lisToDelete === 'shared' || lisToDelete === 'today') {
@@ -79,6 +88,50 @@ function App() {
     setDeleteListError("");
     setIsDeleteListModalOpen(false);
   }
+
+  const getBrightness = (color) => {
+    const rgb = parseInt(color.slice(1), 16);   // convert rrggbb to decimal
+    const r = (rgb >> 16) & 0xff;  // extract red
+    const g = (rgb >> 8) & 0xff;  // extract green
+    const b = (rgb >> 0) & 0xff;  // extract blue
+
+    // calculate brightness
+    return (r * 299 + g * 587 + b * 114) / 1000;
+  }
+
+  const getHexColor = (colorName) => {
+    switch (colorName) {
+      case 'black':
+        return '#000000';
+      case 'white':
+        return '#FFFFFF';
+      default:
+        return colorName;
+    }
+  }
+
+  const handleNewTagSubmit = (event) => {
+    event.preventDefault();
+    let tagName = event.target[0].value;
+
+    if (!tagName) {
+      toast.error('Please enter a name for the tag!');
+      return;
+    }
+
+    if (tagName.charAt(0) !== '#') {
+      tagName = '#' + tagName;
+    }
+
+    const tagColor = document.querySelector('input[type="color"]').value;
+    const brightness = getBrightness(tagColor);
+    const textColor = brightness > 128 ? 'black' : 'white';
+    const textColorHex = getHexColor(textColor);
+
+    addTag(tagName, tagColor, textColorHex);
+    setIsNewTagPopperOpen(false);
+  }
+
 
   //TODO: This shouldbe moved to a separate component
   return (
@@ -98,7 +151,6 @@ function App() {
                   styles={{ control: (base) => ({ ...base, width: '22em', borderRadius: '10px' }) }}
                   className="select-list"
                   isSearchable={true}
-                  isClearable={true}
                   options={loggedInUser.listNames.map(listName => {
                     const todoCount = getListTodoCount(listName.name);
                     const doingCount = getListDoingCount(listName.name);
@@ -142,6 +194,68 @@ function App() {
                 />
               </div>
             )}
+            {isLoggedIn && (
+              <div className="tags-container">
+                <div className='tags'>
+                  {loggedInUser.listNames.find(list => list.name === loggedInUser.activeList).tags.map((tag, index) => {
+                    return (
+                      <Chip
+                        key={index}
+                        label={tag.label}
+                        style={{
+                          background: `linear-gradient(45deg, ${tag.color} 30%, ${tag.color} 90%)`,
+                          boxShadow: `0 3px 5px 2px rgba(255, 105, 135, .3)`,
+                          color: tag.textColor,
+                        }}
+                        onDelete={() => deleteTag(tag.label)}
+                        sx={{
+                          margin: '0.5em',
+                          height: '2em',
+                          '&:hover': {
+                            backgroundColor: tag.color,
+                            color: tag.textColor,
+                          },
+                        }}
+                      />
+                    );
+                  })}
+
+                  <Chip
+                    ref={newTagAnchorRef}
+                    label="Add tag"
+                    variant="outlined"
+                    onClick={setIsNewTagPopperOpen.bind(this, !isNewTagPopperOpen)}
+                    className='add-tag'
+                    sx={{
+                      border: '2px dotted',
+                      borderColor: 'action.active',
+                      width: 'auto',
+                      height: '2em',
+                      cursor: 'pointer',
+                      '&:hover': {
+                        backgroundImage: 'none',
+                        border: '1px solid',
+                      },
+                    }}
+                  />
+
+                </div>
+              </div>
+            )}
+            <Popper open={isNewTagPopperOpen} anchorEl={newTagAnchorRef.current} placement='bottom'>
+              <div className='new-tag-popper-container'>
+                <h5 style={{ margin: '8px', marginBottom: '8px' }}>Create new tag</h5>
+                <form className='new-tag-popper-form' onSubmit={handleNewTagSubmit}>
+                  <div className="new-tag-inputs">
+                    <TextField label="Tag name" variant="outlined" size="small" />
+                    <input type="color" defaultValue="#1e34a4" />
+                  </div>
+                  <Button type="submit" variant="contained" color="primary">
+                    Submit
+                  </Button>
+                </form>
+              </div>
+            </Popper>
 
             {isLoggedIn && <hr style={{ width: '80%', margin: '1em auto' }}></hr>}
 

@@ -64,14 +64,12 @@ const AnythingList = ({ type }) => {
     useEffect(() => {
         if (loggedInUser && loggedInUser.settings && loggedInUser.settings.todoList) {
             setIsUrgentOnly(loggedInUser.settings.todoList.urgentOnly);
-            console.log("DEBUG: anythingList > useEffect> isUrgentOnly: ", isUrgentOnly);
         }
     }, [loggedInUser]);
 
     //Only after the activeTodoList has been set, i want to filters based on user settingws
    
     useEffect(() => {
-        console.log("DEBUG: useEffect activeTodoList");
         if (activeTodoList.length > 0) {
             filterUrgentTasks(isUrgentOnly);
         }
@@ -192,11 +190,8 @@ const AnythingList = ({ type }) => {
     }
 
     const filterUrgentTasks = (urgentOnly) => {
-        console.log("activeTodoList: ", activeTodoList);
-        console.log("isUrgentOnly: ", isUrgentOnly);
         if (urgentOnly) {
             const urgentTasks = activeTodoList.filter(task => task.isUrgent);
-            console.log("urgentTasks: ", urgentTasks);
             if (JSON.stringify(urgentTasks) !== JSON.stringify(activeTodoList)) {
             setActiveTodoList(urgentTasks);
             }
@@ -208,15 +203,11 @@ const AnythingList = ({ type }) => {
     };
 
     const handleSortChange = (selectedOption) => {
-        console.log("selectedOption: ", selectedOption);
-        
-    
         setSelectedOptionSort(selectedOption);
     }
 
     const toggleSortOrder = () => {
         setIsAscending(!isAscending);
-        console.log("isAscending: ", isAscending);
     }
 
     const toggleUrgentTasks = () => {
