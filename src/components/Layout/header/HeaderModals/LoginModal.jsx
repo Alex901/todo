@@ -3,6 +3,9 @@ import ReactModal from 'react-modal';
 import './HeaderModal.css';
 import { useUserContext } from '../../../../contexts/UserContext';
 import { toast } from 'react-toastify';
+import { TextField, Button, InputAdornment, IconButton } from '@mui/material';
+import Icon from '@mdi/react';
+import { mdiEye, mdiEyeOff } from '@mdi/js';
 
 ReactModal.setAppElement('#root');
 
@@ -13,6 +16,7 @@ const LoginModal = ({ isOpen, onRequestClose }) => {
     const [userNameError, setUserNameError] = React.useState("");
     const [passwordError, setPasswordError] = React.useState("");
     const { login } = useUserContext();
+    
 
     useEffect(() => {
         const handleOverlayClick = (event) => {
@@ -60,38 +64,46 @@ const LoginModal = ({ isOpen, onRequestClose }) => {
             isOpen={isOpen}
             onRequestClose={onRequestClose}
             contentLabel="Login Modal"
-            className="modal-content"
+            className="register-modal-content"
             overlayClassName="modal-overlay"
             shouldCloseOnOverlayClick={true}
         >
             <h3 className="title">Login</h3>
             <form className='modal-form' onSubmit={handleLogin}>
-                <input
-                    type="text"
+                <TextField
+                    id="username"
+                    label="Username"
+                    variant="outlined"
                     value={username}
                     onChange={e => { setUsername(e.target.value); setPasswordError(""); setUserNameError(""); }}
                     className="modal-input"
-                    placeholder="Username"
                     autoFocus
                 />
-                {userNameError && <p className='error'>{userNameError}</p>}
-                <div className='password-container'>
-                    <input
-                        type={showPassword ? "text" : "password"}
-                        value={password}
-                        onChange={e => setPassword(e.target.value)}
-                        className="modal-input"
-                        placeholder="Password"
-                    />
-                   
-                    <button className='show-password-button' type="button" onClick={() => setShowPassword(!showPassword)}>
-                        <i className="material-icons show-password-icon">
-                            {showPassword ? "visibility_off" : "visibility"}
-                        </i>
-                    </button> 
-                </div>
+                    {userNameError && <p className='error'>{userNameError}</p>}
+                <TextField
+                    id="password"
+                    label="Password"
+                    variant="outlined"
+                    type={showPassword ? "text" : "password"}
+                    value={password}
+                    onChange={e => setPassword(e.target.value)}
+                    className="modal-input"
+                    InputProps={{
+                        endAdornment: (
+                            <InputAdornment position="end">
+                                <IconButton
+                                    aria-label="toggle password visibility"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                >
+                                    {showPassword ? <Icon path={mdiEyeOff} size={1} /> : <Icon path={mdiEye} size={1} />}
+                                </IconButton>
+                            </InputAdornment>
+                        )
+                    }}
+                    
+                />
                 {passwordError && <p className='error'>{passwordError}</p>}
-                <button className='modal-button'>Login</button>
+                <Button type="submit" variant="contained" className='modal-button' color='success'>Login</Button>
             </form>
         </ReactModal>
     );

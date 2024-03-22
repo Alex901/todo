@@ -5,11 +5,26 @@
 .modal-form {
     display: flex;
     flex-direction: column;
-    align-items: left;
+    align-items: center;
+    gap: 15px;
+}
+
+.modal-form.register-button {
+    height: 36x;
+    border-radius: 5px;
+    border: 1px solid black;
+    background-color: #44c867;
+    color: #000000;
+    cursor: pointer;
 }
 
 .error {
     color: red;
+}
+
+p.error {
+    margin: 0;
+    font-size: 12px;
 }
 
 .modal-input {
@@ -31,7 +46,7 @@
     background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent overlay */
 }
 
-.modal-content {
+.register-modal-content {
     width: 400px;
     position: absolute;
     top: 50%;
@@ -41,7 +56,7 @@
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     border: 2px solid black;
-    background-color: #e8eaec;
+    background-color: #ffffff;
     align-content: center;
 }
 
@@ -88,7 +103,7 @@
 
 .password-container {
     display: flex;
-    align-items: left;
+    align-items: ;
     width: 100%;
 }
 

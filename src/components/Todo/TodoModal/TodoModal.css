@@ -7,9 +7,10 @@
     right: 0;
     bottom: 0;
     background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent overlay */
+    overflow: hidden;
 }
 
-.modal-content {
+.create-task-modal-content {
     width: 00px;
     position: absolute;
     top: 50%;
@@ -19,7 +20,7 @@
     border-radius: 8px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
     border: 2px solid black;
-    background-color: #dbdfe4;
+    background-color: #ffffff;
     align-content: center;
 }
 
@@ -70,6 +71,7 @@
     display: flex;
     flex-direction: column;
     align-items: center;
+    gap: 15px;
 }
 
 .create-entry-form.modal-input {
@@ -105,4 +107,9 @@
     overflow: auto;
     overflow-x: hidden;
    
+}
+
+/* Annoying scroll glitch */
+.ReactModal__Body--open {
+    overflow: hidden;
 }

@@ -113,7 +113,7 @@
   .menu-link:hover {
     background-color: #d7a74e;
     color: white;
-    transform: scale(1.2);
+    transform: scale(1.1);
   }
   
   .logout {

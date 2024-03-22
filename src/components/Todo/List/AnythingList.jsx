@@ -11,7 +11,6 @@ import Select from 'react-select'; // or '@material-ui/core/Select'
 import Icon from '@mdi/react';
 import { mdiMenuUp } from '@mdi/js';
 import { mdiMenuDown } from '@mdi/js';
-import axios from "axios";
 
 const AnythingList = ({ type }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);

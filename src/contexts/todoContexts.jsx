@@ -83,6 +83,7 @@ const TodoProvider = ({ children }) => {
       const newTodo = {
         id: newId,
         task: newTaskData.taskName,
+        tags: newTaskData.tags || [],
         isDone: false,
         created: new Date(),
         completed: null,
@@ -101,6 +102,7 @@ const TodoProvider = ({ children }) => {
         inList: loggedInUser ? ['all'].concat(loggedInUser.activeList !== 'all' ? [loggedInUser.activeList] : []) : []
       };
 
+      console.log("addTodo: newTodo", newTodo);
 
       const response = await axios.post(`${BASE_URL}/api/`, newTodo);
       if (response.status === 201) {

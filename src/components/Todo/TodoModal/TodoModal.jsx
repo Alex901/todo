@@ -3,16 +3,22 @@ import ReactModal from 'react-modal';
 import './TodoModal.css'
 import { useTodoContext } from '../../../contexts/todoContexts';
 import { useUserContext } from '../../../contexts/UserContext';
-import Select from 'react-select'
+//import Select from 'react-select';
 import { toast } from 'react-toastify';
+import { TextField, Button, InputAdornment, IconButton, FormControl, InputLabel, Select, MenuItem, Checkbox, FormControlLabel, Chip } from '@mui/material';
+import { Form } from 'react-bootstrap';
 
 ReactModal.setAppElement('#root');
 
+document.body.classList.add('modal-open');
+
+// When closing the modal
+document.body.classList.remove('modal-open');
+
 const TodoModal = ({ isOpen, onRequestClose }) => {
-    const [taskName, setTaskName] = useState('');
     const { addTodo } = useTodoContext();
     const [errorMessage, setErrorMessage] = useState('');
-    const { isLoggedIn } = useUserContext();
+    const { isLoggedIn, loggedInUser } = useUserContext();
     const options = [
         { value: 'VERY HIGH', label: 'VERY HIGH' },
         { value: 'HIGH', label: 'HIGH' },
@@ -39,7 +45,7 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
         steps: [],
         difficulty: "",
         estimatedTime: 0,
-
+        tags: []
     });
 
     const handleInputChange = (event) => {
@@ -52,6 +58,14 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
         setErrorMessage('');
     };
 
+    const handleTagChange = (event) => {
+        console.log(event);
+        setNewTaskData({
+            ...newTaskData,
+            tags: event.target.value,
+        })
+    }
+
     const handleCheckboxChange = (event) => {
         setNewTaskData({
             ...newTaskData,
@@ -59,11 +73,21 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
         });
     };
 
-    const handleSelectChange = (selectedOption) => {
-        setNewTaskData({
-            ...newTaskData,
-            priority: selectedOption.value,
-        });
+    const handleSelectChange = (event) => {
+        console.log("loggedInuser: ", loggedInUser); // Check the value of loggedInUser
+        console.log("List Names:", loggedInUser?.listNames[0].name === loggedInUser.activeList); // Check the value of loggedInUser.ListName
+        console.log("ActiveList: ", loggedInUser?.activeList)
+        const selectedOption = event.target.value;
+        console.log(selectedOption);
+
+        if (options.some(option => option.value === selectedOption)) {
+            setNewTaskData({
+                ...newTaskData,
+                priority: selectedOption,
+            });
+        }
+
+        console.log(newTaskData);
     };
 
 
@@ -94,6 +118,7 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
             steps: [],
             difficulty: "",
             estimatedTime: null,
+            tags: []
         });
     }
 
@@ -128,13 +153,20 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
     };
 
     const handleDiffChange = (selectedOption) => {
+        console.log(selectedOption.target.value);
         setNewTaskData({
             ...newTaskData,
-            difficulty: selectedOption.value,
+            difficulty: selectedOption.target.value,
         });
     };
 
-
+    function handleAddChip(chipToAdd) {
+        console.log("chip to add: ", chipToAdd);
+        setNewTaskData((prevData) => ({
+            ...prevData,
+            tags: [...prevData.tags, chipToAdd],
+        }));
+    }
 
     return (
 
@@ -150,112 +182,157 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
 
             {isLoggedIn ? (
 
-                <form className="create-entry-form" onSubmit={handleSubmit}>
-                    <input
-                        type='text'
-                        placeholder='Enter task name'
+                <form className="create-entry-form" onSubmit={handleSubmit} style={{ gap: '15px' }}>
+                    <TextField
+                        id="taskName"
+                        label="Enter task name"
+                        variant="outlined"
                         onChange={handleInputChange}
                         className='create-modal-input create-modal-name-input'
                         onKeyDownCapture={handleKeyPress}
                         autoFocus
-                        maxLength={70}
+                        inputProps={{ maxLength: 70 }}
                         name='taskName'
                     />
-                    <textarea
-                        placeholder='Enter task description(optional)'
-                        maxLength={500}
+                    <TextField
+                        id="description"
+                        label="Enter task description(optional)"
+                        variant="outlined"
+                        multiline
                         rows={4}
-                        className='create-modal-input-description'
                         onChange={handleInputChange}
+                        className='create-modal-input-description'
+                        inputProps={{ maxLength: 500 }}
                         name="description"
                     />
                     <hr style={{ width: '80%', margin: '10px auto' }} />
-                    <div style={{
-                        display: 'flex', flexDirection: 'row', alignItems: 'center',
-                        padding: '10px', width: '-webkit-fill-available'
-                    }}>
-                        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginRight: '20px' }}>
-                            <label htmlFor='priority' style={{ width:'65px'}}>Priority</label>
-                            <Select
-                                id='priority'
-                                options={options}
-                                defaultValue='' // Preselect 'NORMAL'
-                                onChange={handleSelectChange}
-                                styles={{
-                                    control: (provided) => ({
-                                        ...provided,
-                                        height: 36,
-                                        minHeight: 30,
-                                        width: '200px',
-                                        borderRadius: 10,
-                                        border: '1px solid black',
-                                        
-                                    }),
-                                    singleValue: (provided) => ({
-                                        ...provided,
-                                        textAlign: 'center',
-                                        margin: '0 auto',
-                                        padding: '0'
-                                    }),
 
+                    <div className="input-container" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%', gap: '20px' }}>
+                        <FormControl style={{ width: '200px' }}>
+                            <TextField
+                                id="dueDate"
+                                type="datetime-local"
+                                label="Deadline"
+                                className='modal-input-date'
+                                onChange={handleInputChange}
+                                name='dueDate'
+                                InputLabelProps={{
+                                    shrink: true,
                                 }}
                             />
-                        </div>
+                        </FormControl>
 
-                        <div className="input-container" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%' }}>
-                            <label htmlFor='urgent' style={{ marginRight: '10px' }}>Urgent?</label>
-                            <input type='checkbox' id='isUrgent' name='isUrgent' onChange={handleCheckboxChange} />
-                        </div>
-                    </div>
-                    <div className="input-container" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%' }}>
-                        <label style={{ width:'65px' }}>Deadline</label>
-                        <input
-                            type='datetime-local'
-                            className='modal-input-date'
-                            onChange={handleInputChange}
-                            name='dueDate'
-                            style={{ width: '200px', height:'36px', textAlign: 'center' }}
-                        />
+                        <FormControl variant="outlined" size="small" style={{ width: '140px', marginRight: '20px' }}>
+                            <InputLabel id="priority-label">Priority</InputLabel>
+                            <Select
+                                labelId="priority-label"
+                                id="priority"
+                                defaultValue=""
+                                onChange={handleSelectChange}
+                                label="Priority" // Add this line
+                            >
+                                {options.map((option) => (
+                                    <MenuItem key={option.value} value={option.value}>
+                                        {option.label}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
                     </div>
 
-                    <div className='input-container' style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%' }}>
-                        <label style={{ width:'65px', textAlign: '' }}>Est. Time</label>
-                        <input
+                    <div className="input-container" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%', gap: '20px' }}>
+                        <TextField
                             type='number'
                             className='modal-input-date'
                             onChange={handleInputChange}
                             name='estimatedTime'
-                            style={{ width: '200px', height: '35px', textAlign: 'center' }}
-                            placeholder='Estimated duration (hours)'
-                            min='0'
-                            
-                        />
-                    </div>
-
-                    <div className="input-contariner" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%', padding: '10px' }}>
-                        <label style={{ width:'65px', textAlign: '' }}>Difficulty</label>
-                        <Select
-                            options={optionsDiff}
-                            onChange={handleDiffChange} // replace with your own handler
-                            styles={{
-                                control: (provided) => ({
-                                    ...provided,
-                                    height: 40,
-                                    minHeight: 36,
-                                    width: '208px',
-                                    borderRadius: 10,
-                                    border: '1px solid black',
-                                    marginLeft: '8px'
-                                }),
-                                singleValue: (provided) => ({
-                                    ...provided,
-                                    textAlign: 'center',
-                                    margin: '0 auto',
-                                    padding: '0'
-                                }),
+                            label="Est. Time"
+                            size="small" // Set size to small
+                            style={{ width: '100px', textAlign: 'center' }} // Set width to 60px
+                            placeholder='Time'
+                            inputProps={{
+                                min: '0' // Set the minimum value
+                            }}
+                            InputProps={{
+                                startAdornment: <InputAdornment position="start">H</InputAdornment>,
                             }}
                         />
+
+
+                        <FormControl variant="outlined" size="small" style={{ width: '140px' }}>
+                            <InputLabel id="difficulty-label">Difficulty</InputLabel>
+                            <Select
+                                labelId="difficulty-label"
+                                id="difficulty"
+                                defaultValue=""
+                                onChange={handleDiffChange}
+                                label="Difficulty"
+                            >
+                                {optionsDiff.map((option) => (
+                                    <MenuItem key={option.value} value={option.value}>
+                                        {option.label}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    id='isUrgent'
+                                    name='isUrgent'
+                                    onChange={handleCheckboxChange}
+                                />
+                            }
+                            label="Urgent?"
+                        />
+
                     </div>
+                    <div className="tags-container" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%', gap: '20px', flexWrap: 'wrap' }}>
+                        <FormControl variant="outlined" style={{ minWidth: '100px', width: 'auto', height:'auto' }} size='small'>
+                            <InputLabel id="tags-label">Tags</InputLabel>
+                            <Select
+
+                                label="Tags"
+                                multiple
+                                size="small"
+                                value={newTaskData.tags}
+                                onChange={handleTagChange}
+                                name='tags'
+                                renderValue={(selected) => (
+                                    
+                                    <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+                                        {selected.map((tag) => (
+                                            <Chip
+                                                key={tag.label}
+                                                label={tag.label}
+                                                style={{ backgroundColor: tag.color, color: tag.textColor, margin: '2px', flexBasis: '20%'}}
+                                            />
+                                        ))}
+                                    </div>
+                                )}
+                            >
+                                {loggedInUser && loggedInUser.listNames && loggedInUser.listNames.filter(list => list.name === loggedInUser.activeList).map((list) => (
+                                    list.tags.map((tag) => (
+                                        <MenuItem key={tag.label} value={tag}>
+                                            <Chip
+                                                key={tag.label}
+                                                label={tag.label}
+                                                clickable
+                                                onClick={() => handleAddChip(tag)}
+                                                style={{ backgroundColor: tag.color, color: tag.textColor }}
+                                            />
+                                        </MenuItem>
+                                    ))
+                                ))}
+                            </Select>
+                        </FormControl>
+
+                    </div>
+
+
+
+
                     <hr style={{ width: '80%', margin: '10px auto' }} />
 
                     <div className='steps' style={{ width: '100%', justifyContent: 'left' }}>
@@ -277,26 +354,30 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
                 </form>
             ) : (
                 <form className="create-entry-form" onSubmit={handleSubmit}>
-                    <input
-                        type='text'
-                        placeholder='Enter task name'
+                    <TextField
+                        id="taskName"
+                        label="Enter task name"
+                        variant="outlined"
                         onChange={handleInputChange}
-                        className='create-modal-input'
+                        className='create-modal-input create-modal-name-input'
                         onKeyDownCapture={handleKeyPress}
                         autoFocus
-                        maxLength={1000}
+                        inputProps={{ maxLength: 70 }}
                         name='taskName'
                     />
-                    <textarea
-                        placeholder='Enter task description(optional)'
-                        maxLength={500}
+                    <TextField
+                        id="description"
+                        label="Enter task description(optional)"
+                        variant="outlined"
+                        multiline
                         rows={4}
-                        className='create-modal-input-description'
                         onChange={handleInputChange}
+                        className='create-modal-input-description'
+                        inputProps={{ maxLength: 500 }}
                         name="description"
                     />
                     <hr style={{ width: '80%', margin: '10px auto' }} />
-                    <h4 style={{color: 'red'}}> Log in for more features </h4>
+                    <h4 style={{ color: 'red' }}> Log in for more features </h4>
                     <hr style={{ width: '80%', margin: '10px auto' }} />
 
                     {errorMessage && <p className="error">{errorMessage}</p>}
