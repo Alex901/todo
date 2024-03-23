@@ -29,6 +29,10 @@
 
 }
 
+.mdl-layout__header-row nav-row {
+  box-shadow: none;
+}
+
 .center-content {
   display: flex;
   align-items: center;

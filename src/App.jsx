@@ -5,7 +5,7 @@ import React, { useState, useRef } from 'react'
 import AnythingList from './components/Todo/List/AnythingList'
 import { useTodoContext } from './contexts/todoContexts'
 import { useUserContext } from './contexts/UserContext'
-import Select from 'react-select'
+//import Select from 'react-select'
 import CreateListModal from './components/Todo/TodoModal/CreateListModal/CreateListModal'
 import DeleteListModal from './components/Todo/TodoModal/DeleteListModal/DeleteListModal'
 import CookieConsent from './components/CookieConsent/CookieConsent'
@@ -18,7 +18,7 @@ import Popper from '@mui/material/Popper';
 import { SketchPicker } from 'react-color';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-
+import { Select, MenuItem, ListItemText, FormControl, InputLabel, Typography } from '@mui/material';
 
 import 'material-design-lite/dist/material.min.css';
 import 'material-design-lite/dist/material.min.js';
@@ -33,6 +33,7 @@ function App() {
   const [deleteListError, setDeleteListError] = useState("");
   const [isNewTagPopperOpen, setIsNewTagPopperOpen] = useState(false);
   const newTagAnchorRef = React.useRef(null);
+  const [showAll, setShowAll] = useState(false);
 
   const switchTodoView = () => {
     setActiveView('todo');
@@ -46,14 +47,12 @@ function App() {
     setActiveView('doing');
   }
 
-  const handleListChange = (selectedOption) => {
-    console.log("selectedOption: ", selectedOption);
-    if (selectedOption) {
-      setLoggedInUser({ ...loggedInUser, activeList: selectedOption.value });
-      //TODO: this is a bad function name, change it
-      setActiveList(selectedOption.value);
+  const handleListChange = (event) => {
+    console.log("selectedOption: ", event.target.value);
+    if (event.target.value) {
+      setLoggedInUser({ ...loggedInUser, activeList: event.target.value });
+      setActiveList(event.target.value);
     } else {
-      //0 can never be deleted, so we prevent the nullpointer here
       setLoggedInUser({ ...loggedInUser, activeList: loggedInUser.listNames[0] });
       setActiveList(loggedInUser.listNames[0]);
     }
@@ -145,32 +144,33 @@ function App() {
           <div className='nav' style={{ display: 'flex', flexDirection: 'column' }}>
             {/* First row */}
             {isLoggedIn && (
-              <div style={{ display: 'flex', justifyContent: 'center', margin: '1em 0 2em 0', gap: '5px' }}>
-                <label style={{ fontWeight: 'bold', display: 'flex', alignItems: 'center', margin: '10px' }}> Active list: </label>
-                <Select
-                  styles={{ control: (base) => ({ ...base, width: '22em', borderRadius: '10px' }) }}
-                  className="select-list"
-                  isSearchable={true}
-                  options={loggedInUser.listNames.map(listName => {
-                    const todoCount = getListTodoCount(listName.name);
-                    const doingCount = getListDoingCount(listName.name);
-                    const doneCount = getListDoneCount(listName.name);
+              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', margin: '1em 0 2em 0', gap: '5px' }}>
+                <FormControl style={{ width: '22em', margin: '10px' }}>
+                  <InputLabel id="active-list-label" style={{ fontWeight: 'bold' }}>Active list </InputLabel>
+                  <Select
+                    labelId="active-list-label"
+                    label="Active listt"
+                    className="select-list"
+                    size='small'
+                    value={loggedInUser.activeList || ""}
+                    onChange={handleListChange}
+                  >
+                    {loggedInUser.listNames.map(listName => {
+                      const todoCount = getListTodoCount(listName.name);
+                      const doingCount = getListDoingCount(listName.name);
+                      const doneCount = getListDoneCount(listName.name);
 
-                    return {
-                      label: (
-                        <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-                          <span>{listName.name.charAt(0).toUpperCase() + listName.name.slice(1)}</span>
-                          <span>({todoCount},{doingCount},{doneCount})</span>
-                        </div>
-                      ),
-                      value: listName.name
-                    };
-                  })}
-                  value={typeof loggedInUser.activeList === 'string' ? { label: loggedInUser.activeList.charAt(0).toUpperCase() + loggedInUser.activeList.slice(1), value: loggedInUser.activeList } : null}
-                  onChange={handleListChange}
-                />
-
-                <div style={{ margin: '0 1em 0 1em' }}></div> {/* Best solution ever :D */}
+                      return (
+                        <MenuItem key={listName.name} value={listName.name}>
+                          <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+                            <div>{listName.name.charAt(0).toUpperCase() + listName.name.slice(1)}</div>
+                            <div>{`(${todoCount},${doingCount},${doneCount})`}</div>
+                          </div>
+                        </MenuItem>
+                      );
+                    })}
+                  </Select>
+                </FormControl>
 
                 <div className="icon-button" onClick={openCreateListModal}>
                   <Icon path={mdiPlus} size={1.6} />
@@ -197,48 +197,69 @@ function App() {
             {isLoggedIn && (
               <div className="tags-container">
                 <div className='tags'>
-                  {loggedInUser.listNames.find(list => list.name === loggedInUser.activeList).tags.map((tag, index) => {
-                    return (
+                  <div className='tags'>
+                    {loggedInUser.listNames.find(list => list.name === loggedInUser.activeList).tags.slice(0, showAll ? undefined : 3).map((tag, index) => {
+                      return (
+                        <Chip
+                          key={index}
+                          label={tag.label}
+                          style={{
+                            background: `linear-gradient(45deg, ${tag.color} 30%, ${tag.color} 90%)`,
+                            boxShadow: `0 3px 5px 2px rgba(255, 105, 135, .3)`,
+                            color: tag.textColor,
+                          }}
+                          onDelete={() => deleteTag(tag.label)}
+                          sx={{
+                            margin: '0.5em',
+                            height: '2em',
+                            '&:hover': {
+                              backgroundColor: tag.color,
+                              color: tag.textColor,
+                            },
+                          }}
+                        />
+                      );
+                    })}
+                    {loggedInUser.listNames.find(list => list.name === loggedInUser.activeList).tags.length > 3 && (
                       <Chip
-                        key={index}
-                        label={tag.label}
-                        style={{
-                          background: `linear-gradient(45deg, ${tag.color} 30%, ${tag.color} 90%)`,
-                          boxShadow: `0 3px 5px 2px rgba(255, 105, 135, .3)`,
-                          color: tag.textColor,
-                        }}
-                        onDelete={() => deleteTag(tag.label)}
+                        label={showAll ? 'Show fewer' : 'Show all'}
+                        onClick={() => setShowAll(!showAll)}
+                        variant="outlined"
                         sx={{
+                          border: 'none',
                           margin: '0.5em',
                           height: '2em',
+                          cursor: 'pointer',
                           '&:hover': {
-                            backgroundColor: tag.color,
-                            color: tag.textColor,
+                            backgroundColor: 'action.active',
+                            color: 'background.red',
                           },
                         }}
                       />
-                    );
-                  })}
+                    )}
+                  </div>
 
-                  <Chip
-                    ref={newTagAnchorRef}
-                    label="Add tag"
-                    variant="outlined"
-                    onClick={setIsNewTagPopperOpen.bind(this, !isNewTagPopperOpen)}
-                    className='add-tag'
-                    sx={{
-                      border: '2px dotted',
-                      borderColor: 'action.active',
-                      width: 'auto',
-                      height: '2em',
-                      cursor: 'pointer',
-                      '&:hover': {
-                        backgroundImage: 'none',
-                        border: '1px solid',
-                      },
-                    }}
-                  />
 
+                  <div style={{ display: 'flex', justifyContent: 'center', marginTop: '10px' }}>
+                    <Chip
+                      ref={newTagAnchorRef}
+                      label="Add tag"
+                      variant="outlined"
+                      onClick={setIsNewTagPopperOpen.bind(this, !isNewTagPopperOpen)}
+                      className='add-tag'
+                      sx={{
+                        border: '2px dotted',
+                        borderColor: 'action.active',
+                        width: 'auto',
+                        height: '2em',
+                        cursor: 'pointer',
+                        '&:hover': {
+                          backgroundImage: 'none',
+                          border: '1px solid',
+                        },
+                      }}
+                    />
+                  </div>
                 </div>
               </div>
             )}
