@@ -1,10 +1,10 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import ReactModal from 'react-modal';
 import './EditModal.css'
 import { useTodoContext } from '../../../../contexts/todoContexts';
 import { useUserContext } from '../../../../contexts/UserContext';
-import Select from 'react-select'
 import { mdiDelete, mdiDeleteEmpty } from '@mdi/js';
+import { TextField, Button, InputAdornment, IconButton, FormControl, InputLabel, Select, MenuItem, Checkbox, FormControlLabel, Chip } from '@mui/material';
 import Icon from '@mdi/react';
 import { toast } from 'react-toastify';
 
@@ -16,18 +16,8 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
     const { loggedInUser, isLoggedIn } = useUserContext();
     const [selectedOption, setSelectedOption] = useState(null);
     const [hoveredStepId, setHoveredStepId] = useState(null);
-    const [taskData, setTaskData] = useState({
-        id: editData.id,
-        task: editData.task,
-        description: editData.description,
-        priority: editData.priority,
-        isUrgent: editData.isUrgent,
-        dueDate: editData.dueDate,
-        steps: editData.steps,
-        difficulty: editData.difficulty,
-        estimatedTime: editData.estimatedTime,
-        inList: editData.inList
-    });
+    const [loading, setLoading] = useState(true);
+
 
     const options = [
         { value: 'VERY HIGH', label: 'VERY HIGH' },
@@ -45,25 +35,57 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
         { value: 'VERY HARD', label: 'VERY HARD' },
     ];
 
-    const optionsListNames = isLoggedIn && loggedInUser.listNames
-    ? loggedInUser.listNames
-        .filter(item => !taskData.inList.includes(item.name))
-        .map(item => ({ value: item.name, label: item.name }))
-    : [];
+    const [taskData, setTaskData] = useState({
+        id: editData.id,
+        task: editData.task,
+        description: editData.description,
+        priority: editData?.priority || '',
+        isUrgent: editData.isUrgent,
+        dueDate: editData.dueDate,
+        steps: editData.steps,
+        difficulty: editData.difficulty,
+        estimatedTime: editData.estimatedTime,
+        inList: editData.inList,
+        tags: editData.tags,
+    });
 
-        const includedListNames = isLoggedIn && loggedInUser.listNames
+    const selectedListValues = editData?.inList;
+    const optionsListNames = isLoggedIn && loggedInUser.listNames
+        ? loggedInUser.listNames
+            .filter(item => !taskData.inList.includes(item.name))
+            .map(item => ({ value: item.name, label: item.name }))
+        : [];
+
+    const includedListNames = isLoggedIn && loggedInUser.listNames
         ? loggedInUser.listNames
             .filter(item => taskData.inList.includes(item.name))
             .map(item => ({ value: item.name, label: item.name }))
         : [];
 
+    const activeList = isLoggedIn && loggedInUser.listNames
+        ? loggedInUser.listNames.find(list => list.name === loggedInUser.activeList)
+        : null;
+
+    const optionsTagNames = activeList && activeList.tags
+        ? activeList.tags
+            .filter(item => !taskData.tags.map(tag => tag.label).includes(item.label))
+            .map(item => item)
+        : [];
 
     const handleInputChange = (event) => {
+        let value = event.target.value;
+        console.log("Value", value);
+
+        if (event.target.name === 'dueDate') {
+            value = new Date(value);
+        }
+
         setErrorMessage('');
         setTaskData({
             ...taskData,
-            [event.target.name]: event.target.value
+            [event.target.name]: value
         });
+        console.log("Task data", taskData);
     };
 
     const handleSubmit = () => {
@@ -82,6 +104,7 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
         }
         editTodo(taskData);
         toast.success('Changes saved');
+
         onRequestClose();
     }
 
@@ -92,10 +115,12 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
     }
 
     const handleSelectChange = (selectedOption) => {
+        console.log("Selected option", selectedOption.target.value); //correct
         setTaskData({
             ...taskData,
-            priority: selectedOption.value
+            priority: selectedOption.target.value
         });
+        console.log("Task data", taskData); //undefined
     }
 
     const handleCheckboxChange = (event) => {
@@ -106,9 +131,10 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
     }
 
     const handleDiffChange = (selectedOption) => {
+        console.log("Selected option", selectedOption.target.value);
         setTaskData({
             ...taskData,
-            difficulty: selectedOption.value
+            difficulty: selectedOption.target.value
         });
     }
 
@@ -148,9 +174,15 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
         setSelectedOption(null);
     }
 
-    const handleListChange = (selectedOption) => {
-        setSelectedOption(selectedOption);
-    }
+    const handleListChange = (event) => {
+        console.log("Selected option", event.target.value);
+        const newList = event.target.value;
+        setTaskData(prevEditData => ({
+            ...prevEditData,
+            inList: [...prevEditData.inList, newList[event.target.value.length - 1]]
+        }));
+        console.log("Task data", taskData);
+    };
 
     const handleRemoveFromList = (listName) => {
         if (listName === "all") {
@@ -171,10 +203,38 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
             steps: prevState.steps.filter(step => step._id !== stepId)
         }));
     };
-
+    //lol
     const generateNewId = () => {
         return [...Array(24)].map(() => Math.floor(Math.random() * 16).toString(16)).join('');
     };
+
+    const handleRemoveTag = (tagId) => {
+        console.log("Remove tag", tagId);
+        setTaskData(prevData => ({
+            ...prevData,
+            tags: prevData.tags.filter(tag => tag._id !== tagId._id)
+        }));
+    }
+
+
+    const handleTagChange = (tag) => {
+        console.log("Selected tag", tag);
+
+        setTaskData(prevData => ({
+            ...prevData,
+            tags: [...prevData.tags, tag]
+        }));
+        console.log("Task data", taskData);
+    }
+
+    const handleAddChip = (tag) => {
+        console.log("Add chip", tag);
+        setTaskData(prevData => ({
+            ...prevData,
+            tags: [...prevData.tags, tag]
+        }));
+        console.log("Task data", taskData);
+    }
 
     //I steal the ccs classes from my create modal -- don't judge me, haha
     return (
@@ -182,165 +242,201 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
         <ReactModal
             isOpen={isOpen}
             contentLabel="Edit todo task"
-            className="modal-content modal"
+            className="modal-content"
             onRequestClose={() => {
                 toast.warn('Edit canceled -- changes not saved');
                 onRequestClose();
             }}
             overlayClassName="modal-overlay"
             shouldCloseOnOverlayClick={true}
-            
         >
+            <div className="modal-title" style={{ textAlign: 'center' }}>
+                <h3 className='title' style={{ marginTop: '0', marginBottom: '15px' }}> Edit task</h3>
+            </div>
 
             {isLoggedIn ? (
-                <form className='edit-entry-form' onSubmit={handleSubmit}>
-                    <div className='modalTitle'> <h3 className="title"> Edit task </h3></div>
-                    <input
+                <form className='edit-entry-form' onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '5px' }}>
+
+
+                    <TextField
+                        label='Task name'
                         name='task'
                         type='text'
                         placeholder='Enter task name'
                         value={taskData.task}
                         onChange={handleInputChange}
-                        className='create-modal-input'
                         onKeyDownCapture={handleKeyPress}
                         autoFocus
-                        
+                        variant="outlined"
+                        fullWidth
+                        sx={{ '.MuiOutlinedInput-root': { marginTop: '0px', marginBottom: '15px' } }}
                     />
-                    <textarea
+
+                    <TextField
+                        label='Description'
                         placeholder='Enter task description(optional)'
                         maxLength={500}
                         rows={4}
-                        className='create-modal-input-description'
                         onChange={handleInputChange}
                         name="description"
                         value={taskData.description}
+                        multiline
+                        variant="outlined"
+                        fullWidth
+                        sx={{ '.MuiOutlinedInput-root': { marginTop: '0px', marginBottom: '15px' } }}
                     />
                     <hr style={{ width: '80%', margin: '10px auto' }} />
 
-                    <div style={{
-                        display: 'flex', flexDirection: 'row', alignItems: 'center',
-                        padding: '10px', width: '-webkit-fill-available'
-                    }}>
-                        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginRight: '20px' }}>
-                            <label htmlFor='priority' style={{ width: '65px' }}>Priority</label>
-                            <Select
-                                id='priority'
-                                options={options}
-                                value={{ value: taskData.priority, label: taskData.priority }}
-                                onChange={handleSelectChange}
-                                styles={{
-                                    control: (provided) => ({
-                                        ...provided,
-                                        height: 36,
-                                        minHeight: 30,
-                                        width: '200px',
-                                        borderRadius: 10,
-                                        border: '1px solid black',
-
-                                    }),
-                                    singleValue: (provided) => ({
-                                        ...provided,
-                                        textAlign: 'center',
-                                        margin: '0 auto',
-                                        padding: '0'
-                                    }),
-
+                    <div className="input-container" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%', gap: '20px' }}>
+                        <FormControl style={{ width: '200px' }}>
+                            <TextField
+                                id="dueDate"
+                                type="datetime-local"
+                                label="Deadline"
+                                className='modal-input-date'
+                                onChange={handleInputChange}
+                                name='dueDate'
+                                value={taskData.dueDate ? new Date(taskData.dueDate).toISOString().substring(0, 16) : ""}
+                                InputLabelProps={{
+                                    shrink: true,
                                 }}
                             />
-                        </div>
-                        <div className="input-container" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%' }}>
-                            <label htmlFor='urgent' style={{ marginRight: '10px' }}>Urgent?</label>
-                            <input type='checkbox' id='isUrgent' name='isUrgent' onChange={handleCheckboxChange} checked={taskData.isUrgent} />
-                        </div>
-                    </div>
-                    <div className="input-container" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%' }}>
-                        <label style={{ width: '65px' }}>Deadline</label>
-                        <input
-                            type='datetime-local'
-                            className='modal-input-date'
-                            onChange={handleInputChange}
-                            name='dueDate'
-                            value={taskData.dueDate ? new Date(taskData.dueDate).toISOString().substring(0, 16) : ""}
-                            style={{ width: '200px', height: '36px', textAlign: 'center' }}
-                        />
+                        </FormControl>
+
+                        <FormControl variant="outlined" size="small" style={{ width: '140px', marginRight: '20px' }}>
+                            <InputLabel id="priority-label">Priority</InputLabel>
+                            <Select
+                                labelId="priority-label"
+                                id="priority"
+                                value={taskData.priority || ''}
+                                onChange={handleSelectChange}
+                                label="Priority"
+                            >
+                                {taskData.priority !== null && options.map((option) => (
+                                    <MenuItem key={option.value} value={option.value}>
+                                        {option.label}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
                     </div>
 
-                    <div className='input-container' style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%' }}>
-                        <label style={{ width: '65px', textAlign: '' }}>Est. Time</label>
-                        <input
-                            type='number'
-                            className='modal-input-date'
+
+                    <div className="input-container" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%', gap: '20px', marginTop: '14px' }}>
+                        <TextField
+                            type="number"
+                            className="modal-input-date"
                             onChange={handleInputChange}
-                            name='estimatedTime'
-                            style={{ width: '200px', height: '35px', textAlign: 'center' }}
-                            placeholder='Estimated duration (hours)'
-                            min='0'
+                            name="estimatedTime"
+                            label="Est. Time"
+                            size="small"
+                            style={{ width: '100px', textAlign: 'center' }}
+                            placeholder="Time"
+                            inputProps={{ min: '0' }}
+                            InputProps={{
+                                startAdornment: <InputAdornment position="start">h</InputAdornment>,
+                            }}
                             value={taskData.estimatedTime}
                         />
-                    </div>
 
-                    <div className="input-contariner" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%', padding: '10px' }}>
-                        <label style={{ width: '65px', textAlign: '' }}>Difficulty</label>
-                        <Select
-                            options={optionsDiff}
-                            onChange={handleDiffChange}
-                            value={{ value: taskData.difficulty, label: taskData.difficulty }}
-                            styles={{
-                                control: (provided) => ({
-                                    ...provided,
-                                    height: 40,
-                                    minHeight: 36,
-                                    width: '208px',
-                                    borderRadius: 10,
-                                    border: '1px solid black',
-                                    marginLeft: '8px'
-                                }),
-                                singleValue: (provided) => ({
-                                    ...provided,
-                                    textAlign: 'center',
-                                    margin: '0 auto',
-                                    padding: '0'
-                                }),
-                            }}
+                        <FormControl variant="outlined" size="small" style={{ width: '140px' }}>
+                            <InputLabel id="difficulty-label">Difficulty</InputLabel>
+                            <Select
+                                labelId="difficulty-label"
+                                id="difficulty"
+                                defaultValue={taskData.difficulty || ''}
+                                onChange={handleDiffChange}
+                                label="Difficulty"
+                                value={taskData.difficulty}
+                            >
+                                {optionsDiff.map((option) => (
+                                    <MenuItem key={option.value} value={option.value}>
+                                        {option.label}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    id="isUrgent"
+                                    name="isUrgent"
+                                    onChange={handleCheckboxChange}
+                                    checked={taskData.isUrgent}
+                                />
+                            }
+                            label="Urgent?"
                         />
                     </div>
                     <hr style={{ width: '80%', margin: '10px auto' }} />
-                    <div className="input-container" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%', padding: '10px' }}>
-                        <label style={{ width: '65px', textAlign: '' }}>Add to list</label>
-                        <Select
-                            options={optionsListNames}
-                            onChange={handleListChange}
-                            value={selectedOption}
-                            styles={{
-                                control: (provided) => ({
-                                    ...provided,
-                                    height: 40,
-                                    minHeight: 36,
-                                    width: '208px',
-                                    borderRadius: 10,
-                                    border: '1px solid black',
-                                    marginLeft: '8px'
-                                }),
-                                singleValue: (provided) => ({
-                                    ...provided,
-                                    textAlign: 'center',
-                                    margin: '0 auto',
-                                    padding: '0'
-                                }),
-                            }}
-                        />
-                        <button className="add-list-button" style={{ marginLeft: '10px' }} onClick={handleAddToList}>Add</button>
-                    </div>
-                    <div className="input-container" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%', padding: '10px' }}>
-                        <label style={{ width: '65px', textAlign: '' }}>In lists</label>
-                        {includedListNames.map((list, index) => (
-                            <span key={index} className="mdl-chip mdl-chip--deletable">
-                                <span className="mdl-chip__text">{list.label}</span>
-                                <button type="button" className="mdl-chip__action" onClick={() => handleRemoveFromList(list.label)}><i className="material-icons">cancel</i></button>
-                            </span>
-                        ))}
+                    <div className="tags-lists-container" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%', gap: '20px', marginTop: '10px' }}>
+                        <FormControl variant="outlined" style={{ minWidth: '100px', width: 'auto', height: 'auto' }} size='small'>
+                            <InputLabel id="list-label">Add to list</InputLabel>
+                            <Select
+                                labelId="list-label"
+                                id="list"
+                                multiple
+                                value={[]}
+                                onChange={handleListChange}
+                                label="Add to list"
+                            >
+                                {optionsListNames.map((option) => (
+                                    <MenuItem key={option.value} value={option.value}>
+                                        {option.label}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                        <div className="included-lists-chips" style={{ width: '80%', display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '5px', flexWrap: 'wrap' }}>
 
+                            {includedListNames.map((value) => (
+                                <Chip key={value.value} label={value.label} onDelete={() => handleRemoveFromList(value.value)} />
+                            ))}
+                        </div>
                     </div>
+
+                    <div className="tags-lists-container" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%', gap: '20px', marginTop: '10px' }}>
+                        <FormControl variant="outlined" style={{ minWidth: '100px', width: 'auto', height: 'auto' }} size='small'>
+                            <InputLabel id="tag-label">Add tag</InputLabel>
+                            <Select
+                                labelId="tag-label"
+                                id="tag"
+                                multiple
+                                value={[]} // assuming editData.tags is an array of selected tag objects
+                                onChange={event => {
+                                    const selectedTagLabel = event.target.value;
+                                    if (!selectedTagLabel) {
+                                        // handle the case where no tags are selected
+                                        handleTagChange([]);
+                                    } else {
+                                        const selectedTagObject = optionsTagNames.find(tag => selectedTagLabel.includes(tag.label));
+                                        console.log("Selected tag objects", selectedTagObject);
+                                        handleTagChange(selectedTagObject);
+                                    }
+                                }}
+                                label="Add to tag"
+                                style={{ cursor: 'pointer' }}
+                            >
+                                {optionsTagNames.map((tag) => (
+                                    <MenuItem key={tag.label} value={tag.label}>
+                                        <Chip
+                                            key={tag.label}
+                                            label={tag.label}
+                                            clickable
+                                            style={{ backgroundColor: tag.color, color: tag.textColor, cursor: 'pointer' }}
+                                        />
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                        <div className="included-tags-chips" style={{ width: '80%', display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '5px', flexWrap: 'wrap' }}>
+                            {taskData.tags.map((tag) => (
+                                <Chip key={tag.label} label={tag.label} onDelete={() => handleRemoveTag(tag)} style={{ backgroundColor: tag.color, color: tag.textColor }} />
+                            ))}
+                        </div>
+                    </div>
+
                     <hr style={{ width: '80%', margin: '10px auto' }} />
                     <div className='steps' style={{ width: '100%', justifyContent: 'left' }}>
                         {taskData.steps.map((step, index) => (
@@ -372,25 +468,32 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
                 </form>
             ) : (
                 <form className='edit-entry-form' onSubmit={handleSubmit}>
-                    <div className='modalTitle'> <h3 className="title"> Edit task </h3></div>
-                    <input
+                       <TextField
+                        label='Task name'
                         name='task'
                         type='text'
                         placeholder='Enter task name'
                         value={taskData.task}
                         onChange={handleInputChange}
-                        className='create-modal-input'
                         onKeyDownCapture={handleKeyPress}
                         autoFocus
+                        variant="outlined"
+                        fullWidth
+                        sx={{ '.MuiOutlinedInput-root': { marginTop: '0px', marginBottom: '15px' } }}
                     />
-                    <textarea
+
+                    <TextField
+                        label='Description'
                         placeholder='Enter task description(optional)'
                         maxLength={500}
                         rows={4}
-                        className='create-modal-input-description'
                         onChange={handleInputChange}
                         name="description"
                         value={taskData.description}
+                        multiline
+                        variant="outlined"
+                        fullWidth
+                        sx={{ '.MuiOutlinedInput-root': { marginTop: '0px', marginBottom: '15px' } }}
                     />
                     <hr style={{ width: '80%', margin: '10px auto' }} />
                     {errorMessage && <p className="error">{errorMessage}</p>}

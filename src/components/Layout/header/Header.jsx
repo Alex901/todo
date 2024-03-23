@@ -77,7 +77,7 @@ const Header = () => {
       </header>
       <LoginModal isOpen={isLoginModalOpen} onRequestClose={closeLoginModal} />
       <RegisterModal isOpen={isRegisterModalOpen} onRequestClose={closeRegisterModal} />
-      <div className="mdl-layout" style={{ overflow: 'hidden' }}>
+      <div className="mdl-layout" style={{ }}>
 
       </div>
     </div>

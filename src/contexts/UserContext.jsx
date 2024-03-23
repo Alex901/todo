@@ -119,13 +119,14 @@ const UserProvider = ({ children }) => {
             const _id = loggedInUser._id;
             const response = await axios.patch(`${BASE_URL}/users/addlist/${_id}`, { listName });
             if (response.status === 200) {
-                console.log("List added: ", listName);
+                console.log("List added: ", response.data);
                 setLoggedInUser({ 
                     ...loggedInUser, 
-                    listNames: [...loggedInUser.listNames, { name: listName }], 
+                    listNames: response.data.listNames,
                     activeList: listName 
                   });
                   console.log("loggedInUser: ", loggedInUser);
+                  toast.success("List added");
             } else if (response.status === 404) {
                 console.log("User not found");
             } else {
@@ -199,12 +200,15 @@ const UserProvider = ({ children }) => {
                 console.log("User not logged in");
                 return;
             }
+
+            console.log("Add tag > activeList: ", loggedInUser.activeList)
+
             const _id = loggedInUser._id;
             const activeList = loggedInUser.activeList;
             console.log("activeList: ", activeList);
             const response = await axios.patch(`${BASE_URL}/users/addtag/${_id}`, { tagName, tagColor, textColor, activeList });
             if (response.status === 200) {
-                console.log("Tag added: ", tagName);
+                console.log("Tag added: response data: ", response.data);
                 setLoggedInUser(response.data);
                 toast.success("Tag added");
             } else if (response.status === 404) {

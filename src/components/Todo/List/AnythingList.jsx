@@ -43,11 +43,15 @@ const AnythingList = ({ type }) => {
         'VERY HARD': 5,
     };
 
+    /*   useEffect(() => {
+          if (editingTask !== null) {
+              setIsEditModalOpen(true);
+          }
+      }, [editingTask]); */
+    /* Logging */
     useEffect(() => {
-        if (editingTask !== null) {
-            setIsEditModalOpen(true);
-        }
-    }, [editingTask]);
+        console.log("IsEditModalOpen?", isEditModalOpen);
+    }, [isEditModalOpen]);
 
     //Everytime todoList(or loggedInUser) changes, i want to grab only the logged in users entries
     useEffect(() => {
@@ -67,7 +71,7 @@ const AnythingList = ({ type }) => {
     }, [loggedInUser]);
 
     //Only after the activeTodoList has been set, i want to filters based on user settingws
-   
+
     useEffect(() => {
         if (activeTodoList.length > 0) {
             filterUrgentTasks(isUrgentOnly);
@@ -80,24 +84,29 @@ const AnythingList = ({ type }) => {
 
     const handleEdit = (taskData) => {
         setEditingTask(taskData);
+        console.log("DEBUG: open edit modal");
         setIsEditModalOpen(true);
     }
 
     const handleCloseModal = () => {
-        setIsModalOpen(false);
         setIsEditModalOpen(false);
         setEditingTask(null);
+        console.log("DEBUG: closeEditingModal");
+    }
+
+    const handleCloseSubmitModal = () => {
+        setIsModalOpen(false);
     }
 
     const filterTodoList = () => {
         if (isLoggedIn && loggedInUser.activeList) {
             const filteredList = todoList.filter(todo => todo.inList.includes(loggedInUser.activeList));
-            if(JSON.stringify(filteredList) !== JSON.stringify(activeTodoList)) {
-            setActiveTodoList(filteredList);
+            if (JSON.stringify(filteredList) !== JSON.stringify(activeTodoList)) {
+                setActiveTodoList(filteredList);
             }
         } else {
-            if(JSON.stringify(todoList) !== JSON.stringify(activeTodoList)) {
-            setActiveTodoList(todoList);
+            if (JSON.stringify(todoList) !== JSON.stringify(activeTodoList)) {
+                setActiveTodoList(todoList);
             }
         }
     };
@@ -192,11 +201,11 @@ const AnythingList = ({ type }) => {
         if (urgentOnly) {
             const urgentTasks = activeTodoList.filter(task => task.isUrgent);
             if (JSON.stringify(urgentTasks) !== JSON.stringify(activeTodoList)) {
-            setActiveTodoList(urgentTasks);
+                setActiveTodoList(urgentTasks);
             }
         } else {
             if (JSON.stringify(activeTodoList) !== JSON.stringify(activeTodoList)) {
-            filterTodoList();
+                filterTodoList();
             }
         }
     };
@@ -216,7 +225,7 @@ const AnythingList = ({ type }) => {
     }
 
     const toggleDeadlineOnly = () => {
-       setIsDeadlineOnly(!isDeadlineOnly);
+        setIsDeadlineOnly(!isDeadlineOnly);
     }
     //Create the todo lists
     return (
@@ -298,13 +307,14 @@ const AnythingList = ({ type }) => {
                     isOpen={isEditModalOpen}
                     onRequestClose={handleCloseModal}
                     editData={editingTask}
+
                 />
             )}
 
             {type === 'todo' && (
                 <div className="button-view">
                     <TodoButton onClick={handleClick} />
-                    <TodoModal isOpen={isModalOpen} onRequestClose={handleCloseModal} />
+                    <TodoModal isOpen={isModalOpen} onRequestClose={handleCloseSubmitModal} />
                 </div>
             )}
         </div>

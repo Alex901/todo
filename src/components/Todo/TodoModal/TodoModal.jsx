@@ -10,10 +10,11 @@ import { Form } from 'react-bootstrap';
 
 ReactModal.setAppElement('#root');
 
-document.body.classList.add('modal-open');
+// When modal opens
+document.body.classList.add('no-scroll');
 
-// When closing the modal
-document.body.classList.remove('modal-open');
+// When modal closes
+document.body.classList.remove('no-scroll');
 
 const TodoModal = ({ isOpen, onRequestClose }) => {
     const { addTodo } = useTodoContext();
@@ -50,16 +51,18 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
 
     const handleInputChange = (event) => {
         let value = event.target.value;
+        console.log(value);
 
         setNewTaskData({
             ...newTaskData,
             [event.target.name]: value,
         });
         setErrorMessage('');
+
+        console.log(newTaskData);
     };
 
     const handleTagChange = (event) => {
-        console.log(event);
         setNewTaskData({
             ...newTaskData,
             tags: event.target.value,
@@ -74,11 +77,7 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
     };
 
     const handleSelectChange = (event) => {
-        console.log("loggedInuser: ", loggedInUser); // Check the value of loggedInUser
-        console.log("List Names:", loggedInUser?.listNames[0].name === loggedInUser.activeList); // Check the value of loggedInUser.ListName
-        console.log("ActiveList: ", loggedInUser?.activeList)
         const selectedOption = event.target.value;
-        console.log(selectedOption);
 
         if (options.some(option => option.value === selectedOption)) {
             setNewTaskData({
@@ -86,8 +85,6 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
                 priority: selectedOption,
             });
         }
-
-        console.log(newTaskData);
     };
 
 
@@ -153,7 +150,6 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
     };
 
     const handleDiffChange = (selectedOption) => {
-        console.log(selectedOption.target.value);
         setNewTaskData({
             ...newTaskData,
             difficulty: selectedOption.target.value,
@@ -161,7 +157,6 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
     };
 
     function handleAddChip(chipToAdd) {
-        console.log("chip to add: ", chipToAdd);
         setNewTaskData((prevData) => ({
             ...prevData,
             tags: [...prevData.tags, chipToAdd],
@@ -178,7 +173,9 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
             overlayClassName="modal-overlay"
             shouldCloseOnOverlayClick={true}
         >
-            <div className='modalTitle'> <h3 className="title"> Create task </h3></div>
+
+
+            <div className='modalTitle' style={{textAlign: 'center'}}> <h3 className="title"> Create task </h3></div>
 
             {isLoggedIn ? (
 
@@ -254,7 +251,7 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
                                 min: '0' // Set the minimum value
                             }}
                             InputProps={{
-                                startAdornment: <InputAdornment position="start">H</InputAdornment>,
+                                startAdornment: <InputAdornment position="start">h</InputAdornment>,
                             }}
                         />
 
@@ -288,8 +285,8 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
                         />
 
                     </div>
-                    <div className="tags-container" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%', gap: '20px', flexWrap: 'wrap' }}>
-                        <FormControl variant="outlined" style={{ minWidth: '100px', width: 'auto', height:'auto' }} size='small'>
+                    <div className="tags-container" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%', gap: '20px', flexWrap: 'wrap', marginTop: '10px' }}>
+                        <FormControl variant="outlined" style={{ minWidth: '100px', width: 'auto', height: 'auto' }} size='small'>
                             <InputLabel id="tags-label">Tags</InputLabel>
                             <Select
 
@@ -300,13 +297,13 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
                                 onChange={handleTagChange}
                                 name='tags'
                                 renderValue={(selected) => (
-                                    
+
                                     <div style={{ display: 'flex', flexWrap: 'wrap' }}>
                                         {selected.map((tag) => (
                                             <Chip
                                                 key={tag.label}
                                                 label={tag.label}
-                                                style={{ backgroundColor: tag.color, color: tag.textColor, margin: '2px', flexBasis: '20%'}}
+                                                style={{ backgroundColor: tag.color, color: tag.textColor, margin: '2px', flexBasis: '20%' }}
                                             />
                                         ))}
                                     </div>
@@ -339,7 +336,7 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
                         {newTaskData.steps.map(step => (
                             <div key={step.id} style={{ display: 'flex', flexDirection: 'row' }}>
                                 <label style={{ display: 'flex', alignItems: 'center' }}>{`Step${step.id}`}</label>
-                                <input className='create-modal-input' type='text' placeholder={`Enter subTask`}
+                                <input className='create-modal-input' type='text' placeholder={`Enter step title`}
                                     onChange={event => handleInputChangeStep(step.id, event)} value={newTaskData.steps[step.id - 1].value} maxLength='50' />
                             </div>
                         ))}
@@ -350,7 +347,9 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
 
 
                     {errorMessage && <p className="error">{errorMessage}</p>}
-                    <button className='modal-button'> Submit </button>
+                    <Button type="submit" variant="contained" color="success" size="large" style={{textAlign: 'center'}}>
+                        Submit
+                    </Button>
                 </form>
             ) : (
                 <form className="create-entry-form" onSubmit={handleSubmit}>

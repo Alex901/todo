@@ -75,7 +75,7 @@ const TodoProvider = ({ children }) => {
   };
 
   const addTodo = async (newTaskData) => {
-    console.log("addTodo: newTaskData", newTaskData);
+   // console.log("addTodo: newTaskData", newTaskData);
     try {
       const newId = parseInt(Date.now().toString(36) + Math.random().toString(36).substr(2), 36); //but why? xD
 
@@ -102,7 +102,7 @@ const TodoProvider = ({ children }) => {
         inList: loggedInUser ? ['all'].concat(loggedInUser.activeList !== 'all' ? [loggedInUser.activeList] : []) : []
       };
 
-      console.log("addTodo: newTodo", newTodo);
+     // console.log("addTodo: newTodo", newTodo);
 
       const response = await axios.post(`${BASE_URL}/api/`, newTodo);
       if (response.status === 201) {
