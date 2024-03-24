@@ -14,7 +14,7 @@ const UserProvider = ({ children }) => {
         'http://localhost:5000';
 
     useEffect(() => {
-     
+
         checkLogin();
     }, []);
 
@@ -22,7 +22,7 @@ const UserProvider = ({ children }) => {
     const checkLogin = async () => {
         try {
             const response = await axios.get(`${BASE_URL}/auth/checkLogin`, { withCredentials: true });
-            if (response.data.valid){
+            if (response.data.valid) {
                 setLoggedInUser(response.data.user);
                 setIsLoggedIn(true);
             }
@@ -52,8 +52,10 @@ const UserProvider = ({ children }) => {
                     axios.get(`${BASE_URL}/users/${userData.username}`, { withCredentials: true })
                         .then(userResponse => {
                             if (userResponse.status === 200) {
+                   
                                 setLoggedInUser(userResponse.data);
                                 setIsLoggedIn(true);
+
                             } else {
                                 console.log("could not load user data, login terminated");
                             }
@@ -65,6 +67,7 @@ const UserProvider = ({ children }) => {
                     console.log("User not found");
                 } else {
                     console.log("Internal server error");
+
                 }
             })
             .catch(error => {
@@ -120,13 +123,13 @@ const UserProvider = ({ children }) => {
             const response = await axios.patch(`${BASE_URL}/users/addlist/${_id}`, { listName });
             if (response.status === 200) {
                 console.log("List added: ", response.data);
-                setLoggedInUser({ 
-                    ...loggedInUser, 
+                setLoggedInUser({
+                    ...loggedInUser,
                     listNames: response.data.listNames,
-                    activeList: listName 
-                  });
-                  console.log("loggedInUser: ", loggedInUser);
-                  toast.success("List added");
+                    activeList: listName
+                });
+                console.log("loggedInUser: ", loggedInUser);
+                toast.success("List added");
             } else if (response.status === 404) {
                 console.log("User not found");
             } else {
@@ -140,28 +143,28 @@ const UserProvider = ({ children }) => {
     const deleteList = async (listName) => {
         console.log("delete list with name: ", listName);
         try {
-          if (!isLoggedIn) {
-            console.log("User not logged in");
-            return;
-          }
-          const _id = loggedInUser._id;
-          const response = await axios.delete(`${BASE_URL}/users/deletelist/${_id}`, { data: { listName } });
-          if (response.status === 200) {
-            console.log("List deleted: ", listName);
-            setLoggedInUser({
-              ...loggedInUser, 
-              listNames: loggedInUser.listNames.filter((item) => item.name !== listName),
-              activeList: loggedInUser.listNames[0].name
-            }); //This should always be 'all'
-          } else if (response.status === 404) {
-            console.log("User not found");
-          } else {
-            console.log("Internal server error");
-          }
+            if (!isLoggedIn) {
+                console.log("User not logged in");
+                return;
+            }
+            const _id = loggedInUser._id;
+            const response = await axios.delete(`${BASE_URL}/users/deletelist/${_id}`, { data: { listName } });
+            if (response.status === 200) {
+                console.log("List deleted: ", listName);
+                setLoggedInUser({
+                    ...loggedInUser,
+                    listNames: loggedInUser.listNames.filter((item) => item.name !== listName),
+                    activeList: loggedInUser.listNames[0].name
+                }); //This should always be 'all'
+            } else if (response.status === 404) {
+                console.log("User not found");
+            } else {
+                console.log("Internal server error");
+            }
         } catch (error) {
-          console.error('Error deleting list', error);
+            console.error('Error deleting list', error);
         }
-      }
+    }
 
     function getCookie(name) {
         const value = `; ${document.cookie}`;
@@ -176,12 +179,12 @@ const UserProvider = ({ children }) => {
                 return;
             }
             const _id = loggedInUser._id;
-            const response = await axios.patch(`${BASE_URL}/users/toggleurgent/${_id}`, 
-            { "settings.todoList.urgentOnly": newUrgentStatus });
+            const response = await axios.patch(`${BASE_URL}/users/toggleurgent/${_id}`,
+                { "settings.todoList.urgentOnly": newUrgentStatus });
 
             if (response.status === 200) {
                 console.log("Urgent setting toggled");
-                console.log("loggedInUser, " , loggedInUser)
+                console.log("loggedInUser, ", loggedInUser)
                 console.log("response.data, ", response.data)
                 setLoggedInUser(response.data);
             } else if (response.status === 404) {
@@ -220,7 +223,7 @@ const UserProvider = ({ children }) => {
         } catch (error) {
             console.error('Error adding tag', error);
             toast.error("Failed to add tag");
-        }   
+        }
     }
 
     const deleteTag = async (tagName) => {

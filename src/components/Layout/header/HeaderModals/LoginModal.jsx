@@ -53,7 +53,7 @@ const LoginModal = ({ isOpen, onRequestClose }) => {
         }
 
         login(userData);
-        toast.success(`welcome back ${username}!`); 
+        toast.success("Login successful");
         setUsername("");
         setPassword("");
         onRequestClose();
