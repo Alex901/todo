@@ -237,7 +237,7 @@ const AnythingList = ({ type }) => {
             {isLoggedIn && (
                 <div className="list-settings" style={{ justifyContent: 'right', border: 'none' }}>
 
-                    <div style={{ display: 'flex', alignItems: 'center', margin: '3px 20px' }}>
+                    <div className="checkbox-container" style={{ margin: '3px 20px' }}>
                         <FormControlLabel
                             control={
                                 <Checkbox
@@ -248,7 +248,7 @@ const AnythingList = ({ type }) => {
                             label="Urgent only"
                         />
                     </div>
-                    <div style={{ display: 'flex', alignItems: 'center', margin: '3px 20px' }}>
+                    <div className="checkbox-container" style={{  margin: '3px 20px' }}>
                         <FormControlLabel
                             control={
                                 <Checkbox

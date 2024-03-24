@@ -26,6 +26,13 @@ body {
   padding: 5em; /* Add padding to create space between content and edges */
 }
 
+@media screen and (max-width: 1024px) {
+  .content {
+    padding: 0;
+  }
+  
+}
+
 .nav button {
   padding: 5px;
   margin: 1px;

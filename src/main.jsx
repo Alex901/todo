@@ -11,6 +11,7 @@ import { purple } from '@mui/material/colors';
 import { red } from '@mui/material/colors';
 import { orange } from '@mui/material/colors';
 import { green } from '@mui/material/colors';
+import TodoDrawer from './components/Layout/TodoDrawer/TodoDrawer'
 
 const theme = createTheme({
   palette: {
@@ -72,6 +73,7 @@ function Main() {
               pauseOnFocusLoss={false}
               autoClose={3000}
             />
+            <TodoDrawer />
             <App />
           </TodoProvider>
         </UserProvider>

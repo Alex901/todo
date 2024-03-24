@@ -56,12 +56,12 @@ const Header = () => {
   }
 
   return (
-    <div className="mdl-layout" style={{ overflow: "visible" }}>
+    <div className="mdl-layout header" style={{ overflow: "visible" }}>
       <header className="mdl-layout__header header_layout" style={{ backgroundColor: theme.palette.primary.main }}>
-        <div className="mdl-layout__header-row nav-row" style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <div className="mdl-layout__header-row nav-row" style={{  justifyContent: 'space-between' }}>
           {/* Left section */}
           <div style={{ display: 'flex', alignItems: 'center' }}>
-            <img src={logo} alt="Logo" style={{ marginRight: '12px', width: '5%', height: 'auto', position: 'relative', top: '-3px' }} />
+            <img src={logo} alt="Logo" style={{ marginRight: '12px', width: '5%', position: 'relative', top: '-3px' }} />
             <span className="mdl-layout-title" style={{ fontSize: '32px', color: "white" }}>TaskForge</span>
 
           </div>

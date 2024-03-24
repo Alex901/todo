@@ -12,6 +12,37 @@
   overflow: visible;
 }
 
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+
+}
+
+@media screen and (max-width: 1024px) {
+  .header {
+    display: flex;
+    height: 20px;
+    width: 100%;
+  }
+  .mdl-layout__header-row.nav-row {
+    display: flex;
+    padding: 0 20px 0 20px;
+    height: 20px;
+    width: 100%;
+  }
+  .nav-row{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  
+  }
+}
+
+
+
 
 .mdl-navigation__link {
   color: white; 
@@ -21,13 +52,6 @@
   margin-left: 10px; 
 }
 
-.mdl-layout__header.header_layout{
-
-}
-
-.mdl-layout__header{
-
-}
 
 .mdl-layout__header-row nav-row {
   box-shadow: none;
@@ -44,7 +68,7 @@
   border-radius: 10px;
   width: 6em; 
   height: 36px; 
-  background-color: #ff9d00; 
+  background-color: var(--secondary-color); 
   cursor: pointer; 
   position: relative; 
   display: flex;
