@@ -36,7 +36,7 @@ const ConfirmationModal = ({ isOpen, onRequestClose, message, onConfirm, onClose
             <p className="message">{message}</p>
             <div className="modal-buttons">
                 <button onClick={onConfirm} className='modal-button confirm-button'> Confirm </button>
-                <button onClick={onClose} className='modal-button cancel-button'> Cancel </button>
+                <button onClick={onClose} className='modal-button cancel'> Cancel </button>
             </div>
         </ReactModal>
     );

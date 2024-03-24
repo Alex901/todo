@@ -347,9 +347,9 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
 
 
                     {errorMessage && <p className="error">{errorMessage}</p>}
-                    <Button type="submit" variant="contained" color="success" size="large" style={{textAlign: 'center'}}>
+                    <button className='modal-button' type="submit" style={{textAlign: 'center'}}>
                         Submit
-                    </Button>
+                    </button>
                 </form>
             ) : (
                 <form className="create-entry-form" onSubmit={handleSubmit}>
@@ -380,7 +380,7 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
                     <hr style={{ width: '80%', margin: '10px auto' }} />
 
                     {errorMessage && <p className="error">{errorMessage}</p>}
-                    <button className='modal-button'> Submit </button>
+                    <button className='modal-button' type='button'> Submit </button>
                 </form>
             )}
         </ReactModal>

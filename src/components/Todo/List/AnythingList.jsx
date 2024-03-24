@@ -7,10 +7,11 @@ import EditModal from "../TodoModal/EditModal/EditModal";
 import TodoEntry from "../TodoEntry/TodoEntry";
 import { useTodoContext } from "../../../contexts/todoContexts";
 import { useUserContext } from "../../../contexts/UserContext";
-import Select from 'react-select'; // or '@material-ui/core/Select'
 import Icon from '@mdi/react';
 import { mdiMenuUp } from '@mdi/js';
 import { mdiMenuDown } from '@mdi/js';
+
+import { FormControl, InputLabel, MenuItem, Select, IconButton, Checkbox, FormControlLabel } from '@mui/material';
 
 const AnythingList = ({ type }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -84,7 +85,7 @@ const AnythingList = ({ type }) => {
 
     const handleEdit = (taskData) => {
         setEditingTask(taskData);
-        console.log("DEBUG: open edit modal");
+        console.log("DEBUG:open edit modal");
         setIsEditModalOpen(true);
     }
 
@@ -211,7 +212,9 @@ const AnythingList = ({ type }) => {
     };
 
     const handleSortChange = (selectedOption) => {
-        setSelectedOptionSort(selectedOption);
+        console.log("DEBUG: selectedOption", selectedOptionSort);
+        console.log("DEBUG: selectedOption:", selectedOption.target);
+        setSelectedOptionSort(selectedOption.target);
     }
 
     const toggleSortOrder = () => {
@@ -230,60 +233,71 @@ const AnythingList = ({ type }) => {
     //Create the todo lists
     return (
         <div className="list-container">
-            <div className={`title-${type}`}>
-                <h3> {isLoggedIn ? loggedInUser.activeList : type} </h3>
-            </div>
+            {isLoggedIn ? <div className={`title-${type}`}></div> : null}
             {isLoggedIn && (
-                <div className="list-settings">
-                    <Select
-                        options={[
-                            { value: 'created', label: 'Created' },
-                            { value: 'task', label: 'Name' },
-                            { value: 'priority', label: 'Priority' },
-                            { value: 'steps', label: 'Steps' },
-                            { value: 'difficulty', label: 'Difficulty' },
-                            { value: 'dueDate', label: 'Deadline' },
-                            { value: 'estimatedTime', label: 'Time' },
-                        ]}
-                        onChange={handleSortChange}
-                        defaultValue={{ value: 'created', label: 'Created' }}
-                        styles={{
-                            control: (provided) => ({
-                                ...provided,
-                                width: '150px',
-                                minHeight: '36px',
-                                borderRadius: '15px',
-                            }),
-                        }}
-                    />
+                <div className="list-settings" style={{ justifyContent: 'right', border: 'none' }}>
 
-                    <button
-                        className="toggle-order-button"
-                        onClick={toggleSortOrder}
-                        style={{
-                            marginRight: '10px',
-                            width: '60px',
-                            height: '36px',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            backgroundColor: 'rgba(0, 0, 0, 0)',
-                            border: 'none',
-                            outline: 'none',
-                        }}
-                    >
-                        {isAscending ? <Icon path={mdiMenuUp} size={1.4} /> : <Icon path={mdiMenuDown} size={1.4} />}
-                    </button>
                     <div style={{ display: 'flex', alignItems: 'center', margin: '3px 20px' }}>
-                        <input type="checkbox" onChange={toggleUrgentTasks} checked={isUrgentOnly} />
-                        <label>Urgent only</label>
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={isUrgentOnly}
+                                    onChange={toggleUrgentTasks}
+                                />
+                            }
+                            label="Urgent only"
+                        />
                     </div>
                     <div style={{ display: 'flex', alignItems: 'center', margin: '3px 20px' }}>
-                        <input type="checkbox" onChange={toggleDeadlineOnly} checked={isDeadlineOnly} />
-                        <label>Dadline only</label>
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={isDeadlineOnly}
+                                    onChange={toggleDeadlineOnly}
+                                />
+                            }
+                            label="Deadline only"
+                        />
+                    </div>
+                    <div className="Select-sorting-order" style={{ display: 'flex', flexDirection: 'row' }}>
+                        <FormControl variant="outlined" style={{ minWidth: 150 }}>
+
+                            <Select
+                                labelId="sorting-order-label"
+                                defaultValue="created"
+                                onChange={handleSortChange}
+                                size="small"
+                            >
+                                <MenuItem value="created" name="created">Created</MenuItem>
+                                <MenuItem value="task" name="task">Name</MenuItem>
+                                <MenuItem value="priority" name="priority">Priority</MenuItem>
+                                <MenuItem value="steps" name="steps">Steps</MenuItem>
+                                <MenuItem value="difficulty" name="difficulty">Difficulty</MenuItem>
+                                <MenuItem value="dueDate" name="dueDate">Deadline</MenuItem>
+                                <MenuItem value="estimatedTime" name="estimatedTime">Time</MenuItem>
+                            </Select>
+                        </FormControl>
+
+                        <IconButton
+                            className="toggle-order-button"
+                            onClick={toggleSortOrder}
+                            sx={{
+                                width: '40px',
+                                height: '36px',
+                                border: '1px solid rgba(0, 0, 0, 0.23)', // Add this line
+                                borderRadius: '4px',
+                                cursor: 'pointer',
+                                marginLeft: '2px'
+                            }}
+                        >
+                            {isAscending ? <Icon path={mdiMenuUp} size={1.4} /> : <Icon path={mdiMenuDown} size={1.4} />}
+                        </IconButton>
                     </div>
                 </div>
             )}
+
+            {isLoggedIn ? <div className={`title-${type}`}></div> : null}
+
             <div className="list-view">
                 {
                     (type === 'todo' && activeTodoList.filter(todo => !todo.isStarted && !todo.isDone).length > 0) ||

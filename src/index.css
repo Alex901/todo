@@ -44,7 +44,7 @@ a:hover {
 
 body {
  min-height: 140vh;
- background: linear-gradient(to top, #ffffff14 30%, #3f51b5 96%);
+ background: linear-gradient(to top, #ffffff14 30%, var(--primary-color) 96%);
 }
 
 h1 {
@@ -52,24 +52,7 @@ h1 {
   line-height: 1.1;
 }
 
-button {
-  border-radius: 10px;
-  border: 1px solid transparent;
-  padding: 0.6em 1.2em;
-  font-size: 1em;
-  font-weight: 500;
-  font-family: inherit;
-  background-color: #1a1a1a;
-  cursor: pointer;
-  transition: border-color 0.25s;
-}
-button:hover {
 
-}
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
 
 @media (prefers-color-scheme: light) {
   :root {
@@ -79,12 +62,9 @@ button:focus-visible {
   a:hover {
     color: #747bff;
   }
-  button {
-    background-color: #f9f9f9;
-  }
 }
 
-
+/* Global modal styles */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -101,4 +81,44 @@ button:focus-visible {
   z-index: 1000;
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
   /* Other styles for the modal */
+}
+
+.modal-button {
+  /* Add your styles here */
+  background-color: var(--primary-color);
+  color: white;
+  border-radius: 10px;
+  padding: 10px 20px;
+  margin-top: 10px;
+  width: 9em;
+  height: 3.8em;
+  font-weight: 700;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+  transition: all 0.3s ease; 
+}
+
+.modal-button:hover {
+  background-color: white;
+  color: var(--secondary-color);
+  font-weight: 900;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+}
+
+.modal-button.cancel {
+  background-color: var(--cancel-color);
+  color: white;
+  border-radius: 10px;
+  padding: 10px 20px;
+  border: none;
+  width: 9em;
+  height: 3.8em;
+  font-weight: 700;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+}
+
+.modal-button.cancel:hover {
+  background-color: white;
+  color: var(--cancel-color);
+  font-weight: 900;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
 }

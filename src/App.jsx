@@ -283,19 +283,19 @@ function App() {
             {/* Second row */}
             <div style={{ display: 'flex', justifyContent: 'center' }}>
               <button className="navButton" onClick={switchTodoView} style={{
-                background: activeView === 'todo' ? '#eaeaef' : '#777474',
+                background: activeView === 'todo' ? '#eaeaef' : '#E65151',
                 color: activeView === 'todo' ? 'black' : 'white',
                 flexGrow: '1'
               }}> Prepared ({isLoggedIn ? getActiveListTodoCount() : getTodoCount()}) </button>
 
               <button className="navButton" onClick={switchDoingView} style={{
-                background: activeView === 'doing' ? '#eaeaef' : '#777474',
+                background: activeView === 'doing' ? '#eaeaef' : '#EBCC67',
                 color: activeView === 'doing' ? 'black' : 'white',
                 flexGrow: '1'
               }}> Ongoing ({isLoggedIn ? getActiveListDoingCount() : getDoingCount()}) </button>
 
               <button className="navButton" onClick={switchDoneView} style={{
-                background: activeView === 'done' ? '#eaeaef' : '#777474',
+                background: activeView === 'done' ? '#eaeaef' : '#649E31',
                 color: activeView === 'done' ? 'black' : 'white',
                 flexGrow: '1'
               }}> Review ({isLoggedIn ? getActiveListDoneCount() : getDoneCount()}) </button>

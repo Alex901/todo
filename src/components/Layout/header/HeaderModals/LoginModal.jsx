@@ -103,7 +103,7 @@ const LoginModal = ({ isOpen, onRequestClose }) => {
                     
                 />
                 {passwordError && <p className='error'>{passwordError}</p>}
-                <Button type="submit" variant="contained" className='modal-button' color='success'>Login</Button>
+                <button className='modal-button'>Login</button>
             </form>
         </ReactModal>
     );

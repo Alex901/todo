@@ -42,15 +42,6 @@
     border-radius: 10px;
 }
 
-.modal-button {
-    min-height: 50px;
-}
-
-
-.modal-button:hover {
-  background-color: #26783a;
-  color: white;
-}
 
 .create-entry-form {
     display: flex;

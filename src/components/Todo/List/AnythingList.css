@@ -1,5 +1,5 @@
 .button-view {
-    background-color: rgb(242, 244, 245);
+    background-color: rgba(123, 31, 162, 0.9); /* This is the primary color, but i need some opacity */
     border-radius: 10px;
     display: flex;
     justify-content: center; /* Center horizontally */
@@ -17,11 +17,13 @@
     padding: 5px;
 }
 
+
 .title-todo {
     background-color: rgb(230, 81, 81);
     color: black;
     border-radius: 10px;
-    margin-bottom: 3px;
+    height: 5px;
+
 }
 
 
@@ -29,16 +31,16 @@
     background-color: rgb(100, 158, 49);
     border-radius: 10px;
     color: white;
-    border: 1px solid black;
-    margin-bottom: 3px;
+    height: 5px;
+
 }
 
 .title-doing {
     background-color: rgb(235, 204, 103);
     border-radius: 10px;
     color: rgb(14, 6, 6);
-    border: 1px solid black;
-    margin-bottom: 3px;
+    height: 5px;
+
 }
 
 .list-view {
@@ -68,7 +70,4 @@
 }
 
 
-.toggle-order-button:hover {
-    cursor: pointer;
-    transform: scale(1.2);
-}
+

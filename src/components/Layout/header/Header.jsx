@@ -6,6 +6,9 @@ import { useUserContext } from "../../../contexts/UserContext";
 import logo from "../../../assets/Anvil_logo_v1.png";
 import { toast } from "react-toastify";
 import UserAvatar from "./UserAvatar/UserAvatar";
+import { useTheme } from '@mui/material/styles';
+
+
 
 const Header = () => {
   const [time, setTime] = useState(new Date());
@@ -13,6 +16,8 @@ const Header = () => {
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
   const { isLoggedIn, loggedInUser, logout } = useUserContext();
   const [showWelcome, setShowWelcome] = useState(false);
+
+  const theme = useTheme();
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -52,7 +57,7 @@ const Header = () => {
 
   return (
     <div className="mdl-layout" style={{ overflow: "visible" }}>
-      <header className="mdl-layout__header header_layout">
+      <header className="mdl-layout__header header_layout" style={{ backgroundColor: theme.palette.primary.main }}>
         <div className="mdl-layout__header-row nav-row" style={{ display: 'flex', justifyContent: 'space-between' }}>
           {/* Left section */}
           <div style={{ display: 'flex', alignItems: 'center' }}>

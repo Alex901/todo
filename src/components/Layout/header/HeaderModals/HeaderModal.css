@@ -9,15 +9,6 @@
     gap: 15px;
 }
 
-.modal-form.register-button {
-    height: 36x;
-    border-radius: 5px;
-    border: 1px solid black;
-    background-color: #44c867;
-    color: #000000;
-    cursor: pointer;
-}
-
 .error {
     color: red;
 }
@@ -66,23 +57,6 @@ p.error {
     height: 36px;
     border-radius: 5px;
     border: 1px solid black;
-}
-
-.modal-button {
-    width: 6em;
-    margin: 5px;
-    background-color: #44c867;
-    height: 50px;
-    color: #000000;
-    cursor: pointer;
-    border: 1px solid black;
-    margin-left: 3px;
-    bottom: 0;
-}
-
-.modal-button:hover {
-  background-color: #26783a;
-  color: white;
 }
 
 .cancel-button{

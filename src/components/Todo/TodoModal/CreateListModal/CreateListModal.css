@@ -31,19 +31,6 @@
     border: 1px solid black;
 }
 
-.modal-button {
-    background-color: #44c867;
-    height: 50px;
-    color: #000000;
-    cursor: pointer;
-    border: 1px solid black;
-    margin-left: 3px;
-}
-
-.modal-button:hover {
-  background-color: #26783a;
-  color: white;
-}
 
 .create-list-form {
     display: flex;

@@ -36,18 +36,6 @@
     border: 1px solid black;
 }
 
-.modal-button {
-    width: 6em;
-    margin: 5px;
-    background-color: #44c867;
-    height: 50px;
-    color: #000000;
-    cursor: pointer;
-    border: 1px solid black;
-    margin-left: 3px;
-    bottom: 0;
-}
-
 .modal-button:hover {
   background-color: #26783a;
   color: white;

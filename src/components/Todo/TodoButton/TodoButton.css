@@ -1,34 +1,23 @@
 .addButton {
     /* Make the button round */
     border-radius: 50%;
-    width: 40px; 
-    height: 40px; 
-    background-color: #4caf50; 
+    background-color: var(--secondary-color);
     cursor: pointer; /* Add cursor pointer */
-    position: relative; /* Position relative for absolute centering */
     /* Center the icon */
-    display: flex;
-    justify-content: center;
-    align-items: center;
     margin: 5px;
+    border: none;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+    border: 1px solid transparent;
   }
   
   .addButton:hover {
-    background-color: #45a049; /* Darker green background color on hover */
+    background-color: white;
+    border: 1px solid rgb(198, 193, 193);
+    color: black;
+    box-shadow: 0 5px 10px rgba(0, 0, 0, 0.25);
   }
 
   .addButton:active {
-    border: 2px solid rgb(144, 57, 57);
+    outline:none;
   }
   
-  
-  .plus {
-    font-size: 24px; /* Increase the size of the plus icon */
-    width: 24px; /* Make the icon wider */
-    color: rgb(0, 0, 0);
-  }
-
-  .plus:hover {
-    color: white;
-  }
-

@@ -22,13 +22,6 @@
     border: 1px solid black;
 }
 
-
-
-.modal-button:hover {
-  background-color: #26783a;
-  color: white;
-}
-
 .add-list-button {
     margin: 5px;
     background-color: #5045c8;
