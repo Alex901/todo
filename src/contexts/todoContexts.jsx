@@ -26,12 +26,18 @@ const TodoContext = createContext({
 });
 
 
+
+
 const TodoProvider = ({ children }) => {
   const [todoList, setTodoList] = useState([]);
   const [dataFetched, setDataFetched] = useState(false);
   const { loggedInUser } = useUserContext(); //Logged in username&&list
 
   const BASE_URL = import.meta.env.VITE_REACT_APP_PRODUCTION === 'true' ? 'https://todo-backend-gkdo.onrender.com' : 'http://localhost:5000';
+
+  function isMobileDevice() {
+    return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
+  }
 
   //Not sure if this is the best solution
   useEffect(() => {
@@ -41,16 +47,20 @@ const TodoProvider = ({ children }) => {
   }, [dataFetched, loggedInUser]);
 
   const refreshTodoList = () => {
-    setDataFetched(false); // Set dataFetched to false to trigger re-fetching
+   
   };
 
   //API functions
   
 
   const fetchTodoList = async () => {
+
+   
     try {
-      const response = await axios.get(`${BASE_URL}/api/todos`, {
-        withCredentials: true,
+      const url = isMobileDevice() ? `${BASE_URL}/api/todos/mobile` : `${BASE_URL}/api/todos`;
+      const response = await axios.get(url, {
+        withCredentials: !isMobileDevice(),
+        headers: isMobileDevice() && loggedInUser ? { 'User': loggedInUser.username } : {},
       });
 
       let parsedData = response.data.map(todo => ({
@@ -67,8 +77,8 @@ const TodoProvider = ({ children }) => {
       } else {
         parsedData = parsedData.filter(todo => todo.owner === null);
       }
-
       setTodoList(parsedData);
+
     } catch (error) {
       console.error('Error fetching data', error);
     }

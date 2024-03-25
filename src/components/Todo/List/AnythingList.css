@@ -6,7 +6,11 @@
     align-items: center; /* Center vertically */
     padding: 3px;
     margin: 2px;
-    border-top: 2px solid #9b8c8c;
+    border-top: 3px solid #5e5d5d;
+    overflow: hidden;
+    position: relative;
+    height: 64px;
+    width: auto;
 }
 
 .list-container {

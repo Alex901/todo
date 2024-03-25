@@ -7,6 +7,7 @@ import { toast } from "react-toastify";
 const UserContext = createContext();
 
 const UserProvider = ({ children }) => {
+    const { refreshTodoList } = useTodoContext();
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [loggedInUser, setLoggedInUser] = useState(null);
     const BASE_URL = import.meta.env.VITE_REACT_APP_PRODUCTION === 'true' ?
@@ -82,6 +83,7 @@ const UserProvider = ({ children }) => {
                 console.log(response.data.message);
                 setLoggedInUser(null);
                 setIsLoggedIn(false);
+                refreshTodoList();
             } else {
                 console.error('Error logging out');
             }
