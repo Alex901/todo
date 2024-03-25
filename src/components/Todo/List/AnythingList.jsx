@@ -11,7 +11,10 @@ import Icon from '@mdi/react';
 import { mdiMenuUp } from '@mdi/js';
 import { mdiMenuDown } from '@mdi/js';
 
-import { FormControl, InputLabel, MenuItem, Select, IconButton, Checkbox, FormControlLabel } from '@mui/material';
+import {
+    FormControl, InputLabel, MenuItem, Select, IconButton,
+    Checkbox, FormControlLabel, Autocomplete, TextField, Stack
+} from '@mui/material';
 
 const AnythingList = ({ type }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -27,6 +30,8 @@ const AnythingList = ({ type }) => {
     const [selectedOptionSort, setSelectedOptionSort] = useState({ value: 'created', label: 'Created' });
     const [filteredTodoList, setFilteredTodoList] = useState([]);
     const [sortedTodoList, setSortedTodoList] = useState([]);
+    const [selectedTags, setSelectedTags] = useState([]);
+    const [originalTodoList, setOriginalTodoList] = useState([]);
 
     const priorityMapping = {
         'VERY LOW': 1,
@@ -44,6 +49,20 @@ const AnythingList = ({ type }) => {
         'VERY HARD': 5,
     };
 
+    const sortFunctions = {
+        task: (a, b) => a.task.localeCompare(b.task),
+        created: (a, b) => a.created - b.created,
+        priority: (a, b) => priorityMapping[a.priority] - priorityMapping[b.priority],
+        steps: (a, b) => a.steps.length - b.steps.length,
+        difficulty: (a, b) => difficultyMapping[a.difficulty] - difficultyMapping[b.difficulty],
+        dueDate: (a, b) => a.dueDate - b.dueDate,
+        estimatedTime: (a, b) => a.estimatedTime - b.estimatedTime,
+    };
+
+    const activeList = loggedInUser ? loggedInUser.listNames.find(list => list.name === loggedInUser.activeList) : null;
+
+    const tags = activeList ? activeList.tags : [];
+
     /*   useEffect(() => {
           if (editingTask !== null) {
               setIsEditModalOpen(true);
@@ -51,7 +70,6 @@ const AnythingList = ({ type }) => {
       }, [editingTask]); */
     /* Logging */
     useEffect(() => {
-        console.log("IsEditModalOpen?", isEditModalOpen);
     }, [isEditModalOpen]);
 
     //Everytime todoList(or loggedInUser) changes, i want to grab only the logged in users entries
@@ -79,20 +97,28 @@ const AnythingList = ({ type }) => {
         }
     }, [isUrgentOnly, activeTodoList]);
 
+    useEffect(() => {
+        updateActiveList();
+    }, [selectedTags]);
+
+    useEffect(() => {
+        if (selectedTags.length === 0) {
+          setOriginalTodoList(activeTodoList);
+        }
+      }, [activeTodoList]);
+
     const handleClick = () => {
         setIsModalOpen(true);
     }
 
     const handleEdit = (taskData) => {
         setEditingTask(taskData);
-        console.log("DEBUG:open edit modal");
         setIsEditModalOpen(true);
     }
 
     const handleCloseModal = () => {
         setIsEditModalOpen(false);
         setEditingTask(null);
-        console.log("DEBUG: closeEditingModal");
     }
 
     const handleCloseSubmitModal = () => {
@@ -113,90 +139,19 @@ const AnythingList = ({ type }) => {
     };
 
     const filterActiveList = () => {
-        if (selectedOptionSort.value === 'task') {
-            const sortedList = [...activeTodoList].sort((a, b) => {
-                if (isAscending) {
-                    return a.task.localeCompare(b.task);
-                } else {
-                    return b.task.localeCompare(a.task);
-                }
-
-            })
-
-            if (JSON.stringify(sortedList) !== JSON.stringify(activeTodoList)) {
-                setActiveTodoList(sortedList);
-            }
-        } else if (selectedOptionSort.value === 'created') {
-            const sortedList = [...activeTodoList].sort((a, b) => {
-                if (!isAscending) {
-                    return a.created - b.created;
-                } else {
-                    return b.created - a.created;
-                }
-            })
-            if (JSON.stringify(sortedList) !== JSON.stringify(activeTodoList)) {
-                setActiveTodoList(sortedList);
-            }
-        } else if (selectedOptionSort.value === 'priority') {
-            const sortedList = [...activeTodoList].sort((a, b) => {
-                if (!isAscending) {
-                    return priorityMapping[a.priority] - priorityMapping[b.priority];
-                } else {
-                    return priorityMapping[b.priority] - priorityMapping[a.priority];
-                }
-            })
-            if (JSON.stringify(sortedList) !== JSON.stringify(activeTodoList)) {
-                setActiveTodoList(sortedList);
-            }
-        } else if (selectedOptionSort.value === 'steps') {
-            const sortedList = [...activeTodoList].sort((a, b) => {
-                if (!isAscending) {
-                    return a.steps.length - b.steps.length;
-                } else {
-                    return b.steps.length - a.steps.length;
-                }
-            })
-            if (JSON.stringify(sortedList) !== JSON.stringify(activeTodoList)) {
-                setActiveTodoList(sortedList);
-            }
-        } else if (selectedOptionSort.value === 'difficulty') {
-            const sortedList = [...activeTodoList].sort((a, b) => {
-                if (!isAscending) {
-                    return difficultyMapping[a.difficulty] - difficultyMapping[b.difficulty];
-                } else {
-                    return difficultyMapping[b.difficulty] - difficultyMapping[a.difficulty];
-                }
-            })
-            if (JSON.stringify(sortedList) !== JSON.stringify(activeTodoList)) {
-                setActiveTodoList(sortedList);
-            }
-
-        } else if (selectedOptionSort.value === 'dueDate') {
-            const sortedList = [...activeTodoList].sort((a, b) => {
-                if (!isAscending) {
-                    return a.dueDate - b.dueDate;
-                } else {
-                    return b.dueDate - a.dueDate;
-                }
-            })
-            if (JSON.stringify(sortedList) !== JSON.stringify(activeTodoList)) {
-                setActiveTodoList(sortedList);
-            }
-        } else if (selectedOptionSort.value === 'estimatedTime') {
-            const sortedList = [...activeTodoList].sort((a, b) => {
-                if (!isAscending) {
-                    return a.estimatedTime - b.estimatedTime;
-                } else {
-                    return b.estimatedTime - a.estimatedTime;
-                }
-            })
-            if (JSON.stringify(sortedList) !== JSON.stringify(activeTodoList)) {
-                setActiveTodoList(sortedList);
-            }
-        } else {
+        const sortFunction = sortFunctions[selectedOptionSort.value];
+        if (!sortFunction) {
             return;
         }
-    }
+
+        const sortedList = [...activeTodoList].sort((a, b) => {
+            return !isAscending ? sortFunction(a, b) : sortFunction(b, a);
+        });
+
+        if (JSON.stringify(sortedList) !== JSON.stringify(activeTodoList)) {
+            setActiveTodoList(sortedList);
+        }
+    };
 
     const filterUrgentTasks = (urgentOnly) => {
         if (urgentOnly) {
@@ -211,9 +166,19 @@ const AnythingList = ({ type }) => {
         }
     };
 
+    const updateActiveList = () => {
+        if (selectedTags.length === 0) {
+            setActiveTodoList(originalTodoList);
+        } else {
+            const selectedTagIds = selectedTags.map(tag => tag._id);
+            const filteredList = originalTodoList.filter(entry =>
+                selectedTagIds.every(id => entry.tags.map(tag => tag._id).includes(id))
+            );
+            setActiveTodoList(filteredList);
+        }
+    };
+
     const handleSortChange = (selectedOption) => {
-        console.log("DEBUG: selectedOption", selectedOptionSort);
-        console.log("DEBUG: selectedOption:", selectedOption.target);
         setSelectedOptionSort(selectedOption.target);
     }
 
@@ -230,12 +195,45 @@ const AnythingList = ({ type }) => {
     const toggleDeadlineOnly = () => {
         setIsDeadlineOnly(!isDeadlineOnly);
     }
+
+    const handleTagChange = (event, values) => {
+        setSelectedTags(values);
+    };
+
+
+
+
     //Create the todo lists
     return (
         <div className="list-container">
             {isLoggedIn ? <div className={`title-${type}`}></div> : null}
             {isLoggedIn && (
-                <div className="list-settings" style={{ justifyContent: 'right', border: 'none' }}>
+                <div className="list-settings" style={{ display: 'flex', justifyContent: 'space-between', border: 'none' }}>
+                    <div className="seartch-container" style={{ margin: '3px 20px' }}>
+
+                        <Stack spacing={3} sx={{}}>
+                            <FormControl variant="outlined" style={{ minWidth: 120 }}>
+                                <Autocomplete
+                                    multiple
+                                    id="tags-outlined"
+                                    size="small"
+                                    limitTags={2}
+                                    options={tags}
+                                    getOptionLabel={(option) => option.label}
+                                    onChange={handleTagChange}
+                                    renderInput={(params) => (
+                                        <TextField
+                                            {...params}
+                                            variant="outlined"
+                                            label="Find tags"
+                                            limitTags={2}
+                                        />
+                                    )}
+                                />
+                            </FormControl>
+                        </Stack>
+                    </div>
+
 
                     <div className="checkbox-container" style={{ margin: '3px 20px' }}>
                         <FormControlLabel
@@ -245,10 +243,10 @@ const AnythingList = ({ type }) => {
                                     onChange={toggleUrgentTasks}
                                 />
                             }
-                            label="Urgent only"
+                            label="Urgent"
                         />
                     </div>
-                    <div className="checkbox-container" style={{  margin: '3px 20px' }}>
+                    <div className="checkbox-container" style={{ margin: '3px 20px' }}>
                         <FormControlLabel
                             control={
                                 <Checkbox
@@ -256,10 +254,10 @@ const AnythingList = ({ type }) => {
                                     onChange={toggleDeadlineOnly}
                                 />
                             }
-                            label="Deadline only"
+                            label="Deadline"
                         />
                     </div>
-                    <div className="Select-sorting-order" style={{ display: 'flex', flexDirection: 'row' }}>
+                    <div className="Select-sorting-order" style={{ display: 'flex', flexDirection: 'row', margin: '3px 0px' }}>
                         <FormControl variant="outlined" style={{ minWidth: 150 }}>
 
                             <Select

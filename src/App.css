@@ -22,15 +22,17 @@ body {
 }
 
 .content {
-  flex: 1; /* Allow content to expand to fill remaining space */
-  padding: 5em; /* Add padding to create space between content and edges */
+  flex: 1;
+  /* Allow content to expand to fill remaining space */
+  padding: 5em;
+  /* Add padding to create space between content and edges */
 }
 
 @media screen and (max-width: 1024px) {
   .content {
     padding: 0;
   }
-  
+
 }
 
 .nav button {
@@ -85,6 +87,10 @@ body {
   gap: 5px;
   justify-content: center;
   width: auto;
+  background-color: #f0eded;
+  border: 1px solid #cdc3c3;
+  border-radius: 10px;
+  padding: 4px;
 }
 
 .add-tag span {
@@ -122,7 +128,7 @@ body {
   margin-bottom: 10px;
 }
 
-.new-tag-inputs{
+.new-tag-inputs {
   display: flex;
   justify-content: space-between;
   align-items: center;

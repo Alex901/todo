@@ -146,7 +146,7 @@ function App() {
             {/* First row */}
             {isLoggedIn && (
               <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', margin: '1em 0 2em 0', gap: '5px' }}>
-                <FormControl style={{ width: '22em', margin: '10px' }}>
+                <FormControl variant='standard' style={{ width: '22em', margin: '10px' }}>
                   <InputLabel id="active-list-label" style={{ fontWeight: 'bold' }}>Active list </InputLabel>
                   <Select
                     labelId="active-list-label"
@@ -173,7 +173,7 @@ function App() {
                   </Select>
                 </FormControl>
 
-                <div className="icon-button" onClick={openCreateListModal}>
+                <div className="icon-button" onClick={openCreateListModal} style={{marginLeft: 10}}>
                   <Icon path={mdiPlus} size={1.6} />
                 </div>
 

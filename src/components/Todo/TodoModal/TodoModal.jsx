@@ -285,7 +285,7 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
                         />
 
                     </div>
-                    <div className="tags-container" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%', gap: '20px', flexWrap: 'wrap', marginTop: '10px' }}>
+                    <div className="tags-container-create" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%', gap: '20px', flexWrap: 'wrap', marginTop: '10px' }}>
                         <FormControl variant="outlined" style={{ minWidth: '100px', width: 'auto', height: 'auto' }} size='small'>
                             <InputLabel id="tags-label">Tags</InputLabel>
                             <Select

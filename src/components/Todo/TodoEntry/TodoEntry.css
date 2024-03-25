@@ -305,3 +305,17 @@ padding: 2px
 .vibrate {
     animation: vibrate 0.5s linear;
 }
+
+/* tags */
+.tags-container-entry {
+    display: inline-flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    gap: 5px;
+    justify-content: center;
+    background-color: #b7b0b0;
+    border: 1px solid #cdc3c3;
+    border-radius: 10px;
+    padding: 4px;
+    width: auto;
+}
