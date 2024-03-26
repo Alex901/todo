@@ -145,7 +145,7 @@ function App() {
           <div className='nav' style={{ display: 'flex', flexDirection: 'column' }}>
             {/* First row */}
             {isLoggedIn && (
-              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', margin: '1em 0 2em 0', gap: '5px' }}>
+              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', margin: '.5em 0 .5em 0', gap: '5px', backgroundColor: '#f0eded', borderRadius:10, border: "1px solid #cdc3c3" }}>
                 <FormControl variant='standard' style={{ width: '22em', margin: '10px' }}>
                   <InputLabel id="active-list-label" style={{ fontWeight: 'bold' }}>Active list </InputLabel>
                   <Select
@@ -173,7 +173,7 @@ function App() {
                   </Select>
                 </FormControl>
 
-                <div className="icon-button" onClick={openCreateListModal} style={{marginLeft: 10}}>
+                <div className="icon-button" onClick={openCreateListModal} style={{ marginLeft: 10 }}>
                   <Icon path={mdiPlus} size={1.6} />
                 </div>
 
@@ -197,51 +197,32 @@ function App() {
             )}
             {isLoggedIn && (
               <div className="tags-container">
-                <div className='tags'>
-                  <div className='tags'>
-                    {loggedInUser.listNames.find(list => list.name === loggedInUser.activeList).tags.slice(0, showAll ? undefined : 3).map((tag, index) => {
-                      return (
-                        <Chip
-                          key={index}
-                          label={tag.label}
-                          style={{
-                            background: `linear-gradient(45deg, ${tag.color} 30%, ${tag.color} 90%)`,
-                            boxShadow: `0 3px 5px 2px rgba(255, 105, 135, .3)`,
-                            color: tag.textColor,
-                          }}
-                          onDelete={() => deleteTag(tag.label)}
-                          sx={{
-                            margin: '0.5em',
-                            height: '2em',
-                            '&:hover': {
-                              backgroundColor: tag.color,
-                              color: tag.textColor,
-                            },
-                          }}
-                        />
-                      );
-                    })}
-                    {loggedInUser.listNames.find(list => list.name === loggedInUser.activeList).tags.length > 3 && (
+                <div className='tags' style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' }}>
+
+                  {loggedInUser.listNames.find(list => list.name === loggedInUser.activeList).tags.slice(0, showAll ? undefined : 3).map((tag, index) => {
+                    return (
                       <Chip
-                        label={showAll ? 'Show fewer' : 'Show all'}
-                        onClick={() => setShowAll(!showAll)}
-                        variant="outlined"
+                        key={index}
+                        label={tag.label}
+                        style={{
+                          background: `linear-gradient(45deg, ${tag.color} 30%, ${tag.color} 90%)`,
+                          boxShadow: `0 3px 5px 2px rgba(255, 105, 135, .3)`,
+                          color: tag.textColor,
+                        }}
+                        onDelete={() => deleteTag(tag.label)}
                         sx={{
-                          border: 'none',
                           margin: '0.5em',
                           height: '2em',
-                          cursor: 'pointer',
                           '&:hover': {
-                            backgroundColor: 'action.active',
-                            color: 'background.red',
+                            backgroundColor: tag.color,
+                            color: tag.textColor,
                           },
                         }}
                       />
-                    )}
-                  </div>
+                    );
+                  })}
 
-
-                  <div style={{ display: 'flex', justifyContent: 'center', marginTop: '10px' }}>
+                  <div style={{ display: 'flex', justifyContent: 'center' }}>
                     <Chip
                       ref={newTagAnchorRef}
                       label="Add tag"
@@ -251,9 +232,10 @@ function App() {
                       sx={{
                         border: '2px dotted',
                         borderColor: 'action.active',
-                        width: 'auto',
+                        width: '8em',
                         height: '2em',
                         cursor: 'pointer',
+                        margin: 'auto',
                         '&:hover': {
                           backgroundImage: 'none',
                           border: '1px solid',
@@ -261,6 +243,28 @@ function App() {
                       }}
                     />
                   </div>
+
+                  {loggedInUser.listNames.find(list => list.name === loggedInUser.activeList).tags.length > 3 && (
+                    <Chip
+                      label={showAll ? 'Show fewer' : 'Show all'}
+                      onClick={() => setShowAll(!showAll)}
+                      variant="outlined"
+                      sx={{
+                        border: 'none',
+                        margin: '0.5em',
+                        height: '2em',
+                        cursor: 'pointer',
+                        '&:hover': {
+                          transform: 'scale(1.1)',
+                          fontWeight: 'bold',
+                        },
+                      }}
+                    />
+                  )}
+
+
+
+
                 </div>
               </div>
             )}

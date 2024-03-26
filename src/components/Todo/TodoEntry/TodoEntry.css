@@ -9,7 +9,7 @@
 
 /* TodoEntry */
 .todo-entry {
-    background-color: rgb(187, 186, 186);
+    background-color: rgb(255, 255, 255);
     margin-bottom: 3px;
     padding: 10px;
     border-radius: 10px;
@@ -21,7 +21,7 @@
 
 .todo-entry:hover {
     transform: scale(1.02);
-    background-color: rgb(102, 98, 92);
+    background-color: var(--primary-color);
     color: white
 }
 
@@ -231,7 +231,7 @@ padding: 2px
 
 .step-entry:hover {
     transform: scale(1.05);
-    background-color: rgb(102, 98, 92);
+    background-color: var(--secondary-color);
     color: white;
     cursor: pointer;
 }
@@ -313,8 +313,6 @@ padding: 2px
     flex-direction: row;
     gap: 5px;
     justify-content: center;
-    background-color: #b7b0b0;
-    border: 1px solid #cdc3c3;
     border-radius: 10px;
     padding: 4px;
     width: auto;

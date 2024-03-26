@@ -45,7 +45,8 @@ a:hover {
 }
 
 body {
- min-height: 140vh;
+ min-height: 100vh;
+ height: auto;
  background: linear-gradient(to top, #ffffff14 30%, var(--primary-color) 96%);
 }
 

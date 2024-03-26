@@ -11,6 +11,7 @@ import Icon from '@mdi/react';
 import { mdiMenuUp } from '@mdi/js';
 import { mdiMenuDown } from '@mdi/js';
 
+
 import {
     FormControl, InputLabel, MenuItem, Select, IconButton,
     Checkbox, FormControlLabel, Autocomplete, TextField, Stack
@@ -32,6 +33,7 @@ const AnythingList = ({ type }) => {
     const [sortedTodoList, setSortedTodoList] = useState([]);
     const [selectedTags, setSelectedTags] = useState([]);
     const [originalTodoList, setOriginalTodoList] = useState([]);
+    const [isTagsOpen, setIsTagsOpen] = useState(false);
 
     const priorityMapping = {
         'VERY LOW': 1,
@@ -103,9 +105,9 @@ const AnythingList = ({ type }) => {
 
     useEffect(() => {
         if (selectedTags.length === 0) {
-          setOriginalTodoList(activeTodoList);
+            setOriginalTodoList(activeTodoList);
         }
-      }, [activeTodoList]);
+    }, [activeTodoList]);
 
     const handleClick = () => {
         setIsModalOpen(true);
@@ -208,12 +210,19 @@ const AnythingList = ({ type }) => {
         <div className="list-container">
             {isLoggedIn ? <div className={`title-${type}`}></div> : null}
             {isLoggedIn && (
-                <div className="list-settings" style={{ display: 'flex', justifyContent: 'space-between', border: 'none' }}>
+                <div className="list-settings" style={{ display: 'flex', justifyContent: 'space-between', border: '2px solid gray' }}>
                     <div className="seartch-container" style={{ margin: '3px 20px' }}>
 
                         <Stack spacing={3} sx={{}}>
                             <FormControl variant="outlined" style={{ minWidth: 120 }}>
                                 <Autocomplete
+                                    open={isTagsOpen}
+                                    onOpen={() => {
+                                        setIsTagsOpen(true);
+                                    }}
+                                    onClose={() => {
+                                        setIsTagsOpen(true);
+                                    }}
                                     multiple
                                     id="tags-outlined"
                                     size="small"
@@ -226,7 +235,9 @@ const AnythingList = ({ type }) => {
                                             {...params}
                                             variant="outlined"
                                             label="Find tags"
-                                            limitTags={2}
+                                            InputLabelProps={{
+                                                style: { color: 'white' },
+                                            }}
                                         />
                                     )}
                                 />
@@ -265,6 +276,7 @@ const AnythingList = ({ type }) => {
                                 defaultValue="created"
                                 onChange={handleSortChange}
                                 size="small"
+                                sx={{ color: 'white' }}
                             >
                                 <MenuItem value="created" name="created">Created</MenuItem>
                                 <MenuItem value="task" name="task">Name</MenuItem>
