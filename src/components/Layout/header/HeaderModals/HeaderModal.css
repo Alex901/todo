@@ -18,6 +18,11 @@ p.error {
     font-size: 12px;
 }
 
+.h3 {
+    font-size: 1.5em;
+    margin: 0;
+}
+
 .modal-input {
     width:80%;
     height: 36px;
@@ -103,3 +108,4 @@ p.error {
 .material-icons.show-password-icon:hover {
     color: #c25353;
 }
+

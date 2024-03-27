@@ -53,7 +53,7 @@ const UserProvider = ({ children }) => {
                     axios.get(`${BASE_URL}/users/${userData.username}`, { withCredentials: true })
                         .then(userResponse => {
                             if (userResponse.status === 200) {
-                   
+                                //här ska de vara
                                 setLoggedInUser(userResponse.data);
                                 setIsLoggedIn(true);
 
@@ -254,11 +254,45 @@ const UserProvider = ({ children }) => {
         }
     }
 
+    const updateProfilePicture = async (file) => {
+        console.log("DEBUG: update profile picture for loggedInUser: ", file);
+
+        const formData = new FormData();
+        formData.append('avatar', file);
+
+        try {
+            if (!isLoggedIn) {
+                console.log("User not logged in");
+                return;
+            }
+            const _id = loggedInUser._id;
+            const response = await axios.patch(`${BASE_URL}/users/updateprofilepicture/${_id}`, formData, {
+                headers: {
+                    'Content-Type': 'multipart/form-data'
+                }
+            });
+            if (response.status === 200) {
+                console.log("Profile picture updated: ", response.data);
+                setLoggedInUser(response.data);
+                toast.success("Profile picture updated");
+            } else if (response.status === 404) {
+                console.log("User not found");
+            } else {
+                console.log("Internal server error");
+                toast.error("Failed to update profile picture -- internal server error");
+            }
+        } catch (error) {
+            console.error('Error updating profile picture', error);
+            toast.error("Failed to update profile picture");
+        }
+    }
+
+
     return (
         <UserContext.Provider value={{
             isLoggedIn, loggedInUser, login, logout, registerNewUser,
             setLoggedInUser, setActiveList, addList, deleteList, toggleUrgent, addTag,
-            deleteTag
+            deleteTag, updateProfilePicture,
         }} >
             {children}
         </UserContext.Provider>

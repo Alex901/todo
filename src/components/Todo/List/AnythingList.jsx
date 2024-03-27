@@ -210,7 +210,7 @@ const AnythingList = ({ type }) => {
         <div className="list-container">
             {isLoggedIn ? <div className={`title-${type}`}></div> : null}
             {isLoggedIn && (
-                <div className="list-settings" style={{ display: 'flex', justifyContent: 'space-between', border: '2px solid gray' }}>
+                <div className={`list-settings list-settings-${type}`} style={{ display: 'flex', justifyContent: 'space-between', border: '2px solid gray' }}>
                     <div className="seartch-container" style={{ margin: '3px 20px' }}>
 
                         <Stack spacing={3} sx={{}}>
@@ -236,7 +236,7 @@ const AnythingList = ({ type }) => {
                                             variant="outlined"
                                             label="Find tags"
                                             InputLabelProps={{
-                                                style: { color: 'white' },
+                                                style: { color: type === 'doing' ? 'black' : 'white' },
                                             }}
                                         />
                                     )}
@@ -276,7 +276,7 @@ const AnythingList = ({ type }) => {
                                 defaultValue="created"
                                 onChange={handleSortChange}
                                 size="small"
-                                sx={{ color: 'white' }}
+                                sx={{ color: type === 'doing' ? 'black' : 'white' }}
                             >
                                 <MenuItem value="created" name="created">Created</MenuItem>
                                 <MenuItem value="task" name="task">Name</MenuItem>

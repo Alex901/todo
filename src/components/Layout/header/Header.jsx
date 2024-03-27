@@ -9,13 +9,12 @@ import UserAvatar from "./UserAvatar/UserAvatar";
 import { useTheme } from '@mui/material/styles';
 
 
-
 const Header = () => {
   const [time, setTime] = useState(new Date());
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
   const { isLoggedIn, loggedInUser, logout } = useUserContext();
-  const [showWelcome, setShowWelcome] = useState(false);
+
 
   const theme = useTheme();
 
@@ -31,13 +30,13 @@ const Header = () => {
   }, []);
 
 
+
   const openLoginModal = (event) => {
     event.preventDefault();
     setIsLoginModalOpen(true);
   }
 
   const closeLoginModal = () => {
-    setIsLoginModalOpen(false);
     setIsLoginModalOpen(false);
   }
 
@@ -82,6 +81,7 @@ const Header = () => {
       </header>
       <LoginModal isOpen={isLoginModalOpen} onRequestClose={closeLoginModal} />
       <RegisterModal isOpen={isRegisterModalOpen} onRequestClose={closeRegisterModal} />
+
       <div className="mdl-layout" style={{ }}>
 
       </div>

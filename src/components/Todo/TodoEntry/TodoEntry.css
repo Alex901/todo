@@ -21,7 +21,7 @@
 
 .todo-entry:hover {
     transform: scale(1.02);
-    background-color: var(--primary-color);
+    background-color: rgba(123, 31, 162, 1);
     color: white
 }
 

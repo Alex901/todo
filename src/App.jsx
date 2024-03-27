@@ -295,7 +295,7 @@ function App() {
 
               <button className="navButton" onClick={switchDoingView} style={{
                 background: activeView === 'doing' ? '#eaeaef' : '#EBCC67',
-                color: activeView === 'doing' ? 'black' : 'white',
+                color: 'black',
                 flexGrow: '1'
               }}> Ongoing ({isLoggedIn ? getActiveListDoingCount() : getDoingCount()}) </button>
 

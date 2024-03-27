@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import './UserAvatar.css'; // Import the CSS file for styling
 import { useUserContext } from '../../../../contexts/UserContext';
 import { toast } from "react-toastify";
+import SettingsModal from '../HeaderModals/SettingsModal';
 
 const UserAvatar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const { loggedInUser, logout, isLoggedIn } = useUserContext();
+  const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
 
   const toggleDropdown = () => {
     setIsDropdownOpen(prevState => !prevState);
@@ -16,6 +18,15 @@ const UserAvatar = () => {
     toast.success("Bye, see you soon!");
   }
 
+  const openSettingsModal = (event) => {
+    event.preventDefault();
+    setIsSettingsModalOpen(true);
+  }
+
+  const onRequestClose = () => {
+    setIsSettingsModalOpen(false);
+  }
+
   return (
     <div className="user-avatar-container">
       <nav className="navigation">
@@ -24,7 +35,7 @@ const UserAvatar = () => {
 
       <div className="user-info">
         <button className="avatar-button" onClick={toggleDropdown} id="dropdownAvatarNameButton">
-          <img src="https://cdn.iconscout.com/icon/free/png-256/free-avatar-370-456322.png" className="avatar" style={{borderRadius: '50%'}} />
+          <img src={loggedInUser.profilePicture} className="avatar" style={{borderRadius: '50%'}} />
           {loggedInUser && <span className="username">{loggedInUser.username}</span>}
           <svg className={`arrow-icon ${isDropdownOpen ? 'rotate' : ''}`} aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
             <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="m1 1 4 4 4-4" />
@@ -38,7 +49,7 @@ const UserAvatar = () => {
           </div>
           <hr></hr>
 
-            <a href="#" className="menu-link">Settings</a>
+            <a onClick={openSettingsModal} className="menu-link">Settings</a>
             <a href="#" className="menu-link">Feedback</a>
             <a href="#" className="menu-link">Help</a>
           <hr></hr>
@@ -47,6 +58,7 @@ const UserAvatar = () => {
           </div>
         </div>
       </div>
+      {loggedInUser && <SettingsModal open={isSettingsModalOpen} onClose={onRequestClose} />}
     </div>
   );
 };
