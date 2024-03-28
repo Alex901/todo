@@ -22,7 +22,6 @@ const ChangePassword = (props) => {
         setHasChanges(true);
         const updatedValues = { ...values, [prop]: event.target.value };
         setValues(updatedValues);
-        console.log("DEBUG: updatedValues: ", updatedValues);
 
         if (updatedValues.currentPassword === '' && updatedValues.newPassword === '' && updatedValues.confirmPassword === '') {
             setHasChanges(false);
@@ -102,7 +101,7 @@ const ChangePassword = (props) => {
                 />
                 {passwordIsValid(values.newPassword) && <Icon path={mdiCheckCircle} size={1} />}
             </div>
-            {!passwordIsValid(values.newPassword) && <p>Please use 8 characters... no leading spaces.</p>}
+            {values.newPassword && !passwordIsValid(values.newPassword) && <p>Please use 8 characters, and no leading spaces.</p>}
 
             <div style={{ display: 'flex', flexDirection: 'row', gap: '5px', alignItems: 'center' }}>
                 <TextField

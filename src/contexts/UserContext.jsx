@@ -257,8 +257,8 @@ const UserProvider = ({ children }) => {
     const updateProfilePicture = async (file) => {
         console.log("DEBUG: update profile picture for loggedInUser: ", file);
 
-         const formData = new FormData();
-  formData.append('avatar', file);
+        const formData = new FormData();
+        formData.append('avatar', file);
 
         try {
             if (!isLoggedIn) {
@@ -286,13 +286,58 @@ const UserProvider = ({ children }) => {
             toast.error("Failed to update profile picture");
         }
     }
+    /**
+  * This function edits a user's data.
+  * 
+  * @param {Object} userData - The new data for the user.
+  * @param {string} oldPassword - The user's current password. Can be empty if the user does not want to change their password.
+  * @param {string} newPassword - The new password for the user. Can be empty if the user does not want to change their password.
+  * 
+  * The function first checks if the user is logged in. If not, it logs a message and returns.
+  * 
+  * If the user is logged in, it sends a PATCH request to the server to update the user's data.
+  * The user's ID is appended to the URL, and the new user data, old password, and new password are sent in the request body.
+  * 
+  * If the server responds with a status of 200, the function logs the new user data, updates the loggedInUser state, and shows a success toast.
+  * If the server responds with a status of 404, the function logs a message.
+  * If the server responds with any other status, the function logs a message and shows an error toast.
+  * 
+  * If an error occurs during the execution of the function, it logs the error and shows an error toast.
+  */
+    const editUser = async (userData, oldPassword, newPassword) => {
+        console.log("edit user with ", userData);
+        console.log("old password: ", oldPassword);
+        console.log("new password: ", newPassword);
+
+        try {
+            if (!isLoggedIn) {
+                console.log("User not logged in");
+                return;
+            }
+            const _id = loggedInUser._id;
+            const response = await axios.patch(`${BASE_URL}/users/edituser/${_id}`, { userData, oldPassword, newPassword }, { withCredentials: true });
+            if (response.status === 200) {
+                console.log("User edited: ", response.data);
+                setLoggedInUser(response.data);
+                toast.success("User edited");
+            } else if (response.status === 404) {
+                console.log("User not found");
+            } else {
+                console.log("Internal server error");
+                toast.error("Failed to edit user -- internal server error");
+            }
+        } catch (error) {
+            console.error('Error editing user', error);
+            toast.error("Failed to edit user");
+        }
+    }
 
 
     return (
         <UserContext.Provider value={{
             isLoggedIn, loggedInUser, login, logout, registerNewUser,
             setLoggedInUser, setActiveList, addList, deleteList, toggleUrgent, addTag,
-            deleteTag, updateProfilePicture,
+            deleteTag, updateProfilePicture, editUser, checkLogin,
         }} >
             {children}
         </UserContext.Provider>

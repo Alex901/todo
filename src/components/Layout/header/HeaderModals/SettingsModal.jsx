@@ -7,10 +7,12 @@ import ChangePassword from '../../ChangePassword/ChangePassword';
 
 const SettingsModal = ({ open, onClose }) => {
     const [selectedTab, setSelectedTab] = useState(0);
-    const { loggedInUser, updateProfilePicture } = useUserContext();
+    const { loggedInUser, updateProfilePicture, editUser } = useUserContext();
     const [hasChanges, setHasChanges] = useState(false);
     const [formData, setFormData] = useState({ ...loggedInUser });
     const [imageSizeError, setImageSizeError] = useState('');
+    const [newPassword, setNewPassword] = useState('');
+    const [oldPassword, setOldPassword] = useState('');
 
     const MAX_SIZE = 1 * 1024 * 1024; // 1MB
 
@@ -32,12 +34,9 @@ const SettingsModal = ({ open, onClose }) => {
 
     const handleInputChange = (event) => {
         // console.log("DEBUG: loggedInUser before: ",formData);
-        console.log("DEBUG: event.target.name: ", event.target.name);
-        console.log("DEBUG: event.target.value: ", event.target.value);
-        console.log("DEBUG: loggedInUser: ", loggedInUser);
         const newValue = event.target.value;
         const initialValue = loggedInUser[event.target.name];
-    
+
         if (initialValue === newValue) {
             setHasChanges(false);
         } else {
@@ -54,12 +53,15 @@ const SettingsModal = ({ open, onClose }) => {
 
     const handleSubmit = (event) => {
         event.preventDefault();
+      
+        editUser(formData, oldPassword, newPassword);
         setHasChanges(false);
+        onClose();
     }
 
     const handlePasswordChange = (newPaswsword, oldPassword) => {
-        console.log("DEBUG: new password: ", newPaswsword);
-        console.log("DEBUG: old password entered: ", oldPassword);
+        setNewPassword(newPaswsword);
+        setOldPassword(oldPassword);
     }
 
     return (
@@ -90,7 +92,7 @@ const SettingsModal = ({ open, onClose }) => {
                     </div>
 
                     <div style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '10px' }}>
-                        <ChangePassword hasChanges={hasChanges} setHasChanges={setHasChanges} onPasswordChange={handlePasswordChange}/>
+                        <ChangePassword hasChanges={hasChanges} setHasChanges={setHasChanges} onPasswordChange={handlePasswordChange} />
                     </div>
                     <button type="submit" className="modal-button" disabled={!hasChanges}>Save</button>
                 </form>
