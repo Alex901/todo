@@ -7,6 +7,7 @@ import './TodoDrawer.css';
 import logo from "../../../assets/Anvil_logo_v1.png";
 import LoginModal from '../header/HeaderModals/LoginModal';
 import RegisterModal from '../header/HeaderModals/RegisterModal';
+import SettingsModal from '../header/HeaderModals/SettingsModal';
 import { useUserContext } from "../../../contexts/UserContext";
 import { toast } from 'react-toastify';
 
@@ -17,6 +18,7 @@ const TodoDrawer = () => {
     const [isLoginModalOpen, setLoginModalOpen] = useState(false);
     const [isRegisterModalOpen, setRegisterModalOpen] = useState(false);
     const { loggedInUser, logout } = useUserContext();
+    const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
 
     const handleClick = () => {
         setClicked(true);
@@ -43,7 +45,16 @@ const TodoDrawer = () => {
     const handleCloseModal = () => {
         setLoginModalOpen(false);
         setRegisterModalOpen(false);
+        setIsSettingsModalOpen(false);
+        console.log(isSettingsModalOpen)
     };
+
+    const handleSettingsClick = () => {
+        setIsSettingsModalOpen(true);
+        toggleDrawer(false)();
+        console.log(isSettingsModalOpen)
+    };
+
 
     const handleLogout = () => {
         logout();
@@ -69,18 +80,18 @@ const TodoDrawer = () => {
                         </div>
                         <div className="drawer-content">
                             {loggedInUser ? (
-                                <div style={{textAlign:'center'}}>
+                                <div style={{ textAlign: 'center' }}>
                                     <div className="user-details">
-                                        <div className="user-type" style={{color: 'white', textAlign:'center'}}> {loggedInUser.role} </div>
-                                        <div className="user-somethingcool" style={{color: 'white', textAlign:'center'}}> {loggedInUser.email} </div>
+                                        <div className="user-type" style={{ color: 'white', textAlign: 'center' }}> {loggedInUser.role} </div>
+                                        <div className="user-somethingcool" style={{ color: 'white', textAlign: 'center' }}> {loggedInUser.email} </div>
                                     </div>
                                     <hr></hr>
-                                    <Typography variant="body1" component="p" className="menu-link">Settings</Typography>
+                                    <Typography variant="body1" component="p" className="menu-link" onClick={handleSettingsClick}>Settings</Typography>
                                     <Typography variant="body1" component="p" className="menu-link">Feedback</Typography>
                                     <Typography variant="body1" component="p" className="menu-link">Help</Typography>
                                     <hr></hr>
                                     <div className="logout">
-                                    <Typography variant="body1" component="p" className="menu-link" style={{color: 'white'}} onClick={handleLogout}>Logout</Typography>
+                                        <Typography variant="body1" component="p" className="menu-link" style={{ color: 'white' }} onClick={handleLogout}>Logout</Typography>
                                     </div>
                                 </div>
                             ) : (
@@ -109,6 +120,7 @@ const TodoDrawer = () => {
                 </Drawer>
                 <RegisterModal isOpen={isRegisterModalOpen} onRequestClose={handleCloseModal} />
                 <LoginModal isOpen={isLoginModalOpen} onRequestClose={handleCloseModal} />
+                <SettingsModal isOpen={isSettingsModalOpen} onRequestClose={handleCloseModal} />
             </React.Fragment>
 
         </div>

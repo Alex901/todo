@@ -51,15 +51,12 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
 
     const handleInputChange = (event) => {
         let value = event.target.value;
-        console.log(value);
 
         setNewTaskData({
             ...newTaskData,
             [event.target.name]: value,
         });
         setErrorMessage('');
-
-        console.log(newTaskData);
     };
 
     const handleTagChange = (event) => {

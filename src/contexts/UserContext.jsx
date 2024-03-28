@@ -257,8 +257,8 @@ const UserProvider = ({ children }) => {
     const updateProfilePicture = async (file) => {
         console.log("DEBUG: update profile picture for loggedInUser: ", file);
 
-        const formData = new FormData();
-        formData.append('avatar', file);
+         const formData = new FormData();
+  formData.append('avatar', file);
 
         try {
             if (!isLoggedIn) {
