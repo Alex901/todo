@@ -52,7 +52,6 @@ const TodoDrawer = () => {
         event.preventDefault();
         setIsSettingsModalOpen(true);
         toggleDrawer(false)();
-        console.log(isSettingsModalOpen);
     };
 
 
@@ -71,9 +70,9 @@ const TodoDrawer = () => {
                 <Drawer anchor='bottom' open={isOpen} onClose={toggleDrawer(false)}>
                     <div className="drawer" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
                         <div className="drawer-header" style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', width: '100%', gap: '10px' }}>
-                            <div className="logo-title" style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', padding: '8px' }}>
+                            <div className="logo-title" style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', margin:'auto', gap: '5px' }}>
                                 <img src={logo} alt="Logo" style={{ width: '100%', maxWidth: '5%', minWidth: '30px', position: 'relative', top: '-6px' }} />
-                                <Typography variant="h5" component="div" style={{ margin: 'auto' }}>
+                                <Typography variant="h5" component="div" style={{  }}>
                                     TaskForge
                                 </Typography>
                             </div>
