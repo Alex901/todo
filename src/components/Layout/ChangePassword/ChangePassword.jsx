@@ -33,7 +33,7 @@ const ChangePassword = (props) => {
             setPasswordError('');
             props.onPasswordChange(updatedValues.newPassword, updatedValues.currentPassword);
         } else {
-            props.onPasswordChange('', ''); 
+            props.onPasswordChange('', '');
             setPasswordError("Passwords do not match");
             return;
         }
@@ -57,11 +57,12 @@ const ChangePassword = (props) => {
     };
 
     return (
-        <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'flex-start', gap: 10, }}>
+        <div style={{ display: 'flex', flexDirection: 'column', textAlign: 'center', gap: 10, justifyContent: 'center' }}>
 
             <h4 style={{ textAlign: 'left' }}>Change Password</h4>
-            <div style={{ display: 'flex', flexDirection: 'row', gap: '5px', alignItems: 'center' }}>
+            <div style={{ display: 'flex', flexDirection: 'row', gap: '5px', alignItems: 'center', width: '100%' }}>
                 <TextField
+                    fullWidth
                     type={values.showPassword ? 'text' : 'password'}
                     label="Current Password"
                     value={values.currentPassword}
@@ -82,22 +83,12 @@ const ChangePassword = (props) => {
             </div>
             <div style={{ display: 'flex', flexDirection: 'row', gap: '5px', alignItems: 'center' }}>
                 <TextField
+                    fullWidth
                     type={values.showPassword ? 'text' : 'password'}
                     label="New Password"
                     value={values.newPassword}
                     onChange={handleChange('newPassword')}
-                    InputProps={{
-                        endAdornment: (
-                            <InputAdornment position="end">
-                                <IconButton
-                                    onClick={handleClickShowPassword}
-                                    onMouseDown={handleMouseDownPassword}
-                                >
-                                    {values.showPassword ? <Icon path={mdiEye} size={1} /> : <Icon path={mdiEyeOff} size={1} color="black" />}
-                                </IconButton>
-                            </InputAdornment>
-                        ),
-                    }}
+                
                 />
                 {passwordIsValid(values.newPassword) && <Icon path={mdiCheckCircle} size={1} />}
             </div>
@@ -105,25 +96,15 @@ const ChangePassword = (props) => {
 
             <div style={{ display: 'flex', flexDirection: 'row', gap: '5px', alignItems: 'center' }}>
                 <TextField
+                    fullWidth
                     type={values.showPassword ? 'text' : 'password'}
                     label="Confirm Password"
                     value={values.confirmPassword}
                     onChange={handleChange('confirmPassword')}
-                    InputProps={{
-                        endAdornment: (
-                            <InputAdornment position="end">
-                                <IconButton
-                                    onClick={handleClickShowPassword}
-                                    onMouseDown={handleMouseDownPassword}
-                                >
-                                    {values.showPassword ? <Icon path={mdiEye} size={1} /> : <Icon path={mdiEyeOff} size={1} />}
-                                </IconButton>
-                            </InputAdornment>
-                        ),
-                    }}
+                 
                 />
                 {doesPasswordMatch(values.newPassword, values.confirmPassword) && <Icon path={mdiCheckCircle} size={1} />}
-               
+
             </div>
             <p className='error'> {passwordError} </p>
         </div>

@@ -199,7 +199,9 @@ const AnythingList = ({ type }) => {
     }
 
     const handleTagChange = (event, values) => {
+        event.preventDefault();
         setSelectedTags(values);
+        setIsTagsOpen(true)
     };
 
 
@@ -220,8 +222,12 @@ const AnythingList = ({ type }) => {
                                     onOpen={() => {
                                         setIsTagsOpen(true);
                                     }}
-                                    onClose={() => {
-                                        setIsTagsOpen(false);
+                                    onClose={(event, reason) => {
+                                        if (reason === 'select-option') {
+                                            event.preventDefault();
+                                        } else {
+                                            setIsTagsOpen(false);
+                                        }
                                     }}
                                     multiple
                                     id="tags-outlined"
