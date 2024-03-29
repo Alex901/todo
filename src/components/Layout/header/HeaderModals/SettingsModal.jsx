@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Tab, Tabs, Box, TextField, Button, Avatar, Grid, Typography } from '@mui/material';
 import { useUserContext } from '../../../../contexts/UserContext';
 import './HeaderModal.css';
 import ReactModal from 'react-modal';
 import ChangePassword from '../../ChangePassword/ChangePassword';
 
-const SettingsModal = ({ open, onClose }) => {
+const SettingsModal = ({ isOpen, onClose }) => {
     const [selectedTab, setSelectedTab] = useState(0);
     const { loggedInUser, updateProfilePicture, editUser } = useUserContext();
     const [hasChanges, setHasChanges] = useState(false);
@@ -15,6 +15,24 @@ const SettingsModal = ({ open, onClose }) => {
     const [oldPassword, setOldPassword] = useState('');
 
     const MAX_SIZE = 1 * 1024 * 1024; // 1MB
+
+    useEffect(() => {
+        const handleOverlayClick = (event) => {
+            if (event.target.className === 'modal-overlay') {
+                onClose();
+            }
+        };
+    
+        if (open) {
+            document.addEventListener('click', handleOverlayClick);
+            document.addEventListener('touchend', handleOverlayClick);
+        }
+    
+        return () => {
+            document.removeEventListener('click', handleOverlayClick);
+            document.removeEventListener('touchend', handleOverlayClick);
+        };
+    }, [open, onClose]);
 
     const handleChange = (event, newValue) => {
         setSelectedTab(newValue);
@@ -53,7 +71,6 @@ const SettingsModal = ({ open, onClose }) => {
 
     const handleSubmit = (event) => {
         event.preventDefault();
-      
         editUser(formData, oldPassword, newPassword);
         setHasChanges(false);
         onClose();
@@ -65,7 +82,14 @@ const SettingsModal = ({ open, onClose }) => {
     }
 
     return (
-        <ReactModal isOpen={open} onRequestClose={onClose} className="register-modal-content" overlayClassName="modal-overlay">
+        <ReactModal
+            isOpen={isOpen}
+            onRequestClose={onClose}
+            className="register-modal-content"
+            overlayClassName="modal-overlay"
+            shouldCloseOnOverlayClick={true}
+        >
+
             {loggedInUser?.role === 'admin' && (
                 <Tabs value={selectedTab} onChange={handleChange} className="modal-form">
                     <Tab label={"Profile"} />

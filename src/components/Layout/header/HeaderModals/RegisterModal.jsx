@@ -31,7 +31,7 @@ const LoginModal = ({ isOpen, onRequestClose }) => {
         if (isOpen) {
             document.addEventListener('click', handleOverlayClick);
         }
-
+       
         return () => {
             document.removeEventListener('click', handleOverlayClick);
         };

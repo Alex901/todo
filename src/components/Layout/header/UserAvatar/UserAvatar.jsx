@@ -21,6 +21,7 @@ const UserAvatar = () => {
   const openSettingsModal = (event) => {
     event.preventDefault();
     setIsSettingsModalOpen(true);
+    setIsDropdownOpen(false);
   }
 
   const onRequestClose = () => {
@@ -58,7 +59,7 @@ const UserAvatar = () => {
           </div>
         </div>
       </div>
-      {loggedInUser && <SettingsModal open={isSettingsModalOpen} onClose={onRequestClose} />}
+      {loggedInUser && <SettingsModal isOpen={isSettingsModalOpen} onClose={onRequestClose} />}
     </div>
   );
 };

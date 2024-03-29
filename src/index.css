@@ -55,7 +55,19 @@ h1 {
   line-height: 1.1;
 }
 
+@media (min-width: 768px) {
+  .entry:active,
+  .entry:focus {
+    color: white;
+  }
+}
 
+@media (max-width: 1024px) {
+  .entry:active,
+  .entry:focus {
+    color: black;
+  }
+}
 
 @media (prefers-color-scheme: light) {
   :root {

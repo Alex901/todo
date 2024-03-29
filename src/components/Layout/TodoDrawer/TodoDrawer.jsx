@@ -46,13 +46,13 @@ const TodoDrawer = () => {
         setLoginModalOpen(false);
         setRegisterModalOpen(false);
         setIsSettingsModalOpen(false);
-        console.log(isSettingsModalOpen)
     };
 
-    const handleSettingsClick = () => {
+    const handleSettingsClick = (event) => {
+        event.preventDefault();
         setIsSettingsModalOpen(true);
         toggleDrawer(false)();
-        console.log(isSettingsModalOpen)
+        console.log(isSettingsModalOpen);
     };
 
 
