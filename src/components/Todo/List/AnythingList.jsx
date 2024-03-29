@@ -221,7 +221,7 @@ const AnythingList = ({ type }) => {
                                         setIsTagsOpen(true);
                                     }}
                                     onClose={() => {
-                                        setIsTagsOpen(true);
+                                        setIsTagsOpen(false);
                                     }}
                                     multiple
                                     id="tags-outlined"
