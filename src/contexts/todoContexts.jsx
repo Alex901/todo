@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 import { useUserContext } from './UserContext';
+import BASE_URL from '../../config';
 
 // Define functions
 const TodoContext = createContext({
@@ -32,8 +33,6 @@ const TodoProvider = ({ children }) => {
   const [todoList, setTodoList] = useState([]);
   const [dataFetched, setDataFetched] = useState(false);
   const { loggedInUser } = useUserContext(); //Logged in username&&list
-
-  const BASE_URL = import.meta.env.VITE_REACT_APP_PRODUCTION === 'true' ? 'https://todo-backend-gkdo.onrender.com' : 'http://localhost:5000';
 
   function isMobileDevice() {
     return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);

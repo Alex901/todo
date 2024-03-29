@@ -3,6 +3,7 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import axios from "axios";
 import { useTodoContext } from "./todoContexts";
 import { toast } from "react-toastify";
+import BASE_URL from "../../config";
 
 const UserContext = createContext();
 
@@ -10,9 +11,6 @@ const UserProvider = ({ children }) => {
     const { refreshTodoList } = useTodoContext();
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [loggedInUser, setLoggedInUser] = useState(null);
-    const BASE_URL = import.meta.env.VITE_REACT_APP_PRODUCTION === 'true' ?
-        'https://todo-backend-gkdo.onrender.com' :
-        'http://localhost:5000';
 
     useEffect(() => {
 
