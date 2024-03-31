@@ -1,0 +1,12 @@
+.export-list-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+
+}
+
+.information-icon {
+    color: var(--secondary-color);
+    transition: transform 0.2s ease-in-out;
+}

@@ -18,7 +18,6 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
     const [hoveredStepId, setHoveredStepId] = useState(null);
     const [loading, setLoading] = useState(true);
 
-
     const options = [
         { value: 'VERY HIGH', label: 'VERY HIGH' },
         { value: 'HIGH', label: 'HIGH' },

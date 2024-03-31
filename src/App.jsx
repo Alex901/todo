@@ -1,7 +1,7 @@
 import './App.css'
 import Header from './components/Layout/header/Header'
 import Card from './components/Layout/card/Card'
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import AnythingList from './components/Todo/List/AnythingList'
 import { useTodoContext } from './contexts/todoContexts'
 import { useUserContext } from './contexts/UserContext'
@@ -13,16 +13,18 @@ import { toast } from "react-toastify";
 import Icon from '@mdi/react';
 import { mdiPlus } from '@mdi/js';
 import { mdiMinus } from '@mdi/js';
+import { mdiFileExport } from '@mdi/js';
 import Chip from '@mui/material/Chip';
 import Popper from '@mui/material/Popper';
 import { SketchPicker } from 'react-color';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import { Select, MenuItem, ListItemText, FormControl, InputLabel, Typography } from '@mui/material';
+import { Select, MenuItem, ListItemText, FormControl, InputLabel, Typography, IconButton } from '@mui/material';
 
 
 import 'material-design-lite/dist/material.min.css';
 import 'material-design-lite/dist/material.min.js';
+import ExportListModal from './components/Todo/TodoModal/ExportListModal/ExportListModal'
 
 function App() {
   const [activeView, setActiveView] = useState('todo');
@@ -35,6 +37,11 @@ function App() {
   const [isNewTagPopperOpen, setIsNewTagPopperOpen] = useState(false);
   const newTagAnchorRef = React.useRef(null);
   const [showAll, setShowAll] = useState(false);
+  const [isOpenListModalOpen, setIsOpenListModalOpen] = useState(false);
+
+  useEffect(() => {
+    console.log("DEBUG: openExportListModal state has updated. Current state: ", isOpenListModalOpen);
+  }, [isOpenListModalOpen]);
 
   const switchTodoView = () => {
     setActiveView('todo');
@@ -132,6 +139,15 @@ function App() {
     setIsNewTagPopperOpen(false);
   }
 
+  const openExportModal = () => {
+    if (!isOpenListModalOpen) {
+      setIsOpenListModalOpen(true);
+    }
+  };
+
+  const closeExportListModal = () => {
+    setIsOpenListModalOpen(false);
+  };
 
   //TODO: This shouldbe moved to a separate component
   return (
@@ -145,7 +161,7 @@ function App() {
           <div className='nav' style={{ display: 'flex', flexDirection: 'column' }}>
             {/* First row */}
             {isLoggedIn && (
-              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', margin: '.5em 0 .5em 0', gap: '5px', backgroundColor: '#f0eded', borderRadius:10, border: "1px solid #cdc3c3" }}>
+              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '5px', backgroundColor: '#f0eded', borderRadius: 10, border: "1px solid #cdc3c3" }}>
                 <FormControl variant='standard' style={{ width: '22em', margin: '10px' }}>
                   <InputLabel id="active-list-label" style={{ fontWeight: 'bold' }}>Active list </InputLabel>
                   <Select
@@ -195,6 +211,22 @@ function App() {
                 />
               </div>
             )}
+            {isLoggedIn && (
+              <div className="functions-container" style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start', margin: '.5em 0 .5em 0', gap: '5px', backgroundColor: '#f0eded', borderRadius: 10, border: "1px solid #cdc3c3", height: '42px' }}>
+
+                <IconButton className="icon-button" onClick={openExportModal}>
+                  <Icon path={mdiFileExport} size={1.2} />
+                </IconButton>
+
+
+
+              </div>
+
+
+            )}
+
+            <ExportListModal isOpen={isOpenListModalOpen} onClose={closeExportListModal} />
+          
             {isLoggedIn && (
               <div className="tags-container">
                 <div className='tags' style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' }}>
