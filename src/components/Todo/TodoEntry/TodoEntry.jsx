@@ -231,7 +231,7 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
                             <p className="todo-text"> {task}</p>
                         </div>
                         <div className="tags-container-entry">
-                           <Tags tags={tags} />
+                            <Tags tags={tags} />
                         </div>
                     </div>
                     <div className="buttons">
@@ -360,7 +360,7 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
                             <p className="done-text"> {task} </p>
                         </div>
                         <div className="tags-container-entry">
-                           <Tags tags={tags} />
+                            <Tags tags={tags} />
                         </div>
                     </div>
                     <div className="buttons">
@@ -455,7 +455,7 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
                             <p ref={entry} className="doing-text"> {task} </p>
                         </div>
                         <div className="tags-container-entry">
-                           <Tags tags={tags} />
+                            <Tags tags={tags} />
                         </div>
                     </div>
 
