@@ -14,6 +14,7 @@ import Icon from '@mdi/react';
 import { mdiPlus } from '@mdi/js';
 import { mdiMinus } from '@mdi/js';
 import { mdiFileExport } from '@mdi/js';
+import { mdiGroup } from '@mdi/js';
 import Chip from '@mui/material/Chip';
 import Popper from '@mui/material/Popper';
 import { SketchPicker } from 'react-color';
@@ -38,6 +39,7 @@ function App() {
   const newTagAnchorRef = React.useRef(null);
   const [showAll, setShowAll] = useState(false);
   const [isOpenListModalOpen, setIsOpenListModalOpen] = useState(false);
+  const [isGroupModalOpen, setIsGroupModalOpen] = useState(false);
 
   useEffect(() => {
     console.log("DEBUG: openExportListModal state has updated. Current state: ", isOpenListModalOpen);
@@ -149,6 +151,16 @@ function App() {
     setIsOpenListModalOpen(false);
   };
 
+  const openGroupModal = () => {
+    if (!isGroupModalOpen) {
+      setIsGroupModalOpen(true);
+    }
+  };
+
+  const closeGroupModal = () => {
+    setIsGroupModalOpen(false);
+  };
+
   //TODO: This shouldbe moved to a separate component
   return (
     <div className='app'>
@@ -161,7 +173,7 @@ function App() {
           <div className='nav' style={{ display: 'flex', flexDirection: 'column' }}>
             {/* First row */}
             {isLoggedIn && (
-              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '5px', backgroundColor: '#f0eded', borderRadius: 10, border: "1px solid #cdc3c3" }}>
+              <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '5px' }}>
                 <FormControl variant='standard' style={{ width: '22em', margin: '10px' }}>
                   <InputLabel id="active-list-label" style={{ fontWeight: 'bold' }}>Active list </InputLabel>
                   <Select
@@ -212,13 +224,18 @@ function App() {
               </div>
             )}
             {isLoggedIn && (
-              <div className="functions-container" style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start', margin: '.5em 0 .5em 0', gap: '5px', backgroundColor: '#f0eded', borderRadius: 10, border: "1px solid #cdc3c3", height: '42px' }}>
+              <div className="functions-container" style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start', 
+              margin: '.5em 0 .5em 0', gap: '5px', 
+              height: '42px' }}>
 
+                <IconButton className="icon-button" onClick={openGroupModal}>
+                  <Icon path={mdiGroup} size={1.2} />
+                </IconButton>
+
+              
                 <IconButton className="icon-button" onClick={openExportModal}>
                   <Icon path={mdiFileExport} size={1.2} />
                 </IconButton>
-
-
 
               </div>
 

@@ -7,6 +7,10 @@ import logo from "../../../assets/Anvil_logo_v1.png";
 import { toast } from "react-toastify";
 import UserAvatar from "./UserAvatar/UserAvatar";
 import { useTheme } from '@mui/material/styles';
+import { mdiBellOutline } from '@mdi/js';
+import Badge from '@mui/material/Badge';
+import Popper from '@mui/material/Popper';
+import Icon from '@mdi/react';
 
 
 const Header = () => {
@@ -14,9 +18,19 @@ const Header = () => {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
   const { isLoggedIn, loggedInUser, logout } = useUserContext();
-
+  const [anchorEl, setAnchorEl] = useState(null);
 
   const theme = useTheme();
+
+
+  const handleClickNotification = (event) => {
+    console.log("Notification clicked");
+    setAnchorEl(anchorEl ? null : event.currentTarget);
+    console.log(anchorEl);
+    console.log(open);
+  };
+
+  const open = Boolean(anchorEl);
 
   useEffect(() => {
     const timer = setInterval(() => {
@@ -57,7 +71,7 @@ const Header = () => {
   return (
     <div className="mdl-layout header" style={{ overflow: "visible" }}>
       <header className="mdl-layout__header header_layout" style={{ backgroundColor: theme.palette.primary.main }}>
-        <div className="mdl-layout__header-row nav-row" style={{  justifyContent: 'space-between' }}>
+        <div className="mdl-layout__header-row nav-row" style={{ justifyContent: 'space-between' }}>
           {/* Left section */}
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <img src={logo} alt="Logo" style={{ marginRight: '12px', width: '5%', position: 'relative', top: '-3px' }} />
@@ -71,10 +85,23 @@ const Header = () => {
           </nav>
 
           {/* Right section */}
-          <div style={{ display: 'flex', alignItems: 'center', position: 'relative' }}>
-          
-          {isLoggedIn ? <UserAvatar /> : null}
-          {!isLoggedIn && <a href="#" className="mdl-navigation__link login-link" onClick={openLoginModal}>Login</a>}
+          <div style={{ display: 'flex', alignItems: 'center', position: 'relative', gap: '20px' }}>
+            {isLoggedIn ? (
+              <>
+                <Badge badgeContent={4} color="secondary">
+                  <Icon className='notification-icon' path={mdiBellOutline} size={1.2} onClick={handleClickNotification}/>
+                </Badge>
+                <Popper open={open} anchorEl={anchorEl} placement='bottom' style={{ zIndex: 10 }}>
+                  <div className="notification-container">
+                    <div className="notification-item">
+                      <p>you have no new notifications</p>
+                      </div>
+                  </div>
+                </Popper>
+                <UserAvatar />
+              </>
+            ) : null}
+            {!isLoggedIn && <a href="#" className="mdl-navigation__link login-link" onClick={openLoginModal}>Login</a>}
             {!isLoggedIn && <button className="todoButton" onClick={openRegisterModal}>Register</button>}
           </div>
         </div>
@@ -82,7 +109,7 @@ const Header = () => {
       <LoginModal isOpen={isLoginModalOpen} onRequestClose={closeLoginModal} />
       <RegisterModal isOpen={isRegisterModalOpen} onRequestClose={closeRegisterModal} />
 
-      <div className="mdl-layout" style={{ }}>
+      <div className="mdl-layout" style={{}}>
 
       </div>
     </div>
