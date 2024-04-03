@@ -1,0 +1,29 @@
+  .modal-appbar {
+    position: absolute;
+    top: 0;
+    background-color: rgba(255, 255, 255, 0.7); /* Change this to the color you want */
+    width: 100%;
+    border-radius: 5px;
+  }
+
+.modal-with-tabs {
+    padding: 0; 
+}
+
+  
+
+  .tab-modal-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    padding: 20px;
+  }
+
+  .create-group-form {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    width: 80%;
+  }

@@ -85,10 +85,10 @@ const Header = () => {
           </nav>
 
           {/* Right section */}
-          <div style={{ display: 'flex', alignItems: 'center', position: 'relative', gap: '20px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', position: 'relative', gap:'5px'}}>
             {isLoggedIn ? (
               <>
-                <Badge badgeContent={4} color="secondary">
+                <Badge badgeContent={4} color="secondary" style={{ margin: '15px', top: '1px'}}>
                   <Icon className='notification-icon' path={mdiBellOutline} size={1.2} onClick={handleClickNotification}/>
                 </Badge>
                 <Popper open={open} anchorEl={anchorEl} placement='bottom' style={{ zIndex: 10 }}>

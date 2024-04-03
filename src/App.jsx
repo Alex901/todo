@@ -21,6 +21,7 @@ import { SketchPicker } from 'react-color';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { Select, MenuItem, ListItemText, FormControl, InputLabel, Typography, IconButton } from '@mui/material';
+import GroupModal from './components/Todo/TodoModal/GroupModal/GroupModal'
 
 
 import 'material-design-lite/dist/material.min.css';
@@ -224,15 +225,17 @@ function App() {
               </div>
             )}
             {isLoggedIn && (
-              <div className="functions-container" style={{ display: 'flex', justifyContent: 'center', alignItems: 'flex-start', 
-              margin: '.5em 0 .5em 0', gap: '5px', 
-              height: '42px' }}>
+              <div className="functions-container" style={{
+                display: 'flex', justifyContent: 'center', alignItems: 'flex-start',
+                margin: '.5em 0 .5em 0', gap: '5px',
+                height: '42px'
+              }}>
 
                 <IconButton className="icon-button" onClick={openGroupModal}>
                   <Icon path={mdiGroup} size={1.2} />
                 </IconButton>
 
-              
+
                 <IconButton className="icon-button" onClick={openExportModal}>
                   <Icon path={mdiFileExport} size={1.2} />
                 </IconButton>
@@ -243,7 +246,8 @@ function App() {
             )}
 
             <ExportListModal isOpen={isOpenListModalOpen} onClose={closeExportListModal} />
-          
+            <GroupModal isOpen={isGroupModalOpen} onClose={closeGroupModal} />
+
             {isLoggedIn && (
               <div className="tags-container">
                 <div className='tags' style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' }}>

@@ -11,12 +11,42 @@ const UserProvider = ({ children }) => {
     const { refreshTodoList } = useTodoContext();
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [loggedInUser, setLoggedInUser] = useState(null);
+    const [userList, setUserList] = useState(null); //For autocomplete in GroupModal
 
     useEffect(() => {
-
         checkLogin();
     }, []);
 
+    useEffect(() => {
+        console.log("User logged in, fetching users");
+      
+        // IIFE for async function inside useEffect
+        (async () => {
+          try {
+            await fetchUsers();
+          } catch (error) {
+            console.error("Failed to fetch users:", error);
+          }
+        })();
+      }, [loggedInUser]);
+
+
+
+    const fetchUsers = async () => {
+        if(loggedInUser === null) return;
+        try {
+            const response = await axios.get(`${BASE_URL}/users/getall`, {
+                params: {
+                    username: loggedInUser.username
+                },
+                withCredentials: true
+            });
+            console.log("fetchUsers response: ", response.data);
+            setUserList(response.data);
+        } catch (error) {
+            console.error('Error fetching users', error);
+        }
+    }
 
     const checkLogin = async () => {
         try {
@@ -333,7 +363,7 @@ const UserProvider = ({ children }) => {
 
     return (
         <UserContext.Provider value={{
-            isLoggedIn, loggedInUser, login, logout, registerNewUser,
+            isLoggedIn, loggedInUser, userList, login, logout, registerNewUser,
             setLoggedInUser, setActiveList, addList, deleteList, toggleUrgent, addTag,
             deleteTag, updateProfilePicture, editUser, checkLogin,
         }} >
