@@ -3,6 +3,7 @@ import { AppBar, Tabs, Tab, Box, Typography, TextField, Autocomplete, FormContro
 import ReactModal from 'react-modal';
 import './GroupModal.css';
 import { useUserContext } from '../../../../contexts/UserContext';
+import { useGroupContext } from '../../../../contexts/GroupContexts';
 
 const TabPanel = (props) => {
     const { children, value, index, ...other } = props;
@@ -16,7 +17,7 @@ const TabPanel = (props) => {
         >
             {value === index && (
                 <Box>
-                    <Typography>{children}</Typography>
+                    <Typography component="div">{children}</Typography>
                 </Box>
             )}
         </div>
@@ -29,31 +30,43 @@ const GroupModal = ({ isOpen, onClose }) => {
     const [value, setValue] = useState(0);
     const { loggedInUser, userList } = useUserContext();
     const [groupData, setGroupData] = useState({ name: '', description: '', listName: '', users: [] });
+    const { createGroup } = useGroupContext();
+    const [ createGroupError, setCreateGroupError ] = useState('');
 
-    const handleChange = (event, newValue) => {
+    const handleChange = (event, newValue) => { //Some bad naming going on here
         setValue(newValue);
     };
 
     const createHandleInputChange = (event) => {
-        console.log("event target name: ", event.target.name)
+        if (event.target.name === 'name' && createGroupError) {
+            setCreateGroupError('');
+        }
         setGroupData({
-          ...groupData,
-          [event.target.name]: event.target.value,
+            ...groupData,
+            [event.target.name]: event.target.value,
         });
         console.log(groupData)
-      };
+    };
 
-      const createHandleUsersChange = (event, value) => {
+    const createHandleUsersChange = (event, value) => {
         setGroupData({
-          ...groupData,
-          users: value,
+            ...groupData,
+            users: value,
         });
         console.log(groupData)
-      };
+    };
 
 
-    const createHandleSumbit = () => (event) => {
+    const createHandleSubmit = (event) => {
         event.preventDefault();
+
+        if (groupData.name === '') {
+            setCreateGroupError("Group name is required");
+            console.log("DEBUG: groupData.name: ", groupData.name);
+            return;
+        }
+        groupData.owner = loggedInUser;
+        createGroup(groupData);
     };
 
     if (!loggedInUser) {
@@ -83,20 +96,21 @@ const GroupModal = ({ isOpen, onClose }) => {
             </AppBar>
             <TabPanel value={value} index={0}>
                 <div className='tab-modal-content'>
-                    <Typography>
+                    <Typography component="div">
                         It looks like you don't have any groups yet. <br />
                         Why not create one?
-                    </Typography>   ¨
+                    </Typography>
                     <button className='modal-button' onClick={() => setValue(1)} style={{ textAlign: 'center' }}> CreateGroup </button>
                 </div>
             </TabPanel>
             <TabPanel value={value} index={1}>
                 <div className='tab-modal-content'>
-                    <form className='create-group-form' onSubmit={createHandleSumbit}>
+                    <form className='create-group-form' onSubmit={createHandleSubmit}>
                         <TextField
-                            name="groupName"
+                            name="name"
                             label="Group Name"
                             variant="outlined"
+                            value={groupData.name}
                             style={{ width: '100%' }}
                             onChange={createHandleInputChange}
                         />
@@ -104,6 +118,7 @@ const GroupModal = ({ isOpen, onClose }) => {
                             name="description"
                             label="Group Description"
                             variant="outlined"
+                            value={groupData.description}
                             multiline
                             rows={3}
                             style={{ width: '100%' }}
@@ -112,6 +127,7 @@ const GroupModal = ({ isOpen, onClose }) => {
                         <TextField
                             name="listName"
                             label="Default list name"
+                            value={groupData.listName}
                             variant="outlined"
                             style={{ width: '100%' }}
                             onChange={createHandleInputChange}
@@ -122,14 +138,16 @@ const GroupModal = ({ isOpen, onClose }) => {
                                 options={userList.filter(user => user.username !== loggedInUser.email)} // filter out the logged in user
                                 getOptionLabel={(option) => option.email}
                                 style={{ width: '100%' }}
+                                value={groupData.users}
                                 onChange={createHandleUsersChange}
                                 renderInput={(params) => (
-                                    <TextField {...params} variant="outlined" label="Invite Users" />
+                                    <TextField {...params} component="div" variant="outlined" label="Invite Users" />
                                 )}
                             />
                         ) : (
                             <div>Loading...</div>
                         )}
+                        {createGroupError && <div className='error'>{createGroupError}</div>}
                         <button className='modal-button' type='submit'>Create Group</button>
                     </form>
                 </div>
