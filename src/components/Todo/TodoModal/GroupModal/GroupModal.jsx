@@ -4,6 +4,7 @@ import ReactModal from 'react-modal';
 import './GroupModal.css';
 import { useUserContext } from '../../../../contexts/UserContext';
 import { useGroupContext } from '../../../../contexts/GroupContexts';
+import { useNotificationContext } from '../../../../contexts/NotificationContexts';
 
 const TabPanel = (props) => {
     const { children, value, index, ...other } = props;
@@ -29,9 +30,12 @@ const TabPanel = (props) => {
 const GroupModal = ({ isOpen, onClose }) => {
     const [value, setValue] = useState(0);
     const { loggedInUser, userList } = useUserContext();
-    const [groupData, setGroupData] = useState({ name: '', description: '', listName: '', users: [] });
-    const { createGroup } = useGroupContext();
+    const initialGroupData = { name: '', description: '', listName: '', users: [] };
+    const [groupData, setGroupData] = useState(initialGroupData);
+    const { createGroup, userGroupList } = useGroupContext();
     const [ createGroupError, setCreateGroupError ] = useState('');
+    const { inviteToGroup } = useNotificationContext();
+    
 
     const handleChange = (event, newValue) => { //Some bad naming going on here
         setValue(newValue);
@@ -45,7 +49,6 @@ const GroupModal = ({ isOpen, onClose }) => {
             ...groupData,
             [event.target.name]: event.target.value,
         });
-        console.log(groupData)
     };
 
     const createHandleUsersChange = (event, value) => {
@@ -53,11 +56,10 @@ const GroupModal = ({ isOpen, onClose }) => {
             ...groupData,
             users: value,
         });
-        console.log(groupData)
     };
 
 
-    const createHandleSubmit = (event) => {
+    const createHandleSubmit = async (event) => {
         event.preventDefault();
 
         if (groupData.name === '') {
@@ -65,8 +67,19 @@ const GroupModal = ({ isOpen, onClose }) => {
             console.log("DEBUG: groupData.name: ", groupData.name);
             return;
         }
+        const users = groupData.users; //separate the users from the groupData
+        console.log("DEBUG: users: ", users);
+
+        groupData.users = []; //this is a dumb wat of doing it, but it works
+
         groupData.owner = loggedInUser;
-        createGroup(groupData);
+        const groupId = await createGroup(groupData);
+        if(users.length > 0) {
+            users.forEach(user => {
+                inviteToGroup(loggedInUser, user, groupId); //invite the user to the group
+            });
+        }
+        setGroupData(initialGroupData); //reset the form
     };
 
     if (!loggedInUser) {

@@ -11,6 +11,8 @@ import { mdiBellOutline } from '@mdi/js';
 import Badge from '@mui/material/Badge';
 import Popper from '@mui/material/Popper';
 import Icon from '@mdi/react';
+import { useNotificationContext } from "../../../contexts/NotificationContexts";
+import Notification from "./Notification/Notification";
 
 
 const Header = () => {
@@ -19,6 +21,7 @@ const Header = () => {
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
   const { isLoggedIn, loggedInUser, logout } = useUserContext();
   const [anchorEl, setAnchorEl] = useState(null);
+  const { userNotifications } = useNotificationContext();
 
   const theme = useTheme();
 
@@ -85,17 +88,29 @@ const Header = () => {
           </nav>
 
           {/* Right section */}
-          <div style={{ display: 'flex', alignItems: 'center', position: 'relative', gap:'5px'}}>
+          <div style={{ display: 'flex', alignItems: 'center', position: 'relative', gap: '5px' }}>
             {isLoggedIn ? (
               <>
-                <Badge badgeContent={4} color="secondary" style={{ margin: '15px', top: '1px'}}>
-                  <Icon className='notification-icon' path={mdiBellOutline} size={1.2} onClick={handleClickNotification}/>
+                <Badge badgeContent={userNotifications.length} color="secondary" style={{ margin: '15px', top: '1px' }}>
+                  <Icon className='notification-icon' path={mdiBellOutline} size={1.2} onClick={handleClickNotification} />
                 </Badge>
                 <Popper open={open} anchorEl={anchorEl} placement='bottom' style={{ zIndex: 10 }}>
                   <div className="notification-container">
-                    <div className="notification-item">
-                      <p>you have no new notifications</p>
-                      </div>
+                    {userNotifications.length > 0 ? (
+                      userNotifications.map((notification, index) => (
+                        <Notification
+                          key={index}
+                          notificationData={notification}
+                          type={notification.type}
+                          message={notification.message}
+                          timestamp={notification.createdAt}
+                        />
+                      ))
+                    ) : (
+                      
+                        <p style={{padding: '0', margin: '0'}}>No new notifications</p>
+                     
+                    )}
                   </div>
                 </Popper>
                 <UserAvatar />

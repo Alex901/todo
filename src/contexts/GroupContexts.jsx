@@ -9,23 +9,30 @@ import BASE_URL from "../../config";
 const GroupContext = createContext();
 
 const GroupProvider = ({ children }) => {
-    const { loggedInUser } = useUserContext();
-    const [groupList, setGroupList] = useState([]);
+    const { loggedInUser } = useUserContext(); //Might not need this
+    const [ userGroupList, setUserGroupList ] = useState([]); // Where i will store groups for the logged in user
+    const [ allGroupList, setAllGroupList] = useState([]); // Where i will store all groups for all users so they can be listed
 
-    const createGroup = async (groupData) => {
+    const createGroup = async (groupData) => { //TODO: Error handling
         console.log("DEBUG: groupData: ", groupData);
         try {
             const response = await axios.post(`${BASE_URL}/groups/create`, groupData, 
             { withCredentials: true   });
-            setGroupList([...groupList, response.data]);
+            setUserGroupList([...userGroupList, response.data]);
             toast.success("Group created successfully");
+            return response.data._id;
         } catch (error) {
             toast.error("Error creating group");
         }
     }
 
+    const addUserToGroup = async (groupId, user) => {
+    
+    }
+
     return (
-        <GroupContext.Provider value={{ groupList, setGroupList, createGroup }}>
+        <GroupContext.Provider value={{ userGroupList, allGroupList, setUserGroupList, setAllGroupList, createGroup,
+        addUserToGroup }}>
             {children}
         </GroupContext.Provider>
     );

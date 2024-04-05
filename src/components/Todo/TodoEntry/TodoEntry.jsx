@@ -260,7 +260,7 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
                                                 <p className={`step-name ${step.isDone ? 'step-completed' : ''}`}>{step.taskName}</p>
                                             </div>
                                         ))}
-                                        <p className="add-step" style={{ margin: '12px' }}><strong>Add another step</strong></p>
+                                        <p className="add-step" style={{ margin: '12px' }} ><strong>Add another step</strong></p>
                                     </>
                                 ) : (
                                     <div className="add-step"><strong>Add step</strong></div>

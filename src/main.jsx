@@ -66,20 +66,21 @@ function Main() {
         <UserProvider>
           <TodoProvider>
             <GroupProvider>
+              <NotificationProvider>
 
-          
-            <ToastContainer 
-              newestOnTop={true}
-              theme='colored'
-              position="top-center" 
-              closeOnClick
-              draggable
-              pauseOnHover={false}
-              pauseOnFocusLoss={false}
-              autoClose={3000}
-            />
-            <TodoDrawer />
-            <App />
+                <ToastContainer
+                  newestOnTop={true}
+                  theme='colored'
+                  position="top-center"
+                  closeOnClick
+                  draggable
+                  pauseOnHover={false}
+                  pauseOnFocusLoss={false}
+                  autoClose={3000}
+                />
+                <TodoDrawer />
+                <App />
+              </NotificationProvider>
             </GroupProvider>
           </TodoProvider>
         </UserProvider>
