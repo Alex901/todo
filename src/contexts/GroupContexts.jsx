@@ -15,6 +15,10 @@ const GroupProvider = ({ children }) => {
 
     const createGroup = async (groupData) => { //TODO: Error handling
         console.log("DEBUG: groupData: ", groupData);
+        if (groupData.listName === '') {
+            groupData.listName = groupData.name + "'s list";
+        }
+
         try {
             const response = await axios.post(`${BASE_URL}/groups/create`, groupData, 
             { withCredentials: true   });

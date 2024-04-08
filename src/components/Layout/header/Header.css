@@ -135,11 +135,11 @@
 }
 
 .notification-container {
-  border: 1px solid #c8cad1;
+  border: 1px solid #7b7777;
   margin-top: 10px;
   background-color: #d9e3dd;
-  padding: 10px;
-  border-radius: 20px;
+  padding: 8px  3px  8px 3px;
+  border-radius: 5px;
   display: flex;
   flex-direction: column;
   align-items: center;

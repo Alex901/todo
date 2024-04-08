@@ -274,7 +274,7 @@ const AnythingList = ({ type }) => {
                             label="Deadline"
                         />
                     </div>
-                    <div className="Select-sorting-order" style={{ display: 'flex', flexDirection: 'row', margin: '3px 0px' }}>
+                    <div className="Select-sorting-order" style={{ display: 'flex', flexDirection: 'row', margin: '3px 15px' }}>
                         <FormControl variant="outlined" style={{ minWidth: 150 }}>
 
                             <Select

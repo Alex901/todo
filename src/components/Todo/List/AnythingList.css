@@ -19,7 +19,6 @@
     flex-direction: column;
     border-radius: 10px;
     width: 100%;
-    border: 2px solid #b8b0b0;
 }
 
 
@@ -71,10 +70,10 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    padding: 4px;
+    padding: 0px;
     border-radius: 10px;
-   
     color: white;
+    width: auto;
    
 
 }
