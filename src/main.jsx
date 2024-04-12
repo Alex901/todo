@@ -9,7 +9,7 @@ import { NotificationProvider } from './contexts/NotificationContexts.jsx';
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { purple } from '@mui/material/colors';
+import { blue, purple } from '@mui/material/colors';
 import { red } from '@mui/material/colors';
 import { orange } from '@mui/material/colors';
 import { green } from '@mui/material/colors';
@@ -31,6 +31,9 @@ const theme = createTheme({
     },
     error: {
       main: red[800],
+    },
+    neutral: {
+      main: blue[700],
     }
   },
 
@@ -58,14 +61,16 @@ function Main() {
     document.body.style.setProperty('--error-color', theme.palette.error.main);
     document.body.style.setProperty('--cancel-color', theme.palette.cancel.main);
     document.body.style.setProperty('--success-color', theme.palette.success.main);
+    document.body.style.setProperty('--neutral-color', theme.palette.neutral.main);
   }, []);
 
   return (
     <React.StrictMode>
       <ThemeProvider theme={theme}>
         <UserProvider>
+        <GroupProvider>
           <TodoProvider>
-            <GroupProvider>
+           
               <NotificationProvider>
 
                 <ToastContainer
@@ -81,8 +86,9 @@ function Main() {
                 <TodoDrawer />
                 <App />
               </NotificationProvider>
-            </GroupProvider>
+            
           </TodoProvider>
+          </GroupProvider>
         </UserProvider>
       </ThemeProvider>
     </React.StrictMode>

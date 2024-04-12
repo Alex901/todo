@@ -7,7 +7,8 @@
   }
 
 .modal-with-tabs {
-    padding: 0; 
+    padding: 0;
+    width: auto; 
 }
 
   
@@ -27,4 +28,50 @@
     gap: 20px;
     width: 80%;
     margin-top: 10px;
+  }
+
+  .group {
+    width: auto;
+  }
+
+  .group-summary-info {
+    display: flex;
+    flex-direction: row;
+    gap: 20px;
+    align-items: center;
+    width: auto;
+  }
+
+  .group-summary-description {
+    width: 100%;
+    resize: none;
+  }
+
+  .group-icon-button {
+    color: rgb(157, 147, 147);
+  }
+
+  .add-member:hover{
+    color: var(--success-color);
+    transform: scale(1.1);
+  }
+
+  .edit-group:hover {
+    color: var(--neutral-color);
+    transform: scale(1.1);
+  }
+
+  .delete-group:hover {
+    color: var(--error-color);
+    transform: scale(1.1);
+  }
+
+  .leave-group:hover {
+    color: var(--error-color);
+    transform: scale(1.1);
+  }
+
+  .remove-member:hover {
+    color: var(--error-color);
+    transform: scale(1.1);
   }

@@ -1,6 +1,7 @@
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 import { useUserContext } from './UserContext';
+import { useGroupContext } from './GroupContexts';
 import BASE_URL from '../../config';
 
 // Define functions
@@ -32,7 +33,26 @@ const TodoContext = createContext({
 const TodoProvider = ({ children }) => {
   const [todoList, setTodoList] = useState([]);
   const [dataFetched, setDataFetched] = useState(false);
-  const { loggedInUser } = useUserContext(); //Logged in username&&list
+  const { loggedInUser, userList } = useUserContext(); //Logged in username&&list
+  const { userGroupList } = useGroupContext();
+  const groupMembers = userGroupList.flatMap(group => group.members.map(member => member.member_id));
+  const groupLists = userGroupList.flatMap(group => group.groupLists.map(list => list.name));
+  const groupMemberNames = userList
+  ? userList
+      .filter(user => groupMembers.includes(user._id) && user._id !== loggedInUser._id)
+      .map(user => user.username)
+  : [];
+
+  if (loggedInUser && userGroupList) {
+    console.log("userList: ", userList);
+      console.log("groupMembers: ", groupMembers);
+      console.log("groupMemberNames: ", groupMemberNames);
+      console.log("groupLists: ", groupLists);
+  }
+
+  if(loggedInUser && userGroupList){
+    console.log("userGroupList: ", userGroupList);
+  }
 
   function isMobileDevice() {
     return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
@@ -46,15 +66,15 @@ const TodoProvider = ({ children }) => {
   }, [dataFetched, loggedInUser]);
 
   const refreshTodoList = () => {
-   
+
   };
 
   //API functions
-  
+
 
   const fetchTodoList = async () => {
 
-   
+
     try {
       const url = isMobileDevice() ? `${BASE_URL}/api/todos/mobile` : `${BASE_URL}/api/todos`;
       const response = await axios.get(url, {
@@ -84,11 +104,11 @@ const TodoProvider = ({ children }) => {
   };
 
   const addTodo = async (newTaskData) => {
-   // console.log("addTodo: newTaskData", newTaskData);
+    // console.log("addTodo: newTaskData", newTaskData);
     try {
       const newId = parseInt(Date.now().toString(36) + Math.random().toString(36).substr(2), 36); //but why? xD
 
-      //TODO: some typesafety here
+      //TODO: some typesafety here, also this is really dumb. Remake this at some point
       const newTodo = {
         id: newId,
         task: newTaskData.taskName,
@@ -111,7 +131,7 @@ const TodoProvider = ({ children }) => {
         inList: loggedInUser ? ['all'].concat(loggedInUser.activeList !== 'all' ? [loggedInUser.activeList] : []) : []
       };
 
-     // console.log("addTodo: newTodo", newTodo);
+      // console.log("addTodo: newTodo", newTodo);
 
       const response = await axios.post(`${BASE_URL}/api/`, newTodo);
       if (response.status === 201) {
@@ -279,7 +299,7 @@ const TodoProvider = ({ children }) => {
     }));
   }
 
-  //Helper function to easilly update my database
+  //Helper function to easilly update my database, this is quite dumb
   const updateDatabase = async () => {
     try {
       const updatedData = {
@@ -336,28 +356,28 @@ const TodoProvider = ({ children }) => {
   const setStepUncomplete = async (taskId, stepId) => {
     console.log("todoContext: setStepUncomplete: taskId, stepId", taskId, stepId);
     try {
-        const response = await axios.patch(`${BASE_URL}/api/stepUncomplete`, { taskId, stepId });
-        if (response.status === 200) {
-  
-            // Update local state here
-            setTodoList(prevTodoList => {
-                const updatedTodoList = prevTodoList.map(todo => { //TODO: this is quite inefficient
-                    if (todo._id === taskId) {
-                        const updatedSteps = todo.steps.map(step => 
-                            step.id === stepId ? { ...step, isDone: false } : step
-                        );
-                        return { ...todo, steps: updatedSteps };
-                    } else {
-                        return todo;
-                    }
-                });
-                return updatedTodoList;
-            });
-        } else {
-            console.error("Error marking step as undone: ", response.statusText);
-        }
+      const response = await axios.patch(`${BASE_URL}/api/stepUncomplete`, { taskId, stepId });
+      if (response.status === 200) {
+
+        // Update local state here
+        setTodoList(prevTodoList => {
+          const updatedTodoList = prevTodoList.map(todo => { //TODO: this is quite inefficient
+            if (todo._id === taskId) {
+              const updatedSteps = todo.steps.map(step =>
+                step.id === stepId ? { ...step, isDone: false } : step
+              );
+              return { ...todo, steps: updatedSteps };
+            } else {
+              return todo;
+            }
+          });
+          return updatedTodoList;
+        });
+      } else {
+        console.error("Error marking step as undone: ", response.statusText);
+      }
     } catch (error) {
-        console.error("Error marking step as undone: ", error);
+      console.error("Error marking step as undone: ", error);
     }
   }
 
@@ -368,15 +388,15 @@ const TodoProvider = ({ children }) => {
 
   const getTodoCount = (isUrgent = false) => {
     return todoList.filter(todo => !todo.isDone && !todo.isStarted && (!isUrgent || todo.isUrgent)).length;
-}
+  }
 
-const getDoneCount = (isUrgent = false) => {
+  const getDoneCount = (isUrgent = false) => {
     return todoList.filter(todo => todo.isDone && (!isUrgent || todo.isUrgent)).length;
-}
+  }
 
-const getDoingCount = (isUrgent = false) => {
+  const getDoingCount = (isUrgent = false) => {
     return todoList.filter(todo => todo.isStarted && !todo.isDone && (!isUrgent || todo.isUrgent)).length;
-}
+  }
 
   const getActiveListTodoCount = () => {
     return todoList.filter(todo => todo.inList.includes(loggedInUser.activeList) && !todo.isDone && !todo.isStarted).length;

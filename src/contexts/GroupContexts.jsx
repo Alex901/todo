@@ -10,8 +10,18 @@ const GroupContext = createContext();
 
 const GroupProvider = ({ children }) => {
     const { loggedInUser } = useUserContext(); //Might not need this
-    const [ userGroupList, setUserGroupList ] = useState([]); // Where i will store groups for the logged in user
-    const [ allGroupList, setAllGroupList] = useState([]); // Where i will store all groups for all users so they can be listed
+    const [userGroupList, setUserGroupList] = useState([]); // Where i will store groups for the logged in user
+    const [allGroupList, setAllGroupList] = useState([]); // Where i will store all groups for all users so they can be listed
+
+    useEffect(() => {
+        if (loggedInUser) {
+            getLoggedInUserUserGroups();
+        }
+    }, [loggedInUser]);
+
+    useEffect(() => {
+        console.log("DEBUG: userGroupList: ", userGroupList);
+    }, [userGroupList]);
 
     const createGroup = async (groupData) => { //TODO: Error handling
         console.log("DEBUG: groupData: ", groupData);
@@ -20,8 +30,8 @@ const GroupProvider = ({ children }) => {
         }
 
         try {
-            const response = await axios.post(`${BASE_URL}/groups/create`, groupData, 
-            { withCredentials: true   });
+            const response = await axios.post(`${BASE_URL}/groups/create`, groupData,
+                { withCredentials: true });
             setUserGroupList([...userGroupList, response.data]);
             toast.success("Group created successfully");
             return response.data._id;
@@ -30,13 +40,34 @@ const GroupProvider = ({ children }) => {
         }
     }
 
+    const getLoggedInUserUserGroups = async () => {
+        if (!loggedInUser) return;
+
+        const userId = loggedInUser._id;
+
+        try {
+            const response = await axios.get(`${BASE_URL}/groups/getGroups/${userId}`, { withCredentials: true });
+            setUserGroupList(response.data);
+        } catch (error) {
+            toast.error("Error fetching groups");
+        }
+    }
+
     const addUserToGroup = async (groupId, user) => {
-    
+        try {
+            const response = await axios.put(`${BASE_URL}/groups/addUser/${groupId}`, { user }, { withCredentials: true });
+            console.log("DEBUG: response: ", response);
+            toast.success("User added to group");
+        } catch (error) {
+            toast.error("Error adding user to group");
+        }
     }
 
     return (
-        <GroupContext.Provider value={{ userGroupList, allGroupList, setUserGroupList, setAllGroupList, createGroup,
-        addUserToGroup }}>
+        <GroupContext.Provider value={{
+            userGroupList, allGroupList, setUserGroupList, setAllGroupList, createGroup,
+            addUserToGroup
+        }}>
             {children}
         </GroupContext.Provider>
     );
