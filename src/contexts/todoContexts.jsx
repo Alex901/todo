@@ -38,19 +38,19 @@ const TodoProvider = ({ children }) => {
   const groupMembers = userGroupList.flatMap(group => group.members.map(member => member.member_id));
   const groupLists = userGroupList.flatMap(group => group.groupLists.map(list => list.name));
   const groupMemberNames = userList
-  ? userList
+    ? userList
       .filter(user => groupMembers.includes(user._id) && user._id !== loggedInUser._id)
       .map(user => user.username)
-  : [];
+    : [];
 
   if (loggedInUser && userGroupList) {
     console.log("userList: ", userList);
-      console.log("groupMembers: ", groupMembers);
-      console.log("groupMemberNames: ", groupMemberNames);
-      console.log("groupLists: ", groupLists);
+    console.log("groupMembers: ", groupMembers);
+    console.log("groupMemberNames: ", groupMemberNames);
+    console.log("groupLists: ", groupLists);
   }
 
-  if(loggedInUser && userGroupList){
+  if (loggedInUser && userGroupList) {
     console.log("userGroupList: ", userGroupList);
   }
 
@@ -92,7 +92,10 @@ const TodoProvider = ({ children }) => {
 
       // Filter the parsedData array
       if (loggedInUser) {
-        parsedData = parsedData.filter(todo => todo.owner === loggedInUser.username);
+        parsedData = parsedData.filter(todo =>
+          (todo.owner === loggedInUser.username) ||
+          (groupMemberNames.includes(todo.owner) && groupLists.includes(todo.inList))
+        );
       } else {
         parsedData = parsedData.filter(todo => todo.owner === null);
       }
