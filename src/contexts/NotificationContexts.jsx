@@ -2,8 +2,18 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import axios from "axios";
 import { toast } from "react-toastify";
 import { useUserContext } from "./UserContext";
-import BASE_URL from "../../config";
 import { useGroupContext } from "./GroupContexts";
+let BASE_URL;
+
+if (process.env.NODE_ENV === 'test') {
+    import('../../config').then((config) => {
+      BASE_URL = config.default;
+    });
+  } else {
+    import('../../config.vite').then((config) => {
+      BASE_URL = config.default;
+    });
+  }
 
 /* Handle notifications sent to users */
 const NotificationContexts = createContext();

@@ -68,9 +68,9 @@ function Main() {
     <React.StrictMode>
       <ThemeProvider theme={theme}>
         <UserProvider>
-        <GroupProvider>
-          <TodoProvider>
-           
+          <GroupProvider>
+            <TodoProvider>
+
               <NotificationProvider>
 
                 <ToastContainer
@@ -86,8 +86,8 @@ function Main() {
                 <TodoDrawer />
                 <App />
               </NotificationProvider>
-            
-          </TodoProvider>
+
+            </TodoProvider>
           </GroupProvider>
         </UserProvider>
       </ThemeProvider>

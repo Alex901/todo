@@ -3,7 +3,17 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import axios from "axios";
 import { useTodoContext } from "./todoContexts";
 import { toast } from "react-toastify";
-import BASE_URL from "../../config";
+let BASE_URL;
+
+if (process.env.NODE_ENV === 'test') {
+    import('../../config').then((config) => {
+      BASE_URL = config.default;
+    });
+  } else {
+    import('../../config.vite').then((config) => {
+      BASE_URL = config.default;
+    });
+  }
 
 const UserContext = createContext();
 
