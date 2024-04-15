@@ -22,6 +22,7 @@ import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { Select, MenuItem, ListItemText, FormControl, InputLabel, Typography, IconButton } from '@mui/material';
 import GroupModal from './components/Todo/TodoModal/GroupModal/GroupModal'
+import LandingPage from './pages/LandingPage/LandingPage'
 
 
 import 'material-design-lite/dist/material.min.css';
@@ -164,11 +165,14 @@ function App() {
 
   //TODO: This shouldbe moved to a separate component
   return (
+    
     <div className='app'>
       <Header />
       <>
         <CookieConsent />
       </>
+
+      {isLoggedIn && (
       <div className="content">
         <Card>
           <div className='nav' style={{ display: 'flex', flexDirection: 'column' }}>
@@ -364,6 +368,8 @@ function App() {
 
         </Card>
       </div>
+      )} 
+      {!isLoggedIn && <LandingPage />}
     </div>
   )
 }

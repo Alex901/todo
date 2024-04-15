@@ -18,7 +18,7 @@ const CreateListModal = ({ isOpen, onRequestClose }) => {
   const handleSubmit = (event) => {
     event.preventDefault();
     console.log("List name: ", listName);
-    if(!listName.trim()) {
+    if (!listName.trim()) {
       setError('List name cannot be empty');
       return;
     }
@@ -29,7 +29,7 @@ const CreateListModal = ({ isOpen, onRequestClose }) => {
   }
 
   const handleKeyPress = (e) => {
-    if(e.key === 'Enter'){
+    if (e.key === 'Enter') {
       handleSubmit(e);
       onRequestClose();
     }
