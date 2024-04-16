@@ -2,6 +2,17 @@ import React from 'react';
 import Header from '../../components/Layout/header/Header';
 import './LandingPage.css';
 
+window.addEventListener('scroll', function() {
+    const heroHeight = document.querySelector('.hero').offsetHeight;
+    const header = document.querySelector('.header');
+  
+    if (window.pageYOffset > heroHeight) {
+      header.classList.add('sticky');
+    } else {
+      header.classList.remove('sticky');
+    }
+  });
+
 const LandingPage = () => {
     return (
         <div className='landing-page'>
@@ -15,12 +26,7 @@ const LandingPage = () => {
                 </div>
 
                 <div className='hero-right'>
-                    <p> Winner team image </p>
-                    <p> Hero - form </p>
-                    <p> form title </p>
-                    <p> input mail </p>
-                    <p> imput textArea </p>
-                    <p> button </p>
+
                 </div>
 
             </div>
