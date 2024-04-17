@@ -54,10 +54,6 @@ function App() {
     } 
     const checkScrollPosition = () => {
       const heroHeight = document.querySelector('.hero').offsetHeight;
-      console.log("DEBUG: heroHeight: ", heroHeight);
-      console.log("DEBUG: window.pageYOffset: ", window.pageYOffset);
-      console.log("DEBUG: show header: ", showHeader)
-      console.log("Logged in:", isLoggedIn)
       if (window.pageYOffset >  heroHeight) {
         setShowHeader(true);
       } else {

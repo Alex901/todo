@@ -131,6 +131,16 @@
 
 }
 
+
+
+.header.sticky {
+  position: fixed;
+  top: 0;
+  width: 100%;
+  z-index: 100;
+  /* This ensures the header stays on top of other elements */
+}
+
 /* Buttons */
 
 .hero-button {
