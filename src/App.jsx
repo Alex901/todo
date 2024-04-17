@@ -33,7 +33,7 @@ function App() {
   const [activeView, setActiveView] = useState('todo');
   const { getTodoCount, getDoneCount, getDoingCount, getActiveListTodoCount, getActiveListDoingCount, getActiveListDoneCount,
     getListDoingCount, getListDoneCount, getListTodoCount } = useTodoContext();
-  const { loggedInUser, isLoggedIn, setLoggedInUser, setActiveList, deleteList, addTag, deleteTag } = useUserContext();
+  const { loggedInUser, isLoggedIn, setLoggedInUser, setActiveList, deleteList, addTag, deleteTag, checkLogin } = useUserContext();
   const [isCreateListModalOpen, setIsCreateListModalOpen] = useState(false);
   const [isdDeleteListModalOpen, setIsDeleteListModalOpen] = useState(false);
   const [deleteListError, setDeleteListError] = useState("");
@@ -42,6 +42,29 @@ function App() {
   const [showAll, setShowAll] = useState(false);
   const [isOpenListModalOpen, setIsOpenListModalOpen] = useState(false);
   const [isGroupModalOpen, setIsGroupModalOpen] = useState(false);
+  const [showHeader, setShowHeader] = useState(false);
+
+  useEffect(() => {
+    checkLogin();
+  }, []);
+
+  useEffect(() => {
+    if(isLoggedIn) {
+      setShowHeader(true);
+      return;
+    }
+    const checkScrollPosition = () => {
+      const heroHeight = document.querySelector('.hero').offsetHeight;
+      if (window.pageYOffset > heroHeight + 50) {
+        setShowHeader(true);
+      } else {
+        setShowHeader(false);
+      }
+    };
+
+    window.addEventListener('scroll', checkScrollPosition);
+    return () => window.removeEventListener('scroll', checkScrollPosition);
+  }, [isLoggedIn]);
 
   useEffect(() => {
     console.log("DEBUG: openExportListModal state has updated. Current state: ", isOpenListModalOpen);
@@ -167,7 +190,9 @@ function App() {
   return (
     
     <div className='app'>
-      <Header />
+      <div>
+      {showHeader && <Header />}
+    </div>
       <>
         <CookieConsent />
       </>
