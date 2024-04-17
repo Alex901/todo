@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import {
     AppBar, Tabs, Tab, Box, Typography, TextField, Autocomplete, FormControl, Accordion,
     AccordionSummary, AccordionDetails, Avatar
@@ -15,23 +15,7 @@ import stepsImage from '../../assets/Features_icons/steps.jpg';
 import trackImage from '../../assets/Features_icons/trackProg.jpg';
 import Header from '../../components/Layout/header/Header';
 
-useEffect(() => {
-    const checkScrollPosition = () => {
-      const heroHeight = document.querySelector('.hero').offsetHeight;
-      const header = headerRef.current;
-  
-      if (header) {
-        if (window.pageYOffset > heroHeight) {
-          header.classList.add('sticky');
-        } else {
-          header.classList.remove('sticky');
-        }
-      }
-    };
-  
-    window.addEventListener('scroll', checkScrollPosition);
-    return () => window.removeEventListener('scroll', checkScrollPosition);
-  }, []);
+
 
 const LandingPage = () => { //Could break this out into a header component ofc
     const [showRegisterModal, setShowRegisterModal] = useState(false);
