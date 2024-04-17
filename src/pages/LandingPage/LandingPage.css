@@ -9,7 +9,7 @@
   width: auto;
   background-color: rgb(255, 255, 255, .8);
   padding: 35px;
-  border-radius: 5px;
+  border-radius: 15px;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.6), 0 6px 6px rgba(0, 0, 0, 0.23);
   display: flex;
   flex-direction: row;
@@ -131,16 +131,6 @@
 
 }
 
-
-
-.header.sticky {
-  position: fixed;
-  top: 0;
-  width: 100%;
-  z-index: 100;
-  /* This ensures the header stays on top of other elements */
-}
-
 /* Buttons */
 
 .hero-button {
@@ -192,4 +182,19 @@
   color: var(--secondary-color);
   font-weight: 900;
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+}
+
+.features {
+  width: auto;
+  max-width: 90%;
+  height: auto;
+  background-color: rgba(255, 255, 255, 0.7); /* white with 70% transparency */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 10px auto; /* center the div */
+  border-radius: 30px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.6), 0 6px 6px rgba(0, 0, 0, 0.23);
+
+  padding: 10px;
 }

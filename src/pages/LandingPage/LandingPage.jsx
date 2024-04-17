@@ -3,24 +3,17 @@ import {
     AppBar, Tabs, Tab, Box, Typography, TextField, Autocomplete, FormControl, Accordion,
     AccordionSummary, AccordionDetails, Avatar
 } from '@mui/material';
-import Header from '../../components/Layout/header/Header';
 import './LandingPage.css';
 import Icon from '@mdi/react';
 import RegisterModal from '../../components/Layout/header/HeaderModals/RegisterModal';
 import LoginModal from '../../components/Layout/header/HeaderModals/LoginModal';
-
-
-
-window.addEventListener('scroll', function () {
-    const heroHeight = document.querySelector('.hero').offsetHeight;
-    const header = document.querySelector('.header');
-
-    if (window.pageYOffset > heroHeight) {
-        header.classList.add('sticky');
-    } else {
-        header.classList.remove('sticky');
-    }
-});
+import Feature from './Feature/Feature';
+import testingImage from '../../assets/Features_icons/testing.jpg';
+import cooperateImage from '../../assets/Features_icons/cooperate.png';
+import ideaImage from '../../assets/Features_icons/idea.png';
+import stepsImage from '../../assets/Features_icons/steps.jpg';
+import trackImage from '../../assets/Features_icons/trackProg.jpg';
+import Header from '../../components/Layout/header/Header';
 
 const LandingPage = () => { //Could break this out into a header component ofc
     const [showRegisterModal, setShowRegisterModal] = useState(false);
@@ -34,6 +27,15 @@ const LandingPage = () => { //Could break this out into a header component ofc
 
     const openLoginModal = () => setShowLoginModal(true);
     const closeLoginModal = () => setShowLoginModal(false);
+
+    const features = [
+       
+        { image: ideaImage, title: 'Define your goal', description: 'Do you finally want to learn how to code? Maybe get rid of a bad habbit or why not learn how to get a girlfriend? Spoiler alert mister: it start with talking to another human being.. Now sign-up you virgin FUCK! ' },
+        { image: stepsImage, title: 'Daily steps', description: 'Our algorithm breaks your goal into small bite sized tasks. Based on your preferances you will be assigned simple tasks each day that will take you to your goal' },
+        { image: cooperateImage, title: 'Cooperate', description: 'You can go on an entierly solo learning journey. Or you can do so as a group. Where you can simply keep eachother accountable. Or you can work together towards a common goal.' },
+        { image: trackImage, title: 'Track your progress', description: 'All progress is being recorded so our algorithm can decide if things are too easy/hard and adjust the difficulty of your daily tasks based on that. Also, you get some shiny graphs!!' },
+        { image: testingImage, title: 'Discover the power of AI', description: 'Along this journey, you can laverage the power of AI in each step of the way. And if you are not happy with the results, you can always modify your plans accordingly. We all know that this technology is not perfect(yet). ' },
+    ];
 
 
     return (
@@ -55,7 +57,7 @@ const LandingPage = () => { //Could break this out into a header component ofc
                         </div>
                     </div>
                     <p style={{ fontSize: '0.8em', margin: '10px' }}>
-                        (PSST! Your data is safe, the database is fully encrypted and we will not share it with any third parties)
+                        (PSST! Your data is safe, the database is fully encrypted and we will not share any data with any third parties)
                     </p>
                 </div>
 
@@ -66,7 +68,14 @@ const LandingPage = () => { //Could break this out into a header component ofc
                 </div>
 
             </div>
+            <div className='features'>
+                {features.map((feature, index) => (
+                    <Feature key={index} image={feature.image} title={feature.title} description={feature.description} />
+                ))}
+            </div>
         </div>
+
+
     );
 }
 

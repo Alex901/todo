@@ -51,11 +51,14 @@ function App() {
   useEffect(() => {
     if(isLoggedIn) {
       setShowHeader(true);
-      return;
-    }
+    } 
     const checkScrollPosition = () => {
       const heroHeight = document.querySelector('.hero').offsetHeight;
-      if (window.pageYOffset > heroHeight + 50) {
+      console.log("DEBUG: heroHeight: ", heroHeight);
+      console.log("DEBUG: window.pageYOffset: ", window.pageYOffset);
+      console.log("DEBUG: show header: ", showHeader)
+      console.log("Logged in:", isLoggedIn)
+      if (window.pageYOffset >  heroHeight) {
         setShowHeader(true);
       } else {
         setShowHeader(false);
