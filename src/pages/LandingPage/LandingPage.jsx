@@ -42,6 +42,7 @@ const LandingPage = () => { //Could break this out into a header component ofc
 
     return (
         <div className='landing-page'>
+            <Header className="sticky" /> 
             <div className="hero">
                 <div className='hero-left'>
                     <div className="hero-content-left">
@@ -77,8 +78,50 @@ const LandingPage = () => { //Could break this out into a header component ofc
             </div>
 
             <div className='qoute-div'>
-                <h2 className='ins-quote'> "Forge a strong enough habbit, and you are already half way done." </h2>
+                <h1 className='ins-quote first-quote'>
+                    <span className='quote-mark'>"</span>Forge a strong enough habit, and you are half way there already.<span className='quote-mark'>"</span>
+                </h1>
             </div>
+
+            <div className="success-case">
+                <div className="success-case-section">
+                    <div className="success-case-image">
+                        <img className="image1" src="src\assets\solo-success-r.jpg" alt="Success Case" />
+                    </div>
+                    <div className="success-case-text">
+                        <h2>Success Case</h2>
+                        <p>Here is some text about the success case...</p>
+                    </div>
+                </div>
+                <div className="success-case-section">
+                    <div className="success-case-text">
+                        <h2>FAQ</h2>
+                        <p>Here is some FAQ text...</p>
+                    </div>
+                    <div className="success-case-image">
+                        <img className="image2" src="src\assets\team-success-r.jpg" alt="Success Case" />
+                    </div>
+                </div>
+            </div>
+            <div className='qoute-div'>
+                <h1 className='ins-quote second-quote'>
+                    <span className='quote-mark'>"</span>One step at a time.<span className='quote-mark'>"</span>
+                </h1>
+            </div>
+            <div className="testimonials" style={{ width: '100%' }}>
+                <h2>See what other customers have to say</h2>
+                <div className="carousel-placeholder" style={{ width: '100%', height: '200px', backgroundColor: 'white' }}>
+                    <h1> !!!Placeholder!! </h1> 
+                </div>
+            </div>
+            <div className='qoute-div'>
+                <h1 className='ins-quote'>
+                    <span className='quote-mark'>"</span>To success.<span className='quote-mark'>"</span>
+                </h1>
+            </div>
+
+            <div className="data-presentation-CTA"></div>
+            <div className="footer"></div>
         </div>
 
 

@@ -15,13 +15,6 @@ body {
   background-color: rgb(241, 237, 237);
 }
 
-.header.sticky {
-  position: fixed;
-  top: 0;
-  width: 100%;
-  z-index: 1000;
-}
-
 .nav {
   display: inline-table;
   border-radius: 10px;
@@ -162,4 +155,8 @@ body {
   color: var(--secondary-color);
   cursor: pointer;
   transform: scale(1.2);
+}
+
+.hidden {
+  display: none;
 }

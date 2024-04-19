@@ -49,30 +49,7 @@ function App() {
     checkLogin();
   }, []);
 
-  useEffect(() => {
-    if (isLoggedIn) {
-      setShowHeader(true);
-    }
-    const checkScrollPosition = () => {
-      const heroHeight = document.querySelector('.hero').offsetHeight;
-      const header = headerRef.current;
-      
-      console.log(header)
 
-   
-        if (window.pageYOffset > heroHeight) {
-          setShowHeader(true);
-          header.classList.add('sticky');
-        } else {
-          setShowHeader(false);
-          header.classList.remove('sticky');
-        }
-      
-    };
-
-    window.addEventListener('scroll', checkScrollPosition);
-    return () => window.removeEventListener('scroll', checkScrollPosition);
-  }, [isLoggedIn]);
 
   useEffect(() => {
     console.log("DEBUG: openExportListModal state has updated. Current state: ", isOpenListModalOpen);
@@ -199,7 +176,7 @@ function App() {
 
     <div className='app'>
       <div>
-        {showHeader && <Header className="header" ref={headerRef} />}
+      {isLoggedIn && <Header />}
       </div>
       <>
         <CookieConsent />

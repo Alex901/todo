@@ -139,6 +139,7 @@
   border-radius: 10px;
   margin-top: 10px;
   width: auto;
+  min-width: 300px;
   height: 3.0em;
   font-weight: 700;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
@@ -206,15 +207,79 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 150px auto; /* center the div */
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.6), 0 6px 6px rgba(0, 0, 0, 0.23);
-  background-color: rgba(255, 255, 255, 0.7);
-  border-radius: 20px;
-  padding: 10px;
+  margin: 200px auto; /* center the div */
+
 }
 
 .ins-quote {
   font-size: 3rem;
   font-family: cursive;
+  color: var(--success-color);
+  text-shadow: 60px 160px 20px rgba(93, 6, 99, 0.3);
+}
+
+.first-quote {
+ color: white;
+}
+
+.second-quote {
   color: var(--primary-color);
+}
+
+.quote-mark {
+  color: var(--secondary-color) 
+}
+
+.success-case {
+  display: flex;
+  flex-direction: column;
+  background: linear-gradient(to bottom right, rgb(66, 172, 198) 15%, transparent 52%, rgb(47, 111, 184) 85%);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.6), 0 6px 6px rgba(0, 0, 0, 0.23);
+  border-radius: 20px;
+  width: auto;
+  max-width: 90%;
+  margin: auto;
+}
+
+.success-case-section {
+  display: flex;
+  justify-content: space-between;
+}
+
+.success-case-image, .success-case-text {
+  flex: 1;
+  padding: 20px;
+}
+
+
+
+.success-case-image img {
+  width: 100%;
+  height: auto;
+  border-radius: 20px;
+ 
+}
+
+.image1 {
+  box-shadow: 0 0 20px 10px rgba(66, 111, 115, 0.5);
+}
+
+.image2 {
+  box-shadow: 0 0 20px 10px rgba(66, 111, 115, 0.5);
+}
+
+.testimonials {
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.6), 0 6px 6px rgba(0, 0, 0, 0.23);
+  border-radius: 20px;
+  width: auto;
+  max-width: 90%;
+  margin: auto;
+}
+
+.sticky {
+  position: fixed;
+  top: 0;
+  z-index: 1000; /* Adjust as needed to ensure the header is above other elements */
 }
