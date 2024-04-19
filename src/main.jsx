@@ -35,6 +35,9 @@ const theme = createTheme({
     },
     neutral: {
       main: blue[700],
+    },
+    white: {
+      main: '#FFFFFF',
     }
   },
 

@@ -14,6 +14,7 @@ import ideaImage from '../../assets/Features_icons/idea.png';
 import stepsImage from '../../assets/Features_icons/steps.jpg';
 import trackImage from '../../assets/Features_icons/trackProg.jpg';
 import Header from '../../components/Layout/header/Header';
+import Footer from '../../components/Layout/Footer/Footer';
 
 
 
@@ -46,7 +47,7 @@ const LandingPage = () => { //Could break this out into a header component ofc
             <div className="hero">
                 <div className='hero-left'>
                     <div className="hero-content-left">
-                        <h1>You know that project you have been putting off for for a couple of years?</h1>
+                        <h1>You know that project you have been putting off indefinetly?</h1>
                         <p className='hero-sub-text'> Yeah, that one... How about getting started today? We will make sure that you stick to it this time. With the assistance of our
                             AI driven daily planner, we will make sure that you are not owerwhelmed this time around. Only you can make it happen, but we will help! </p>
                         <div className='hero-get-started'>
@@ -89,14 +90,15 @@ const LandingPage = () => { //Could break this out into a header component ofc
                         <img className="image1" src="src\assets\solo-success-r.jpg" alt="Success Case" />
                     </div>
                     <div className="success-case-text">
-                        <h2>Success Case</h2>
-                        <p>Here is some text about the success case...</p>
+                        <h2>Success Story</h2>
+                        <p>Maybe something like this? Continue telling the story.</p>
                     </div>
                 </div>
                 <div className="success-case-section">
                     <div className="success-case-text">
                         <h2>FAQ</h2>
                         <p>Here is some FAQ text...</p>
+                        <p>More steps?</p>
                     </div>
                     <div className="success-case-image">
                         <img className="image2" src="src\assets\team-success-r.jpg" alt="Success Case" />
@@ -109,9 +111,8 @@ const LandingPage = () => { //Could break this out into a header component ofc
                 </h1>
             </div>
             <div className="testimonials" style={{ width: '100%' }}>
-                <h2>See what other customers have to say</h2>
-                <div className="carousel-placeholder" style={{ width: '100%', height: '200px', backgroundColor: 'white' }}>
-                    <h1> !!!Placeholder!! </h1> 
+                <div className="carousel" style={{ width: '100%', height: '300px', backgroundColor: 'white', borderRadius:'20px' }}>
+                    <h1> !!!Placeholder -- testamonials!!! </h1> 
                 </div>
             </div>
             <div className='qoute-div'>
@@ -121,7 +122,7 @@ const LandingPage = () => { //Could break this out into a header component ofc
             </div>
 
             <div className="data-presentation-CTA"></div>
-            <div className="footer"></div>
+            <Footer />
         </div>
 
 
