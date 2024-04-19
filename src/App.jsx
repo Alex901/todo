@@ -59,7 +59,7 @@ function App() {
       
       console.log(header)
 
-      if (header) {
+   
         if (window.pageYOffset > heroHeight) {
           setShowHeader(true);
           header.classList.add('sticky');
@@ -67,7 +67,7 @@ function App() {
           setShowHeader(false);
           header.classList.remove('sticky');
         }
-      }
+      
     };
 
     window.addEventListener('scroll', checkScrollPosition);

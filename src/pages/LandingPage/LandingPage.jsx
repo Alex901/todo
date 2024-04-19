@@ -31,7 +31,7 @@ const LandingPage = () => { //Could break this out into a header component ofc
     const closeLoginModal = () => setShowLoginModal(false);
 
     const features = [
-       
+
         { image: ideaImage, title: 'Define your goal', description: 'Do you finally want to learn how to code? Maybe get rid of a bad habbit or why not learn how to get a girlfriend? Spoiler alert mister: it start with talking to another human being.. Now sign-up you virgin FUCK! ' },
         { image: stepsImage, title: 'Daily steps', description: 'Our algorithm breaks your goal into small bite sized tasks. Based on your preferances you will be assigned simple tasks each day that will take you to your goal' },
         { image: cooperateImage, title: 'Cooperate', description: 'You can go on an entierly solo learning journey. Or you can do so as a group. Where you can simply keep eachother accountable. Or you can work together towards a common goal.' },
@@ -74,6 +74,10 @@ const LandingPage = () => { //Could break this out into a header component ofc
                 {features.map((feature, index) => (
                     <Feature key={index} image={feature.image} title={feature.title} description={feature.description} />
                 ))}
+            </div>
+
+            <div className='qoute-div'>
+                <h2 className='ins-quote'> "Forge a strong enough habbit, and you are already half way done." </h2>
             </div>
         </div>
 

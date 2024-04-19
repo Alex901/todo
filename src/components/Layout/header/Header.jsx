@@ -94,7 +94,7 @@ const Header = () => {
                 <Badge badgeContent={userNotifications.length} color="secondary" style={{ margin: '15px', top: '1px' }}>
                   <Icon className='notification-icon' path={mdiBellOutline} size={1.2} onClick={handleClickNotification} />
                 </Badge>
-                <Popper open={open} anchorEl={anchorEl} placement='bottom' style={{ zIndex: 10 }}>
+                <Popper open={open} anchorEl={anchorEl} placement='bottom-end' style={{ zIndex: 10000 }}>
                   <div className="notification-container">
                     {userNotifications.length > 0 ? (
                       userNotifications.map((notification, index) => (
