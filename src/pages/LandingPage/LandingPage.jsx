@@ -29,12 +29,13 @@ const LandingPage = () => { //Could break this out into a header component ofc
     const closeRegisterModal = () => setShowRegisterModal(false);
 
     const openLoginModal = () => setShowLoginModal(true);
+
     const closeLoginModal = () => setShowLoginModal(false);
 
     const features = [
 
         { image: ideaImage, title: 'Define your goal', description: 'Do you finally want to learn how to code? Maybe get rid of a bad habbit or why not learn how to get a girlfriend? Spoiler alert mister: it start with talking to another human being.. Now sign-up you virgin FUCK! ' },
-        { image: stepsImage, title: 'Daily steps', description: 'Our algorithm breaks your goal into small bite sized tasks. Based on your preferances you will be assigned simple tasks each day that will take you to your goal' },
+        { image: stepsImage, title: 'Daily steps and reminders', description: 'To keep you engaged in your new activity each day, to maximize the effectiveness.' },
         { image: cooperateImage, title: 'Cooperate', description: 'You can go on an entierly solo learning journey. Or you can do so as a group. Where you can simply keep eachother accountable. Or you can work together towards a common goal.' },
         { image: trackImage, title: 'Track your progress', description: 'All progress is being recorded so our algorithm can decide if things are too easy/hard and adjust the difficulty of your daily tasks based on that. Also, you get some shiny graphs!!' },
         { image: testingImage, title: 'Discover the power of AI', description: 'Along this journey, you can laverage the power of AI in each step of the way. And if you are not happy with the results, you can always modify your plans accordingly. We all know that this technology is not perfect(yet). ' },
@@ -43,7 +44,7 @@ const LandingPage = () => { //Could break this out into a header component ofc
 
     return (
         <div className='landing-page'>
-            <Header className="sticky" /> 
+            <Header className="sticky" />
             <div className="hero">
                 <div className='hero-left'>
                     <div className="hero-content-left">
@@ -54,10 +55,10 @@ const LandingPage = () => { //Could break this out into a header component ofc
                             (Some social proof here)
                             <div className='hero-get-started-actions'>
                                 <button className="hero-button" onClick={openRegisterModal}> Get Started NOW its free </button>
-                                <RegisterModal isOpen={showRegisterModal} onClose={closeRegisterModal} />
+                                <RegisterModal isOpen={showRegisterModal} onRequestClose={closeRegisterModal} />
                             </div>
                             <p>Already have an account? <a className="hero-login-link" onClick={openLoginModal}>Login</a></p>
-                            <LoginModal isOpen={showLoginModal} onClose={closeLoginModal} />
+                            <LoginModal isOpen={showLoginModal} onRequestClose={closeLoginModal}/>
                         </div>
                     </div>
                     <p style={{ fontSize: '0.8em', margin: '10px' }}>
@@ -80,14 +81,14 @@ const LandingPage = () => { //Could break this out into a header component ofc
 
             <div className='qoute-div'>
                 <h1 className='ins-quote first-quote'>
-                    <span className='quote-mark'>"</span>Forge a strong enough habit, and you are half way there already.<span className='quote-mark'>"</span>
+                    <span className='quote-mark'>"</span>Forge a strong enough habit, and you are halfway there already.<span className='quote-mark'>"</span>
                 </h1>
             </div>
 
             <div className="success-case">
                 <div className="success-case-section">
                     <div className="success-case-image">
-                        <img className="image1" src="src\assets\solo-success-r.jpg" alt="Success Case" />
+                        <img className="image1" src="src\assets\Overwhelmed_2.jpg" alt="Success Case" />
                     </div>
                     <div className="success-case-text">
                         <h2>Success Story</h2>
@@ -104,6 +105,15 @@ const LandingPage = () => { //Could break this out into a header component ofc
                         <img className="image2" src="src\assets\team-success-r.jpg" alt="Success Case" />
                     </div>
                 </div>
+                <div className="success-case-section">
+                    <div className="success-case-image">
+                        <img className="image1" src="src\assets\solo-success-r.jpg" alt="Success Case" />
+                    </div>
+                    <div className="success-case-text">
+                        <h2>New Level</h2>
+                        <p>Here is some text for the new level...</p>
+                    </div>
+                </div>
             </div>
             <div className='qoute-div'>
                 <h1 className='ins-quote second-quote'>
@@ -111,8 +121,8 @@ const LandingPage = () => { //Could break this out into a header component ofc
                 </h1>
             </div>
             <div className="testimonials" style={{ width: '100%' }}>
-                <div className="carousel" style={{ width: '100%', height: '300px', backgroundColor: 'white', borderRadius:'20px' }}>
-                    <h1> !!!Placeholder -- testamonials!!! </h1> 
+                <div className="carousel" style={{ width: '100%', height: '300px', backgroundColor: 'white', borderRadius: '20px' }}>
+                    <h1> !!!Placeholder -- testamonials!!! </h1>
                 </div>
             </div>
             <div className='qoute-div'>

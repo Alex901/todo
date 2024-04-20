@@ -20,19 +20,22 @@ const LoginModal = ({ isOpen, onRequestClose }) => {
 
     useEffect(() => {
         const handleOverlayClick = (event) => {
-            if (event.target.className === 'modal-overlay') {
-                onRequestClose();
+            onRequestClose();
+        };
+    
+        const overlayElement = document.querySelector('.modal-overlay');
+    
+        if (isOpen && overlayElement) {
+            overlayElement.addEventListener('click', handleOverlayClick);
+        }
+    
+        return () => {
+            if (overlayElement) {
+                overlayElement.removeEventListener('click', handleOverlayClick);
             }
         };
-
-        if (isOpen) {
-            document.addEventListener('click', handleOverlayClick);
-        }
-
-        return () => {
-            document.removeEventListener('click', handleOverlayClick);
-        };
     }, [isOpen, onRequestClose]);
+
 
     const handleLogin = (event) => {
         let isError = false;

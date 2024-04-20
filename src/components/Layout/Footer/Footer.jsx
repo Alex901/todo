@@ -8,10 +8,27 @@ import { mdiTwitter } from '@mdi/js';
 import { mdiLinkedin } from '@mdi/js';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useTheme } from '@mui/material/styles';
+import { styled } from '@mui/system';
 
+    
+const CustomTextField = styled(TextField)({
+    '& .MuiOutlinedInput-root': {
+      '& fieldset': {
+        borderColor: 'white',
+      },
+      '&:hover fieldset': {
+        borderColor: 'white',
+      },
+      '&.Mui-focused fieldset': {
+        borderColor: 'white',
+      },
+    },
+  });
 
 const Footer = () => {
     const theme = useTheme();
+
+
 
 
     return (
@@ -46,7 +63,7 @@ const Footer = () => {
                 <div>
                     <h3>Tell us about your goal</h3>
                     <form className='footer-form' >
-                        <TextField
+                        <CustomTextField
                             label="Tell us about your goal, and we will tell you if we can help you achieve it."
                             variant="outlined"
                             size="small"
@@ -57,7 +74,7 @@ const Footer = () => {
                             inputProps={{ style: { color: theme.palette.white.main } }}
                             InputLabelProps={{ style: { color: theme.palette.secondary.main } }}
                         />
-                        <TextField
+                        <CustomTextField
                             label="Email"
                             variant="outlined"
                             size="small"
