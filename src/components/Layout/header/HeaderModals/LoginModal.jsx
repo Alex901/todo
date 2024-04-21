@@ -16,7 +16,7 @@ const LoginModal = ({ isOpen, onRequestClose }) => {
     const [userNameError, setUserNameError] = React.useState("");
     const [passwordError, setPasswordError] = React.useState("");
     const { login } = useUserContext();
-    
+
 
     useEffect(() => {
         const handleOverlayClick = (event) => {
@@ -24,13 +24,13 @@ const LoginModal = ({ isOpen, onRequestClose }) => {
                 onRequestClose();
             }
         };
-    
+
         const overlayElement = document.querySelector('.modal-overlay');
-    
+
         if (isOpen && overlayElement) {
             overlayElement.addEventListener('click', handleOverlayClick);
         }
-    
+
         return () => {
             if (overlayElement) {
                 overlayElement.removeEventListener('click', handleOverlayClick);
@@ -46,8 +46,8 @@ const LoginModal = ({ isOpen, onRequestClose }) => {
         if (!username.trim()) {
             setUserNameError("Username cannot be empty");
             isError = true;
-        } 
-        
+        }
+
         if (!password.trim()) {
             setPasswordError("Password cannot be empty");
             isError = true;
@@ -58,7 +58,7 @@ const LoginModal = ({ isOpen, onRequestClose }) => {
         }
 
         login(userData);
-        toast.success("Login successful");
+
         setUsername("");
         setPassword("");
         onRequestClose();
@@ -84,7 +84,7 @@ const LoginModal = ({ isOpen, onRequestClose }) => {
                     className="modal-input"
                     autoFocus
                 />
-                    {userNameError && <p className='error'>{userNameError}</p>}
+                {userNameError && <p className='error'>{userNameError}</p>}
                 <TextField
                     id="password"
                     label="Password"
@@ -105,7 +105,7 @@ const LoginModal = ({ isOpen, onRequestClose }) => {
                             </InputAdornment>
                         )
                     }}
-                    
+
                 />
                 {passwordError && <p className='error'>{passwordError}</p>}
                 <button className='modal-button'>Login</button>

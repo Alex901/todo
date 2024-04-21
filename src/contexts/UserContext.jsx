@@ -7,13 +7,13 @@ let BASE_URL;
 
 if (process.env.NODE_ENV === 'test') {
     import('../../config').then((config) => {
-      BASE_URL = config.default;
+        BASE_URL = config.default;
     });
-  } else {
+} else {
     import('../../config.vite').then((config) => {
-      BASE_URL = config.default;
+        BASE_URL = config.default;
     });
-  }
+}
 
 const UserContext = createContext();
 
@@ -23,27 +23,25 @@ const UserProvider = ({ children }) => {
     const [loggedInUser, setLoggedInUser] = useState(null);
     const [userList, setUserList] = useState(null); //For autocomplete in GroupModal
 
-    useEffect(() => {
-        checkLogin();
-    }, []);
+
 
     useEffect(() => {
         console.log("User logged in, fetching users");
-      
+        console.log("loggedInUser: ", loggedInUser);
         // IIFE for async function inside useEffect
         (async () => {
-          try {
-            await fetchUsers();
-          } catch (error) {
-            console.error("Failed to fetch users:", error);
-          }
+            try {
+                await fetchUsers();
+            } catch (error) {
+                console.error("Failed to fetch users:", error);
+            }
         })();
-      }, [loggedInUser]);
+    }, [loggedInUser]);
 
 
 
     const fetchUsers = async () => {
-        if(loggedInUser === null) return;
+        if (loggedInUser === null) return;
         try {
             const response = await axios.get(`${BASE_URL}/users/getall`, {
                 params: {
@@ -59,9 +57,19 @@ const UserProvider = ({ children }) => {
     }
 
     const checkLogin = async () => {
+        console.log("Checking login start");
+        let BASE_URL;
+        if (process.env.NODE_ENV === 'test') {
+            const config = await import('../../config');
+            BASE_URL = config.default;
+        } else {
+            const config = await import('../../config.vite');
+            BASE_URL = config.default;
+        }
         try {
             const response = await axios.get(`${BASE_URL}/auth/checkLogin`, { withCredentials: true });
             if (response.data.valid) {
+                console.log("User is logged in", response.data.user)
                 setLoggedInUser(response.data.user);
                 setIsLoggedIn(true);
             }

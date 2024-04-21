@@ -23,6 +23,7 @@ import Button from '@mui/material/Button';
 import { Select, MenuItem, ListItemText, FormControl, InputLabel, Typography, IconButton } from '@mui/material';
 import GroupModal from './components/Todo/TodoModal/GroupModal/GroupModal'
 import LandingPage from './pages/LandingPage/LandingPage'
+import { MagnifyingGlass } from "react-loader-spinner";
 
 
 import 'material-design-lite/dist/material.min.css';
@@ -44,16 +45,26 @@ function App() {
   const [isGroupModalOpen, setIsGroupModalOpen] = useState(false);
   const [showHeader, setShowHeader] = useState(false);
   const headerRef = useRef(null);
+  const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    checkLogin();
+    const fetchLoginStatus = async () => {
+      setIsLoading(true);
+      await checkLogin();
+      setIsLoading(false);
+    };
+
+    fetchLoginStatus();
   }, []);
 
+  if (isLoading) {
+    return (
+    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+      <MagnifyingGlass />
+    </div>
+    );
+  }
 
-
-  useEffect(() => {
-    console.log("DEBUG: openExportListModal state has updated. Current state: ", isOpenListModalOpen);
-  }, [isOpenListModalOpen]);
 
   const switchTodoView = () => {
     setActiveView('todo');
@@ -176,7 +187,7 @@ function App() {
 
     <div className='app'>
       <div>
-      {isLoggedIn && <Header />}
+        {isLoggedIn && <Header />}
       </div>
       <>
         <CookieConsent />
@@ -379,7 +390,7 @@ function App() {
           </Card>
         </div>
       )}
-      {!isLoggedIn && <LandingPage />}
+      {!isLoggedIn && !loggedInUser && <LandingPage />}
     </div>
   )
 }
