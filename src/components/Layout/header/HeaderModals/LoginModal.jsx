@@ -20,7 +20,9 @@ const LoginModal = ({ isOpen, onRequestClose }) => {
 
     useEffect(() => {
         const handleOverlayClick = (event) => {
-            onRequestClose();
+            if (event.target === overlayElement) {
+                onRequestClose();
+            }
         };
     
         const overlayElement = document.querySelector('.modal-overlay');
