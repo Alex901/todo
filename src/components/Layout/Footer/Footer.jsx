@@ -10,20 +10,20 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useTheme } from '@mui/material/styles';
 import { styled } from '@mui/system';
 
-    
+
 const CustomTextField = styled(TextField)({
     '& .MuiOutlinedInput-root': {
-      '& fieldset': {
-        borderColor: 'white',
-      },
-      '&:hover fieldset': {
-        borderColor: 'white',
-      },
-      '&.Mui-focused fieldset': {
-        borderColor: 'white',
-      },
+        '& fieldset': {
+            borderColor: 'white',
+        },
+        '&:hover fieldset': {
+            borderColor: 'white',
+        },
+        '&.Mui-focused fieldset': {
+            borderColor: 'white',
+        },
     },
-  });
+});
 
 const Footer = () => {
     const theme = useTheme();
@@ -33,38 +33,39 @@ const Footer = () => {
 
     return (
         <footer className="footer-main" style={{ padding: '20px' }}>
-            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '20px', gap: '30px' }}>
-                <Icon path={mdiFacebook} size={1.7} />
-                <Icon path={mdiGit} size={1.7} />
-                <Icon path={mdiTwitter} size={1.7} />
-                <Icon path={mdiLinkedin} size={1.7} />
+            <div style={{ display: 'flex', justifyContent: 'center', marginBottom: '15px', gap: '25px' }}>
+                <Icon className="social-icon" path={mdiFacebook} size={1.7} />
+                <Icon className="social-icon" path={mdiGit} size={1.7} />
+                <Icon className="social-icon" path={mdiTwitter} size={1.7} />
+                <Icon className="social-icon" path={mdiLinkedin} size={1.7} />
             </div>
             <hr style={{ width: '80%', margin: '0 auto' }}></hr>
-            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                <div>
-                    <h3>Contact</h3>
+            <div style={{ display: 'flex', justifyContent: 'space-evenly', alignItems: 'center' }}>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', height: '280px' }}>
+                    <h5 className="category">Contact</h5>
                     <p>123 Street</p>
                     <p>City, State, Zip</p>
                     <p>Email: info@website.com</p>
                 </div>
-                <div>
-                    <h3>Site</h3>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', height: '280px' }}>
+                    <h5 className="category">Navigation</h5>
                     <p>About</p>
                     <p>Our story</p>
+                    <p>Blogg </p>
                     <p>Login</p>
                     <p>Register</p>
                 </div>
-                <div>
-                    <h3>Resources</h3>
-                    <p>Blog</p>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', height: '280px' }}>
+                    <h5 className="category">Resources</h5>
                     <p>Downloads</p>
-                    <p>Tutorials</p>
+                    <p> pre-made guides</p>
+                    <p>Support</p>
                 </div>
                 <div>
-                    <h3>Tell us about your goal</h3>
+                    <h4>Learn more about us</h4>
                     <form className='footer-form' >
                         <CustomTextField
-                            label="Tell us about your goal, and we will tell you if we can help you achieve it."
+                            label="What is the habbit missing in your life?"
                             variant="outlined"
                             size="small"
                             multiline

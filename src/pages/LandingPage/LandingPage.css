@@ -231,7 +231,7 @@
 .success-case {
   display: flex;
   flex-direction: column;
-  background: linear-gradient(to bottom, rgba(66, 172, 198, 0.7) 33%, rgba(47, 111, 184, 0.7) 66%, rgba(30, 50, 120, 0.7) 100%);
+  background: linear-gradient(to bottom, rgba(66, 172, 198, 0.7) 50%, rgba(47, 111, 184, 0.3) 66%, rgba(30, 50, 120, 0.7) 100%);
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.6), 0 6px 6px rgba(0, 0, 0, 0.23);
   border-radius: 20px;
   width: auto;
