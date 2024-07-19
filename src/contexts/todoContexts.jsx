@@ -53,16 +53,6 @@ const TodoProvider = ({ children }) => {
       .map(user => user.username)
     : [];
 
-  if (loggedInUser && userGroupList) {
-    console.log("userList: ", userList);
-    console.log("groupMembers: ", groupMembers);
-    console.log("groupMemberNames: ", groupMemberNames);
-    console.log("groupLists: ", groupLists);
-  }
-
-  if (loggedInUser && userGroupList) {
-    console.log("userGroupList: ", userGroupList);
-  }
 
   function isMobileDevice() {
     return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
@@ -83,11 +73,16 @@ const TodoProvider = ({ children }) => {
 
 
   const fetchTodoList = async () => {
-
+    console.log("DEBUG: f groupLists: ", groupLists)
+    console.log("DEBUG: f groupMemberNames: ", groupMemberNames)
 
     try {
       const url = isMobileDevice() ? `${BASE_URL}/api/todos/mobile` : `${BASE_URL}/api/todos`;
       const response = await axios.get(url, {
+        params: {
+          groupMemberNames: groupMemberNames,
+          groupLists: groupLists
+        },
         withCredentials: !isMobileDevice(),
         headers: isMobileDevice() && loggedInUser ? { 'User': loggedInUser.username } : {},
       });

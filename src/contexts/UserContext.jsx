@@ -99,26 +99,31 @@ const UserProvider = ({ children }) => {
                     axios.get(`${BASE_URL}/users/${userData.username}`, { withCredentials: true })
                         .then(userResponse => {
                             if (userResponse.status === 200) {
-                                //här ska de vara
+                                toast.success("Login successful");
                                 setLoggedInUser(userResponse.data);
                                 setIsLoggedIn(true);
 
                             } else {
+
                                 console.log("could not load user data, login terminated");
                             }
                         })
                         .catch(error => {
                             console.error('Error loading user data', error);
+
                         });
                 } else if (response.status === 401) {
                     console.log("User not found");
+
                 } else {
                     console.log("Internal server error");
+
 
                 }
             })
             .catch(error => {
                 console.error('Error logging in', error);
+
             });
     };
 

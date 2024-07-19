@@ -62,7 +62,7 @@ const LandingPage = () => { //Could break this out into a header component ofc
                         </div>
                     </div>
                     <p style={{ fontSize: '0.8em', margin: '10px' }}>
-                        (PSST! Your data is safe, the database is fully encrypted and we will not share any data with any third parties)
+                        (PSST! Your data is safe, the database is fully encrypted and we will not share any data with third parties)
                     </p>
                 </div>
 
