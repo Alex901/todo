@@ -73,7 +73,7 @@ const TodoDrawer = () => {
                             <div className="logo-title" style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', margin:'auto', gap: '5px' }}>
                                 <img src={logo} alt="Logo" style={{ width: '100%', maxWidth: '5%', minWidth: '30px', position: 'relative', top: '-6px' }} />
                                 <Typography variant="h5" component="div" style={{  }}>
-                                    TaskForge
+                                    HabitForge
                                 </Typography>
                             </div>
                         </div>

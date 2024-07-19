@@ -78,7 +78,7 @@ const Header = () => {
           {/* Left section */}
           <div style={{ display: 'flex', alignItems: 'center' }}>
             <img src={logo} alt="Logo" style={{ marginRight: '12px', width: '5%', position: 'relative', top: '-3px' }} />
-            <span className="mdl-layout-title" style={{ fontSize: '32px', color: "white" }}>TaskForge</span>
+            <span className="mdl-layout-title" style={{ fontSize: '32px', color: "white" }}>HabitForge</span>
 
           </div>
 

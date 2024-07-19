@@ -14,7 +14,7 @@ if (process.env.NODE_ENV === 'test') {
   });
 }
 
-// Define functions
+// TODO: Get rid of this mess
 const TodoContext = createContext({
   todoList: [],
   addTodo: () => { },
@@ -45,6 +45,8 @@ const TodoProvider = ({ children }) => {
   const [dataFetched, setDataFetched] = useState(false);
   const { loggedInUser, userList } = useUserContext(); //Logged in username&&list
   const { userGroupList } = useGroupContext();
+  //TODO: This is just silly and should be fixed
+  if (loggedInUser) { //TODO: this is a hotfix, remember to fix this sillyness
   const groupMembers = userGroupList.flatMap(group => group.members.map(member => member.member_id));
   const groupLists = userGroupList.flatMap(group => group.groupLists.map(list => list.name));
   const groupMemberNames = userList
@@ -52,6 +54,7 @@ const TodoProvider = ({ children }) => {
       .filter(user => groupMembers.includes(user._id) && user._id !== loggedInUser._id)
       .map(user => user.username)
     : [];
+  }
 
 
   function isMobileDevice() {
@@ -69,12 +72,16 @@ const TodoProvider = ({ children }) => {
 
   };
 
-  //API functions
+  //API interactions
 
 
   const fetchTodoList = async () => {
     console.log("DEBUG: f groupLists: ", groupLists)
     console.log("DEBUG: f groupMemberNames: ", groupMemberNames)
+
+    if(!loggedInUser) {
+      return;
+    }
 
     try {
       const url = isMobileDevice() ? `${BASE_URL}/api/todos/mobile` : `${BASE_URL}/api/todos`;

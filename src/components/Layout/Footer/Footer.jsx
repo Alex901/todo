@@ -97,7 +97,7 @@ const Footer = () => {
             </div>
 
             <div className='copyright-disc'>
-                <p style={{ textAlign: 'center' }}>© 2024 Taskforge. All Rights Reserved</p>
+                <p style={{ textAlign: 'center' }}>© 2024 HabitForge. All Rights Reserved</p>
             </div>
         </footer>
     );
