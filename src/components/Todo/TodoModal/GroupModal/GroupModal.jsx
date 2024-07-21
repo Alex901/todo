@@ -107,14 +107,14 @@ const GroupModal = ({ isOpen, onClose }) => {
         console.log('Add member');
     };
 
-    const handleEditEntry = (event) => {
+    const handleEditGroup = (event) => {
         event.stopPropagation();
-        console.log('Edit entry');
+        console.log('Edit group');
     };
 
-    const handleDeleteEntry = (event) => {
+    const handleDeleteGroup = (event) => {
         event.stopPropagation();
-        console.log('Delete entry');
+        console.log('Delete group');
     };
 
     const handleLeaveGroup = (event) => {
@@ -185,11 +185,11 @@ const GroupModal = ({ isOpen, onClose }) => {
                                                     {loggedInUser._id === group.owner ? (
                                                         <>
                                                             <Icon className="group-icon-button add-member" path={mdiPlusCircle} size={1.2} onClick={(event) => handleAddMember(event)} style={{ cursor: 'pointer' }} />
-                                                            <Icon className="group-icon-button edit-group" path={mdiPencilCircle} size={1.2} onClick={(event) => handleAddMember(event)} style={{ cursor: 'pointer' }} />
-                                                            <Icon className="group-icon-button delete-group" path={mdiDeleteCircle} size={1.2} onClick={(event) => handleAddMember(event)} style={{ cursor: 'pointer' }} />
+                                                            <Icon className="group-icon-button edit-group" path={mdiPencilCircle} size={1.2} onClick={(event) => handleEditGroup(event)} style={{ cursor: 'pointer' }} />
+                                                            <Icon className="group-icon-button delete-group" path={mdiDeleteCircle} size={1.2} onClick={(event) => handleDeleteGroup(event)} style={{ cursor: 'pointer' }} />
                                                         </>
                                                     ) : (
-                                                        <Icon className="group-icon-button leave-group" path={mdiArrowLeftBoldCircle} size={1.2} onClick={(event) => handleAddMember(event)} style={{ cursor: 'pointer' }} />
+                                                        <Icon className="group-icon-button leave-group" path={mdiArrowLeftBoldCircle} size={1.2} onClick={(event) => handleLeaveGroup(event)} style={{ cursor: 'pointer' }} />
                                                     )}
                                                 </div>
 
