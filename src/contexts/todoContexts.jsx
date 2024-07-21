@@ -46,7 +46,7 @@ const TodoProvider = ({ children }) => {
   const { loggedInUser, userList } = useUserContext(); //Logged in username&&list
   const { userGroupList } = useGroupContext();
   //TODO: This is just silly and should be fixed
-  if (loggedInUser) { //TODO: this is a hotfix, remember to fix this sillyness
+  //TODO: this is a hotfix, remember to fix this sillyness
   const groupMembers = userGroupList.flatMap(group => group.members.map(member => member.member_id));
   const groupLists = userGroupList.flatMap(group => group.groupLists.map(list => list.name));
   const groupMemberNames = userList
@@ -54,7 +54,7 @@ const TodoProvider = ({ children }) => {
       .filter(user => groupMembers.includes(user._id) && user._id !== loggedInUser._id)
       .map(user => user.username)
     : [];
-  }
+  
 
 
   function isMobileDevice() {
@@ -86,10 +86,6 @@ const TodoProvider = ({ children }) => {
     try {
       const url = isMobileDevice() ? `${BASE_URL}/api/todos/mobile` : `${BASE_URL}/api/todos`;
       const response = await axios.get(url, {
-        params: {
-          groupMemberNames: groupMemberNames,
-          groupLists: groupLists
-        },
         withCredentials: !isMobileDevice(),
         headers: isMobileDevice() && loggedInUser ? { 'User': loggedInUser.username } : {},
       });

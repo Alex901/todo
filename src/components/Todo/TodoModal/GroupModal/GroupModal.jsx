@@ -96,25 +96,29 @@ const GroupModal = ({ isOpen, onClose }) => {
         setGroupData(initialGroupData); //reset the form
     };
     //TODO: I'm not happy about this one. Change it so i fetch moderator lists in the furure
-    const isUserModerator = (loggedInUser, group) => { 
+    const isUserModerator = (loggedInUser, group) => {
         // Assuming group.members is an array of objects with properties 'member_id' and 'role'
         const member = group.members.find(member => member.member_id === loggedInUser._id);
         return member && member.role === 'moderator';
     };
 
-    const handleAddMember = () => {
+    const handleAddMember = (event) => {
+        event.stopPropagation();
         console.log('Add member');
     };
 
-    const handleEditEntry = () => {
+    const handleEditEntry = (event) => {
+        event.stopPropagation();
         console.log('Edit entry');
     };
 
-    const handleDeleteEntry = () => {
+    const handleDeleteEntry = (event) => {
+        event.stopPropagation();
         console.log('Delete entry');
     };
 
-    const handleLeaveGroup = () => {
+    const handleLeaveGroup = (event) => {
+        event.stopPropagation();
         console.log('Leave group');
     };
 
@@ -180,12 +184,12 @@ const GroupModal = ({ isOpen, onClose }) => {
                                                 <div className='group-summary-actions' style={{ width: '33%', display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly' }}>
                                                     {loggedInUser._id === group.owner ? (
                                                         <>
-                                                            <Icon className="group-icon-button add-member" path={mdiPlusCircle} size={1.2} onClick={handleAddMember} style={{ cursor: 'pointer' }} />
-                                                            <Icon className="group-icon-button edit-group" path={mdiPencilCircle} size={1.2} onClick={handleEditEntry} style={{ cursor: 'pointer' }} />
-                                                            <Icon className="group-icon-button delete-group" path={mdiDeleteCircle} size={1.2} onClick={handleDeleteEntry} style={{ cursor: 'pointer' }} />
+                                                            <Icon className="group-icon-button add-member" path={mdiPlusCircle} size={1.2} onClick={(event) => handleAddMember(event)} style={{ cursor: 'pointer' }} />
+                                                            <Icon className="group-icon-button edit-group" path={mdiPencilCircle} size={1.2} onClick={(event) => handleAddMember(event)} style={{ cursor: 'pointer' }} />
+                                                            <Icon className="group-icon-button delete-group" path={mdiDeleteCircle} size={1.2} onClick={(event) => handleAddMember(event)} style={{ cursor: 'pointer' }} />
                                                         </>
                                                     ) : (
-                                                        <Icon className="group-icon-button leave-group" path={mdiArrowLeftBoldCircle} size={1.2} onClick={handleLeaveGroup} style={{ cursor: 'pointer' }} />
+                                                        <Icon className="group-icon-button leave-group" path={mdiArrowLeftBoldCircle} size={1.2} onClick={(event) => handleAddMember(event)} style={{ cursor: 'pointer' }} />
                                                     )}
                                                 </div>
 
