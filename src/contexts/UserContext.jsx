@@ -177,12 +177,7 @@ const UserProvider = ({ children }) => {
             const response = await axios.patch(`${BASE_URL}/users/addlist/${_id}`, { listName });
             if (response.status === 200) {
                 console.log("List added: ", response.data);
-                setLoggedInUser({
-                    ...loggedInUser,
-                    listNames: response.data.listNames,
-                    myLists: response.data.myLists,
-                    activeList: listName
-                });
+                checkLogin();
                 console.log("loggedInUser: ", loggedInUser);
                 toast.success("List added");
             } else if (response.status === 404) {
@@ -205,12 +200,8 @@ const UserProvider = ({ children }) => {
             const _id = loggedInUser._id;
             const response = await axios.delete(`${BASE_URL}/users/deletelist/${_id}`, { data: { listName } });
             if (response.status === 200) {
-                console.log("List deleted: ", listName);
-                setLoggedInUser({
-                    ...loggedInUser,
-                    listNames: loggedInUser.listNames.filter((item) => item.name !== listName),
-                    activeList: loggedInUser.listNames[0].name
-                }); //This should always be 'all'
+                console.log("List , response: ", response.data);
+                checkLogin();
             } else if (response.status === 404) {
                 console.log("User not found");
             } else {
