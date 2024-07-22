@@ -210,15 +210,16 @@ function App() {
                       value={loggedInUser.activeList || ""}
                       onChange={handleListChange}
                     >
-                      {loggedInUser.listNames.map(listName => {
-                        const todoCount = getListTodoCount(listName.name);
-                        const doingCount = getListDoingCount(listName.name);
-                        const doneCount = getListDoneCount(listName.name);
+                      
+                      {loggedInUser.myLists.map(list => {
+                        const todoCount = getListTodoCount(list.listName);
+                        const doingCount = getListDoingCount(list.listName);
+                        const doneCount = getListDoneCount(list.listName);
 
                         return (
-                          <MenuItem key={listName.name} value={listName.name}>
+                          <MenuItem key={list.listName} value={list.listName}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-                              <div>{listName.name.charAt(0).toUpperCase() + listName.name.slice(1)}</div>
+                              <div>{list.listName.charAt(0).toUpperCase() + list.listName.slice(1)}</div>
                               <div>{`(${todoCount},${doingCount},${doneCount})`}</div>
                             </div>
                           </MenuItem>

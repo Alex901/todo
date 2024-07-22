@@ -39,7 +39,7 @@ const UserProvider = ({ children }) => {
     }, [loggedInUser]);
 
 
-
+    //TODO: this entire shotshow can be removed eventually
     const fetchUsers = async () => {
         if (loggedInUser === null) return;
         try {
