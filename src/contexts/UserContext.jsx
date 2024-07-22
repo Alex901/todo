@@ -3,6 +3,7 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import axios from "axios";
 import { useTodoContext } from "./todoContexts";
 import { toast } from "react-toastify";
+import { mdiYahoo } from "@mdi/js";
 let BASE_URL;
 
 if (process.env.NODE_ENV === 'test') {
@@ -179,6 +180,7 @@ const UserProvider = ({ children }) => {
                 setLoggedInUser({
                     ...loggedInUser,
                     listNames: response.data.listNames,
+                    myLists: response.data.myLists,
                     activeList: listName
                 });
                 console.log("loggedInUser: ", loggedInUser);
@@ -194,7 +196,7 @@ const UserProvider = ({ children }) => {
     }
 
     const deleteList = async (listName) => {
-        console.log("delete list with name: ", listName);
+       // console.log("delete list with name: ", listName);
         try {
             if (!isLoggedIn) {
                 console.log("User not logged in");
