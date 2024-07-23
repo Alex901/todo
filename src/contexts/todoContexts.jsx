@@ -117,8 +117,19 @@ const TodoProvider = ({ children }) => {
   const addTodo = async (newTaskData) => {
     // console.log("addTodo: newTaskData", newTaskData);
     try {
+      
       const newId = parseInt(Date.now().toString(36) + Math.random().toString(36).substr(2), 36); //but why? xD
-
+      const allListId = loggedInUser.myLists.find(list => list.listName === 'all')._id;
+      
+      let inListNewTmp = [allListId];
+      
+      if(loggedInUser.activeList !== 'all') {
+        const activeListId = loggedInUser.myLists.find(list => list.listName === loggedInUser.activeList)._id;
+        if(activeListId) {
+          inListNewTmp.push(activeListId);
+        }
+      }
+      
       //TODO: some typesafety here, also this is really dumb. Remake this at some point
       const newTodo = {
         id: newId,
@@ -139,9 +150,10 @@ const TodoProvider = ({ children }) => {
         dueDate: newTaskData.dueDate ? new Date(newTaskData.dueDate) : null, //TODO: remember to parse
         description: newTaskData.description || null,
         isUrgent: newTaskData.isUrgent || false, //And this one
-        inList: loggedInUser ? ['all'].concat(loggedInUser.activeList !== 'all' ? [loggedInUser.activeList] : []) : []
+        inList: loggedInUser ? ['all'].concat(loggedInUser.activeList !== 'all' ? [loggedInUser.activeList] : []) : [],
+        inListNew: inListNewTmp,
       };
-
+      console.log("DEBUG -- NewTodo", newTodo);
       // console.log("addTodo: newTodo", newTodo);
 
       const response = await axios.post(`${BASE_URL}/api/`, newTodo);
