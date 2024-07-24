@@ -162,7 +162,6 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
     const confrimeDelete = () => {
         removeTodo(id);
         setIsConfirmDeleteModalOpen(false);
-        toast.error(`Your task has been deleted.`);
     }
 
     const cancelDelete = () => {

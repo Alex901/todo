@@ -323,7 +323,7 @@ function App() {
                       />
                     </div>
 
-                    {loggedInUser.listNames.find(list => list.name === loggedInUser.activeList).tags.length > 3 && (
+                    {loggedInUser.myLists.find(list => list.listName === loggedInUser.activeList).tags.length > 3 && (
                       <Chip
                         label={showAll ? 'Show fewer' : 'Show all'}
                         onClick={() => setShowAll(!showAll)}

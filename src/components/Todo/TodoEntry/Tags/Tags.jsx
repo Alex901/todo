@@ -22,8 +22,9 @@ Tags.propTypes = {
     tags: PropTypes.arrayOf(
         PropTypes.shape({
             label: PropTypes.string.isRequired,
-            color: PropTypes,
-            textColor: PropTypes
+            color: PropTypes.string.isRequired,
+            textColor: PropTypes.string.isRequired,
+            uses: PropTypes.number.isRequired,
         })
     ).isRequired,
 };

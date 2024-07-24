@@ -2,6 +2,7 @@ import React, { createContext, useContext, useState, useEffect } from 'react';
 import axios from 'axios';
 import { useUserContext } from './UserContext';
 import { useGroupContext } from './GroupContexts';
+import { toast } from "react-toastify";
 let BASE_URL;
 
 if (process.env.NODE_ENV === 'test') {
@@ -222,6 +223,7 @@ const TodoProvider = ({ children }) => {
       const response = await axios.delete(`${BASE_URL}/api/delete/${taskId}`);
       if (response.status === 200) {
         setTodoList(prevTodoList => prevTodoList.filter(todo => todo.id !== id));
+        toast.success(`Your task has been deleted.`);
       } else {
         console.error('Error deleting todo ', response.statusText);
       }

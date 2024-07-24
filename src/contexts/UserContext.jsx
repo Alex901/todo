@@ -282,8 +282,12 @@ const UserProvider = ({ children }) => {
                 return;
             }
             const _id = loggedInUser._id;
-            const activeList = loggedInUser.activeList;
-            const response = await axios.delete(`${BASE_URL}/users/deletetag/${_id}`, { data: { tagId, tag } });
+            const response = await axios.delete(`${BASE_URL}/users/deletetag/${_id}`, {
+                data: { tagId, tag },
+                validateStatus: function (status) {
+                    return (status >= 200 && status < 300) || status === 409; // Resolve only if status is in 2xx range or 409
+                }
+            });
             if (response.status === 200) {
                 console.log("Tag deleted: ", tagId);
                 setLoggedInUser(response.data);
@@ -291,7 +295,7 @@ const UserProvider = ({ children }) => {
             } else if (response.status === 404) {
                 console.log("User not found");
             } else if (response.status === 409) {
-                toast.warn(`Failed to delete tag -- tag is used in ${response.uses} places`);
+                toast.warn(`Failed to delete tag -- tag is used in ${response.data.uses} places`);
             } else {
                 console.log("Internal server error");
                 toast.error("Failed to delete tag -- internal server error");

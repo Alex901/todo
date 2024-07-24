@@ -17,6 +17,7 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
     const [selectedOption, setSelectedOption] = useState(null);
     const [hoveredStepId, setHoveredStepId] = useState(null);
     const [loading, setLoading] = useState(true);
+    console.log("DEBUG -- EditModal -> editData", editData);
 
     const options = [
         { value: 'VERY HIGH', label: 'VERY HIGH' },
@@ -45,20 +46,29 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
         difficulty: editData.difficulty,
         estimatedTime: editData.estimatedTime,
         inList: editData.inList,
+        inListNew: editData.inListNew,
         tags: editData.tags,
     });
 
+
+
     const selectedListValues = editData?.inList;
-    const optionsListNames = isLoggedIn && loggedInUser.listNames
-        ? loggedInUser.listNames
-            .filter(item => !taskData.inList.includes(item.name))
-            .map(item => ({ value: item.name, label: item.name }))
+    const optionsListNames = isLoggedIn && loggedInUser.myLists
+        ? loggedInUser.myLists
+            .filter(item => {
+                const inListNewNames = taskData.inListNew.map(listItem => listItem.listName);
+                return !inListNewNames.includes(item.listName);
+            })
+            .map(item => ({ value: item.listName, label: item.listName }))
         : [];
 
-    const includedListNames = isLoggedIn && loggedInUser.listNames
-        ? loggedInUser.listNames
-            .filter(item => taskData.inList.includes(item.name))
-            .map(item => ({ value: item.name, label: item.name }))
+    const includedListNames = isLoggedIn && loggedInUser.myLists
+        ? loggedInUser.myLists
+            .filter(item => {
+                const inListNames = taskData.inListNew.map(listItem => listItem.listName);
+                return inListNames.includes(item.listName);
+            })
+            .map(item => ({ value: item.listName, label: item.listName }))
         : [];
 
     const activeList = isLoggedIn && loggedInUser.listNames
@@ -178,14 +188,14 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
         const newList = event.target.value;
         setTaskData(prevEditData => ({
             ...prevEditData,
-            inList: [...prevEditData.inList, newList[event.target.value.length - 1]]
+            inList: [...prevEditData.inListNew, newList[event.target.value.length - 1]]
         }));
         console.log("Task data", taskData);
     };
 
     const handleRemoveFromList = (listName) => {
         if (listName === "all") {
-            setErrorMessage('You cannot remove this list');
+            setErrorMessage('You cannot remove entry from all lists this way');
             setTimeout(() => { setErrorMessage('') }, 5000);
             return;
         }
@@ -467,7 +477,7 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
                 </form>
             ) : (
                 <form className='edit-entry-form' onSubmit={handleSubmit}>
-                       <TextField
+                    <TextField
                         label='Task name'
                         name='task'
                         type='text'
