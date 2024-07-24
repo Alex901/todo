@@ -191,7 +191,7 @@ const UserProvider = ({ children }) => {
     }
 
     const deleteList = async (listName) => {
-       // console.log("delete list with name: ", listName);
+        // console.log("delete list with name: ", listName);
         try {
             if (!isLoggedIn) {
                 console.log("User not logged in");
@@ -272,8 +272,10 @@ const UserProvider = ({ children }) => {
         }
     }
 
-    const deleteTag = async (tagName) => {
-        console.log("delete tag with ", tagName);
+    const deleteTag = async (tagId, tag) => {
+        //Tag is in use, a) delete entries with the tag b) remove tag from entries
+
+        console.log("delete tag with ", tagId);
         try {
             if (!isLoggedIn) {
                 console.log("User not logged in");
@@ -281,13 +283,15 @@ const UserProvider = ({ children }) => {
             }
             const _id = loggedInUser._id;
             const activeList = loggedInUser.activeList;
-            const response = await axios.delete(`${BASE_URL}/users/deletetag/${_id}`, { data: { tagName, activeList } });
+            const response = await axios.delete(`${BASE_URL}/users/deletetag/${_id}`, { data: { tagId, tag } });
             if (response.status === 200) {
-                console.log("Tag deleted: ", tagName);
+                console.log("Tag deleted: ", tagId);
                 setLoggedInUser(response.data);
                 toast.success("Tag deleted");
             } else if (response.status === 404) {
                 console.log("User not found");
+            } else if (response.status === 409) {
+                toast.warn(`Failed to delete tag -- tag is used in ${response.uses} places`);
             } else {
                 console.log("Internal server error");
                 toast.error("Failed to delete tag -- internal server error");

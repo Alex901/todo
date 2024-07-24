@@ -278,7 +278,7 @@ function App() {
                 <div className="tags-container">
                   <div className='tags' style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' }}>
 
-                    {loggedInUser.listNames.find(list => list.name === loggedInUser.activeList).tags.slice(0, showAll ? undefined : 3).map((tag, index) => {
+                    {loggedInUser.myLists.find(list => list.listName === loggedInUser.activeList).tags.slice(0, showAll ? undefined : 3).map((tag, index) => {
                       return (
                         <Chip
                           key={index}
@@ -288,7 +288,7 @@ function App() {
                             boxShadow: `0 3px 5px 2px rgba(255, 105, 135, .3)`,
                             color: tag.textColor,
                           }}
-                          onDelete={() => deleteTag(tag.label)}
+                          onDelete={() => deleteTag(tag._id, tag)}
                           sx={{
                             margin: '0.5em',
                             height: '2em',

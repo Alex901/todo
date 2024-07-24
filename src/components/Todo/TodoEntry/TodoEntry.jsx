@@ -41,6 +41,7 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
         isUrgent,
         tags,
         inList,
+        myLists,
         owner,
         priority,
         steps,

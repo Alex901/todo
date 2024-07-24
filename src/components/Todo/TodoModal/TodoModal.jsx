@@ -306,7 +306,7 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
                                     </div>
                                 )}
                             >
-                                {loggedInUser && loggedInUser.listNames && loggedInUser.listNames.filter(list => list.name === loggedInUser.activeList).map((list) => (
+                                {loggedInUser && loggedInUser.myLists && loggedInUser.myLists.filter(list => list.listName === loggedInUser.activeList).map((list) => (
                                     list.tags.map((tag) => (
                                         <MenuItem key={tag.label} value={tag}>
                                             <Chip

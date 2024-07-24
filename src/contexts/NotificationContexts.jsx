@@ -31,7 +31,7 @@ const NotificationProvider = ({ children }) => {
         // Then set up the interval to call it every 60 seconds
         const intervalId = setInterval(() => {
             getNotifications();
-        }, 60000000); // 60000 milliseconds = 60 seconds
+        }, 60000); // 60000 milliseconds = 60 seconds
     
         // Don't forget to clear the interval when the component unmounts
     
