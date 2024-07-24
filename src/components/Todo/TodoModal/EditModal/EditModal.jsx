@@ -50,8 +50,6 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
         tags: editData.tags,
     });
 
-
-
     const selectedListValues = editData?.inList;
     const optionsListNames = isLoggedIn && loggedInUser.myLists
         ? loggedInUser.myLists
@@ -71,9 +69,10 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
             .map(item => ({ value: item.listName, label: item.listName }))
         : [];
 
-    const activeList = isLoggedIn && loggedInUser.listNames
-        ? loggedInUser.listNames.find(list => list.name === loggedInUser.activeList)
+    const activeList = isLoggedIn && loggedInUser.myLists
+        ? loggedInUser.myLists.find(list => list.listName === loggedInUser.activeList)
         : null;
+    console.log("DEBUG -- EditModal -> activeList", activeList);
 
     const optionsTagNames = activeList && activeList.tags
         ? activeList.tags
@@ -169,42 +168,56 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
         }
     };
 
-    const handleAddToList = (event) => {
-        event.preventDefault();
-        if (selectedOption === null) {
-            setErrorMessage('You need to select a list');
-            setTimeout(() => { setErrorMessage('') }, 5000);
-            return;
-        }
-        setTaskData(prevData => ({
-            ...prevData,
-            inList: [...prevData.inList, selectedOption.value]
-        }));
-        setSelectedOption(null);
-    }
 
     const handleListChange = (event) => {
-        console.log("Selected option", event.target.value);
-        const newList = event.target.value;
-        setTaskData(prevEditData => ({
-            ...prevEditData,
-            inList: [...prevEditData.inListNew, newList[event.target.value.length - 1]]
-        }));
-        console.log("Task data", taskData);
+        console.log("Selected option:", event.target.value);
+        const selectedListName = event.target.value[0];
+        console.log("Selected list name:", selectedListName);
+        console.log("User's lists:", loggedInUser.myLists);
+        const selectedList = loggedInUser.myLists.find(list => list.listName === selectedListName);
+        console.log("Selected list:", selectedList);
+
+        if (selectedList) {
+            setTaskData(prevEditData => {
+                const updatedInListNew = [...prevEditData.inListNew, selectedList];
+                console.log("Updated inListNew:", updatedInListNew);
+                return {
+                    ...prevEditData,
+                    inListNew: updatedInListNew
+                };
+            });
+        } else {
+            console.error("List not found:", selectedListName);
+        }
+
+        console.log("Updated task data:", taskData);
     };
 
-    const handleRemoveFromList = (listName) => {
-        if (listName === "all") {
-            setErrorMessage('You cannot remove entry from all lists this way');
-            setTimeout(() => { setErrorMessage('') }, 5000);
+    const handleRemoveFromList = (listNameToRemove) => {
+        console.log("Attempting to remove list:", listNameToRemove);
+    
+        if (listNameToRemove === "all") {
+            console.error('You cannot remove entry from "all" lists this way');
+            setErrorMessage('You cannot remove entry from "all" lists this way');
+            setTimeout(() => { 
+                setErrorMessage(''); 
+                console.log("Error message cleared");
+            }, 5000);
             return;
         }
-        setTaskData(prevData => ({
-            ...prevData,
-            inList: prevData.inList.filter(name => name !== listName)
-        }));
+    
+        setTaskData(prevData => {
+            console.log("Previous task data:", prevData);
+            const updatedInListNew = prevData.inListNew.filter(listName => listName.listName !== listNameToRemove);
+            console.log("Updated inListNew after removal:", updatedInListNew);
+            return {
+                ...prevData,
+                inListNew: updatedInListNew
+            };
+        });
+    
+        console.log("Task data updated successfully");
     }
-
     const handleDeleteStep = (stepId) => {
         console.log("Delete step", stepId);
         setTaskData(prevState => ({
@@ -229,15 +242,6 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
     const handleTagChange = (tag) => {
         console.log("Selected tag", tag);
 
-        setTaskData(prevData => ({
-            ...prevData,
-            tags: [...prevData.tags, tag]
-        }));
-        console.log("Task data", taskData);
-    }
-
-    const handleAddChip = (tag) => {
-        console.log("Add chip", tag);
         setTaskData(prevData => ({
             ...prevData,
             tags: [...prevData.tags, tag]
