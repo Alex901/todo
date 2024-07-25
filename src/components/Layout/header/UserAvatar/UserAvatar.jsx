@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import './UserAvatar.css'; // Import the CSS file for styling
 import { useUserContext } from '../../../../contexts/UserContext';
 import { toast } from "react-toastify";
@@ -8,10 +8,29 @@ const UserAvatar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const { loggedInUser, logout, isLoggedIn } = useUserContext();
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
+  const dropdownRef = useRef(null);
 
   const toggleDropdown = () => {
     setIsDropdownOpen(prevState => !prevState);
   };
+
+  const handleDocumentClick = (event) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+      setIsDropdownOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    if (isDropdownOpen) {
+      document.addEventListener('click', handleDocumentClick);
+    } else {
+      document.removeEventListener('click', handleDocumentClick);
+    }
+
+    return () => {
+      document.removeEventListener('click', handleDocumentClick);
+    };
+  }, [isDropdownOpen]);
 
   const handleLogout = () => {
     logout();
@@ -34,7 +53,7 @@ const UserAvatar = () => {
         {/* Add your navigation links/icons here */}
       </nav>
 
-      <div className="user-info">
+      <div className="user-info" ref={dropdownRef}>
         <button className="avatar-button" onClick={toggleDropdown} id="dropdownAvatarNameButton">
           <img src={loggedInUser.profilePicture} className="avatar" style={{borderRadius: '50%'}} />
           {loggedInUser && <span className="username">{loggedInUser.username}</span>}
@@ -45,7 +64,7 @@ const UserAvatar = () => {
 
         <div className={`dropdown-menu ${isDropdownOpen ? 'open' : ''}`} id="dropdownAvatarName">
           <div className="user-details">
-            <div className="user-type"> {loggedInUser.role} </div>
+            <div className="user-role"> {loggedInUser.role} </div>
             <div className="user-somethingcool"> something cool </div>
           </div>
           <hr></hr>

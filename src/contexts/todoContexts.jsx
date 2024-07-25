@@ -88,7 +88,7 @@ const TodoProvider = ({ children }) => {
       const url = isMobileDevice() ? `${BASE_URL}/api/todos/mobile` : `${BASE_URL}/api/todos`;
       const response = await axios.get(url, {
         withCredentials: !isMobileDevice(),
-        headers: isMobileDevice() && loggedInUser ? { 'User': loggedInUser.username } : {},
+        headers: isMobileDevice() && loggedInUser ? { 'User': loggedInUser._id } : {},
       });
 
       let parsedData = response.data.map(todo => ({
@@ -103,7 +103,7 @@ const TodoProvider = ({ children }) => {
       if (loggedInUser) {
         console.log("DEBUG: ParsedData: ", parsedData)
         parsedData = parsedData.filter(todo =>
-          (todo.owner === loggedInUser.username) 
+          (todo.owner === loggedInUser._id) 
         );
       } else {
         parsedData = parsedData.filter(todo => todo.owner === null);
@@ -142,7 +142,7 @@ const TodoProvider = ({ children }) => {
         isStarted: false,
         estimatedTime: newTaskData.estimatedTime || null,
         started: null,
-        owner: loggedInUser ? loggedInUser.username : null, //TODO: _id 
+        owner: loggedInUser ? loggedInUser._id : null, 
         difficulty: newTaskData.difficulty || "",
         //  assignee: [...User],
         steps: newTaskData.steps || [],

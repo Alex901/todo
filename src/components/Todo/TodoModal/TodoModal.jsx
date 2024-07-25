@@ -100,7 +100,7 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
         }
 
         addTodo(newTaskData);
-        toast.info('Task successfully created');
+        toast.success('Task successfully created');
         onRequestClose();
         setErrorMessage('');
         setNewTaskData({ //Reset the form
