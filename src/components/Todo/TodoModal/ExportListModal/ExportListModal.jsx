@@ -16,7 +16,7 @@ const ExportListModal = ({ isOpen, onClose }) => {
     const [selectedList, setSelectedList] = React.useState(loggedInUser ? loggedInUser.activeList : '');
     const [customName, setCustomName] = React.useState('');
     const [selectedOptions, setSelectedOptions] = React.useState({
-        isDone: true,
+
         created: true,
         completed: true,
         dueDate: true,
@@ -24,6 +24,8 @@ const ExportListModal = ({ isOpen, onClose }) => {
         priority: false,
         duration: true,
         steps: true,
+        tags: true,
+        deadline: false, 
     });
 
     const handleOptionChange = (event) => {
@@ -206,9 +208,7 @@ const ExportListModal = ({ isOpen, onClose }) => {
                     </div>
                 </div>
 
-                <div className="export-format" style={{ display: 'flex', flexDirection: 'column', textAlign: 'left' }}>
-                    <h5>Format</h5>
-                </div>
+
 
                 <button className="export-button modal-button">Export</button>
             </form>
