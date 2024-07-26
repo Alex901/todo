@@ -79,7 +79,7 @@ function App() {
   }
 
   const handleListChange = (event) => {
-    console.log("selectedOption: ", event.target.value);
+    //console.log("selectedOption: ", event.target.value);
     if (event.target.value) {
       setLoggedInUser({ ...loggedInUser, activeList: event.target.value });
       setActiveList(event.target.value);

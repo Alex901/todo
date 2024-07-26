@@ -50,7 +50,7 @@ const NotificationProvider = ({ children }) => {
         const getNotifications = async () => {
             try {
                 const response = await axios.get(`${BASE_URL}/notifications/`, { withCredentials: true });
-                console.log("DEBUG: response: ", response);
+               // console.log("DEBUG: response: ", response);
                 setUserNotifications(response.data);
             } catch (error) {
                 console.error("Error fetching notifications: ", error);
@@ -82,7 +82,7 @@ const NotificationProvider = ({ children }) => {
         console.log("DEBUG: inviteToGroup: ", from, to, groupId);
         try {
             const response = await axios.post(`${BASE_URL}/notifications/groupinvite`, { from, to, groupId }, { withCredentials: true });
-            console.log("DEBUG: response: ", response);
+           // console.log("DEBUG: response: ", response);
             toast.success("Invite sent successfully");
         } catch (error) {
             console.error("Error sending invite: ", error);
@@ -117,7 +117,7 @@ const NotificationProvider = ({ children }) => {
 
         try {
             const response = await axios.delete(`${BASE_URL}/notifications/delete/${notificationId}`, { withCredentials: true });
-            console.log("DEBUG: response: ", response);
+          //  console.log("DEBUG: response: ", response);
             getNotifications();
             toast.success("Invite accepted");
         } catch (error) {
@@ -149,7 +149,7 @@ const NotificationProvider = ({ children }) => {
         //delete the notification and notify the sender at some point
         try {
             const response = await axios.delete(`${BASE_URL}/notifications/delete/${notificationId}`, { withCredentials: true });
-            console.log("DEBUG: response: ", response);
+           // console.log("DEBUG: response: ", response);
             getNotifications();
             toast.success("Invite declined");
         } catch (error) {

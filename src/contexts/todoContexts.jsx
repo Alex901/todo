@@ -46,17 +46,6 @@ const TodoProvider = ({ children }) => {
   const [dataFetched, setDataFetched] = useState(false);
   const { loggedInUser, userList } = useUserContext(); //Logged in username&&list
   const { userGroupList } = useGroupContext();
-  //TODO: This is just silly and should be fixed
-  //TODO: this is a hotfix, remember to fix this sillyness
-  const groupMembers = userGroupList.flatMap(group => group.members.map(member => member.member_id));
-  const groupLists = userGroupList.flatMap(group => group.groupLists.map(list => list.name));
-  const groupMemberNames = userList
-    ? userList
-      .filter(user => groupMembers.includes(user._id) && user._id !== loggedInUser._id)
-      .map(user => user.username)
-    : [];
-  
-
 
   function isMobileDevice() {
     return /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent);
@@ -77,8 +66,7 @@ const TodoProvider = ({ children }) => {
 
 
   const fetchTodoList = async () => {
-    console.log("DEBUG: f groupLists: ", groupLists)
-    console.log("DEBUG: f groupMemberNames: ", groupMemberNames)
+    console.log("DEBUG: Fetching todo list, checking group lists: ", userGroupList);
 
     if(!loggedInUser) {
       return;
@@ -99,15 +87,7 @@ const TodoProvider = ({ children }) => {
         dueDate: todo.dueDate ? new Date(todo.dueDate) : null
       }));
 
-      // Filter the parsedData array
-      if (loggedInUser) {
-        console.log("DEBUG: ParsedData: ", parsedData)
-        parsedData = parsedData.filter(todo =>
-          (todo.owner === loggedInUser._id) 
-        );
-      } else {
-        parsedData = parsedData.filter(todo => todo.owner === null);
-      }
+      console.log("\x1b[31mDEBUG\x1b[0m - parsedData.length", parsedData.length);
       setTodoList(parsedData);
 
     } catch (error) {

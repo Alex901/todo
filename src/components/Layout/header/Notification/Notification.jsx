@@ -12,7 +12,6 @@ const Notification = ({ notificationData, type, message, timestamp }) => {
     const lastWord = words.pop();
    
     const handleAcceptGroupInvite = () => {
-        console.log('Accepted');
         console.log(notificationData);
         acceptGroupInvite(notificationData._id, notificationData.group);
     }

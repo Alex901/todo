@@ -84,11 +84,12 @@ const GroupModal = ({ isOpen, onClose }) => {
         const users = groupData.users; //separate the users from the groupData
         console.log("DEBUG: users: ", users);
 
-        groupData.users = []; //this is a dumb wat of doing it, but it works
+        groupData.users = []; //this is a dumb way of doing it, but it works
 
-        groupData.owner = loggedInUser;
+        groupData.owner = loggedInUser._id;
         const groupId = await createGroup(groupData);
         if (users.length > 0) {
+            console.log("DEBUG: users GroupModal: createGroup: ", users);
             users.forEach(user => {
                 inviteToGroup(loggedInUser, user, groupId); //invite the user to the group
             });
@@ -173,12 +174,12 @@ const GroupModal = ({ isOpen, onClose }) => {
                                                 </div>
 
                                                 <div style={{ display: 'flex', alignItems: 'center' }}>
-                                                    <Icon path={mdiAccountGroupOutline} size={.8} style={{ marginRight: '8px' }} /> {/* Adjust size and margin as needed */}
+                                                    <Icon path={mdiAccountGroupOutline} size={.8} style={{ marginRight: '8px' }} /> 
                                                     <Typography>{group.members.length}</Typography>
                                                 </div>
                                                 <div style={{ display: 'flex', alignItems: 'center' }}>
-                                                    <Icon path={mdiFolderMultipleOutline} size={.8} style={{ marginRight: '8px' }} /> {/* Adjust size and margin as needed */}
-                                                    <Typography>{group.groupLists.length}</Typography>
+                                                    <Icon path={mdiFolderMultipleOutline} size={.8} style={{ marginRight: '8px' }} /> 
+                                                    <Typography>{group.groupListsModel.length}</Typography>
                                                 </div>
 
                                                 <div className='group-summary-actions' style={{ width: '33%', display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly' }}>

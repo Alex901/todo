@@ -27,10 +27,7 @@ const Header = () => {
 
 
   const handleClickNotification = (event) => {
-    console.log("Notification clicked");
     setAnchorEl(anchorEl ? null : event.currentTarget);
-    console.log(anchorEl);
-    console.log(open);
   };
 
   const open = Boolean(anchorEl);

@@ -25,13 +25,9 @@ const GroupProvider = ({ children }) => {
 
     useEffect(() => {
         if (loggedInUser) {
-            getLoggedInUserUserGroups();
+            getLoggedInUserGroups();
         }
     }, [loggedInUser]);
-
-    useEffect(() => {
-        console.log("DEBUG: userGroupList: ", userGroupList);
-    }, [userGroupList]);
 
     const createGroup = async (groupData) => { //TODO: Error handling
         console.log("DEBUG: groupData: ", groupData);
@@ -50,7 +46,7 @@ const GroupProvider = ({ children }) => {
         }
     }
 
-    const getLoggedInUserUserGroups = async () => {
+    const getLoggedInUserGroups = async () => {
         if (!loggedInUser) return;
 
         const userId = loggedInUser._id;
@@ -66,7 +62,7 @@ const GroupProvider = ({ children }) => {
     const addUserToGroup = async (groupId, user) => {
         try {
             const response = await axios.put(`${BASE_URL}/groups/addUser/${groupId}`, { user }, { withCredentials: true });
-            console.log("DEBUG: response: ", response);
+           // console.log("DEBUG: response: ", response);
             toast.success("User added to group");
         } catch (error) {
             toast.error("Error adding user to group");
