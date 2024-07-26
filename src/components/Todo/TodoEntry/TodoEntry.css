@@ -159,6 +159,10 @@
     gap: 8px;
 }
 
+.information-time > span {
+   font-size: 12px;
+}
+
 .information-container p {
     font-size: small;
 }

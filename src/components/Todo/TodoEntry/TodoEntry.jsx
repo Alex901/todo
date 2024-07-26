@@ -186,7 +186,17 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
         toast.error(`Your task has been cancelled.`);
     }
 
-
+    const formatEstimatedTime = (minutes) => {
+        if (minutes < 60) {
+            return `${minutes}min`;
+        }
+        const hours = Math.floor(minutes / 60);
+        const remainingMinutes = minutes % 60;
+        if (remainingMinutes === 0) {
+            return `${hours}h`;
+        }
+        return `${hours}h ${remainingMinutes}min`;
+    };
 
     //TODO: this is not pretty, make commonTodoEntry component and use it on all cases. 
     //Making changes on three places is not good practice and confusing in the long run.
@@ -202,7 +212,10 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
                                 <Icon path={priorityIcons[priority]} size={priority === 'NORMAL' ? 0.7 : 1} />
                             </div>
                             <div className="information-time">
-                                <Icon path={mdiClockOutline} size={1} /> {estimatedTime ? `${estimatedTime}h` : '-'}
+                                <Icon path={mdiClockOutline} size={1} />
+                                <span style={{ whiteSpace: 'nowrap' }}>
+                                    {estimatedTime ? formatEstimatedTime(estimatedTime) : '-'}
+                                </span>
                             </div>
                             {steps.length > 0 && (
                                 <div className="information-steps">
@@ -327,7 +340,12 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
                                 <Icon path={priorityIcons[priority]} size={1} />
                             </div>
                             <div className="information-time">
-                                <Icon path={mdiClockOutline} size={1} /> {estimatedTime ? `${estimatedTime}h` : '-'}
+                            <div className="information-time">
+                                <Icon path={mdiClockOutline} size={1} />
+                                <span style={{ whiteSpace: 'nowrap' }}>
+                                    {estimatedTime ? formatEstimatedTime(estimatedTime) : '-'}
+                                </span>
+                            </div>
                             </div>
                             {steps.length > 0 && (
                                 <div className="information-steps">
@@ -424,7 +442,12 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
                                 <Icon path={priorityIcons[priority]} size={1} />
                             </div>
                             <div className="information-time">
-                                <Icon path={mdiClockOutline} size={1} /> {estimatedTime ? `${estimatedTime}h` : '-'}
+                            <div className="information-time">
+                                <Icon path={mdiClockOutline} size={1} />
+                                <span style={{ whiteSpace: 'nowrap' }}>
+                                    {estimatedTime ? formatEstimatedTime(estimatedTime) : '-'}
+                                </span>
+                            </div>
                             </div>
                             {steps.length > 0 && (
                                 <div className="information-steps">

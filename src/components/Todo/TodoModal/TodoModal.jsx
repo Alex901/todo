@@ -20,6 +20,7 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
     const { addTodo } = useTodoContext();
     const [errorMessage, setErrorMessage] = useState('');
     const { isLoggedIn, loggedInUser } = useUserContext();
+
     const options = [
         { value: 'VERY HIGH', label: 'VERY HIGH' },
         { value: 'HIGH', label: 'HIGH' },
@@ -51,6 +52,11 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
 
     const handleInputChange = (event) => {
         let value = event.target.value;
+
+        // Special case for estimatedTime input
+        if (event.target.name === 'estimatedTime') {
+            value = parseInt(value, 10);
+        }
 
         setNewTaskData({
             ...newTaskData,
@@ -160,6 +166,12 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
         }));
     }
 
+    const formatTime = (minutes) => {
+        const hours = Math.floor(minutes / 60);
+        const remainingMinutes = minutes % 60;
+        return `${hours}h ${remainingMinutes}min`;
+    };
+
     return (
 
         <ReactModal
@@ -172,7 +184,7 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
         >
 
 
-            <div className='modalTitle' style={{textAlign: 'center'}}> <h3 className="title"> Create task </h3></div>
+            <div className='modalTitle' style={{ textAlign: 'center' }}> <h3 className="title"> Create task </h3></div>
 
             {isLoggedIn ? (
 
@@ -240,17 +252,24 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
                             className='modal-input-date'
                             onChange={handleInputChange}
                             name='estimatedTime'
-                            label="Est. Time"
+                            label="Est. Time(min)"
                             size="small" // Set size to small
                             style={{ width: '100px', textAlign: 'center' }} // Set width to 60px
-                            placeholder='Time'
+                            placeholder='Minutes'
                             inputProps={{
-                                min: '0' // Set the minimum value
+                                min: '0', // Set the minimum value
+                                step: '15' // 15 min increments
                             }}
                             InputProps={{
-                                startAdornment: <InputAdornment position="start">h</InputAdornment>,
+                                endAdornment: <InputAdornment position="end"></InputAdornment>,
                             }}
                         />
+
+                        {newTaskData.estimatedTime >= 60 && (
+                            <div style={{ width: '80px', textAlign: 'center' }}>
+                                <strong>{formatTime(newTaskData.estimatedTime)}</strong>
+                            </div>
+                        )}
 
 
                         <FormControl variant="outlined" size="small" style={{ width: '140px' }}>
@@ -270,16 +289,7 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
                             </Select>
                         </FormControl>
 
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    id='isUrgent'
-                                    name='isUrgent'
-                                    onChange={handleCheckboxChange}
-                                />
-                            }
-                            label="Urgent?"
-                        />
+
 
                     </div>
                     <div className="tags-container-create" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%', gap: '20px', flexWrap: 'wrap', marginTop: '10px' }}>
@@ -321,6 +331,16 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
                                 ))}
                             </Select>
                         </FormControl>
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    id='isUrgent'
+                                    name='isUrgent'
+                                    onChange={handleCheckboxChange}
+                                />
+                            }
+                            label="Urgent?"
+                        />
 
                     </div>
 
@@ -344,7 +364,7 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
 
 
                     {errorMessage && <p className="error">{errorMessage}</p>}
-                    <button className='modal-button' type="submit" style={{textAlign: 'center'}}>
+                    <button className='modal-button' type="submit" style={{ textAlign: 'center' }}>
                         Submit
                     </button>
                 </form>

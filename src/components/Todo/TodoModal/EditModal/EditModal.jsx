@@ -88,6 +88,10 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
             value = new Date(value);
         }
 
+        if (event.target.name === 'estimatedTime') {
+            value = parseInt(value, 10);
+        }
+
         setErrorMessage('');
         setTaskData({
             ...taskData,
@@ -195,17 +199,17 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
 
     const handleRemoveFromList = (listNameToRemove) => {
         console.log("Attempting to remove list:", listNameToRemove);
-    
+
         if (listNameToRemove === "all") {
             console.error('You cannot remove entry from "all" lists this way');
             setErrorMessage('You cannot remove entry from "all" lists this way');
-            setTimeout(() => { 
-                setErrorMessage(''); 
+            setTimeout(() => {
+                setErrorMessage('');
                 console.log("Error message cleared");
             }, 5000);
             return;
         }
-    
+
         setTaskData(prevData => {
             console.log("Previous task data:", prevData);
             const updatedInListNew = prevData.inListNew.filter(listName => listName.listName !== listNameToRemove);
@@ -215,7 +219,7 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
                 inListNew: updatedInListNew
             };
         });
-    
+
         console.log("Task data updated successfully");
     }
     const handleDeleteStep = (stepId) => {
@@ -248,6 +252,12 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
         }));
         console.log("Task data", taskData);
     }
+
+    const formatTime = (minutes) => {
+        const hours = Math.floor(minutes / 60);
+        const remainingMinutes = minutes % 60;
+        return `${hours}h ${remainingMinutes}min`;
+    };
 
     //I steal the ccs classes from my create modal -- don't judge me, haha
     return (
@@ -341,16 +351,22 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
                             className="modal-input-date"
                             onChange={handleInputChange}
                             name="estimatedTime"
-                            label="Est. Time"
+                            label="Est. Time(min)"
                             size="small"
                             style={{ width: '100px', textAlign: 'center' }}
                             placeholder="Time"
-                            inputProps={{ min: '0' }}
+                            inputProps={{ min: '0', step: '15' }}
                             InputProps={{
-                                startAdornment: <InputAdornment position="start">h</InputAdornment>,
+                                startAdornment: <InputAdornment position="start"></InputAdornment>,
                             }}
                             value={taskData.estimatedTime}
                         />
+
+                        {taskData.estimatedTime >= 60 && (
+                            <div style={{ width: '80px', textAlign: 'center' }}>
+                                <strong>{formatTime(taskData.estimatedTime)}</strong>
+                            </div>
+                        )}
 
                         <FormControl variant="outlined" size="small" style={{ width: '140px' }}>
                             <InputLabel id="difficulty-label">Difficulty</InputLabel>
@@ -370,7 +386,10 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
                             </Select>
                         </FormControl>
 
-                        <FormControlLabel
+                      
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginTop: '14px' }}> 
+                    <FormControlLabel
                             control={
                                 <Checkbox
                                     id="isUrgent"
