@@ -7,13 +7,13 @@ let BASE_URL;
 
 if (process.env.NODE_ENV === 'test') {
     import('../../config').then((config) => {
-      BASE_URL = config.default;
+        BASE_URL = config.default;
     });
-  } else {
+} else {
     import('../../config.vite').then((config) => {
-      BASE_URL = config.default;
+        BASE_URL = config.default;
     });
-  }
+}
 
 /* Handle notifications sent to users */
 const NotificationContexts = createContext();
@@ -24,52 +24,52 @@ const NotificationProvider = ({ children }) => {
     const { addUserToGroup } = useGroupContext();
 
     useEffect(() => {
-        if(loggedInUser) {
-        // Call the function immediately on component mount
-        getNotifications();
-       
-        // Then set up the interval to call it every 60 seconds
-        const intervalId = setInterval(() => {
+        if (loggedInUser) {
+            // Call the function immediately on component mount
             getNotifications();
-        }, 60000); // 60000 milliseconds = 60 seconds
-    
-        // Don't forget to clear the interval when the component unmounts
-    
-        return () => clearInterval(intervalId);
-    }
+
+            // Then set up the interval to call it every 60 seconds
+            const intervalId = setInterval(() => {
+                getNotifications();
+            }, 60000); // 60000 milliseconds = 60 seconds
+
+            // Don't forget to clear the interval when the component unmounts
+
+            return () => clearInterval(intervalId);
+        }
     }, [loggedInUser]);
 
     useEffect(() => {
         console.log("DEBUG: userNotifications: ", userNotifications);
     }
-    , [userNotifications]);
+        , [userNotifications]);
 
-        /**
-     * Fetches all notifications that are directed at loggedInUser if there are any.
-     */
-        const getNotifications = async () => {
-            try {
-                const response = await axios.get(`${BASE_URL}/notifications/`, { withCredentials: true });
-               // console.log("DEBUG: response: ", response);
-                setUserNotifications(response.data);
-            } catch (error) {
-                console.error("Error fetching notifications: ", error);
-                if (error.response) {
-                    // The request was made and the server responded with a status code
-                    // that falls out of the range of 2xx
-                    console.error(error.response.data);
-                    console.error(error.response.status);
-                    console.error(error.response.headers);
-                } else if (error.request) {
-                    // The request was made but no response was received
-                    console.error(error.request);
-                    toast.error("Error fetching notifications: No response from the server");
-                } else {
-                    // Something happened in setting up the request that triggered an Error
-                    console.error('Error', error.message);
-                }
+    /**
+ * Fetches all notifications that are directed at loggedInUser if there are any.
+ */
+    const getNotifications = async () => {
+        try {
+            const response = await axios.get(`${BASE_URL}/notifications/`, { withCredentials: true });
+            // console.log("DEBUG: response: ", response);
+            setUserNotifications(response.data);
+        } catch (error) {
+            console.error("Error fetching notifications: ", error);
+            if (error.response) {
+                // The request was made and the server responded with a status code
+                // that falls out of the range of 2xx
+                console.error(error.response.data);
+                console.error(error.response.status);
+                console.error(error.response.headers);
+            } else if (error.request) {
+                // The request was made but no response was received
+                console.error(error.request);
+                toast.error("Error fetching notifications: No response from the server");
+            } else {
+                // Something happened in setting up the request that triggered an Error
+                console.error('Error', error.message);
             }
         }
+    }
 
     /**
      * Invites a user to a group.
@@ -82,7 +82,7 @@ const NotificationProvider = ({ children }) => {
         console.log("DEBUG: inviteToGroup: ", from, to, groupId);
         try {
             const response = await axios.post(`${BASE_URL}/notifications/groupinvite`, { from, to, groupId }, { withCredentials: true });
-           // console.log("DEBUG: response: ", response);
+            // console.log("DEBUG: response: ", response);
             toast.success("Invite sent successfully");
         } catch (error) {
             console.error("Error sending invite: ", error);
@@ -117,10 +117,11 @@ const NotificationProvider = ({ children }) => {
 
         try {
             const response = await axios.delete(`${BASE_URL}/notifications/delete/${notificationId}`, { withCredentials: true });
-          //  console.log("DEBUG: response: ", response);
-            getNotifications();
-            checkLogin();
-            toast.success("Invite accepted");
+            //  console.log("DEBUG: response: ", response);
+            if (response.status === 200) {  
+                getNotifications();
+                toast.success("Invite accepted");
+            }
         } catch (error) {
             console.error("Error accepting invite: ", error);
             if (error.response) {
@@ -138,6 +139,7 @@ const NotificationProvider = ({ children }) => {
                 console.error('Error', error.message);
             }
         }
+        checkLogin();
     }
 
     /**
@@ -150,7 +152,7 @@ const NotificationProvider = ({ children }) => {
         //delete the notification and notify the sender at some point
         try {
             const response = await axios.delete(`${BASE_URL}/notifications/delete/${notificationId}`, { withCredentials: true });
-           // console.log("DEBUG: response: ", response);
+            // console.log("DEBUG: response: ", response);
             getNotifications();
             toast.success("Invite declined");
         } catch (error) {
@@ -175,7 +177,7 @@ const NotificationProvider = ({ children }) => {
 
 
     return (
-        <NotificationContexts.Provider value={{inviteToGroup, userNotifications, acceptGroupInvite, declineGroupInvite}}>
+        <NotificationContexts.Provider value={{ inviteToGroup, userNotifications, acceptGroupInvite, declineGroupInvite }}>
             {children}
         </NotificationContexts.Provider>
     );

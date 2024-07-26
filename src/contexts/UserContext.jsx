@@ -70,7 +70,8 @@ const UserProvider = ({ children }) => {
         try {
             const response = await axios.get(`${BASE_URL}/auth/checkLogin`, { withCredentials: true });
             if (response.data.valid) {
-                console.log("User is logged in", response.data.user)
+                console.log("Valid user is logged in", response.data.user)
+                console.log("DEBUG -- CheckLogin user data in response: ", response.data.user)
                 setLoggedInUser(response.data.user);
                 setIsLoggedIn(true);
             }

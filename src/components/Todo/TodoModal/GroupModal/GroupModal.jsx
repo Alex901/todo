@@ -73,7 +73,7 @@ const GroupModal = ({ isOpen, onClose }) => {
     };
 
 
-    const createHandleSubmit = async (event) => {
+    const handleCreateGroup = async (event) => {
         event.preventDefault();
 
         if (groupData.name === '') {
@@ -249,7 +249,7 @@ const GroupModal = ({ isOpen, onClose }) => {
             </TabPanel >
             <TabPanel value={value} index={1}>
                 <div className='tab-modal-content'>
-                    <form className='create-group-form' onSubmit={createHandleSubmit}>
+                    <form className='create-group-form' onSubmit={handleCreateGroup}>
                         <TextField
                             name="name"
                             label="Group Name"
