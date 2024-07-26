@@ -98,16 +98,22 @@ const TodoProvider = ({ children }) => {
   const addTodo = async (newTaskData) => {
     // console.log("addTodo: newTaskData", newTaskData);
     try {
+      let groupOwner = loggedInUser ? loggedInUser._id : null;
       
+
       const newId = parseInt(Date.now().toString(36) + Math.random().toString(36).substr(2), 36); //but why? xD
       const allListId = loggedInUser.myLists.find(list => list.listName === 'all')._id;
       
       let inListNewTmp = [allListId];
       
       if(loggedInUser.activeList !== 'all') {
-        const activeListId = loggedInUser.myLists.find(list => list.listName === loggedInUser.activeList)._id;
+        const activeListId = loggedInUser.myLists.find(list => list.listName === loggedInUser.activeList);
         if(activeListId) {
-          inListNewTmp.push(activeListId);
+          console.log("DEBUG: activeListId", activeListId);
+          if(activeListId.type === 'groupList') {
+            groupOwner = activeListId.owner;
+          }
+          inListNewTmp.push(activeListId._id);
         }
       }
       
@@ -122,7 +128,7 @@ const TodoProvider = ({ children }) => {
         isStarted: false,
         estimatedTime: newTaskData.estimatedTime || null,
         started: null,
-        owner: loggedInUser ? loggedInUser._id : null, 
+        owner: groupOwner, //TODO: remember to change this to references if I ever need to populate
         difficulty: newTaskData.difficulty || "",
         //  assignee: [...User],
         steps: newTaskData.steps || [],
@@ -131,7 +137,7 @@ const TodoProvider = ({ children }) => {
         dueDate: newTaskData.dueDate ? new Date(newTaskData.dueDate) : null, //TODO: remember to parse
         description: newTaskData.description || null,
         isUrgent: newTaskData.isUrgent || false, //And this one
-        inList: loggedInUser ? ['all'].concat(loggedInUser.activeList !== 'all' ? [loggedInUser.activeList] : []) : [],
+        inList: loggedInUser ? ['all'].concat(loggedInUser.activeList !== 'all' ? [loggedInUser.activeList] : []) : [], //Mark for deletion
         inListNew: inListNewTmp,
       };
       console.log("DEBUG -- NewTodo", newTodo);

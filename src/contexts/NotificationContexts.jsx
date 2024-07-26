@@ -19,7 +19,7 @@ if (process.env.NODE_ENV === 'test') {
 const NotificationContexts = createContext();
 
 const NotificationProvider = ({ children }) => {
-    const { loggedInUser } = useUserContext();
+    const { loggedInUser, checkLogin } = useUserContext();
     const [userNotifications, setUserNotifications] = useState([]);
     const { addUserToGroup } = useGroupContext();
 
@@ -119,6 +119,7 @@ const NotificationProvider = ({ children }) => {
             const response = await axios.delete(`${BASE_URL}/notifications/delete/${notificationId}`, { withCredentials: true });
           //  console.log("DEBUG: response: ", response);
             getNotifications();
+            checkLogin();
             toast.success("Invite accepted");
         } catch (error) {
             console.error("Error accepting invite: ", error);
