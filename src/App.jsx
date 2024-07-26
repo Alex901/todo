@@ -215,7 +215,7 @@ function App() {
                         const todoCount = getListTodoCount(list.listName);
                         const doingCount = getListDoingCount(list.listName);
                         const doneCount = getListDoneCount(list.listName);
-
+                        console.log("DEBUG: list: ", list);
                         return (
                           <MenuItem key={list.listName} value={list.listName}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
