@@ -78,7 +78,7 @@ const UserProvider = ({ children }) => {
             console.error('Error verifying token', error);
         }
     }
-
+    // Nice function bozo - 10/10
     const registerNewUser = async (userData) => {
 
         try {

@@ -59,9 +59,9 @@ function App() {
 
   if (isLoading) {
     return (
-    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
-      <MagnifyingGlass />
-    </div>
+      <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '100vh' }}>
+        <MagnifyingGlass />
+      </div>
     );
   }
 
@@ -210,7 +210,7 @@ function App() {
                       value={loggedInUser.activeList || ""}
                       onChange={handleListChange}
                     >
-                      
+
                       {loggedInUser.myLists.map(list => {
                         const todoCount = getListTodoCount(list.listName);
                         const doingCount = getListDoingCount(list.listName);

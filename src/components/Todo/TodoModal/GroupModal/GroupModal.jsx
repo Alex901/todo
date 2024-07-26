@@ -174,11 +174,11 @@ const GroupModal = ({ isOpen, onClose }) => {
                                                 </div>
 
                                                 <div style={{ display: 'flex', alignItems: 'center' }}>
-                                                    <Icon path={mdiAccountGroupOutline} size={.8} style={{ marginRight: '8px' }} /> 
+                                                    <Icon path={mdiAccountGroupOutline} size={.8} style={{ marginRight: '8px' }} />
                                                     <Typography>{group.members.length}</Typography>
                                                 </div>
                                                 <div style={{ display: 'flex', alignItems: 'center' }}>
-                                                    <Icon path={mdiFolderMultipleOutline} size={.8} style={{ marginRight: '8px' }} /> 
+                                                    <Icon path={mdiFolderMultipleOutline} size={.8} style={{ marginRight: '8px' }} />
                                                     <Typography>{group.groupListsModel.length}</Typography>
                                                 </div>
 
@@ -196,7 +196,7 @@ const GroupModal = ({ isOpen, onClose }) => {
 
                                             </div>
                                             <div className='group-summary-description'>
-                                                {group.description.match(/.{1,60}/g).map((text, index) => (
+                                                {group.description && group.description.match(/.{1,60}/g).map((text, index) => (
                                                     <Typography key={index}>{text}</Typography>
                                                 ))}
                                             </div>
