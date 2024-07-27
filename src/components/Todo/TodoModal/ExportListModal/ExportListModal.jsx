@@ -23,6 +23,7 @@ const ExportListModal = ({ isOpen, onClose }) => {
         owner: true,
         priority: false,
         duration: true,
+        compareTime: false,
         steps: true,
         tags: true,
         deadline: false, 

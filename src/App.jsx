@@ -11,10 +11,7 @@ import DeleteListModal from './components/Todo/TodoModal/DeleteListModal/DeleteL
 import CookieConsent from './components/CookieConsent/CookieConsent'
 import { toast } from "react-toastify";
 import Icon from '@mdi/react';
-import { mdiPlus } from '@mdi/js';
-import { mdiMinus } from '@mdi/js';
-import { mdiFileExport } from '@mdi/js';
-import { mdiGroup } from '@mdi/js';
+import { mdiDelete, mdiPlus, mdiMinus, mdiFileExport, mdiGroup, mdiTextBoxEditOutline, mdiPlaylistEdit, mdiDeleteEmpty, mdiPencil } from '@mdi/js';
 import Chip from '@mui/material/Chip';
 import Popper from '@mui/material/Popper';
 import { SketchPicker } from 'react-color';
@@ -46,6 +43,8 @@ function App() {
   const [showHeader, setShowHeader] = useState(false);
   const headerRef = useRef(null);
   const [isLoading, setIsLoading] = useState(true);
+  const [isEditHovered, setIsEditHovered] = useState(false);
+  const [isDeleteHovered, setIsDeleteHovered] = useState(false);
 
   useEffect(() => {
     const fetchLoginStatus = async () => {
@@ -182,6 +181,10 @@ function App() {
     setIsGroupModalOpen(false);
   };
 
+  const openEditListModal = () => {
+    console.log("Edit list modal opened");
+  }
+
   //TODO: This shouldbe moved to a separate component
   return (
 
@@ -194,7 +197,7 @@ function App() {
       </>
 
       {isLoggedIn && (
-        <div className="content">
+        <div className="content" style={{ display: 'flex', flexDirection: 'column' }}>
           <Card>
             <div className='nav' style={{ display: 'flex', flexDirection: 'column' }}>
               {/* First row */}
@@ -215,7 +218,6 @@ function App() {
                         const todoCount = getListTodoCount(list.listName);
                         const doingCount = getListDoingCount(list.listName);
                         const doneCount = getListDoneCount(list.listName);
-                        console.log("DEBUG: list: ", list);
                         return (
                           <MenuItem key={list.listName} value={list.listName}>
                             <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
@@ -228,12 +230,29 @@ function App() {
                     </Select>
                   </FormControl>
 
-                  <div className="icon-button" onClick={openCreateListModal} style={{ marginLeft: 10 }}>
+                  <div className="icon-button add" onClick={openCreateListModal} style={{ marginLeft: 10 }}>
                     <Icon path={mdiPlus} size={1.6} />
                   </div>
 
-                  <div className="icon-button" onClick={openDeleteListModal}>
-                    <Icon path={mdiMinus} size={1.6} />
+                  <div
+                    className="icon-button edit"
+                    onClick={openEditListModal}
+                    onMouseEnter={() => setIsEditHovered(true)}
+                    onMouseLeave={() => setIsEditHovered(false)}
+                  >
+                    <Icon path={isEditHovered ? mdiPencil : mdiTextBoxEditOutline} size={1.4} />
+                  </div>
+
+                  <div
+                    className="icon-button delete"
+                    onClick={openDeleteListModal}
+                    onMouseEnter={() => setIsDeleteHovered(true)}
+                    onMouseLeave={() => setIsDeleteHovered(false)}
+                  >
+                    <Icon path={isDeleteHovered ? mdiDeleteEmpty : mdiDelete} size={1.4} />
+                  </div>
+
+                  <div className="list-details-section">
                   </div>
 
                   <CreateListModal
@@ -278,28 +297,34 @@ function App() {
                 <div className="tags-container">
                   <div className='tags' style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' }}>
 
-                    {loggedInUser.myLists.find(list => list.listName === loggedInUser.activeList).tags.slice(0, showAll ? undefined : 3).map((tag, index) => {
-                      return (
-                        <Chip
-                          key={index}
-                          label={tag.label}
-                          style={{
-                            background: `linear-gradient(45deg, ${tag.color} 30%, ${tag.color} 90%)`,
-                            boxShadow: `0 3px 5px 2px rgba(255, 105, 135, .3)`,
-                            color: tag.textColor,
-                          }}
-                          onDelete={() => deleteTag(tag._id, tag)}
-                          sx={{
-                            margin: '0.5em',
-                            height: '2em',
-                            '&:hover': {
-                              backgroundColor: tag.color,
+                    {loggedInUser.myLists
+                      .find(list => list.listName === loggedInUser.activeList)
+                      .tags.slice(0, showAll ? undefined : 3)
+                      .map((tag, index) => {
+                        return (
+                          <Chip
+                            key={index}
+                            label={tag.label}
+                            style={{
+                              background: `linear-gradient(135deg, ${tag.color} 25%, ${tag.color} 75%)`,
+                              boxShadow: `0 3px 5px 2px rgba(255, 105, 135, .3), inset 0 1px 2px rgba(255, 255, 255, 0.3)`,
                               color: tag.textColor,
-                            },
-                          }}
-                        />
-                      );
-                    })}
+                            }}
+                            onDelete={() => deleteTag(tag._id, tag)}
+                            deleteIconStyle={{ color: tag.textColor }}
+                            deleteIcon={{ color: tag.textColor }}
+                            sx={{
+                              margin: '0.5em',
+                              height: '2em',
+                              '&:hover': {
+                                transform: 'scale(1.1)',
+                                boxShadow: `0 3px 5px 2px rgba(255, 105, 135, .6), inset 0 1px 2px rgba(255, 255, 255, 0.5)`,
+                                border: '1px solid rgba(255, 255, 255, 0.3)',
+                              },
+                            }}
+                          />
+                        );
+                      })}
 
                     <div style={{ display: 'flex', justifyContent: 'center' }}>
                       <Chip

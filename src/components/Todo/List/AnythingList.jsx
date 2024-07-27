@@ -8,8 +8,8 @@ import TodoEntry from "../TodoEntry/TodoEntry";
 import { useTodoContext } from "../../../contexts/todoContexts";
 import { useUserContext } from "../../../contexts/UserContext";
 import Icon from '@mdi/react';
-import { mdiMenuUp } from '@mdi/js';
-import { mdiMenuDown } from '@mdi/js';
+import { mdiMenuUp,mdiMenuDown } from '@mdi/js';
+import {  } from '@mdi/js';
 
 
 import {

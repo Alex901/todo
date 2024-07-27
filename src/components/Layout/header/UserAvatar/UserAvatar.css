@@ -41,11 +41,15 @@
     font-weight: 500;
     color: #1a202c;
     background-color: var(--secondary-color);
-    border-radius: 9999px;
+    border-radius: 20px;
     cursor: pointer;
-    overflow: hidden;
+    border: none;
   }
   
+  .avatar-button:hover {
+    border: 1px solid white;
+  }
+
   .avatar {
     width: 2rem;
     height: 2rem;

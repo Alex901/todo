@@ -80,6 +80,18 @@ body {
   color: black;
 }
 
+.icon-button.edit:hover {
+  color: rgb(235, 204, 103);
+}
+
+.icon-button.delete:hover {
+  color: rgb(230, 81, 81);
+}
+
+.icon-button.add:hover {
+  color: rgb(100, 158, 49)
+}
+
 .tags-container {
   display: flex;
   flex-wrap: wrap;
