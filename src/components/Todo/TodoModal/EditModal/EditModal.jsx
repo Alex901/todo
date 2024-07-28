@@ -7,6 +7,7 @@ import { mdiDelete, mdiDeleteEmpty } from '@mdi/js';
 import { TextField, Button, InputAdornment, IconButton, FormControl, InputLabel, Select, MenuItem, Checkbox, FormControlLabel, Chip } from '@mui/material';
 import Icon from '@mdi/react';
 import { toast } from 'react-toastify';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 ReactModal.setAppElement('#root');
 
@@ -245,6 +246,17 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
         return `${hours}h ${remainingMinutes}min`;
     };
 
+    const handleOnDragEnd = (result) => {
+        if (!result.destination) return;
+
+        const items = Array.from(taskData.steps);
+        const [reorderedItem] = items.splice(result.source.index, 1);
+        items.splice(result.destination.index, 0, reorderedItem);
+
+        // Update your state with the new order
+        setTaskData({ ...taskData, steps: items });
+    };
+
     //I steal the ccs classes from my create modal -- don't judge me, haha
     return (
 
@@ -372,10 +384,10 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
                             </Select>
                         </FormControl>
 
-                      
+
                     </div>
-                    <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginTop: '14px' }}> 
-                    <FormControlLabel
+                    <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginTop: '14px' }}>
+                        <FormControlLabel
                             control={
                                 <Checkbox
                                     id="isUrgent"
@@ -455,26 +467,44 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
                     </div>
 
                     <hr style={{ width: '80%', margin: '10px auto' }} />
-                    <div className='steps' style={{ width: '100%', justifyContent: 'left' }}>
-                        {taskData.steps.map((step, index) => (
-                            <div key={step.id} style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                                <label style={{ display: 'flex', alignItems: 'center' }}>{`Step${index + 1}`}</label>
-                                <input className='create-modal-input' type='text' placeholder={`Enter subTask`}
-                                    onChange={event => handleInputChangeStep(step._id, event)}
-                                    defaultValue={taskData.steps.find(s => s._id === step._id).taskName || ''} maxLength='50' />
-                                <div onMouseEnter={() => setHoveredStepId(step._id)} onMouseLeave={() => setHoveredStepId(null)}>
-                                    <Icon
-                                        path={hoveredStepId === step._id ? mdiDeleteEmpty : mdiDelete}
-                                        size={1.2}
-                                        color={hoveredStepId === step._id ? "initial" : "gray"}
-                                        onClick={() => handleDeleteStep(step._id)}
-                                    />
+
+                    <DragDropContext onDragEnd={handleOnDragEnd}>
+                        <Droppable droppableId="steps">
+                            {(provided) => (
+
+                                <div className='steps' style={{ width: '100%', justifyContent: 'flex-start' }} {...provided.droppableProps} ref={provided.innerRef}>
+                                    {taskData.steps.map((step, index) => {
+                                        return (
+                                            <Draggable key={step.id} draggableId={String(step.id)} index={index}>
+                                                {(provided) => (
+                                                    <div className="drag" ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} style={{ transform: 'none', display: 'flex', flexDirection: 'row', alignItems: 'center', ...provided.draggableProps.style }}>
+                                                        <label style={{ display: 'flex', alignItems: 'center' }}>{`#${index + 1}`}</label>
+                                                        <input className='create-modal-input' type='text' placeholder={`Enter subTask title`}
+                                                            onChange={event => handleInputChangeStep(step._id, event)}
+                                                            defaultValue={taskData.steps.find(s => s._id === step._id).taskName || ''} maxLength='50' />
+                                                        <div onMouseEnter={() => setHoveredStepId(step._id)} onMouseLeave={() => setHoveredStepId(null)}>
+                                                            <Icon
+                                                                path={hoveredStepId === step._id ? mdiDeleteEmpty : mdiDelete}
+                                                                size={1.2}
+                                                                color={hoveredStepId === step._id ? "initial" : "gray"}
+                                                                onClick={() => handleDeleteStep(step._id)}
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </Draggable>
+                                        );
+                                    })}
+                                    {provided.placeholder}
+                                    <div style={{ display: 'flex', justifyContent: 'center' }}>
+                                        <p className='add-step' onClick={handleAddStep} style={{}}> <strong> add step </strong> </p>
+                                    </div>
                                 </div>
-                            </div>
-                        ))}
-                        <div style={{ display: 'flex', justifyContent: 'center' }}>
-                            <p className='add-step' onClick={handleAddStep} style={{}}> <strong> add step </strong> </p> </div>
-                    </div>
+                            )}
+                        </Droppable>
+                    </DragDropContext>
+
+
                     <hr style={{ width: '80%', margin: '10px auto' }} />
 
 

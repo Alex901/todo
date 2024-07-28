@@ -39,11 +39,6 @@ const NotificationProvider = ({ children }) => {
         }
     }, [loggedInUser]);
 
-    useEffect(() => {
-        console.log("DEBUG: userNotifications: ", userNotifications);
-    }
-        , [userNotifications]);
-
     /**
  * Fetches all notifications that are directed at loggedInUser if there are any.
  */

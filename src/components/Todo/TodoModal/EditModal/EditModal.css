@@ -55,3 +55,8 @@
     justify-content: center;
     margin-top: 10px;
 }   
+
+.draggable {
+    top: auto !important;
+    right: auto !important;
+}

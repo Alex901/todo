@@ -134,3 +134,8 @@ h1 {
   font-weight: 700;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
 }
+
+.drag{
+  top:auto !important;
+  left: auto !important;
+  }
