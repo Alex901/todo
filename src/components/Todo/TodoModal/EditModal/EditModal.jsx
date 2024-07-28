@@ -17,7 +17,7 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
     const [selectedOption, setSelectedOption] = useState(null);
     const [hoveredStepId, setHoveredStepId] = useState(null);
     const [loading, setLoading] = useState(true);
-    console.log("DEBUG -- EditModal -> editData", editData);
+    //console.log("DEBUG -- EditModal -> editData", editData);
 
     const options = [
         { value: 'VERY HIGH', label: 'VERY HIGH' },
@@ -72,7 +72,6 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
     const activeList = isLoggedIn && loggedInUser.myLists
         ? loggedInUser.myLists.find(list => list.listName === loggedInUser.activeList)
         : null;
-    console.log("DEBUG -- EditModal -> activeList", activeList);
 
     const optionsTagNames = activeList && activeList.tags
         ? activeList.tags
@@ -127,12 +126,10 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
     }
 
     const handleSelectChange = (selectedOption) => {
-        console.log("Selected option", selectedOption.target.value); //correct
         setTaskData({
             ...taskData,
             priority: selectedOption.target.value
         });
-        console.log("Task data", taskData); //undefined
     }
 
     const handleCheckboxChange = (event) => {
@@ -174,17 +171,12 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
 
 
     const handleListChange = (event) => {
-        console.log("Selected option:", event.target.value);
         const selectedListName = event.target.value[0];
-        console.log("Selected list name:", selectedListName);
-        console.log("User's lists:", loggedInUser.myLists);
         const selectedList = loggedInUser.myLists.find(list => list.listName === selectedListName);
-        console.log("Selected list:", selectedList);
 
         if (selectedList) {
             setTaskData(prevEditData => {
                 const updatedInListNew = [...prevEditData.inListNew, selectedList];
-                console.log("Updated inListNew:", updatedInListNew);
                 return {
                     ...prevEditData,
                     inListNew: updatedInListNew
@@ -198,29 +190,23 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
     };
 
     const handleRemoveFromList = (listNameToRemove) => {
-        console.log("Attempting to remove list:", listNameToRemove);
 
         if (listNameToRemove === "all") {
             console.error('You cannot remove entry from "all" lists this way');
             setErrorMessage('You cannot remove entry from "all" lists this way');
             setTimeout(() => {
                 setErrorMessage('');
-                console.log("Error message cleared");
             }, 5000);
             return;
         }
 
         setTaskData(prevData => {
-            console.log("Previous task data:", prevData);
             const updatedInListNew = prevData.inListNew.filter(listName => listName.listName !== listNameToRemove);
-            console.log("Updated inListNew after removal:", updatedInListNew);
             return {
                 ...prevData,
                 inListNew: updatedInListNew
             };
         });
-
-        console.log("Task data updated successfully");
     }
     const handleDeleteStep = (stepId) => {
         console.log("Delete step", stepId);
@@ -443,7 +429,6 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
                                         handleTagChange([]);
                                     } else {
                                         const selectedTagObject = optionsTagNames.find(tag => selectedTagLabel.includes(tag.label));
-                                        console.log("Selected tag objects", selectedTagObject);
                                         handleTagChange(selectedTagObject);
                                     }
                                 }}
