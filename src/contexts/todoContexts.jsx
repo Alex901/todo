@@ -68,7 +68,7 @@ const TodoProvider = ({ children }) => {
   const fetchTodoList = async () => {
     console.log("DEBUG: Fetching todo list, checking group lists: ", userGroupList);
 
-    if(!loggedInUser) {
+    if (!loggedInUser) {
       return;
     }
 
@@ -99,24 +99,29 @@ const TodoProvider = ({ children }) => {
     // console.log("addTodo: newTaskData", newTaskData);
     try {
       let groupOwner = loggedInUser ? loggedInUser._id : null;
-      
+
 
       const newId = parseInt(Date.now().toString(36) + Math.random().toString(36).substr(2), 36); //but why? xD
       const allListId = loggedInUser.myLists.find(list => list.listName === 'all')._id;
-      
+
       let inListNewTmp = [allListId];
-      
-      if(loggedInUser.activeList !== 'all') {
+
+      if (loggedInUser.activeList !== 'all') {
         const activeListId = loggedInUser.myLists.find(list => list.listName === loggedInUser.activeList);
-        if(activeListId) {
+        if (activeListId) {
           console.log("DEBUG: activeListId", activeListId);
-          if(activeListId.type === 'groupList') {
-            groupOwner = activeListId.owner;
+          if (activeListId.type === 'groupList') {
+            groupOwner = activeListId.owner; //lists can be owned by groups, so in case of group the group owns the todo
+            
+            const index = inListNewTmp.indexOf(allListId);
+            if (index !== -1) {
+                inListNewTmp.splice(index, 1);
+            }
           }
           inListNewTmp.push(activeListId._id);
         }
       }
-      
+
       //TODO: some typesafety here, also this is really dumb. Remake this at some point
       const newTodo = {
         id: newId,

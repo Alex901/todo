@@ -46,7 +46,8 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
         owner,
         priority,
         steps,
-        estimatedTime } = todoData;
+        estimatedTime,
+        totalTimeSpent } = todoData;
     const [isMoreChecked, setIsMoreChecked] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isConfirmDeleteModalOpen, setIsConfirmDeleteModalOpen] = useState(false);
@@ -278,7 +279,7 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
                                         <p className="add-step" style={{ margin: '12px' }} ><strong>Add another step</strong></p>
                                     </>
                                 ) : (
-                                    <div className="add-step"><strong>Add step</strong></div>
+                                    <div className="no-steps">No steps in this task!</div>
                                 )}
                             </div>
 
@@ -323,8 +324,10 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
             </div >
         )
     } else if (type === 'done' && isDone && isStarted) {
-        //This though :'D
-        const durationMS = completed.getTime() - started.getTime();
+        //This though, please make this into a function :'D
+        const durationMS = (totalTimeSpent && totalTimeSpent !== 0)
+            ? totalTimeSpent
+            : completed.getTime() - started.getTime();
         const remainingMS = durationMS > 0 ? durationMS : 0;
         const seconds = Math.floor(remainingMS / 1000);
         const remainingSeconds = seconds % 60;
@@ -474,7 +477,7 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
                                 </>
                             ) : null}
                             <div className="separator"> </div>
-                            <p className="time-stamp"> <strong>Time spent:</strong> {formatTime(Math.floor((currentTime - started) / 1000))} </p>
+                            <p className="time-stamp"> <strong>Time spent:</strong> {formatTime(Math.floor((currentTime - started + totalTimeSpent) / 1000))} </p>
                         </div>
                         <div className="todo-text">
                             <p ref={entry} className="doing-text"> {task} </p>

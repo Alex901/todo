@@ -258,7 +258,7 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
                             placeholder='Minutes'
                             inputProps={{
                                 min: '0', // Set the minimum value
-                                step: '15' // 15 min increments
+                                step: '5' // 5 min increments
                             }}
                             InputProps={{
                                 endAdornment: <InputAdornment position="end"></InputAdornment>,

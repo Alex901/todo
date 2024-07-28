@@ -70,7 +70,6 @@ const AnythingList = ({ type }) => {
 
     const filteredTodoList = useMemo(() => {
         let list = todoList; //All todo entries
-        console.log("DEBUG: All todo entries before filtering", list);
 
         list = list.filter(todo => todo.inListNew.some(list => list.listName === loggedInUser.activeList));
 
@@ -93,7 +92,6 @@ const AnythingList = ({ type }) => {
                 )
             );
         }
-        console.log("DEBUG: Filtered list", list);
         return list;
     }, [todoList, isUrgentOnly, isDeadlineOnly, selectedTags, isNewOnly]);
 
