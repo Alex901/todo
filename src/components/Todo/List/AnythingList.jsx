@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import "./AnythingList.css"
 import PropTypes from 'prop-types';
 import TodoButton from "../TodoButton/TodoButton";
@@ -8,8 +8,11 @@ import TodoEntry from "../TodoEntry/TodoEntry";
 import { useTodoContext } from "../../../contexts/todoContexts";
 import { useUserContext } from "../../../contexts/UserContext";
 import Icon from '@mdi/react';
-import { mdiMenuUp,mdiMenuDown } from '@mdi/js';
-import {  } from '@mdi/js';
+import { mdiMenuUp, mdiMenuDown } from '@mdi/js';
+import { } from '@mdi/js';
+import { Grid, FallingLines } from "react-loader-spinner";
+import { MagnifyingGlass } from "react-loader-spinner";
+
 
 
 import {
@@ -26,14 +29,14 @@ const AnythingList = ({ type }) => {
     const { todoList } = useTodoContext();
     const [isAscending, setIsAscending] = useState(true);
     const [isUrgentOnly, setIsUrgentOnly] = useState(false);
+    const [isNewOnly, setIsNewOnly] = useState(false); //should be "show"
     const [isDeadlineOnly, setIsDeadlineOnly] = useState(false);
     const [deadlineListOnly, setDeadlineListOnly] = useState([]);
     const [selectedOptionSort, setSelectedOptionSort] = useState({ value: 'created', label: 'Created' });
-    const [filteredTodoList, setFilteredTodoList] = useState([]);
-    const [sortedTodoList, setSortedTodoList] = useState([]);
     const [selectedTags, setSelectedTags] = useState([]);
     const [originalTodoList, setOriginalTodoList] = useState([]);
     const [isTagsOpen, setIsTagsOpen] = useState(false);
+    const [isFiltering, setIsFiltering] = useState(false);
 
     const priorityMapping = {
         'VERY LOW': 1,
@@ -65,49 +68,52 @@ const AnythingList = ({ type }) => {
 
     const tags = activeList ? activeList.tags : [];
 
-    /*   useEffect(() => {
-          if (editingTask !== null) {
-              setIsEditModalOpen(true);
-          }
-      }, [editingTask]); */
-    /* Logging */
-    useEffect(() => {
-    }, [isEditModalOpen]);
+    const filteredTodoList = useMemo(() => {
+        let list = todoList; //All todo entries
+        console.log("DEBUG: All todo entries before filtering", list);
 
-    //Everytime todoList(or loggedInUser) changes, i want to grab only the logged in users entries
-    useEffect(() => {
-        filterTodoList();
-    }, [todoList, loggedInUser]);
+        list = list.filter(todo => todo.inListNew.some(list => list.listName === loggedInUser.activeList));
 
-    //if the user selects a different sorting option, i want to sort the list
-    useEffect(() => {
-        filterActiveList();
-    }, [selectedOptionSort, isAscending, activeTodoList, loggedInUser]);
+        if (isUrgentOnly) {
+            list = list.filter(todo => todo.isUrgent);
+        }
 
-    //When i load a new user, i want that users settings to be loaded
+        if (isDeadlineOnly) {
+            list = list.filter(todo => todo.dueDate);
+        }
+
+        if(isNewOnly) {
+            list = list.filter(todo => todo.__v === 0);
+        }
+
+        if (selectedTags.length > 0) {
+            list = list.filter(todo =>
+                selectedTags.every(tag =>
+                    todo.tags.map(t => t._id).includes(tag._id)
+                )
+            );
+        }
+        console.log("DEBUG: Filtered list", list);
+        return list;
+    }, [todoList, isUrgentOnly, isDeadlineOnly, selectedTags, isNewOnly]);
+
+    const sortedTodoList = useMemo(() => {
+        const sortedList = [...filteredTodoList].sort(sortFunctions[selectedOptionSort.value]);
+        return isAscending ? sortedList.reverse() : sortedList;
+    }, [filteredTodoList, selectedOptionSort, isAscending]);
+
+
+    //Might not need this
+    useEffect(() => {
+        setActiveTodoList(sortedTodoList);
+    }, [filteredTodoList, sortedTodoList]);
+
+    //Load user settings
     useEffect(() => {
         if (loggedInUser && loggedInUser.settings && loggedInUser.settings.todoList) {
             setIsUrgentOnly(loggedInUser.settings.todoList.urgentOnly);
         }
     }, [loggedInUser]);
-
-    //Only after the activeTodoList has been set, i want to filters based on user settingws
-
-    useEffect(() => {
-        if (activeTodoList.length > 0) {
-            filterUrgentTasks(isUrgentOnly);
-        }
-    }, [isUrgentOnly, activeTodoList]);
-
-    useEffect(() => {
-        updateActiveList();
-    }, [selectedTags]);
-
-    useEffect(() => {
-        if (selectedTags.length === 0) {
-            setOriginalTodoList(activeTodoList);
-        }
-    }, [activeTodoList]);
 
     const handleClick = () => {
         setIsModalOpen(true);
@@ -117,6 +123,7 @@ const AnythingList = ({ type }) => {
         setEditingTask(taskData);
         setIsEditModalOpen(true);
     }
+
 
     const handleCloseModal = () => {
         setIsEditModalOpen(false);
@@ -128,6 +135,7 @@ const AnythingList = ({ type }) => {
     }
 
     const filterTodoList = () => {
+        setIsFiltering(true);
         if (isLoggedIn && loggedInUser.activeList) {
             const filteredList = todoList.filter(todo => todo.inList.includes(loggedInUser.activeList));
             if (JSON.stringify(filteredList) !== JSON.stringify(activeTodoList)) {
@@ -138,6 +146,7 @@ const AnythingList = ({ type }) => {
                 setActiveTodoList(todoList);
             }
         }
+        setIsFiltering(false);
     };
 
     const filterActiveList = () => {
@@ -156,6 +165,7 @@ const AnythingList = ({ type }) => {
     };
 
     const filterUrgentTasks = (urgentOnly) => {
+        setIsFiltering(true);
         if (urgentOnly) {
             const urgentTasks = activeTodoList.filter(task => task.isUrgent);
             if (JSON.stringify(urgentTasks) !== JSON.stringify(activeTodoList)) {
@@ -166,6 +176,7 @@ const AnythingList = ({ type }) => {
                 filterTodoList();
             }
         }
+        setIsFiltering(false);
     };
 
     const updateActiveList = () => {
@@ -196,6 +207,10 @@ const AnythingList = ({ type }) => {
 
     const toggleDeadlineOnly = () => {
         setIsDeadlineOnly(!isDeadlineOnly);
+    }
+
+    const toggleNewOnly = () => {
+        setIsNewOnly(!isNewOnly);
     }
 
     const handleTagChange = (event, values) => {
@@ -274,6 +289,17 @@ const AnythingList = ({ type }) => {
                             label="Deadline"
                         />
                     </div>
+                    <div className="checkbox-container" style={{ margin: '3px 20px' }}>
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={isNewOnly}
+                                    onChange={toggleNewOnly}
+                                />
+                            }
+                            label="New"
+                        />
+                    </div>
                     <div className="Select-sorting-order" style={{ display: 'flex', flexDirection: 'row', margin: '3px 15px' }}>
                         <FormControl variant="outlined" style={{ minWidth: 150 }}>
 
@@ -311,26 +337,35 @@ const AnythingList = ({ type }) => {
                     </div>
                 </div>
             )}
+            {isFiltering ? (
+                <div className="filtering-spinner-container" style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', height: '20vh' }}>
+                    <MagnifyingGlass color="brown" height={60} width={60} />
+                </div>
+            ) : (
+                <>
 
-            {isLoggedIn ? <div className={`title-${type}`}></div> : null}
+                    {isLoggedIn ? <div className={`title-${type}`}></div> : null}
 
-            <div className="list-view">
-                {
-                    (type === 'todo' && activeTodoList.filter(todo => !todo.isStarted && !todo.isDone).length > 0) ||
-                        (type === 'doing' && activeTodoList.filter(todo => todo.isStarted && !todo.isDone).length > 0) ||
-                        (type === 'done' && activeTodoList.filter(todo => todo.isDone).length > 0) ? (
-                        activeTodoList.map(todo => (
-                            <TodoEntry key={todo.id} type={type} todoData={todo} onEdit={handleEdit} />
-                        ))
-                    ) : (
-                        <div style={{ width: '100%', height: '20em', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                            {type === 'todo' && <strong>"To create new a new activity, use the '+'-button."</strong>}
-                            {type === 'doing' && "Looks like you are not doing anything at the moment. Go to 'todo' to start a task."}
-                            {type === 'done' && "No finished tasks yet."}
-                        </div>
-                    )
-                }
-            </div>
+                    <div className="list-view">
+
+                        {
+                            (type === 'todo' && activeTodoList.filter(todo => !todo.isStarted && !todo.isDone).length > 0) ||
+                                (type === 'doing' && activeTodoList.filter(todo => todo.isStarted && !todo.isDone).length > 0) ||
+                                (type === 'done' && activeTodoList.filter(todo => todo.isDone).length > 0) ? (
+                                activeTodoList.map(todo => (
+                                    <TodoEntry key={todo.id} type={type} todoData={todo} onEdit={handleEdit} />
+                                ))
+                            ) : (
+                                <div style={{ width: '100%', height: '20em', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                    {type === 'todo' && <strong>"To create new a new activity, use the '+'-button."</strong>}
+                                    {type === 'doing' && "Looks like you are not doing anything at the moment. Go to 'todo' to start a task."}
+                                    {type === 'done' && "No finished tasks yet."}
+                                </div>
+                            )
+                        }
+                    </div>
+                </>
+            )}
 
             {isEditModalOpen && editingTask && (
                 <EditModal

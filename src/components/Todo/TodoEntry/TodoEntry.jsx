@@ -242,7 +242,7 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
                             ) : null}
                         </div>
                         <div className="todo-text-container">
-                            {todoData.__v === 0 && <p className="new-task">NEW</p>}
+                            {todoData.__v === 0 && <p className="new-task">NEW!</p>}
                             <p className="todo-text">{task}</p>
                         </div>
                         <div className="tags-container-entry">

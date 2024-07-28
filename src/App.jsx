@@ -46,6 +46,7 @@ function App() {
   const [isEditHovered, setIsEditHovered] = useState(false);
   const [isDeleteHovered, setIsDeleteHovered] = useState(false);
 
+  //Is this clever or na ? 
   useEffect(() => {
     const fetchLoginStatus = async () => {
       setIsLoading(true);
