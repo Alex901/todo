@@ -27,6 +27,7 @@ import Icon from '@mdi/react';
 import { toast } from 'react-toastify';
 
 const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should use state. Maybe fix?
+
     const { id,
         task,
         isDone,
@@ -241,7 +242,8 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
                             ) : null}
                         </div>
                         <div className="todo-text-container">
-                            <p className="todo-text"> {task}</p>
+                            {todoData.__v === 0 && <p className="new-task">NEW</p>}
+                            <p className="todo-text">{task}</p>
                         </div>
                         <div className="tags-container-entry">
                             <Tags tags={tags} />
@@ -340,12 +342,12 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
                                 <Icon path={priorityIcons[priority]} size={1} />
                             </div>
                             <div className="information-time">
-                            <div className="information-time">
-                                <Icon path={mdiClockOutline} size={1} />
-                                <span style={{ whiteSpace: 'nowrap' }}>
-                                    {estimatedTime ? formatEstimatedTime(estimatedTime) : '-'}
-                                </span>
-                            </div>
+                                <div className="information-time">
+                                    <Icon path={mdiClockOutline} size={1} />
+                                    <span style={{ whiteSpace: 'nowrap' }}>
+                                        {estimatedTime ? formatEstimatedTime(estimatedTime) : '-'}
+                                    </span>
+                                </div>
                             </div>
                             {steps.length > 0 && (
                                 <div className="information-steps">
@@ -442,12 +444,12 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
                                 <Icon path={priorityIcons[priority]} size={1} />
                             </div>
                             <div className="information-time">
-                            <div className="information-time">
-                                <Icon path={mdiClockOutline} size={1} />
-                                <span style={{ whiteSpace: 'nowrap' }}>
-                                    {estimatedTime ? formatEstimatedTime(estimatedTime) : '-'}
-                                </span>
-                            </div>
+                                <div className="information-time">
+                                    <Icon path={mdiClockOutline} size={1} />
+                                    <span style={{ whiteSpace: 'nowrap' }}>
+                                        {estimatedTime ? formatEstimatedTime(estimatedTime) : '-'}
+                                    </span>
+                                </div>
                             </div>
                             {steps.length > 0 && (
                                 <div className="information-steps">

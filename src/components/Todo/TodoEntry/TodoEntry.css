@@ -327,3 +327,17 @@ padding: 2px
     padding: 4px;
     width: auto;
 }
+
+.todo-text-container {
+    display: flex;
+    flex-direction: row;
+    width: 100%;
+    justify-content: center;
+  }
+  
+  .new-task {
+    color: var(--error-color); /* Example style */
+    font-weight: bold;
+    margin-right: 5px; /* Space between "new" and the task */
+  }
+  
