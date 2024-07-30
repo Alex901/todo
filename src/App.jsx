@@ -215,7 +215,8 @@ function App() {
                       onChange={handleListChange}
                     >
 
-                      {loggedInUser.myLists.map(list => {
+                      {loggedInUser.myLists && loggedInUser.myLists.map(list => {
+                        console.log("DEBUG -- list: ", list);
                         const todoCount = getListTodoCount(list.listName);
                         const doingCount = getListDoingCount(list.listName);
                         const doneCount = getListDoneCount(list.listName);
