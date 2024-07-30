@@ -285,6 +285,7 @@ const TodoProvider = ({ children }) => {
   };
 
   const editTodo = async (updatedTask) => {
+    console.log("todoContext: editTodo: updatedTask", updatedTask);
     try {
       const taskId = todoList.find(todo => todo.id === updatedTask.id)._id;
 
@@ -342,6 +343,7 @@ const TodoProvider = ({ children }) => {
   }
   //Find task with id -> step id and set it to completed
   const setStepCompleted = async (taskId, stepId) => {
+    console.log("todoContext: setStepCompleted: taskId, stepId", taskId, stepId);
     try {
       const response = await axios.patch(`${BASE_URL}/api/stepComplete`, { taskId, stepId });
       if (response.status === 200) {
@@ -401,6 +403,8 @@ const TodoProvider = ({ children }) => {
 
 
   //Other functions
+
+  //TODO: Clean up this mess and make it into a single function
 
   const getTodoCount = (isUrgent = false) => {
     return todoList.filter(todo => !todo.isDone && !todo.isStarted && (!isUrgent || todo.isUrgent)).length;
