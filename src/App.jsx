@@ -11,7 +11,10 @@ import DeleteListModal from './components/Todo/TodoModal/DeleteListModal/DeleteL
 import CookieConsent from './components/CookieConsent/CookieConsent'
 import { toast } from "react-toastify";
 import Icon from '@mdi/react';
-import { mdiDelete, mdiPlus, mdiMinus, mdiFileExport, mdiGroup, mdiTextBoxEditOutline, mdiPlaylistEdit, mdiDeleteEmpty, mdiPencil } from '@mdi/js';
+import {
+  mdiDelete, mdiPlus, mdiMinus, mdiFileExport, mdiGroup, mdiTextBoxEditOutline,
+  mdiPlaylistEdit, mdiDeleteEmpty, mdiPencil, mdiArchiveArrowDownOutline, mdiArchiveArrowUpOutline
+} from '@mdi/js';
 import Chip from '@mui/material/Chip';
 import Popper from '@mui/material/Popper';
 import { SketchPicker } from 'react-color';
@@ -45,6 +48,10 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [isEditHovered, setIsEditHovered] = useState(false);
   const [isDeleteHovered, setIsDeleteHovered] = useState(false);
+  const [isShowDetailsSelected, setIsShowDetailsSelected] = useState(false); //DEBUG: Get setting from logged in user
+
+
+  const activeList = loggedInUser?.myLists.find(list => list.listName === loggedInUser.activeList);
 
   //Is this clever or na ? 
   useEffect(() => {
@@ -186,6 +193,21 @@ function App() {
     console.log("Edit list modal opened");
   }
 
+  const toggleShowDetails = () => {
+    setIsShowDetailsSelected(!isShowDetailsSelected);
+  }
+
+  const formatDate = (dateString) => {
+    const date = new Date(dateString);
+    const day = String(date.getDate()).padStart(2, '0');
+    const month = String(date.getMonth() + 1).padStart(2, '0'); // Months are zero-based
+    const year = date.getFullYear();
+    const hours = String(date.getHours()).padStart(2, '0');
+    const minutes = String(date.getMinutes()).padStart(2, '0');
+
+    return `${day}/${month}/${year} - ${hours}:${minutes}`;
+  };
+
   //TODO: This shouldbe moved to a separate component
   return (
 
@@ -245,6 +267,10 @@ function App() {
                     <Icon path={isEditHovered ? mdiPencil : mdiTextBoxEditOutline} size={1.4} />
                   </div>
 
+                  <div className="icon-button description" onClick={toggleShowDetails}>
+                    <Icon path={isShowDetailsSelected ? mdiArchiveArrowUpOutline : mdiArchiveArrowDownOutline} size={1.4} />
+                  </div>
+
                   <div
                     className="icon-button delete"
                     onClick={openDeleteListModal}
@@ -271,6 +297,27 @@ function App() {
                   />
                 </div>
               )}
+
+              {isShowDetailsSelected && (
+                <div className="details-container" style={{ display: 'flex', gap: '10px', margin: '10px 0' }}>
+                  <div style={{ flex: 1 }}>
+                    <strong>Description</strong>
+                    <br />
+                    {activeList?.description || 'No description'}
+                  </div>
+                  <div className="details-grid" style={{ flex: 2 }}>
+                  <div><strong>Owner:</strong> {activeList?.type === 'userList' ? activeList?.owner.username : activeList?.owner.listName}</div>
+                    <div><strong>Created:</strong> {activeList?.createdAt ? formatDate(activeList.createdAt) : 'N/A'}</div>
+                    <div><strong>List Type:</strong> {activeList?.type}</div>
+                    <div><strong>Visibility:</strong> {activeList?.visibility}</div>
+                    <div><strong>Entries:</strong> {activeList?.entries}</div>
+                    <div><strong>Last Modified:</strong> {activeList?.updatedAt ? formatDate(activeList.updatedAt) : 'N/A'}</div>
+                   
+                    
+                  </div>
+                </div>
+              )}
+
               {isLoggedIn && (
                 <div className="functions-container" style={{
                   display: 'flex', justifyContent: 'center', alignItems: 'flex-start',
@@ -367,10 +414,6 @@ function App() {
                         }}
                       />
                     )}
-
-
-
-
                   </div>
                 </div>
               )}

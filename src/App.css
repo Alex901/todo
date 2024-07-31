@@ -27,13 +27,6 @@ body {
   /* Add padding to create space between content and edges */
 }
 
-@media screen and (max-width: 1024px) {
-  .content {
-    padding: 0;
-  }
-
-}
-
 .nav button {
   padding: 5px;
   margin: 1px;
@@ -171,4 +164,36 @@ body {
 
 .hidden {
   display: none;
+}
+
+.details-container {
+  display: flex;
+  gap: 10px;
+  margin: 10px 0;
+}
+
+.details-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 10px;
+  text-align: left;
+}
+
+@media screen and (max-width: 1024px) {
+  .content {
+    padding: 0;
+  }
+
+}
+
+@media (min-width: 600px) {
+  .details-container {
+    flex-direction: row;
+  }
+}
+
+@media (max-width: 599px) {
+  .details-container {
+    flex-direction: column;
+  }
 }
