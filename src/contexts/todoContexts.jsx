@@ -66,7 +66,7 @@ const TodoProvider = ({ children }) => {
 
 
   const fetchTodoList = async () => {
-    console.log("DEBUG: Fetching todo list, checking group lists: ", userGroupList);
+    //console.log("DEBUG: Fetching todo list, checking group lists: ", userGroupList);
 
     if (!loggedInUser) {
       return;
@@ -87,7 +87,7 @@ const TodoProvider = ({ children }) => {
         dueDate: todo.dueDate ? new Date(todo.dueDate) : null
       }));
 
-      console.log("\x1b[31mDEBUG\x1b[0m - parsedData.length", parsedData.length);
+      //console.log("\x1b[31mDEBUG\x1b[0m - parsedData.length", parsedData.length);
       setTodoList(parsedData);
 
     } catch (error) {

@@ -34,7 +34,7 @@ function App() {
   const [activeView, setActiveView] = useState('todo');
   const { getTodoCount, getDoneCount, getDoingCount, getActiveListTodoCount, getActiveListDoingCount, getActiveListDoneCount,
     getListDoingCount, getListDoneCount, getListTodoCount } = useTodoContext();
-  const { loggedInUser, isLoggedIn, setLoggedInUser, setActiveList, deleteList, addTag, deleteTag, checkLogin } = useUserContext();
+  const { loggedInUser, isLoggedIn, setLoggedInUser, setActiveList, deleteList, addTag, deleteTag, checkLogin, toggleShowDetails } = useUserContext();
   const [isCreateListModalOpen, setIsCreateListModalOpen] = useState(false);
   const [isdDeleteListModalOpen, setIsDeleteListModalOpen] = useState(false);
   const [deleteListError, setDeleteListError] = useState("");
@@ -48,7 +48,7 @@ function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [isEditHovered, setIsEditHovered] = useState(false);
   const [isDeleteHovered, setIsDeleteHovered] = useState(false);
-  const [isShowDetailsSelected, setIsShowDetailsSelected] = useState(false); //DEBUG: Get setting from logged in user
+  const [isShowDetailsSelected, setIsShowDetailsSelected] = useState(false);
 
 
   const activeList = loggedInUser?.myLists.find(list => list.listName === loggedInUser.activeList);
@@ -63,6 +63,12 @@ function App() {
 
     fetchLoginStatus();
   }, []);
+
+  useEffect(() => {
+    if (loggedInUser?.settings?.todoList?.showListDetails !== undefined) {
+      setIsShowDetailsSelected(loggedInUser.settings.todoList.showListDetails);
+    }
+  }, [loggedInUser]);
 
   if (isLoading) {
     return (
@@ -193,8 +199,12 @@ function App() {
     console.log("Edit list modal opened");
   }
 
-  const toggleShowDetails = () => {
-    setIsShowDetailsSelected(!isShowDetailsSelected);
+  const toggleDetails = () => {
+    setIsShowDetailsSelected(prevState => {
+      const newState = !prevState;
+      toggleShowDetails(newState);
+      return newState;
+    });
   }
 
   const formatDate = (dateString) => {
@@ -225,7 +235,7 @@ function App() {
             <div className='nav' style={{ display: 'flex', flexDirection: 'column' }}>
               {/* First row */}
               {isLoggedIn && (
-                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '5px' }}>
+                <div className="listSelection">
                   <FormControl variant='standard' style={{ width: '22em', margin: '10px' }}>
                     <InputLabel id="active-list-label" style={{ fontWeight: 'bold' }}>Active list </InputLabel>
                     <Select
@@ -238,7 +248,6 @@ function App() {
                     >
 
                       {loggedInUser.myLists && loggedInUser.myLists.map(list => {
-                        console.log("DEBUG -- list: ", list);
                         const todoCount = getListTodoCount(list.listName);
                         const doingCount = getListDoingCount(list.listName);
                         const doneCount = getListDoneCount(list.listName);
@@ -254,33 +263,35 @@ function App() {
                     </Select>
                   </FormControl>
 
-                  <div className="icon-button add" onClick={openCreateListModal} style={{ marginLeft: 10 }}>
-                    <Icon path={mdiPlus} size={1.6} />
-                  </div>
+                  <div className="icon-buttons">
+                    <div className="icon-button add" onClick={openCreateListModal} style={{ marginLeft: 10 }}>
+                      <Icon path={mdiPlus} size={1.6} />
+                    </div>
 
-                  <div
-                    className="icon-button edit"
-                    onClick={openEditListModal}
-                    onMouseEnter={() => setIsEditHovered(true)}
-                    onMouseLeave={() => setIsEditHovered(false)}
-                  >
-                    <Icon path={isEditHovered ? mdiPencil : mdiTextBoxEditOutline} size={1.4} />
-                  </div>
+                    <div
+                      className="icon-button edit"
+                      onClick={openEditListModal}
+                      onMouseEnter={() => setIsEditHovered(true)}
+                      onMouseLeave={() => setIsEditHovered(false)}
+                    >
+                      <Icon path={isEditHovered ? mdiPencil : mdiTextBoxEditOutline} size={1.4} />
+                    </div>
 
-                  <div className="icon-button description" onClick={toggleShowDetails}>
-                    <Icon path={isShowDetailsSelected ? mdiArchiveArrowUpOutline : mdiArchiveArrowDownOutline} size={1.4} />
-                  </div>
+                    <div className="icon-button description" onClick={toggleDetails}>
+                      <Icon path={isShowDetailsSelected ? mdiArchiveArrowUpOutline : mdiArchiveArrowDownOutline} size={1.4} />
+                    </div>
 
-                  <div
-                    className="icon-button delete"
-                    onClick={openDeleteListModal}
-                    onMouseEnter={() => setIsDeleteHovered(true)}
-                    onMouseLeave={() => setIsDeleteHovered(false)}
-                  >
-                    <Icon path={isDeleteHovered ? mdiDeleteEmpty : mdiDelete} size={1.4} />
-                  </div>
+                    <div
+                      className="icon-button delete"
+                      onClick={openDeleteListModal}
+                      onMouseEnter={() => setIsDeleteHovered(true)}
+                      onMouseLeave={() => setIsDeleteHovered(false)}
+                    >
+                      <Icon path={isDeleteHovered ? mdiDeleteEmpty : mdiDelete} size={1.4} />
+                    </div>
 
-                  <div className="list-details-section">
+                    <div className="list-details-section">
+                    </div>
                   </div>
 
                   <CreateListModal
@@ -299,21 +310,19 @@ function App() {
               )}
 
               {isShowDetailsSelected && (
-                <div className="details-container" style={{ display: 'flex', gap: '10px', margin: '10px 0' }}>
+                <div className="details-container">
                   <div style={{ flex: 1 }}>
                     <strong>Description</strong>
                     <br />
                     {activeList?.description || 'No description'}
                   </div>
                   <div className="details-grid" style={{ flex: 2 }}>
-                  <div><strong>Owner:</strong> {activeList?.type === 'userList' ? activeList?.owner.username : activeList?.owner.listName}</div>
+                    <div><strong>Owner:</strong> {activeList?.type === 'userList' ? activeList?.owner.username : activeList?.owner.listName}</div>
                     <div><strong>Created:</strong> {activeList?.createdAt ? formatDate(activeList.createdAt) : 'N/A'}</div>
                     <div><strong>List Type:</strong> {activeList?.type}</div>
                     <div><strong>Visibility:</strong> {activeList?.visibility}</div>
                     <div><strong>Entries:</strong> {activeList?.entries}</div>
                     <div><strong>Last Modified:</strong> {activeList?.updatedAt ? formatDate(activeList.updatedAt) : 'N/A'}</div>
-                   
-                    
                   </div>
                 </div>
               )}

@@ -166,8 +166,15 @@ body {
   display: none;
 }
 
+.icon-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 5px;
+}
+
 .details-container {
   display: flex;
+  flex-direction: row;
   gap: 10px;
   margin: 10px 0;
 }
@@ -179,21 +186,37 @@ body {
   text-align: left;
 }
 
+.listSelection {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 5px;
+}
+
+
 @media screen and (max-width: 1024px) {
   .content {
     padding: 0;
-  }
-
-}
-
-@media (min-width: 600px) {
-  .details-container {
-    flex-direction: row;
   }
 }
 
 @media (max-width: 599px) {
   .details-container {
+    flex-direction: row;
     flex-direction: column;
+  }
+}
+
+@media (max-width: 599px) {
+  .listSelection {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .icon-buttons {
+    display: flex;
+    flex-direction: row;
+    gap: 5px;
+    margin-left: 0;
   }
 }
