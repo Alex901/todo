@@ -51,11 +51,11 @@
 
 .hero-right {
   justify-content: center;
-  background-image: url('../../assets/checklist2.jpg');
+  background-image: url('../../assets/header_image.png');
   background-size: 80%;
   background-repeat: no-repeat;
   background-position: center;
-  z-index: 100;
+  z-index: 1;
 }
 
 .hero-bottom-left {

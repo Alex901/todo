@@ -317,9 +317,9 @@ function App() {
                     {activeList?.description || 'No description'}
                   </div>
                   <div className="details-grid" style={{ flex: 2 }}>
-                    <div><strong>Owner:</strong> {activeList?.type === 'userList' ? activeList?.owner.username : activeList?.owner.listName}</div>
-                    <div><strong>Created:</strong> {activeList?.createdAt ? formatDate(activeList.createdAt) : 'N/A'}</div>
+                    <div><strong>Owner:</strong> {activeList?.type === 'userList' ? activeList?.owner.username : activeList?.owner.name}</div>
                     <div><strong>List Type:</strong> {activeList?.type}</div>
+                    <div><strong>Created:</strong> {activeList?.createdAt ? formatDate(activeList.createdAt) : 'N/A'}</div>
                     <div><strong>Visibility:</strong> {activeList?.visibility}</div>
                     <div><strong>Entries:</strong> {activeList?.entries}</div>
                     <div><strong>Last Modified:</strong> {activeList?.updatedAt ? formatDate(activeList.updatedAt) : 'N/A'}</div>
