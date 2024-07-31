@@ -13,7 +13,7 @@ import { toast } from "react-toastify";
 import Icon from '@mdi/react';
 import {
   mdiDelete, mdiPlus, mdiMinus, mdiFileExport, mdiGroup, mdiTextBoxEditOutline,
-  mdiPlaylistEdit, mdiDeleteEmpty, mdiPencil, mdiArchiveArrowDownOutline, mdiArchiveArrowUpOutline
+  mdiPlaylistEdit, mdiDeleteEmpty, mdiPencil, mdiArchiveArrowDownOutline, mdiArchiveArrowUpOutline, mdiCloseCircle
 } from '@mdi/js';
 import Chip from '@mui/material/Chip';
 import Popper from '@mui/material/Popper';
@@ -363,14 +363,21 @@ function App() {
                           <Chip
                             key={index}
                             label={tag.label}
+                            className="chip"
                             style={{
                               background: `linear-gradient(135deg, ${tag.color} 25%, ${tag.color} 75%)`,
                               boxShadow: `0 3px 5px 2px rgba(255, 105, 135, .3), inset 0 1px 2px rgba(255, 255, 255, 0.3)`,
                               color: tag.textColor,
                             }}
                             onDelete={() => deleteTag(tag._id, tag)}
-                            deleteIconStyle={{ color: tag.textColor }}
-                            deleteIcon={{ color: tag.textColor }}
+                            deleteIcon={
+                              <Icon
+                                path={mdiCloseCircle}
+                                size={1}
+                                color={tag.textColor}
+                                className="delete-icon" // Apply CSS class
+                              />
+                            }
                             sx={{
                               margin: '0.5em',
                               height: '2em',
