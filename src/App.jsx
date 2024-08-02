@@ -50,6 +50,7 @@ function App() {
   const [isDeleteHovered, setIsDeleteHovered] = useState(false);
   const [isShowDetailsSelected, setIsShowDetailsSelected] = useState(false);
   const [totalTimeToComplete, setTotalTimeToComplete] = useState("");
+  const [totalTimeSpent, setTotalTimeSpent] = useState("");
 
 
   const activeList = loggedInUser?.myLists.find(list => list.listName === loggedInUser.activeList);
@@ -67,7 +68,7 @@ function App() {
     if (weeks > 0) formatted += `${weeks} week${weeks > 1 ? 's' : ''} `;
     if (remainingDays > 0) formatted += `${remainingDays} day${remainingDays > 1 ? 's' : ''} `;
     if (hours > 0) formatted += `${hours} hour${hours > 1 ? 's' : ''} `;
-    if (mins > 0 || formatted === '') formatted += `${mins} minute${mins > 1 ? 's' : ''}`;
+    if (mins > 0 || formatted === '') formatted += `${Math.round(mins)} minute${Math.round(mins) > 1 ? 's' : ''}`;
   
     return formatted.trim();
   };
@@ -96,17 +97,36 @@ function App() {
       console.log("DEBUG -- activeList", activeList.listName);
       console.log("DEBUG -- todoList", todoList);
 
-      const totalTime = todoList
+      const totalTimeToComplete = todoList
         .filter(todo => {
           const isMatch = todo.inListNew.some(list => list.listName.toLowerCase() === activeList.listName.toLowerCase());
           const isNotCompleted = todo.completed === null;
-          console.log(`Filtering todo: ${todo.task}, isMatch: ${isMatch}, isNotCompleted: ${isNotCompleted}`);
           return isMatch && isNotCompleted;
         })
         .reduce((acc, todo) => acc + todo.estimatedTime, 0);
 
-      const formattedTime = formatDuration(totalTime);
-      setTotalTimeToComplete(formattedTime);
+        const totalTimeSpent = todoList
+        .filter(todo => {
+            const isMatch = todo.inListNew.some(list => list.listName.toLowerCase() === activeList.listName.toLowerCase());
+            const isCompleted = todo.completed !== null;
+            console.log(`Filtering todo completed: ${todo.totalTimeSpent}, isMatch: ${isMatch}, isCompleted: ${isCompleted}`);
+            return isMatch && isCompleted;
+        })
+        .reduce((acc, todo) => {
+          const timeSpent = todo.totalTimeSpent / 60000; // Convert milliseconds to minutes
+          console.log(`Reducing todo: totalTimeSpend=${todo.totalTimeSpent}, timeSpend=${timeSpent}`);
+          const newAcc = acc + timeSpent;
+          console.log("DEBUG -- acc", newAcc);
+          return newAcc;
+      }, 0);
+
+        console.log("DEBUG -- totalTimeSpent: ", totalTimeSpent);
+
+      const formattedTimeToComplete = formatDuration(totalTimeToComplete);
+      const formattedTimeSpent = formatDuration(totalTimeSpent); // Convert milliseconds to minutes
+
+      setTotalTimeToComplete(formattedTimeToComplete);
+      setTotalTimeSpent(formattedTimeSpent);
     }
 }, [todoList, activeList]);
 
@@ -362,6 +382,7 @@ function App() {
                     <div><strong>Visibility:</strong> {activeList?.visibility}</div>
                     <div><strong>Time to complete: </strong> {totalTimeToComplete || 'N/A'}</div>
                     <div><strong>Last Modified:</strong> {activeList?.updatedAt ? formatDate(activeList.updatedAt) : 'N/A'}</div>
+                    <div><strong>Time spend on project </strong> {totalTimeSpent || 'N/A'}</div>
                   </div>
                 </div>
               )}
