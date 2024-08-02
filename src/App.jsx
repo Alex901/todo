@@ -94,8 +94,6 @@ function App() {
 
   useMemo(() => {
     if (todoList && activeList) {
-      console.log("DEBUG -- activeList", activeList.listName);
-      console.log("DEBUG -- todoList", todoList);
 
       const totalTimeToComplete = todoList
         .filter(todo => {
@@ -109,18 +107,14 @@ function App() {
         .filter(todo => {
             const isMatch = todo.inListNew.some(list => list.listName.toLowerCase() === activeList.listName.toLowerCase());
             const isCompleted = todo.completed !== null;
-            console.log(`Filtering todo completed: ${todo.totalTimeSpent}, isMatch: ${isMatch}, isCompleted: ${isCompleted}`);
             return isMatch && isCompleted;
         })
         .reduce((acc, todo) => {
           const timeSpent = todo.totalTimeSpent / 60000; // Convert milliseconds to minutes
-          console.log(`Reducing todo: totalTimeSpend=${todo.totalTimeSpent}, timeSpend=${timeSpent}`);
           const newAcc = acc + timeSpent;
-          console.log("DEBUG -- acc", newAcc);
           return newAcc;
       }, 0);
 
-        console.log("DEBUG -- totalTimeSpent: ", totalTimeSpent);
 
       const formattedTimeToComplete = formatDuration(totalTimeToComplete);
       const formattedTimeSpent = formatDuration(totalTimeSpent); // Convert milliseconds to minutes
@@ -151,7 +145,6 @@ function App() {
   }
 
   const handleListChange = (event) => {
-    //console.log("selectedOption: ", event.target.value);
     if (event.target.value) {
       setLoggedInUser({ ...loggedInUser, activeList: event.target.value });
       setActiveList(event.target.value);

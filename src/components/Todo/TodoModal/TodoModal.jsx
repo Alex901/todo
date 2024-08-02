@@ -172,6 +172,17 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
         return `${hours}h ${remainingMinutes}min`;
     };
 
+    const handleOnDragEnd = (result) => {
+        if (!result.destination) return;
+
+        const items = Array.from(newTaskData.steps);
+        const [reorderedItem] = items.splice(result.source.index, 1);
+        items.splice(result.destination.index, 0, reorderedItem);
+
+        // Update your state with the new order
+        setNewTaskData({ ...newTaskData, steps: items });
+    };
+
     return (
 
         <ReactModal
@@ -349,18 +360,29 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
 
                     <hr style={{ width: '80%', margin: '10px auto' }} />
 
-                    <div className='steps' style={{ width: '100%', justifyContent: 'left' }}>
-                        {newTaskData.steps.map(step => (
-                            <div key={step.id} style={{ display: 'flex', flexDirection: 'row' }}>
-                                <label style={{ display: 'flex', alignItems: 'center' }}>{`Step${step.id}`}</label>
-                                <input className='create-modal-input' type='text' placeholder={`Enter step title`}
-                                    onChange={event => handleInputChangeStep(step.id, event)} value={newTaskData.steps[step.id - 1].value} maxLength='50' />
-                            </div>
-                        ))}
-                        <div style={{ display: 'flex', justifyContent: 'center' }}>
-                            <p className='add-step' onClick={handleAddStep} style={{}}> <strong> add step </strong> </p> </div>
-                    </div>
-                    <hr style={{ width: '80%', margin: '10px auto' }} />
+                    <DragDropContext onDragEnd={handleOnDragEnd}>
+                        <Droppable droppableId="newTaskSteps">
+                            {(provided) => (
+                                <div className='steps' style={{ width: '100%', justifyContent: 'left' }} {...provided.droppableProps} ref={provided.innerRef}>
+                                    {newTaskData.steps.map((step, index) => (
+                                        <Draggable key={step.id} draggableId={String(step.id)} index={index}>
+                                            {(provided) => (
+                                                <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} style={{ display: 'flex', flexDirection: 'row', ...provided.draggableProps.style }}>
+                                                    <label style={{ display: 'flex', alignItems: 'center' }}>{`Step${index + 1}`}</label>
+                                                    <input className='create-modal-input' type='text' placeholder={`Enter step title`}
+                                                        onChange={event => handleInputChangeStep(step.id, event)} value={newTaskData.steps[step.id - 1].value} maxLength='50' />
+                                                </div>
+                                            )}
+                                        </Draggable>
+                                    ))}
+                                    {provided.placeholder}
+                                    <div style={{ display: 'flex', justifyContent: 'center' }}>
+                                        <p className='add-step' onClick={handleAddStep} style={{}}> <strong> add step </strong> </p>
+                                    </div>
+                                </div>
+                            )}
+                        </Droppable>
+                    </DragDropContext>
 
 
                     {errorMessage && <p className="error">{errorMessage}</p>}

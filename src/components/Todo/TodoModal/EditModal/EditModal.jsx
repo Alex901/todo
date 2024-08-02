@@ -82,7 +82,7 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
 
     const handleInputChange = (event) => {
         let value = event.target.value;
-        console.log("Value", value);
+        //console.log("Value", value);
 
         if (event.target.name === 'dueDate') {
             value = new Date(value);

@@ -12,12 +12,10 @@ import { mdiMenuUp, mdiMenuDown } from '@mdi/js';
 import { } from '@mdi/js';
 import { Grid, FallingLines } from "react-loader-spinner";
 import { MagnifyingGlass } from "react-loader-spinner";
-
-
-
 import {
     FormControl, InputLabel, MenuItem, Select, IconButton,
-    Checkbox, FormControlLabel, Autocomplete, TextField, Stack
+    Checkbox, FormControlLabel, Autocomplete, TextField, Stack,
+    Chip
 } from '@mui/material';
 
 const AnythingList = ({ type }) => {
@@ -72,7 +70,7 @@ const AnythingList = ({ type }) => {
         start.setHours(0, 0, 0, 0);
         return start;
     };
-    
+
     const getEndOfWeek = (date) => {
         const end = new Date(date);
         const day = end.getDay();
@@ -81,40 +79,43 @@ const AnythingList = ({ type }) => {
         end.setHours(23, 59, 59, 999);
         return end;
     };
-    
+
     const startOfWeek = getStartOfWeek(new Date());
     const endOfWeek = getEndOfWeek(new Date());
-    const activeList = loggedInUser ? loggedInUser.listNames.find(list => list.name === loggedInUser.activeList) : null;
+    const activeList = loggedInUser ? loggedInUser.myLists.find(list => list.listName === loggedInUser.activeList) : null;
     const tags = activeList ? activeList.tags : [];
 
-    const customSortFunction = (a, b, isAscending = true) => {
+    const customSortFunction = (a, b, isAscending) => {
         const getDateCategory = (date) => {
-            if (!date) return isAscending ? 5 : -1; // No deadline
+            if (!date) return isAscending ? -1 : 5; // No deadline
             const today = new Date();
             const tomorrow = new Date(today);
             tomorrow.setDate(today.getDate() + 1);
-    
+
             if (date.toDateString() === today.toDateString()) return 3; // Today
             if (date.toDateString() === tomorrow.toDateString()) return 2; // Tomorrow
             if (date < today) return 4; // Past deadline
             return 1; // Other future dates (Normal deadline)
         };
-    
+
         const dateA = getDateCategory(a.dueDate);
         const dateB = getDateCategory(b.dueDate);
-    
+
         if (dateA !== dateB) {
-            return dateA - dateB;
+            return dateB - dateA;
         }
-    
+
         // If dates are in the same category, sort by the actual date
-        return isAscending ? new Date(a.dueDate) - new Date(b.dueDate) : new Date(b.dueDate) - new Date(a.dueDate);
+        return isAscending ? new Date(b.dueDate) - new Date(a.dueDate) : new Date(a.dueDate) - new Date(b.dueDate);
     };
 
     const filteredTodoList = useMemo(() => {
         let list = todoList; //All todo entries
+        console.log("DEBUG -- list: ", list);
 
         list = list.filter(todo => todo.inListNew.some(list => list.listName === loggedInUser.activeList));
+
+        //filter out used tags
 
         if (isUrgentOnly) {
             list = list.filter(todo => todo.isUrgent);
@@ -127,7 +128,7 @@ const AnythingList = ({ type }) => {
             });
         }
 
-        if(isNewOnly) {
+        if (isNewOnly) {
             list = list.filter(todo => todo.__v === 0);
         }
 
@@ -138,23 +139,25 @@ const AnythingList = ({ type }) => {
                 )
             );
         }
+
         return list;
     }, [todoList, isUrgentOnly, isDeadlineOnly, selectedTags, isNewOnly]);
 
     const sortedTodoList = useMemo(() => {
         const sortedList = [...filteredTodoList].sort((a, b) => {
             if (selectedOptionSort.value === 'deadline') {
-                return customSortFunction(a, b, isAscending);
+                return customSortFunction(a, b, !isAscending);
             }
             return sortFunctions[selectedOptionSort.value](a, b, !isAscending);
         });
-        return isAscending ? sortedList : sortedList.reverse();
+        return isAscending ? sortedList.reverse() : sortedList;
     }, [filteredTodoList, selectedOptionSort, isAscending]);
 
 
     //Might not need this
     useEffect(() => {
         setActiveTodoList(sortedTodoList);
+        console.log("DEBUG -- activeTodoList post sort: ", activeTodoList);
     }, [filteredTodoList, sortedTodoList]);
 
     //Load user settings
@@ -245,7 +248,7 @@ const AnythingList = ({ type }) => {
                 <div className={`list-settings list-settings-${type}`} style={{ display: 'flex', justifyContent: 'space-between', border: '2px solid gray' }}>
                     <div className="seartch-container" style={{ margin: '3px 20px' }}>
 
-                        <Stack spacing={3} sx={{}}>
+                        <Stack spacing={1} sx={{}}>
                             <FormControl variant="outlined" style={{ minWidth: 120 }}>
                                 <Autocomplete
                                     open={isTagsOpen}
@@ -262,10 +265,28 @@ const AnythingList = ({ type }) => {
                                     multiple
                                     id="tags-outlined"
                                     size="small"
-                                    limitTags={2}
+                                    limitTags={3}
                                     options={tags}
                                     getOptionLabel={(option) => option.label}
                                     onChange={handleTagChange}
+                                    renderOption={(props, option) => (
+                                        <li {...props}>
+                                            <Chip
+                                                label={option.label}
+                                                style={{ backgroundColor: option.color, color: option.textColor }}
+                                            />
+                                        </li>
+                                    )}
+                                    renderTags={(value, getTagProps) =>
+                                        value.map((option, index) => (
+                                            <Chip
+                                                key={option._id}
+                                                label={option.label}
+                                                style={{ backgroundColor: option.color, color: option.textColor }}
+                                                {...getTagProps({ index })}
+                                            />
+                                        ))
+                                    }
                                     renderInput={(params) => (
                                         <TextField
                                             {...params}
