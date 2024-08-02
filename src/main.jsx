@@ -38,7 +38,10 @@ const theme = createTheme({
     },
     white: {
       main: '#FFFFFF',
-    }
+    },
+    forestGreen: {
+      main: '#228B22',
+    },
   },
 
 
@@ -69,7 +72,6 @@ function Main() {
   }, []);
 
   return (
-    <React.StrictMode>
       <ThemeProvider theme={theme}>
         <UserProvider>
           <GroupProvider>
@@ -95,7 +97,6 @@ function Main() {
           </GroupProvider>
         </UserProvider>
       </ThemeProvider>
-    </React.StrictMode>
   );
 }
 

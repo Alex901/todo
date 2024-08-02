@@ -51,7 +51,6 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
         tags: editData.tags,
     });
 
-    const selectedListValues = editData?.inList;
     const optionsListNames = isLoggedIn && loggedInUser.myLists
         ? loggedInUser.myLists
             .filter(item => {
@@ -353,7 +352,7 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
                             size="small"
                             style={{ width: '100px', textAlign: 'center' }}
                             placeholder="Time"
-                            inputProps={{ min: '0', step: '15' }}
+                            inputProps={{ min: '0', step: '5' }}
                             InputProps={{
                                 startAdornment: <InputAdornment position="start"></InputAdornment>,
                             }}
@@ -486,7 +485,7 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
                                                             <Icon
                                                                 path={hoveredStepId === step._id ? mdiDeleteEmpty : mdiDelete}
                                                                 size={1.2}
-                                                                color={hoveredStepId === step._id ? "initial" : "gray"}
+                                                                color={hoveredStepId === step._id ? "red" : "gray"}
                                                                 onClick={() => handleDeleteStep(step._id)}
                                                             />
                                                         </div>
