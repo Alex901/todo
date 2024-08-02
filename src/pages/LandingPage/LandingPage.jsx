@@ -9,7 +9,7 @@ import RegisterModal from '../../components/Layout/header/HeaderModals/RegisterM
 import LoginModal from '../../components/Layout/header/HeaderModals/LoginModal';
 import Feature from './Feature/Feature';
 import testingImage from '../../assets/Features_icons/testing.jpg';
-import cooperateImage from '../../assets/Features_icons/cooperate.png';
+import cooperateImage from '../../assets/Features_icons/Cooperation-icon2_trans.png';
 import ideaImage from '../../assets/Features_icons/idea.png';
 import stepsImage from '../../assets/Features_icons/steps.jpg';
 import trackImage from '../../assets/Features_icons/trackProg.jpg';
@@ -38,6 +38,7 @@ const LandingPage = () => { //Could break this out into a header component ofc
         { image: stepsImage, title: 'Daily steps and reminders', description: 'To keep you engaged in your new activity each day, to maximize the effectiveness.' },
         { image: cooperateImage, title: 'Cooperate', description: 'You can go on an entierly solo learning journey. Or you can do so as a group. Where you can simply keep eachother accountable. Or you can work together towards a common goal.' },
         { image: trackImage, title: 'Track your progress', description: 'All progress is being recorded so our algorithm can decide if things are too easy/hard and adjust the difficulty of your daily tasks based on that. Also, you get some shiny graphs!!' },
+        { image: testingImage, title: 'Discover the power of AI', description: 'Along this journey, you can laverage the power of AI in each step of the way. And if you are not happy with the results, you can always modify your plans accordingly. We all know that this technology is not perfect(yet). ' },
         { image: testingImage, title: 'Discover the power of AI', description: 'Along this journey, you can laverage the power of AI in each step of the way. And if you are not happy with the results, you can always modify your plans accordingly. We all know that this technology is not perfect(yet). ' },
     ];
 
@@ -73,17 +74,20 @@ const LandingPage = () => { //Could break this out into a header component ofc
                 </div>
 
             </div>
-            <div className='features'>
-                {features.map((feature, index) => (
-                    <Feature key={index} image={feature.image} title={feature.title} description={feature.description} />
-                ))}
-            </div>
 
             <div className='qoute-div'>
                 <h1 className='ins-quote first-quote'>
                     <span className='quote-mark'>"</span>Forge a strong enough habit, and you are halfway there already.<span className='quote-mark'>"</span>
                 </h1>
             </div>
+
+            <div className='features'>
+                {features.map((feature, index) => (
+                    <Feature key={index} image={feature.image} title={feature.title} description={feature.description} />
+                ))}
+            </div>
+
+          
 
             <div className="success-case">
                 <div className="success-case-section">

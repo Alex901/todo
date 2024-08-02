@@ -40,7 +40,6 @@
 .hero-right {
   width: 50%;
   height: 60vh;
-  /* vh is a viewport unit that stands for viewport height. 100vh is 100% of the viewport height */
 }
 
 .hero-left {
@@ -51,8 +50,8 @@
 
 .hero-right {
   justify-content: center;
-  background-image: url('../../assets/header_image.png');
-  background-size: 80%;
+  background-image: url('../../assets/header_image_geen2.png');
+  background-size: 70%;
   background-repeat: no-repeat;
   background-position: center;
   z-index: 1;
@@ -186,13 +185,13 @@
 }
 
 .features {
-  width: 90%; 
+  width: 97%; 
   height: auto; 
-  background-color: rgba(255, 255, 255, 0.7); 
+  background-color: rgba(6, 48, 20, 00); 
   display: flex;
   justify-content: center;
   align-items: stretch; 
-  margin: 20px auto; 
+  margin: 10px auto; 
   border-radius: 30px;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.6), 0 6px 6px rgba(0, 0, 0, 0.23);
   padding: 15px;
@@ -200,12 +199,12 @@
 
 .qoute-div {
   width: auto;
-  max-width: 90%;
+  max-width: 100%;
   height: auto;
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 200px auto; /* center the div */
+  margin: 100px auto; /* center the div */
 
 }
 

@@ -1,7 +1,7 @@
 import './App.css'
 import Header from './components/Layout/header/Header'
 import Card from './components/Layout/card/Card'
-import React, { useState, useRef, useEffect } from 'react'
+import React, { useState, useRef, useEffect, useMemo } from 'react'
 import AnythingList from './components/Todo/List/AnythingList'
 import { useTodoContext } from './contexts/todoContexts'
 import { useUserContext } from './contexts/UserContext'
@@ -33,7 +33,7 @@ import ExportListModal from './components/Todo/TodoModal/ExportListModal/ExportL
 function App() {
   const [activeView, setActiveView] = useState('todo');
   const { getTodoCount, getDoneCount, getDoingCount, getActiveListTodoCount, getActiveListDoingCount, getActiveListDoneCount,
-    getListDoingCount, getListDoneCount, getListTodoCount } = useTodoContext();
+    getListDoingCount, getListDoneCount, getListTodoCount, todoList } = useTodoContext();
   const { loggedInUser, isLoggedIn, setLoggedInUser, setActiveList, deleteList, addTag, deleteTag, checkLogin, toggleShowDetails } = useUserContext();
   const [isCreateListModalOpen, setIsCreateListModalOpen] = useState(false);
   const [isdDeleteListModalOpen, setIsDeleteListModalOpen] = useState(false);
@@ -49,9 +49,28 @@ function App() {
   const [isEditHovered, setIsEditHovered] = useState(false);
   const [isDeleteHovered, setIsDeleteHovered] = useState(false);
   const [isShowDetailsSelected, setIsShowDetailsSelected] = useState(false);
+  const [totalTimeToComplete, setTotalTimeToComplete] = useState("");
 
 
   const activeList = loggedInUser?.myLists.find(list => list.listName === loggedInUser.activeList);
+
+  const formatDuration = (minutes) => {
+    const months = Math.floor(minutes / (60 * 24 * 30));
+    const days = Math.floor((minutes % (60 * 24 * 30)) / (60 * 24));
+    const weeks = Math.floor(days / 7);
+    const remainingDays = days % 7;
+    const hours = Math.floor((minutes % (60 * 24)) / 60);
+    const mins = minutes % 60;
+  
+    let formatted = '';
+    if (months > 0) formatted += `${months} month${months > 1 ? 's' : ''} `;
+    if (weeks > 0) formatted += `${weeks} week${weeks > 1 ? 's' : ''} `;
+    if (remainingDays > 0) formatted += `${remainingDays} day${remainingDays > 1 ? 's' : ''} `;
+    if (hours > 0) formatted += `${hours} hour${hours > 1 ? 's' : ''} `;
+    if (mins > 0 || formatted === '') formatted += `${mins} minute${mins > 1 ? 's' : ''}`;
+  
+    return formatted.trim();
+  };
 
   //Is this clever or na ? 
   useEffect(() => {
@@ -64,11 +83,31 @@ function App() {
     fetchLoginStatus();
   }, []);
 
+
+
   useEffect(() => {
     if (loggedInUser?.settings?.todoList?.showListDetails !== undefined) {
       setIsShowDetailsSelected(loggedInUser.settings.todoList.showListDetails);
     }
   }, [loggedInUser]);
+
+  useMemo(() => {
+    if (todoList && activeList) {
+      console.log("DEBUG -- activeList", activeList.listName);
+      console.log("DEBUG -- todoList", todoList);
+
+      const totalTime = todoList
+        .filter(todo => {
+          const isMatch = todo.inListNew.some(list => list.listName.toLowerCase() === activeList.listName.toLowerCase());
+          console.log(`Filtering todo: ${todo.task}, isMatch: ${isMatch}`);
+          return isMatch;
+        })
+        .reduce((acc, todo) => acc + todo.estimatedTime, 0);
+
+      const formattedTime = formatDuration(totalTime);
+      setTotalTimeToComplete(formattedTime);
+    }
+  }, [todoList, activeList]);
 
   if (isLoading) {
     return (
@@ -77,7 +116,6 @@ function App() {
       </div>
     );
   }
-
 
   const switchTodoView = () => {
     setActiveView('todo');
@@ -321,7 +359,7 @@ function App() {
                     <div><strong>List Type:</strong> {activeList?.type}</div>
                     <div><strong>Created:</strong> {activeList?.createdAt ? formatDate(activeList.createdAt) : 'N/A'}</div>
                     <div><strong>Visibility:</strong> {activeList?.visibility}</div>
-                    <div><strong>Entries:</strong> {activeList?.entries}</div>
+                    <div><strong>Time to complete: </strong> {totalTimeToComplete || 'N/A'}</div>
                     <div><strong>Last Modified:</strong> {activeList?.updatedAt ? formatDate(activeList.updatedAt) : 'N/A'}</div>
                   </div>
                 </div>
