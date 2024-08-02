@@ -99,15 +99,16 @@ function App() {
       const totalTime = todoList
         .filter(todo => {
           const isMatch = todo.inListNew.some(list => list.listName.toLowerCase() === activeList.listName.toLowerCase());
-          console.log(`Filtering todo: ${todo.task}, isMatch: ${isMatch}`);
-          return isMatch;
+          const isNotCompleted = todo.completed === null;
+          console.log(`Filtering todo: ${todo.task}, isMatch: ${isMatch}, isNotCompleted: ${isNotCompleted}`);
+          return isMatch && isNotCompleted;
         })
         .reduce((acc, todo) => acc + todo.estimatedTime, 0);
 
       const formattedTime = formatDuration(totalTime);
       setTotalTimeToComplete(formattedTime);
     }
-  }, [todoList, activeList]);
+}, [todoList, activeList]);
 
   if (isLoading) {
     return (

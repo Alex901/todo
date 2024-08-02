@@ -64,30 +64,51 @@ const AnythingList = ({ type }) => {
         estimatedTime: (a, b) => a.estimatedTime - b.estimatedTime,
     };
 
+    const getStartOfWeek = (date) => {
+        const start = new Date(date);
+        const day = start.getDay();
+        const diff = start.getDate() - day + (day === 0 ? -6 : 1); // Adjust when day is Sunday
+        start.setDate(diff);
+        start.setHours(0, 0, 0, 0);
+        return start;
+    };
+    
+    const getEndOfWeek = (date) => {
+        const end = new Date(date);
+        const day = end.getDay();
+        const diff = end.getDate() + (7 - day); // Adjust when day is Sunday
+        end.setDate(diff);
+        end.setHours(23, 59, 59, 999);
+        return end;
+    };
+    
+    const startOfWeek = getStartOfWeek(new Date());
+    const endOfWeek = getEndOfWeek(new Date());
     const activeList = loggedInUser ? loggedInUser.listNames.find(list => list.name === loggedInUser.activeList) : null;
-
     const tags = activeList ? activeList.tags : [];
 
-    const customSortFunction = (a, b) => {
+    const customSortFunction = (a, b, isAscending = true) => {
         const getDateCategory = (date) => {
-            if (!date) return 4; // No deadline
+            if (!date) return isAscending ? 5 : -1; // No deadline
             const today = new Date();
             const tomorrow = new Date(today);
             tomorrow.setDate(today.getDate() + 1);
     
-            if (date.toDateString() === today.toDateString()) return 1; // Today
+            if (date.toDateString() === today.toDateString()) return 3; // Today
             if (date.toDateString() === tomorrow.toDateString()) return 2; // Tomorrow
-            if (date < today) return 0; // Past deadline
-            return 3; // Other future dates
+            if (date < today) return 4; // Past deadline
+            return 1; // Other future dates (Normal deadline)
         };
     
         const dateA = getDateCategory(a.dueDate);
         const dateB = getDateCategory(b.dueDate);
     
-        if (dateA !== dateB) return dateA - dateB;
+        if (dateA !== dateB) {
+            return dateA - dateB;
+        }
     
         // If dates are in the same category, sort by the actual date
-        return new Date(a.dueDate) - new Date(b.dueDate);
+        return isAscending ? new Date(a.dueDate) - new Date(b.dueDate) : new Date(b.dueDate) - new Date(a.dueDate);
     };
 
     const filteredTodoList = useMemo(() => {
@@ -100,7 +121,10 @@ const AnythingList = ({ type }) => {
         }
 
         if (isDeadlineOnly) {
-            list = list.filter(todo => todo.dueDate);
+            list = list.filter(todo => {
+                const dueDate = new Date(todo.dueDate);
+                return dueDate >= startOfWeek && dueDate <= endOfWeek;
+            });
         }
 
         if(isNewOnly) {
@@ -119,13 +143,13 @@ const AnythingList = ({ type }) => {
 
     const sortedTodoList = useMemo(() => {
         const sortedList = [...filteredTodoList].sort((a, b) => {
-          if (selectedOptionSort.value === 'deadline') {
-            return customSortFunction(a, b);
-          }
-          return sortFunctions[selectedOptionSort.value](a, b);
+            if (selectedOptionSort.value === 'deadline') {
+                return customSortFunction(a, b, isAscending);
+            }
+            return sortFunctions[selectedOptionSort.value](a, b, !isAscending);
         });
-        return isAscending ? sortedList.reverse() : sortedList;
-      }, [filteredTodoList, selectedOptionSort, isAscending]);
+        return isAscending ? sortedList : sortedList.reverse();
+    }, [filteredTodoList, selectedOptionSort, isAscending]);
 
 
     //Might not need this
@@ -244,9 +268,6 @@ const AnythingList = ({ type }) => {
         setIsTagsOpen(true)
     };
 
-
-
-
     //Create the todo lists
     return (
         <div className="list-container">
@@ -311,7 +332,7 @@ const AnythingList = ({ type }) => {
                                     onChange={toggleDeadlineOnly}
                                 />
                             }
-                            label="Deadline soon"
+                            label="Deadline this week"
                         />
                     </div>
                     <div className="checkbox-container" style={{ margin: '3px 20px' }}>
