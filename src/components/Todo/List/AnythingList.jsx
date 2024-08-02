@@ -68,6 +68,28 @@ const AnythingList = ({ type }) => {
 
     const tags = activeList ? activeList.tags : [];
 
+    const customSortFunction = (a, b) => {
+        const getDateCategory = (date) => {
+            if (!date) return 4; // No deadline
+            const today = new Date();
+            const tomorrow = new Date(today);
+            tomorrow.setDate(today.getDate() + 1);
+    
+            if (date.toDateString() === today.toDateString()) return 1; // Today
+            if (date.toDateString() === tomorrow.toDateString()) return 2; // Tomorrow
+            if (date < today) return 0; // Past deadline
+            return 3; // Other future dates
+        };
+    
+        const dateA = getDateCategory(a.dueDate);
+        const dateB = getDateCategory(b.dueDate);
+    
+        if (dateA !== dateB) return dateA - dateB;
+    
+        // If dates are in the same category, sort by the actual date
+        return new Date(a.dueDate) - new Date(b.dueDate);
+    };
+
     const filteredTodoList = useMemo(() => {
         let list = todoList; //All todo entries
 
@@ -96,9 +118,14 @@ const AnythingList = ({ type }) => {
     }, [todoList, isUrgentOnly, isDeadlineOnly, selectedTags, isNewOnly]);
 
     const sortedTodoList = useMemo(() => {
-        const sortedList = [...filteredTodoList].sort(sortFunctions[selectedOptionSort.value]);
+        const sortedList = [...filteredTodoList].sort((a, b) => {
+          if (selectedOptionSort.value === 'deadline') {
+            return customSortFunction(a, b);
+          }
+          return sortFunctions[selectedOptionSort.value](a, b);
+        });
         return isAscending ? sortedList.reverse() : sortedList;
-    }, [filteredTodoList, selectedOptionSort, isAscending]);
+      }, [filteredTodoList, selectedOptionSort, isAscending]);
 
 
     //Might not need this
@@ -284,7 +311,7 @@ const AnythingList = ({ type }) => {
                                     onChange={toggleDeadlineOnly}
                                 />
                             }
-                            label="Deadline"
+                            label="Deadline soon"
                         />
                     </div>
                     <div className="checkbox-container" style={{ margin: '3px 20px' }}>

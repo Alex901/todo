@@ -200,6 +200,26 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
         return `${hours}h ${remainingMinutes}min`;
     };
 
+    const formatDueDate = (dueDate) => {
+        const today = new Date();
+        const tomorrow = new Date(today);
+        tomorrow.setDate(today.getDate() + 1);
+      
+        const isToday = dueDate.toDateString() === today.toDateString();
+        const isTomorrow = dueDate.toDateString() === tomorrow.toDateString();
+        const isPast = dueDate < today && !isToday;
+      
+        if (isPast) {
+          return "Past deadline";
+        } else if (isToday) {
+          return `Today ${dueDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+        } else if (isTomorrow) {
+          return `Tomorrow ${dueDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+        } else {
+          return `${dueDate.toLocaleDateString("en-GB")} - ${dueDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+        }
+      };
+
     //TODO: this is not pretty, make commonTodoEntry component and use it on all cases. 
     //Making changes on three places is not good practice and confusing in the long run.
     if (type === 'todo' && !isDone && !isStarted) {
@@ -234,11 +254,11 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
                     )}
                     <div className="todo-item" onClick={handleClickToStart}>
                         <div className="time">
-                            <p className="time-stamp"> <strong>Created:</strong> {created.toLocaleDateString()} - {created.toLocaleTimeString()} </p>
+                            <p className="time-stamp"> <strong>Created:</strong> {created.toLocaleDateString("en-GB")} - {created.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} </p>
                             {dueDate ? (
                                 <>
                                     <div className="separator"> </div>
-                                    <p className={`time-stamp ${isDueSoon ? 'due-soon' : ''}`}> <strong>Deadline:</strong> {dueDate.toLocaleDateString()} - {dueDate.toLocaleTimeString()} </p>
+                                    <p className={`time-stamp ${isDueSoon ? 'due-soon' : ''}`}> <strong>Deadline:</strong> {formatDueDate(dueDate)} </p>
                                 </>
                             ) : null}
                         </div>
@@ -368,7 +388,7 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
                     <div className="done-item">
                         <div className="time">
                             <p className="time-stamp"> <strong>Completed:</strong>
-                                {completed.toLocaleDateString()} - {completed.toLocaleTimeString()}
+                                {completed.toLocaleDateString("en-GB")} - {completed.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                             </p>
                             <div className="separator"> </div>
                             <p className="time-stamp">
@@ -469,11 +489,11 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
                     )}
                     <div className="doing-item" onClick={handleClicktoComplete}>
                         <div className="time">
-                            <p className="time-stamp"> <strong>Started:</strong> {started.toLocaleDateString()} - {started.toLocaleTimeString()} </p>
+                            <p className="time-stamp"> <strong>Started:</strong> {started.toLocaleDateString("en-GB")} - {started.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} </p>
                             {dueDate ? (
                                 <>
                                     <div className="separator"> </div>
-                                    <p className="time-stamp"> <strong>Deadline:</strong> {dueDate.toLocaleDateString()} - {dueDate.toLocaleTimeString()} </p>
+                                    <p className="time-stamp"> <strong>Deadline:</strong> {dueDate.toLocaleDateString("en-GB")} - {dueDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })} </p>
                                 </>
                             ) : null}
                             <div className="separator"> </div>
