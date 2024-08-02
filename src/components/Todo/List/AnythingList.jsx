@@ -111,7 +111,7 @@ const AnythingList = ({ type }) => {
 
     const filteredTodoList = useMemo(() => {
         let list = todoList; //All todo entries
-        console.log("DEBUG -- list: ", list);
+       // console.log("DEBUG -- list: ", list);
 
         list = list.filter(todo => todo.inListNew.some(list => list.listName === loggedInUser.activeList));
 
@@ -157,7 +157,7 @@ const AnythingList = ({ type }) => {
     //Might not need this
     useEffect(() => {
         setActiveTodoList(sortedTodoList);
-        console.log("DEBUG -- activeTodoList post sort: ", activeTodoList);
+        //console.log("DEBUG -- activeTodoList post sort: ", activeTodoList);
     }, [filteredTodoList, sortedTodoList]);
 
     //Load user settings
