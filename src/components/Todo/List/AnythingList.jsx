@@ -25,9 +25,9 @@ const AnythingList = ({ type }) => {
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [activeTodoList, setActiveTodoList] = useState([]);
     const [editingTask, setEditingTask] = useState(null);
-    const { loggedInUser, isLoggedIn, toggleUrgent } = useUserContext();
+    const { loggedInUser, isLoggedIn, toggleUrgent, updateSettings } = useUserContext();
     const { todoList } = useTodoContext();
-    const [isAscending, setIsAscending] = useState(true);
+    const [isAscending, setIsAscending] = useState(false);
     const [isUrgentOnly, setIsUrgentOnly] = useState(false);
     const [isNewOnly, setIsNewOnly] = useState(false); //should be "show"
     const [isDeadlineOnly, setIsDeadlineOnly] = useState(false);
@@ -161,6 +161,9 @@ const AnythingList = ({ type }) => {
     useEffect(() => {
         if (loggedInUser && loggedInUser.settings && loggedInUser.settings.todoList) {
             setIsUrgentOnly(loggedInUser.settings.todoList.urgentOnly);
+            setIsAscending(loggedInUser.settings.todoList.ascending);
+            setIsDeadlineOnly(loggedInUser.settings.todoList.deadlineOnly);
+            setIsNewOnly(loggedInUser.settings.todoList.newOnly);
         }
     }, [loggedInUser]);
 
@@ -198,68 +201,34 @@ const AnythingList = ({ type }) => {
         setIsFiltering(false);
     };
 
-    const filterActiveList = () => {
-        const sortFunction = sortFunctions[selectedOptionSort.value];
-        if (!sortFunction) {
-            return;
-        }
-
-        const sortedList = [...activeTodoList].sort((a, b) => {
-            return !isAscending ? sortFunction(a, b) : sortFunction(b, a);
-        });
-
-        if (JSON.stringify(sortedList) !== JSON.stringify(activeTodoList)) {
-            setActiveTodoList(sortedList);
-        }
-    };
-
-    const filterUrgentTasks = (urgentOnly) => {
-        setIsFiltering(true);
-        if (urgentOnly) {
-            const urgentTasks = activeTodoList.filter(task => task.isUrgent);
-            if (JSON.stringify(urgentTasks) !== JSON.stringify(activeTodoList)) {
-                setActiveTodoList(urgentTasks);
-            }
-        } else {
-            if (JSON.stringify(activeTodoList) !== JSON.stringify(activeTodoList)) {
-                filterTodoList();
-            }
-        }
-        setIsFiltering(false);
-    };
-
-    const updateActiveList = () => {
-        if (selectedTags.length === 0) {
-            setActiveTodoList(originalTodoList);
-        } else {
-            const selectedTagIds = selectedTags.map(tag => tag._id);
-            const filteredList = originalTodoList.filter(entry =>
-                selectedTagIds.every(id => entry.tags.map(tag => tag._id).includes(id))
-            );
-            setActiveTodoList(filteredList);
-        }
-    };
 
     const handleSortChange = (selectedOption) => {
         setSelectedOptionSort(selectedOption.target);
     }
 
     const toggleSortOrder = () => {
-        setIsAscending(!isAscending);
+        const newOrder = !isAscending;
+        updateSettings('ascending', newOrder);
+        setIsAscending(newOrder);
+
     }
 
     const toggleUrgentTasks = () => {
         const newUrgentOnly = !isUrgentOnly; // Toggle the value
         // Perform API call or any other side effects here
-        toggleUrgent(newUrgentOnly); //API call
+        updateSettings("urgentOnly", newUrgentOnly);
+        setIsUrgentOnly(newUrgentOnly);
     }
 
     const toggleDeadlineOnly = () => {
-        setIsDeadlineOnly(!isDeadlineOnly);
+        const newDeadlineOnly = !isDeadlineOnly;
+        updateSettings("deadlineOnly", newDeadlineOnly);
+        setIsDeadlineOnly(newDeadlineOnly);
     }
 
     const toggleNewOnly = () => {
         setIsNewOnly(!isNewOnly);
+        updateSettings('newOnly', !isNewOnly);
     }
 
     const handleTagChange = (event, values) => {

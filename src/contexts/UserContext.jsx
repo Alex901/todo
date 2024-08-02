@@ -410,12 +410,38 @@ const UserProvider = ({ children }) => {
         }
     }
 
+    const updateSettings = async (settingName, value) => {
+        console.log("DEBUG: update settings for loggedInUser: ", settingName, value);
+        try{
+            if (!isLoggedIn) {
+                console.log("User not logged in");
+                return;
+            }
+            const _id = loggedInUser._id;
+            const response = await axios.patch(`${BASE_URL}/users/update-todo-settings/${_id}`, { settingName, value });
+            if (response.status === 200) {
+                console.log("Settings updated: ", response.data);
+                toast.success("Settings updated");
+                checkLogin();
+            } else if (response.status === 404) {
+                console.log("User not found");
+            } else {
+                console.log("Internal server error");
+                toast.error("Failed to update settings -- internal server error");
+            }
+        } catch (error) {
+            console.error('Error updating settings', error);
+            toast.error("Failed to update settings");
+        }
+    }
+
 
     return (
         <UserContext.Provider value={{
             isLoggedIn, loggedInUser, userList, login, logout, registerNewUser,
             setLoggedInUser, setActiveList, addList, deleteList, toggleUrgent, addTag,
             deleteTag, updateProfilePicture, editUser, checkLogin, toggleShowDetails,
+            updateSettings,
         }} >
             {children}
         </UserContext.Provider>

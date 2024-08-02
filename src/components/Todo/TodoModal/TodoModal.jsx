@@ -6,7 +6,7 @@ import { useUserContext } from '../../../contexts/UserContext';
 //import Select from 'react-select';
 import { toast } from 'react-toastify';
 import { TextField, Button, InputAdornment, IconButton, FormControl, InputLabel, Select, MenuItem, Checkbox, FormControlLabel, Chip } from '@mui/material';
-import { Form } from 'react-bootstrap';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 
 ReactModal.setAppElement('#root');
 

@@ -69,7 +69,6 @@ function Main() {
   }, []);
 
   return (
-    <React.StrictMode>
       <ThemeProvider theme={theme}>
         <UserProvider>
           <GroupProvider>
@@ -95,7 +94,6 @@ function Main() {
           </GroupProvider>
         </UserProvider>
       </ThemeProvider>
-    </React.StrictMode>
   );
 }
 
