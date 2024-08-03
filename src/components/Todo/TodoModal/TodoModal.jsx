@@ -66,7 +66,6 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
             ...newTaskData,
             [event.target.name]: value,
         });
-        console.log("DEBUG -- newTaskData: ", newTaskData);
         setErrorMessage('');
     };
 
@@ -185,15 +184,10 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
         items.splice(result.destination.index, 0, reorderedItem);
 
         // Update your state with the new order
-        console.log("DEBUG -- items: ", items);
         setNewTaskData({ ...newTaskData, steps: items });
-        console.log("DEBUG -- newTaskData.steps: ", newTaskData.steps);
     };
 
     const handleDeleteStep = (stepId) => {
-        console.log("DEBUG -- steps in newTaskData: ", newTaskData.steps);
-        console.log("Delete step", stepId);
-        console.log("DEBUG -- steps in newTaskData after before: ", newTaskData.steps);
         setNewTaskData(prevState => {
             const updatedSteps = prevState.steps.filter(step => step.id !== stepId).map((step, index) => ({
                 ...step,

@@ -13,19 +13,19 @@ import { toast } from "react-toastify";
 import Icon from '@mdi/react';
 import {
   mdiDelete, mdiPlus, mdiMinus, mdiFileExport, mdiGroup, mdiTextBoxEditOutline,
-  mdiPlaylistEdit, mdiDeleteEmpty, mdiPencil, mdiArchiveArrowDownOutline, mdiArchiveArrowUpOutline, mdiCloseCircle
+  mdiPlaylistEdit, mdiDeleteEmpty, mdiPencil, mdiArchiveArrowDownOutline, mdiArchiveArrowUpOutline, mdiCloseCircle,
+  mdiTimerCheckOutline, mdiTimelineClockOutline, mdiEyeOutline, mdiWrenchClock, mdiFolderPlusOutline, mdiFormatListBulletedType, mdiBadgeAccountOutline
 } from '@mdi/js';
 import Chip from '@mui/material/Chip';
 import Popper from '@mui/material/Popper';
 import { SketchPicker } from 'react-color';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import { Select, MenuItem, ListItemText, FormControl, InputLabel, Typography, IconButton } from '@mui/material';
+import { Select, MenuItem, ListItemText, FormControl, InputLabel, Typography, IconButton, Tooltip } from '@mui/material';
 import GroupModal from './components/Todo/TodoModal/GroupModal/GroupModal'
 import LandingPage from './pages/LandingPage/LandingPage'
 import { MagnifyingGlass } from "react-loader-spinner";
-
-
+import ColorPickerButton from './components/UtilityComponents/ColorPickerButton/ColorPickerButton'
 import 'material-design-lite/dist/material.min.css';
 import 'material-design-lite/dist/material.min.js';
 import ExportListModal from './components/Todo/TodoModal/ExportListModal/ExportListModal'
@@ -51,9 +51,27 @@ function App() {
   const [isShowDetailsSelected, setIsShowDetailsSelected] = useState(false);
   const [totalTimeToComplete, setTotalTimeToComplete] = useState("");
   const [totalTimeSpent, setTotalTimeSpent] = useState("");
+  const [selectedColor, setSelectedColor] = useState('#1e34a4');
+  const popperRef = useRef(null);
+
+  const webSafeColors = [
+    '#000000', '#0000FF', '#00FF00', '#FF0000',
+    '#00FFFF', '#FF00FF', '#FFFF00', '#C0C0C0',
+    '#808080', '#800000', '#808000', '#800080',
+    '#008080', '#FFA500', '#A52A2A', '#8A2BE2'
+  ];
 
 
   const activeList = loggedInUser?.myLists.find(list => list.listName === loggedInUser.activeList);
+
+  const handleClickOutside = (event) => {
+    if (event.target.classList.contains('color-swatch') || event.target.classList.contains('color-picker')) {
+      return; // Do nothing if the click is on a color picker element
+    }
+    if (popperRef.current && !popperRef.current.contains(event.target) && !newTagAnchorRef.current.contains(event.target)) {
+      setIsNewTagPopperOpen(false);
+    }
+  };
 
   const formatDuration = (minutes) => {
     const months = Math.floor(minutes / (60 * 24 * 30));
@@ -62,16 +80,28 @@ function App() {
     const remainingDays = days % 7;
     const hours = Math.floor((minutes % (60 * 24)) / 60);
     const mins = minutes % 60;
-  
+
     let formatted = '';
     if (months > 0) formatted += `${months} month${months > 1 ? 's' : ''} `;
     if (weeks > 0) formatted += `${weeks} week${weeks > 1 ? 's' : ''} `;
     if (remainingDays > 0) formatted += `${remainingDays} day${remainingDays > 1 ? 's' : ''} `;
     if (hours > 0) formatted += `${hours} hour${hours > 1 ? 's' : ''} `;
     if (mins > 0 || formatted === '') formatted += `${Math.round(mins)} minute${Math.round(mins) > 1 ? 's' : ''}`;
-  
+
     return formatted.trim();
   };
+
+  useEffect(() => {
+    if (isNewTagPopperOpen) {
+      document.addEventListener('mousedown', handleClickOutside);
+    } else {
+      document.removeEventListener('mousedown', handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, [isNewTagPopperOpen]);
 
   //Is this clever or na ? 
   useEffect(() => {
@@ -103,17 +133,17 @@ function App() {
         })
         .reduce((acc, todo) => acc + todo.estimatedTime, 0);
 
-        const totalTimeSpent = todoList
+      const totalTimeSpent = todoList
         .filter(todo => {
-            const isMatch = todo.inListNew.some(list => list.listName.toLowerCase() === activeList.listName.toLowerCase());
-            const isCompleted = todo.completed !== null;
-            return isMatch && isCompleted;
+          const isMatch = todo.inListNew.some(list => list.listName.toLowerCase() === activeList.listName.toLowerCase());
+          const isCompleted = todo.completed !== null;
+          return isMatch && isCompleted;
         })
         .reduce((acc, todo) => {
           const timeSpent = todo.totalTimeSpent / 60000; // Convert milliseconds to minutes
           const newAcc = acc + timeSpent;
           return newAcc;
-      }, 0);
+        }, 0);
 
 
       const formattedTimeToComplete = formatDuration(totalTimeToComplete);
@@ -122,7 +152,7 @@ function App() {
       setTotalTimeToComplete(formattedTimeToComplete);
       setTotalTimeSpent(formattedTimeSpent);
     }
-}, [todoList, activeList]);
+  }, [todoList, activeList]);
 
   if (isLoading) {
     return (
@@ -217,8 +247,8 @@ function App() {
     if (tagName.charAt(0) !== '#') {
       tagName = '#' + tagName;
     }
-
-    const tagColor = document.querySelector('input[type="color"]').value;
+    const tagColor = selectedColor;
+    //const tagColor = document.querySelector('input[type="color"]').value;
     const brightness = getBrightness(tagColor);
     const textColor = brightness > 128 ? 'black' : 'white';
     const textColorHex = getHexColor(textColor);
@@ -270,6 +300,11 @@ function App() {
     return `${day}/${month}/${year} - ${hours}:${minutes}`;
   };
 
+  const handleColorChange = (color) => {
+    setSelectedColor(color);
+  }
+
+
   //TODO: This shouldbe moved to a separate component
   return (
 
@@ -289,7 +324,7 @@ function App() {
               {isLoggedIn && (
                 <div className="listSelection">
                   <FormControl variant='standard' style={{ width: '22em', margin: '10px' }}>
-                    <InputLabel id="active-list-label" style={{ fontWeight: 'bold' }}>Active list </InputLabel>
+                    <InputLabel id="active-list-label" style={{ fontWeight: 'bold' }}>Active Project </InputLabel>
                     <Select
                       labelId="active-list-label"
                       label="Active listt"
@@ -364,18 +399,55 @@ function App() {
               {isShowDetailsSelected && (
                 <div className="details-container">
                   <div style={{ flex: 1 }}>
-                    <strong>Description</strong>
+                    <strong className="list-description-title">Description</strong>
                     <br />
-                    {activeList?.description || 'No description'}
+                    <span className="list-description-text">
+                      {activeList?.description || 'No description'}
+                    </span>
                   </div>
                   <div className="details-grid" style={{ flex: 2 }}>
-                    <div><strong>Owner:</strong> {activeList?.type === 'userList' ? activeList?.owner.username : activeList?.owner.name}</div>
-                    <div><strong>List Type:</strong> {activeList?.type}</div>
-                    <div><strong>Created:</strong> {activeList?.createdAt ? formatDate(activeList.createdAt) : 'N/A'}</div>
-                    <div><strong>Visibility:</strong> {activeList?.visibility}</div>
-                    <div><strong>Time to complete: </strong> {totalTimeToComplete || 'N/A'}</div>
-                    <div><strong>Last Modified:</strong> {activeList?.updatedAt ? formatDate(activeList.updatedAt) : 'N/A'}</div>
-                    <div><strong>Time spend on project </strong> {totalTimeSpent || 'N/A'}</div>
+                    <Tooltip title="Owner of this project">
+                      <div>
+                        <Icon path={mdiBadgeAccountOutline} size={1.2} />
+                        {activeList?.type === 'userList' ? activeList?.owner.username : activeList?.owner.name}
+                      </div>
+                    </Tooltip>
+                    <Tooltip title="Type of list, Group or Personal">
+                      <div>
+                        <Icon className="details-icon" path={mdiFormatListBulletedType} size={1.2} />
+                        {activeList?.ownerModel === 'User' ? 'Personal' : 'Group'}
+                      </div>
+                    </Tooltip>
+                    <Tooltip title="Date when the list was created">
+                      <div>
+                        <Icon path={mdiFolderPlusOutline} size={1.2} />
+                        {activeList?.createdAt ? formatDate(activeList.createdAt) : 'N/A'}
+                      </div>
+                    </Tooltip>
+                    <Tooltip title="Visibility of the list">
+                      <div>
+                        <Icon path={mdiEyeOutline} size={1.2} />
+                        {activeList?.visibility}
+                      </div>
+                    </Tooltip>
+                    <Tooltip title="Estimated time to complete the project">
+                      <div>
+                        <Icon path={mdiTimerCheckOutline} size={1.2} />
+                        {totalTimeToComplete || 'N/A'}
+                      </div>
+                    </Tooltip>
+                    <Tooltip title="Date when the list was last modified">
+                      <div>
+                        <Icon path={mdiWrenchClock} size={1.2} />
+                        {activeList?.updatedAt ? formatDate(activeList.updatedAt) : 'N/A'}
+                      </div>
+                    </Tooltip>
+                    <Tooltip title="Total time spent on the project">
+                      <div>
+                        <Icon path={mdiTimelineClockOutline} size={1.2} />
+                        {totalTimeSpent || 'N/A'}
+                      </div>
+                    </Tooltip>
                   </div>
                 </div>
               )}
@@ -486,13 +558,13 @@ function App() {
                   </div>
                 </div>
               )}
-              <Popper open={isNewTagPopperOpen} anchorEl={newTagAnchorRef.current} placement='bottom'>
+              <Popper open={isNewTagPopperOpen} ref={popperRef} anchorEl={newTagAnchorRef.current} placement='bottom'>
                 <div className='new-tag-popper-container'>
                   <h5 style={{ margin: '8px', marginBottom: '8px' }}>Create new tag</h5>
                   <form className='new-tag-popper-form' onSubmit={handleNewTagSubmit}>
                     <div className="new-tag-inputs">
                       <TextField label="Tag name" variant="outlined" size="small" />
-                      <input type="color" defaultValue="#1e34a4" />
+                      <ColorPickerButton webSafeColors={webSafeColors}  selectedColor={selectedColor} handleColorSelect={handleColorChange} />
                     </div>
                     <Button type="submit" variant="contained" color="primary">
                       Submit

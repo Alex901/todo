@@ -20,6 +20,10 @@ body {
   border-radius: 10px;
 }
 
+.details-container svg {
+  color: var(--foresta-green);
+}
+
 .content {
   flex: 1;
   /* Allow content to expand to fill remaining space */
@@ -181,6 +185,12 @@ body {
   gap: 5px;
 }
 
+.list-description-title {
+  font-size: 1.5em;
+  font-weight: bold;
+  color: var(--foresta-green);
+}
+
 .details-container {
   display: flex;
   flex-direction: row;
@@ -192,7 +202,19 @@ body {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
   gap: 10px;
-  text-align: left;
+  text-align: center;
+}
+
+.details-grid div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+@media (max-width: 599px) {
+  .details-container {
+    flex-direction: column;
+  }
 }
 
 .listSelection {

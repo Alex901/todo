@@ -1,0 +1,18 @@
+.color-picker {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 5px;
+    padding: 10px; /* Optional: Add padding around the grid */
+    background-color: white; /* Optional: Set background color for the popper */
+    border: 1px solid #9b9191; /* Optional: Add border to the popper */
+    box-shadow: -10px 10px 10px rgba(141, 13, 128, 0.2); 
+    height: auto;
+    border-radius: 10px;
+    background-color: #ffffff;
+  }
+  
+  .color-swatch {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+  }

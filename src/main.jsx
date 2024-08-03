@@ -69,6 +69,7 @@ function Main() {
     document.body.style.setProperty('--cancel-color', theme.palette.cancel.main);
     document.body.style.setProperty('--success-color', theme.palette.success.main);
     document.body.style.setProperty('--neutral-color', theme.palette.neutral.main);
+    document.body.style.setProperty('--forestGreen-color', theme.palette.forestGreen.main);
   }, []);
 
   return (
