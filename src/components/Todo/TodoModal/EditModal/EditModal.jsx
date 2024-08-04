@@ -54,8 +54,10 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
     const optionsListNames = isLoggedIn && loggedInUser.myLists
         ? loggedInUser.myLists
             .filter(item => {
-                const inListNewNames = taskData.inListNew.map(listItem => listItem.listName);
-                return !inListNewNames.includes(item.listName);
+                if (item.ownerModel === 'User') {
+                    const inListNewNames = taskData.inListNew.map(listItem => listItem.listName);
+                    return !inListNewNames.includes(item.listName);
+                }
             })
             .map(item => ({ value: item.listName, label: item.listName }))
         : [];
@@ -398,72 +400,76 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
                             label="Urgent?"
                         />
                     </div>
-                    <hr style={{ width: '80%', margin: '10px auto' }} />
-                    <div className="tags-lists-container" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%', gap: '20px', marginTop: '10px' }}>
-                        <FormControl variant="outlined" style={{ minWidth: '100px', width: 'auto', height: 'auto' }} size='small'>
-                            <InputLabel id="list-label">Add to list</InputLabel>
-                            <Select
-                                labelId="list-label"
-                                id="list"
-                                multiple
-                                value={[]}
-                                onChange={handleListChange}
-                                label="Add to list"
-                            >
-                                {optionsListNames.map((option) => (
-                                    <MenuItem key={option.value} value={option.value}>
-                                        {option.label}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-                        <div className="included-lists-chips" style={{ width: '80%', display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '5px', flexWrap: 'wrap' }}>
+                    {activeList.ownerModel !== 'Group' && (
+                        <>
+                            <hr style={{ width: '80%', margin: '10px auto' }} />
+                            <div className="tags-lists-container" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%', gap: '20px', marginTop: '10px' }}>
+                                <FormControl variant="outlined" style={{ minWidth: '100px', width: 'auto', height: 'auto' }} size='small'>
+                                    <InputLabel id="list-label">Add to list</InputLabel>
+                                    <Select
+                                        labelId="list-label"
+                                        id="list"
+                                        multiple
+                                        value={[]}
+                                        onChange={handleListChange}
+                                        label="Add to list"
+                                    >
+                                        {optionsListNames.map((option) => (
+                                            <MenuItem key={option.value} value={option.value}>
+                                                {option.label}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                                <div className="included-lists-chips" style={{ width: '80%', display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '5px', flexWrap: 'wrap' }}>
+                                    {includedListNames.map((value) => (
+                                        <Chip key={value.value} label={value.label} onDelete={() => handleRemoveFromList(value.value)} />
+                                    ))}
+                                </div>
+                            </div>
 
-                            {includedListNames.map((value) => (
-                                <Chip key={value.value} label={value.label} onDelete={() => handleRemoveFromList(value.value)} />
-                            ))}
-                        </div>
-                    </div>
+                            <div className="tags-lists-container" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%', gap: '20px', marginTop: '10px' }}>
+                                <FormControl variant="outlined" style={{ minWidth: '100px', width: 'auto', height: 'auto' }} size='small'>
+                                    <InputLabel id="tag-label">Add tag</InputLabel>
+                                    <Select
+                                        labelId="tag-label"
+                                        id="tag"
+                                        multiple
+                                        value={[]} // assuming editData.tags is an array of selected tag objects
+                                        onChange={event => {
+                                            const selectedTagLabel = event.target.value;
+                                            if (!selectedTagLabel) {
+                                                // handle the case where no tags are selected
+                                                handleTagChange([]);
+                                            } else {
+                                                const selectedTagObject = optionsTagNames.find(tag => selectedTagLabel.includes(tag.label));
+                                                handleTagChange(selectedTagObject);
+                                            }
+                                        }}
+                                        label="Add to tag"
+                                        style={{ cursor: 'pointer' }}
+                                    >
+                                        {optionsTagNames.map((tag) => (
+                                            <MenuItem key={tag.label} value={tag.label}>
+                                                <Chip
+                                                    key={tag.label}
+                                                    label={tag.label}
+                                                    clickable
+                                                    style={{ backgroundColor: tag.color, color: tag.textColor, cursor: 'pointer' }}
+                                                />
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                                <div className="included-tags-chips" style={{ width: '80%', display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '5px', flexWrap: 'wrap' }}>
+                                    {taskData.tags.map((tag) => (
+                                        <Chip key={tag.label} label={tag.label} onDelete={() => handleRemoveTag(tag)} style={{ backgroundColor: tag.color, color: tag.textColor }} />
+                                    ))}
+                                </div>
+                            </div>
+                        </>
+                    )}
 
-                    <div className="tags-lists-container" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%', gap: '20px', marginTop: '10px' }}>
-                        <FormControl variant="outlined" style={{ minWidth: '100px', width: 'auto', height: 'auto' }} size='small'>
-                            <InputLabel id="tag-label">Add tag</InputLabel>
-                            <Select
-                                labelId="tag-label"
-                                id="tag"
-                                multiple
-                                value={[]} // assuming editData.tags is an array of selected tag objects
-                                onChange={event => {
-                                    const selectedTagLabel = event.target.value;
-                                    if (!selectedTagLabel) {
-                                        // handle the case where no tags are selected
-                                        handleTagChange([]);
-                                    } else {
-                                        const selectedTagObject = optionsTagNames.find(tag => selectedTagLabel.includes(tag.label));
-                                        handleTagChange(selectedTagObject);
-                                    }
-                                }}
-                                label="Add to tag"
-                                style={{ cursor: 'pointer' }}
-                            >
-                                {optionsTagNames.map((tag) => (
-                                    <MenuItem key={tag.label} value={tag.label}>
-                                        <Chip
-                                            key={tag.label}
-                                            label={tag.label}
-                                            clickable
-                                            style={{ backgroundColor: tag.color, color: tag.textColor, cursor: 'pointer' }}
-                                        />
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-                        <div className="included-tags-chips" style={{ width: '80%', display: 'flex', flexDirection: 'row', alignItems: 'center', gap: '5px', flexWrap: 'wrap' }}>
-                            {taskData.tags.map((tag) => (
-                                <Chip key={tag.label} label={tag.label} onDelete={() => handleRemoveTag(tag)} style={{ backgroundColor: tag.color, color: tag.textColor }} />
-                            ))}
-                        </div>
-                    </div>
 
                     <hr style={{ width: '80%', margin: '10px auto' }} />
 
