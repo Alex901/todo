@@ -384,7 +384,7 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
                                     {newTaskData.steps.map((step, index) => (
                                         <Draggable key={step.id} draggableId={String(step.id)} index={index}>
                                             {(provided) => (
-                                                <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', ...provided.draggableProps.style }}>
+                                                <div className="drag" ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} style={{ transform: 'none', display: 'flex', flexDirection: 'row', alignItems: 'center', ...provided.draggableProps.style }}>
                                                     <label style={{ display: 'flex', alignItems: 'center' }}>{`Step${index + 1}`}</label>
                                                     <input className='create-modal-input' type='text' placeholder={`Enter step title`}
                                                         onChange={event => handleInputChangeStep(step.id, event)} value={newTaskData.steps[step.id - 1].value} maxLength='50' />
@@ -392,7 +392,7 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
                                                         <Icon
                                                             path={hoveredStepId === step.id ? mdiDeleteEmpty : mdiDelete}
                                                             size={1.2}
-                                                            color={hoveredStepId === step.id ? "initial" : "gray"}
+                                                            color={hoveredStepId === step.id ? "red" : "gray"}
                                                             onClick={() => handleDeleteStep(step.id)}
                                                         />
                                                     </div>

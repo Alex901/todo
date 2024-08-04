@@ -81,3 +81,13 @@
 .no-scroll {
     overflow: hidden;
 }
+
+.draggable {
+    top: auto !important;
+    right: auto !important;
+}
+
+.steps {
+   width: 100%;
+   justify-content: flex-start;
+}

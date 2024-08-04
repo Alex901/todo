@@ -2,15 +2,17 @@
   padding: 0 80px 0 80px;
   overflow: visible;
 }
+
 .mdl-layout__header-row {
   position: sticky;
-  position: relative; 
+  position: relative;
 }
+
 .mdl-layout__header {
-  background-color: #3f51b5; 
-  position: relative; 
+  background-color: #3f51b5;
+  position: relative;
   overflow: visible;
-  
+
 }
 
 .header {
@@ -31,18 +33,20 @@
     height: 20px;
     width: 100%;
   }
+
   .mdl-layout__header-row.nav-row {
     display: flex;
     padding: 0 20px 0 20px;
     height: 20px;
     width: 100%;
   }
-  .nav-row{
+
+  .nav-row {
     display: flex;
     justify-content: space-between;
     align-items: center;
     width: 100%;
-  
+
   }
 }
 
@@ -50,11 +54,11 @@
 
 
 .mdl-navigation__link {
-  color: white; 
+  color: white;
 }
 
 .mdl-button--raised.mdl-button--accent {
-  margin-left: 10px; 
+  margin-left: 10px;
 }
 
 
@@ -67,34 +71,40 @@
   align-items: center;
 }
 
-.todoButton {
-  color: rgb(80, 60, 60);
-  font-weight: 600;
+.header-button {
+  background-color: var(--secondary-color);
+  color: white;
   border-radius: 10px;
-  width: 6em; 
-  height: 36px; 
-  background-color: var(--secondary-color); 
-  cursor: pointer; 
-  position: relative; 
+  width: auto;
+  height: 36px;
+  padding: 0 1em; /* Add padding for space around the text */
+  font-weight: 700;
+  box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.3s ease, color 0.3s ease, box-shadow 0.3s ease;
+  cursor: pointer;
+  position: relative;
   display: flex;
   justify-content: center;
   align-items: center;
-
   border: 1px solid rgb(75, 57, 57);
 }
 
-.todoButton:hover {
-  background-color: #e1900e; 
-  color: rgb(255, 255, 255);  
-  border: 2px solid rgb(235, 194, 137);
+.header-button:hover {
+  background-color: white;
+  color: var(--secondary-color);
+  font-weight: 900;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
+  border: 1px solid rgb(235, 194, 137); /* Keep border width consistent */
 }
 
-.todoButton:active {
-  border: 2px solid rgb(144, 57, 57);
+.header-button:active {
+  border: 1px solid rgb(144, 57, 57); /* Keep border width consistent */
 }
+
+
 
 .mdl-navigation__link.login-link:hover {
-  color: #e8b962; 
+  color: #e8b962;
   transform: scale(1.2);
 }
 
@@ -128,8 +138,21 @@
 }
 
 @keyframes fade-out {
-  0% { opacity: 1; }
-  100% { opacity: 0; }
+  0% {
+    opacity: 1;
+  }
+
+  100% {
+    opacity: 0;
+  }
+}
+
+/* Language */
+.language-icon:hover {
+  transform: scale(1.2);
+  transition: transform 0.3s;
+  cursor: pointer;
+  color: var(--secondary-color);
 }
 
 
@@ -137,6 +160,7 @@
 .notification-icon:hover {
   transform: scale(1.2);
   cursor: pointer;
+  color: var(--secondary-color);
 }
 
 .notification-container {
@@ -145,7 +169,7 @@
   border: 1px solid #7b7777;
   margin-top: 10px;
   background-color: #d9e3dd;
-  padding: 12px  5px  12px 5px;
+  padding: 12px 5px 12px 5px;
   border-radius: 20px 1px 20px 20px;
   display: flex;
   flex-direction: column;

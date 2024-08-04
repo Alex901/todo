@@ -14,6 +14,8 @@ import { red } from '@mui/material/colors';
 import { orange } from '@mui/material/colors';
 import { green } from '@mui/material/colors';
 import TodoDrawer from './components/Layout/TodoDrawer/TodoDrawer'
+import { I18nextProvider } from 'react-i18next';
+import i18n from './i18n';
 import { BrowserRouter as Router, Route } from 'react-router-dom';
 
 const theme = createTheme({
@@ -73,6 +75,8 @@ function Main() {
   }, []);
 
   return (
+    <React.StrictMode>
+    <I18nextProvider i18n={i18n}>
       <ThemeProvider theme={theme}>
         <UserProvider>
           <GroupProvider>
@@ -98,6 +102,8 @@ function Main() {
           </GroupProvider>
         </UserProvider>
       </ThemeProvider>
+    </I18nextProvider>
+    </React.StrictMode>
   );
 }
 
