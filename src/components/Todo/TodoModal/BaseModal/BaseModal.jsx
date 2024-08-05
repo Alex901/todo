@@ -1,21 +1,32 @@
 import React, { useEffect, useRef } from "react";
+import ReactModal from 'react-modal';
+import { TextField, Button, InputAdornment, IconButton } from '@mui/material';
 import "./BaseModal.css";
 
-const BaseModal = ({ isOpen, onClose, children }) => {
+ReactModal.setAppElement('#root');
+
+const BaseModal = ({ isOpen, onRequestClose, title, children }) => {
   const modalRef = useRef(null);
+
   useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (isOpen && !event.target.closest(".modal-content")) {
-        onClose();
+    const handleOverlayClick = (event) => {
+      if (event.target === overlayElement) {
+        onRequestClose();
       }
     };
 
-    document.addEventListener("mousedown", handleClickOutside);
+    const overlayElement = document.querySelector('.modal-overlay');
+
+    if (isOpen && overlayElement) {
+      overlayElement.addEventListener('click', handleOverlayClick);
+    }
 
     return () => {
-      document.removeEventListener("mousedown", handleClickOutside);
+      if (overlayElement) {
+        overlayElement.removeEventListener('click', handleOverlayClick);
+      }
     };
-  }, [isOpen, onClose]);
+  }, [isOpen, onRequestClose]);
 
   useEffect(() => {
     if (isOpen && modalRef.current) {
@@ -29,17 +40,17 @@ const BaseModal = ({ isOpen, onClose, children }) => {
   }
 
   return (
-    isOpen && (
-      <div className="modal-overlay">
-        <div className="modal">
-          <div className="modal-header">
-
-
-          </div>
-          <div className="modal-content">{children}</div>
-        </div>
-      </div>
-    )
+    <ReactModal
+      isOpen={isOpen}
+      onRequestClose={onRequestClose}
+      contentLabel={title}
+      className="modal-content"
+      overlayClassName="modal-overlay"
+      shouldCloseOnOverlayClick={true}
+    >
+      <h3 className="title">{title}</h3>
+      {children}
+    </ReactModal>
   );
 };
 

@@ -8,19 +8,22 @@ import Icon from '@mdi/react';
 import RegisterModal from '../../components/Layout/header/HeaderModals/RegisterModal';
 import LoginModal from '../../components/Layout/header/HeaderModals/LoginModal';
 import Feature from './Feature/Feature';
-import testingImage from '../../assets/Features_icons/testing.jpg';
+import testingImage from '../../assets/Features_icons/Technology-icon2_trans.png';
 import cooperateImage from '../../assets/Features_icons/Cooperation-icon2_trans.png';
-import ideaImage from '../../assets/Features_icons/idea.png';
-import stepsImage from '../../assets/Features_icons/steps.jpg';
-import trackImage from '../../assets/Features_icons/trackProg.jpg';
+import ideaImage from '../../assets/Features_icons/Idea-icon2_trans.png';
+import stepsImage from '../../assets/Features_icons/Progress-icon2_trans.png';
+import trackImage from '../../assets/Features_icons/Examine-details2_trans.png';
+import motivatedImage from '../../assets/Features_icons/Motivated-icon2_trans.png';
 import Header from '../../components/Layout/header/Header';
 import Footer from '../../components/Layout/Footer/Footer';
+import { useTranslation } from "react-i18next";
 
 
 
 const LandingPage = () => { //Could break this out into a header component ofc
     const [showRegisterModal, setShowRegisterModal] = useState(false);
     const [showLoginModal, setShowLoginModal] = useState(false);
+    const { t } = useTranslation();
 
     const openRegisterModal = (event) => {
         event.preventDefault();
@@ -38,8 +41,8 @@ const LandingPage = () => { //Could break this out into a header component ofc
         { image: stepsImage, title: 'Daily steps and reminders', description: 'To keep you engaged in your new activity each day, to maximize the effectiveness.' },
         { image: cooperateImage, title: 'Cooperate', description: 'You can go on an entierly solo learning journey. Or you can do so as a group. Where you can simply keep eachother accountable. Or you can work together towards a common goal.' },
         { image: trackImage, title: 'Track your progress', description: 'All progress is being recorded so our algorithm can decide if things are too easy/hard and adjust the difficulty of your daily tasks based on that. Also, you get some shiny graphs!!' },
-        { image: testingImage, title: 'Discover the power of AI', description: 'Along this journey, you can laverage the power of AI in each step of the way. And if you are not happy with the results, you can always modify your plans accordingly. We all know that this technology is not perfect(yet). ' },
-        { image: testingImage, title: 'Discover the power of AI', description: 'Along this journey, you can laverage the power of AI in each step of the way. And if you are not happy with the results, you can always modify your plans accordingly. We all know that this technology is not perfect(yet). ' },
+        { image: motivatedImage, title: 'Elmiminate stress', description: 'By always knowing what the next thing you have to do to reach your goal is' },
+        { image: testingImage, title: 'Discover new technologies', description: 'Along this journey, you can laverage the power of AI in each step of the way. And if you are not happy with the results, you can always modify your plans accordingly. We all know that this technology is not perfect(yet). ' },
     ];
 
 
@@ -49,21 +52,22 @@ const LandingPage = () => { //Could break this out into a header component ofc
             <div className="hero">
                 <div className='hero-left'>
                     <div className="hero-content-left">
-                        <h1>You know that project you have been putting off indefinetly?</h1>
-                        <p className='hero-sub-text'> Yeah, that one... How about getting started today? We will make sure that you stick to it this time. With the assistance of our
-                            AI driven daily planner, we will make sure that you are not owerwhelmed this time around. Only you can make it happen, but we will help! </p>
+                        <h1>{t("hero-title")}</h1>
+                        <p className='hero-sub-text'> {t("hero-subtitle")}</p>
                         <div className='hero-get-started'>
-                            (Some social proof here)
+                            <span style={{ opacity: 0 }}>
+                                (You are worth it!)
+                            </span>
                             <div className='hero-get-started-actions'>
-                                <button className="hero-button" onClick={openRegisterModal}> Get Started NOW its free </button>
+                                <button className="hero-button" onClick={openRegisterModal}> {t("hero-button")} </button>
                                 <RegisterModal isOpen={showRegisterModal} onRequestClose={closeRegisterModal} />
                             </div>
-                            <p>Already have an account? <a className="hero-login-link" onClick={openLoginModal}>Login</a></p>
-                            <LoginModal isOpen={showLoginModal} onRequestClose={closeLoginModal}/>
+                            <p>{t("already-account")} <a className="hero-login-link" onClick={openLoginModal}>{t("login")}</a></p>
+                            <LoginModal isOpen={showLoginModal} onRequestClose={closeLoginModal} />
                         </div>
                     </div>
                     <p style={{ fontSize: '0.8em', margin: '10px' }}>
-                        (PSST! Your data is safe, the database is fully encrypted and we will not share any data with third parties)
+                        ({t("data-safe")})
                     </p>
                 </div>
 
@@ -75,19 +79,19 @@ const LandingPage = () => { //Could break this out into a header component ofc
 
             </div>
 
-            <div className='qoute-div'>
-                <h1 className='ins-quote first-quote'>
-                    <span className='quote-mark'>"</span>Forge a strong enough habit, and you are halfway there already.<span className='quote-mark'>"</span>
-                </h1>
-            </div>
+
 
             <div className='features'>
                 {features.map((feature, index) => (
                     <Feature key={index} image={feature.image} title={feature.title} description={feature.description} />
                 ))}
             </div>
+            <div className='qoute-div'>
+                <h1 className='ins-quote first-quote'>
+                    <span className='quote-mark'>"</span>Forge a strong enough habit, and you are halfway there already.<span className='quote-mark'>"</span>
+                </h1>
+            </div>
 
-          
 
             <div className="success-case">
                 <div className="success-case-section">
@@ -129,6 +133,7 @@ const LandingPage = () => { //Could break this out into a header component ofc
                     <h1> !!!Placeholder -- testamonials!!! </h1>
                 </div>
             </div>
+
             <div className='qoute-div'>
                 <h1 className='ins-quote'>
                     <span className='quote-mark'>"</span>To success.<span className='quote-mark'>"</span>
