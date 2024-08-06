@@ -168,13 +168,33 @@
   right: 20px;
   border: 1px solid #7b7777;
   margin-top: 10px;
-  background-color: #d9e3dd;
+  background-color: #ffffff;
   padding: 12px 5px 12px 5px;
-  border-radius: 20px 1px 20px 20px;
+  border-radius: 5px; /* Make all corners rounded */
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   width: 100%;
   height: 100%;
+  transition: all 1s ease-in-out;
 }
+
+.notification-container::after {
+  content: '';
+  position: relative;
+  top: -10px; /* Position the tail */
+  left: var(--triangle-left, 20px); /* Use CSS variable for dynamic positioning */
+  width: 0;
+  height: 0;
+  border: 10px solid transparent;
+  border-bottom-color: #ffffff; /* Same as background color */
+  border-top: 0;
+  margin-left: -10px;
+}
+
+.notification-container.active {
+  background-color: #ffffff; 
+  right: 0; 
+}
+

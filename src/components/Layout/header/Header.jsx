@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import "./Header.css";
 import LoginModal from "./HeaderModals/LoginModal";
 import RegisterModal from "./HeaderModals/RegisterModal";
@@ -12,7 +12,7 @@ import Icon from '@mdi/react';
 import { useNotificationContext } from "../../../contexts/NotificationContexts";
 import Notification from "./Notification/Notification";
 import { useTranslation } from "react-i18next";
-import { Menu, MenuItem, IconButton, Badge, Popper } from '@mui/material';
+import { Menu, MenuItem, IconButton, Badge, Popper, ClickAwayListener } from '@mui/material';
 import ukFlag from "../../../assets/language_icons/uk-flag.png";
 import sweFlag from "../../../assets/language_icons/flag-sweden.png";
 
@@ -27,26 +27,26 @@ const Header = () => {
   const { t, i18n } = useTranslation();
   const theme = useTheme();
   const [languageAnchorEl, setLanguageAnchorEl] = useState(null);
-
-
-  const handleClickNotification = (event) => {
-    setAnchorEl(anchorEl ? null : event.currentTarget);
-  };
-
-  const open = Boolean(anchorEl);
+  const [open, setOpen] = useState(false);
+  const notificationContainerRef = useRef(null);
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setTime(new Date());
-    }, 1000); // update time every second
-
-    // cleanup function
+    document.addEventListener('mousedown', handleClickAway);
     return () => {
-      clearInterval(timer);
+      document.removeEventListener('mousedown', handleClickAway);
     };
-  }, []);
+  }, [open]);
 
+  const handleClickNotification = (event) => {
+    setAnchorEl(event.currentTarget);
+    setOpen((prev) => !prev);
+  };
 
+  const handleClickAway = (event) => {
+    if (!event.target.closest('.notification-container') && !event.target.closest('.notification-badge')) {
+      setOpen(false);
+    }
+  };
 
   const openLoginModal = (event) => {
     event.preventDefault();
@@ -86,9 +86,7 @@ const Header = () => {
     handleLanguageMenuClose();
   };
 
-  const openSelectLanguage = Boolean(anchorEl);
   const languageMenuOpen = Boolean(languageAnchorEl);
-
   return (
     <div className="mdl-layout header" style={{ overflow: "visible" }}>
       <header className="mdl-layout__header header_layout" style={{ backgroundColor: theme.palette.primary.main }}>
@@ -107,7 +105,7 @@ const Header = () => {
 
           {/* Right section */}
           <div style={{ display: 'flex', alignItems: 'center', position: 'relative', justifyContent: 'space-between', gap: isLoggedIn ? '12px' : '15px' }}>
-            <IconButton onClick={handleLanguageMenuClick} color="inherit" style={{ top: '1px', marginRight: !isLoggedIn ? '15px' : '0'  }}>
+            <IconButton onClick={handleLanguageMenuClick} color="inherit" style={{ top: '1px', marginRight: !isLoggedIn ? '15px' : '0' }}>
               <Icon className="language-icon" path={mdiTranslateVariant} size={1.2} />
             </IconButton>
             <Menu
@@ -126,11 +124,12 @@ const Header = () => {
             </Menu>
             {isLoggedIn ? (
               <>
-                <Badge badgeContent={userNotifications.length} color="secondary" style={{ top: '1px', marginRight: '20px' }}>
+                <Badge badgeContent={userNotifications.length} className="notification-badge" color="secondary" style={{ top: '1px', marginRight: '20px' }}>
                   <Icon className='notification-icon' path={mdiBellOutline} size={1.2} onClick={handleClickNotification} />
                 </Badge>
+                <ClickAwayListener onClickAway={handleClickAway}>
                 <Popper open={open} anchorEl={anchorEl} placement='bottom-end' style={{ zIndex: 10000 }}>
-                  <div className="notification-container">
+                  <div className={`notification-container ${open ? 'active' : ''}`}>
                     {userNotifications.length > 0 ? (
                       userNotifications.map((notification, index) => (
                         <Notification
@@ -148,11 +147,12 @@ const Header = () => {
                     )}
                   </div>
                 </Popper>
+                </ClickAwayListener>
                 <UserAvatar />
               </>
             ) : null}
 
-            {!isLoggedIn && <a href="#" className="mdl-navigation__link login-link" style={{ padding:'0'}} onClick={openLoginModal}>{t('login')}</a>}
+            {!isLoggedIn && <a href="#" className="mdl-navigation__link login-link" style={{ padding: '0' }} onClick={openLoginModal}>{t('login')}</a>}
             {!isLoggedIn && <button className="header-button" onClick={openRegisterModal}>{t('register')}</button>}
 
           </div>
