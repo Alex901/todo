@@ -147,8 +147,8 @@ const GroupModal = ({ isOpen, onClose }) => {
             overlayClassName="modal-overlay"
             shouldCloseOnOverlayClick={true}
         >
-
-            <AppBar position="static">
+            <div className="modal-container">
+            <AppBar position="static" className='modal-appbar'>
                 <Tabs value={value}
                     onChange={handleChange}
                     variant="fullWidth"
@@ -299,6 +299,7 @@ const GroupModal = ({ isOpen, onClose }) => {
             <TabPanel value={value} index={2}>
                 Find Content
             </TabPanel>
+            </div>
         </ReactModal >
     );
 };

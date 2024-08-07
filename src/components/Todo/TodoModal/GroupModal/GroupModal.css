@@ -1,24 +1,37 @@
   .modal-appbar {
-    position: absolute;
+    position: sticky;
     top: 0;
-    background-color: rgba(255, 255, 255, 0.7); /* Change this to the color you want */
+    background-color: rgba(255, 255, 255, 0.7);
     width: 100%;
     border-radius: 5px;
+    z-index: 1; 
   }
 
-.modal-with-tabs {
+  .modal-with-tabs {
     padding: 0;
-    width: auto; 
-}
+    width: auto;
+  }
 
-  
+  .modal-container {
+    display: flex;
+    flex-direction: column;
+    width: 450px;
+    max-width: 800px;
+    max-height: 600px;
+    border-radius: 8px;
+    overflow: auto; 
+  }
+
+
 
   .tab-modal-content {
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
-    padding: 20px;
+    flex-grow: 1;
+    padding: 16px;
+    overflow-y: auto;
   }
 
   .create-group-form {
@@ -51,7 +64,7 @@
     color: rgb(157, 147, 147);
   }
 
-  .add-member:hover{
+  .add-member:hover {
     color: var(--success-color);
     transform: scale(1.1);
   }
