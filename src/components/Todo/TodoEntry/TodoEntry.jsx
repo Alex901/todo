@@ -296,7 +296,6 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
                                                 <p className={`step-name ${step.isDone ? 'step-completed' : ''}`}>{step.taskName}</p>
                                             </div>
                                         ))}
-                                        <p className="add-step" style={{ margin: '12px' }} ><strong>Add another step</strong></p>
                                     </>
                                 ) : (
                                     <div className="no-steps">No steps in this task!</div>
@@ -305,7 +304,7 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
 
                             <div className="description-container">
                                 <p className="description-label"> <strong>Description </strong> </p>
-                                <p> {description} </p>
+                                <p>{description != null ? description : "No description"}</p>
 
                             </div>
 
@@ -432,7 +431,7 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
                         {description && (
                             <div className="description-container">
                                 <p className="description-label"> <strong>Description </strong> </p>
-                                <p> {description} </p>
+                                <p>{description != null ? description : "No description"}</p>
                             </div>
                         )}
                     </div>
@@ -537,7 +536,7 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
                         {description && (
                             <div className="description-container">
                                 <p className="description-label"> <strong>Description </strong> </p>
-                                <p> {description} </p>
+                                <p>{description != null ? description : "No description"}</p>
                             </div>
                         )}
                     </div>
