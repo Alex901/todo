@@ -564,7 +564,7 @@ function App() {
                       <TextField label="Tag name" variant="outlined" size="small" />
                       <ColorPickerButton webSafeColors={webSafeColors}  selectedColor={selectedColor} handleColorSelect={handleColorChange} />
                     </div>
-                    <Button type="submit" variant="contained" color="primary">
+                    <Button type="submit" variant="contained" >
                       Submit
                     </Button>
                   </form>

@@ -9,16 +9,11 @@ import { useUserContext } from '../../../../contexts/UserContext';
 import { useGroupContext } from '../../../../contexts/GroupContexts';
 import { useNotificationContext } from '../../../../contexts/NotificationContexts';
 import Icon from '@mdi/react';
-import { mdiAccountGroupOutline } from '@mdi/js';
-import { mdiFolderMultipleOutline } from '@mdi/js';
-
-import { mdiPlusCircle } from '@mdi/js';
-import { mdiPencilCircle } from '@mdi/js';
-import { mdiDeleteCircle } from '@mdi/js';
-
-import { mdiMinusCircle } from '@mdi/js';
-import { mdiArrowLeftBoldCircle } from '@mdi/js';
-import { mdiHumanGreetingProximity } from '@mdi/js';
+import {
+    mdiAccountGroupOutline, mdiFolderMultipleOutline, mdiPlusCircle, mdiPencilCircle, mdiDeleteCircle,
+    mdiMinusCircle, mdiArrowLeftBoldCircle, mdiHumanGreetingProximity
+} from '@mdi/js';
+import GroupModalPopper from './GroupModalPopper/GroupModalPopper';
 
 const TabPanel = (props) => { //TODO: Move this at some point
     const { children, value, index, ...other } = props;
@@ -52,9 +47,13 @@ const GroupModal = ({ isOpen, onClose }) => {
     const roles = ['edit', 'observer', 'moderator']; // huh ? 
     const [searchInput, setSearchInput] = useState('');
     const [filteredGroups, setFilteredGroups] = useState([]);
+    const [anchorElPopper, setAnchorElPopper] = useState(null);
+    const [popperOpen, setPopperOpen] = useState(false);
+    const [popperMode, setPopperMode] = useState('');
+    const [selectedGroup, setSelectedGroup] = useState(null);
 
     useEffect(() => {
-        setFilteredGroups(allGroupList.slice(0, 10)); // Initially display 10 arbitrary groups
+        setFilteredGroups(allGroupList.slice(0, 10)); 
     }, [allGroupList]);
 
     const handleChange = (event, newValue) => { //Some bad naming going on here
@@ -109,9 +108,12 @@ const GroupModal = ({ isOpen, onClose }) => {
         return member && member.role === 'moderator';
     };
 
-    const handleAddMember = (event) => {
+    const handleAddMember = (event, group) => {
         event.stopPropagation();
-        console.log('Add member');
+        setSelectedGroup(group);
+        setPopperMode('create-user');
+        setPopperOpen(!popperOpen);
+        setAnchorElPopper(event.currentTarget);
     };
 
     const handleEditGroup = (event) => {
@@ -156,10 +158,19 @@ const GroupModal = ({ isOpen, onClose }) => {
         console.log('Request join group', event.target);
     };
 
+    const handlePopperClose = () => {
+        setPopperOpen(!popperOpen);
+        setAnchorElPopper(null);
+        setPopperMode('');
+    };
+
     return (
         <ReactModal
             isOpen={isOpen}
-            onRequestClose={onClose}
+            onRequestClose={() => {
+                onClose();
+                handlePopperClose();
+            }}
             className="modal-content modal-with-tabs"
             overlayClassName="modal-overlay"
             shouldCloseOnOverlayClick={true}
@@ -181,8 +192,8 @@ const GroupModal = ({ isOpen, onClose }) => {
                     <div className='tab-modal-content'>
                         {loggedInUser && userGroupList.length > 0 ? (
                             <div className='group'>
-                                {userGroupList.map((group, index) => (
-                                    <Accordion key={index}>
+                                {userGroupList.map((group) => (
+                                    <Accordion key={group._id}>
                                         <AccordionSummary>
                                             <div className='group-summary-columns' style={{ width: '100%' }}>
                                                 <div className='group-summary-info' style={{ width: 'auto' }}>
@@ -202,7 +213,7 @@ const GroupModal = ({ isOpen, onClose }) => {
                                                     <div className='group-summary-actions' style={{ width: '33%', display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly' }}>
                                                         {loggedInUser._id === group.owner ? (
                                                             <>
-                                                                <Icon className="group-icon-button add-member" path={mdiPlusCircle} size={1.2} onClick={(event) => handleAddMember(event)} style={{ cursor: 'pointer' }} />
+                                                                <Icon className="group-icon-button add-member" path={mdiPlusCircle} size={1.2} onClick={(event) => handleAddMember(event, group)} style={{ cursor: 'pointer' }} />
                                                                 <Icon className="group-icon-button edit-group" path={mdiPencilCircle} size={1.2} onClick={(event) => handleEditGroup(event)} style={{ cursor: 'pointer' }} />
                                                                 <Icon className="group-icon-button delete-group" path={mdiDeleteCircle} size={1.2} onClick={(event) => handleDeleteGroup(event)} style={{ cursor: 'pointer' }} />
                                                             </>
@@ -250,6 +261,14 @@ const GroupModal = ({ isOpen, onClose }) => {
                                                 })}
                                             </div>
                                         </AccordionDetails>
+                                        <GroupModalPopper 
+                                        anchorEl={anchorElPopper}
+                                        open={popperOpen}
+                                        onClose={handlePopperClose}
+                                        userList={userList}
+                                        mode={popperMode}
+                                        group={selectedGroup ? selectedGroup : null}
+                                        />
                                     </Accordion>
                                 ))}
                             </div>
@@ -334,7 +353,7 @@ const GroupModal = ({ isOpen, onClose }) => {
                             {filteredGroups
                                 .filter(group => group.owner !== null && !group.members.some(member => member.member_id._id === loggedInUser._id))
                                 .map((group) => (
-                                    <Accordion key={group.id}>
+                                    <Accordion key={group._id}>
                                         <AccordionSummary>
                                             <div className='group-summary-columns' style={{ width: '100%' }}>
                                                 <div className='group-summary-info' style={{ width: 'auto' }}>
