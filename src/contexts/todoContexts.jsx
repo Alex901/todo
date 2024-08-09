@@ -145,7 +145,7 @@ const TodoProvider = ({ children }) => {
         inList: loggedInUser ? ['all'].concat(loggedInUser.activeList !== 'all' ? [loggedInUser.activeList] : []) : [], //Mark for deletion
         inListNew: inListNewTmp,
       };
-      console.log("DEBUG -- NewTodo", newTodo);
+      // console.log("DEBUG -- NewTodo", newTodo);
       // console.log("addTodo: newTodo", newTodo);
 
       const response = await axios.post(`${BASE_URL}/api/`, newTodo);
@@ -343,7 +343,6 @@ const TodoProvider = ({ children }) => {
   }
   //Find task with id -> step id and set it to completed
   const setStepCompleted = async (taskId, stepId) => {
-    console.log("todoContext: setStepCompleted: taskId, stepId", taskId, stepId);
     try {
       const response = await axios.patch(`${BASE_URL}/api/stepComplete`, { taskId, stepId });
       if (response.status === 200) {

@@ -48,6 +48,7 @@ body {
  min-height: 100vh;
  height: auto;
  background: linear-gradient(to top, #ffffff14 30%, var(--primary-color) 96%);
+ overflow-y: auto;
 }
 
 h1 {

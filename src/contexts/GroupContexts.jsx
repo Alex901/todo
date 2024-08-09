@@ -26,6 +26,7 @@ const GroupProvider = ({ children }) => {
     useEffect(() => {
         if (loggedInUser) {
             getLoggedInUserGroups();
+            fetchAllGroups();
         }
     }, [loggedInUser]);
 
@@ -37,6 +38,32 @@ const GroupProvider = ({ children }) => {
  * @param {string} [groupData.listName] - The name of the list associated with the group. If not provided, it defaults to the group's name followed by "'s list".
  * @returns {Promise<string|undefined>} - The ID of the created group if successful, otherwise undefined.
  */
+    const fetchAllGroups = async () => {
+        try {
+            const response = await axios.get(`${BASE_URL}/groups/fetchAllGroups`, { withCredentials: true });
+            console.log("DEBUG: response.data: ", response.data);
+            if (response.status === 200) {
+                setAllGroupList(response.data);
+            }
+        } catch (error) {
+            if (error.response) {
+                // The request was made and the server responded with a status code
+                // that falls out of the range of 2xx
+                console.error("Error fetching all groups: ", error.response.data);
+                console.error("Status code: ", error.response.status);
+                console.error("Headers: ", error.response.headers);
+            } else if (error.request) {
+                // The request was made but no response was received
+                console.error("Error fetching all groups: No response received");
+                console.error("Request: ", error.request);
+            } else {
+                // Something happened in setting up the request that triggered an Error
+                console.error("Error fetching all groups: ", error.message);
+            }
+            console.error("Config: ", error.config);
+        }
+    };
+
     const createGroup = async (groupData) => { //TODO: Error handling
         console.log("DEBUG: groupData: ", groupData);
         if (groupData.listName === '') {
@@ -71,7 +98,7 @@ const GroupProvider = ({ children }) => {
     const addUserToGroup = async (groupId, user) => {
         try {
             const response = await axios.put(`${BASE_URL}/groups/addUser/${groupId}`, { user }, { withCredentials: true });
-            if (response.status === 200){
+            if (response.status === 200) {
                 checkLogin();
             }
             toast.success("User added to group");

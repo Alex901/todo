@@ -112,6 +112,7 @@ const Header = () => {
               anchorEl={languageAnchorEl}
               open={languageMenuOpen}
               onClose={handleLanguageMenuClose}
+              disableScrollLock={true}
             >
               <MenuItem onClick={() => handleLanguageChange('en')}>
                 <img src={ukFlag} alt="English" style={{ width: '20px', height: '20px', marginRight: '8px' }} />

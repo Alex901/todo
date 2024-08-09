@@ -198,8 +198,6 @@ function App() {
     setIsDeleteListModalOpen(true);
   };
 
-  console.debug("DEBUG: loggedInUser: ", loggedInUser);
-
   const handleDelete = () => {
     const lisToDelete = loggedInUser.activeList
     if (lisToDelete === 'all' || lisToDelete === 'shared' || lisToDelete === 'today') {

@@ -28,7 +28,7 @@ const UserProvider = ({ children }) => {
 
     useEffect(() => {
         //console.log("User logged in, fetching users");
-       // console.log("loggedInUser: ", loggedInUser);
+        // console.log("loggedInUser: ", loggedInUser);
         // IIFE for async function inside useEffect
         (async () => {
             try {
@@ -50,7 +50,7 @@ const UserProvider = ({ children }) => {
                 },
                 withCredentials: true
             });
-           // console.log("fetchUsers response: ", response.data);
+            // console.log("fetchUsers response: ", response.data);
             setUserList(response.data);
         } catch (error) {
             console.error('Error fetching users', error);
@@ -58,7 +58,7 @@ const UserProvider = ({ children }) => {
     }
 
     const checkLogin = async () => {
-       // console.log("Checking login start");
+        // console.log("Checking login start");
         let BASE_URL;
         if (process.env.NODE_ENV === 'test') {
             const config = await import('../../config');
@@ -70,8 +70,8 @@ const UserProvider = ({ children }) => {
         try {
             const response = await axios.get(`${BASE_URL}/auth/checkLogin`, { withCredentials: true });
             if (response.data.valid) {
-               // console.log("Valid user is logged in", response.data.user)
-                console.log("DEBUG -- CheckLogin user data in response: ", response.data.user)
+                // console.log("Valid user is logged in", response.data.user)
+                // console.log("DEBUG -- CheckLogin user data in response: ", response.data.user)
                 setLoggedInUser(response.data.user);
                 setIsLoggedIn(true);
             }
@@ -412,7 +412,7 @@ const UserProvider = ({ children }) => {
 
     const updateSettings = async (settingName, value) => {
         console.log("DEBUG: update settings for loggedInUser: ", settingName, value);
-        try{
+        try {
             if (!isLoggedIn) {
                 console.log("User not logged in");
                 return;

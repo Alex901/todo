@@ -60,3 +60,8 @@
     top: auto !important;
     right: auto !important;
 }
+
+.modal-content {
+    overflow: auto;
+    max-height: 80vh;
+}
