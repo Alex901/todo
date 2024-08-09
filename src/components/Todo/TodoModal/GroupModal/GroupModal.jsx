@@ -92,7 +92,7 @@ const GroupModal = ({ isOpen, onClose }) => {
         groupData.users = []; //this is a dumb way of doing it, but it works
 
         groupData.owner = loggedInUser._id;
-        const groupId = await createGroup(groupData);
+        const groupId = await createGroup(groupData); //Move to group context or nah? 
         if (users.length > 0) {
             console.log("DEBUG: users GroupModal: createGroup: ", users);
             users.forEach(user => {

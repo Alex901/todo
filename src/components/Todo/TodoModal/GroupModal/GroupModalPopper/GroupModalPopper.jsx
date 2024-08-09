@@ -16,7 +16,7 @@ const GroupModalPopper = ({ anchorEl, open, onClose, userList, mode, group }) =>
 
         return userList.filter(user => {
             const isLoggedInUser = user._id === loggedInUser._id;
-            const isAlreadyInGroup = group.members.some(member => member.member_id === user._id);
+            const isAlreadyInGroup = group && group.members && group.members.some(member => member.member_id === user._id);
             return !isLoggedInUser && !isAlreadyInGroup;
         });
     }, [userList, loggedInUser, group]);
@@ -49,9 +49,7 @@ const GroupModalPopper = ({ anchorEl, open, onClose, userList, mode, group }) =>
             return;
         } else {
             setError('');
-            // Handle form submission logic here
-            console.log('DEBUG -- Selected Users:', selectedUsers);
-            console.log("DEBUG -- Group:", group);
+            inviteToGroup(loggedInUser, selectedUsers, group._id);
             setSelectedUsers([]);
             onClose();
         }

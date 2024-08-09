@@ -104,7 +104,7 @@ const Header = () => {
           </nav>
 
           {/* Right section */}
-          <div style={{ display: 'flex', alignItems: 'center', position: 'relative', justifyContent: 'space-between', gap: isLoggedIn ? '12px' : '15px' }}>
+          <div style={{ display: 'flex', alignItems: 'center', position: 'relative', justifyContent: 'space-between', gap: isLoggedIn ? '12px' : '25px' }}>
             <IconButton onClick={handleLanguageMenuClick} color="inherit" style={{ top: '1px', marginRight: !isLoggedIn ? '15px' : '0' }}>
               <Icon className="language-icon" path={mdiTranslateVariant} size={1.2} />
             </IconButton>

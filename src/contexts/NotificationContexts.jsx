@@ -75,28 +75,39 @@ const NotificationProvider = ({ children }) => {
      */
     const inviteToGroup = async (from, to, groupId) => {
         console.log("DEBUG: inviteToGroup: ", from, to, groupId);
-        try {
-            const response = await axios.post(`${BASE_URL}/notifications/groupinvite`, { from, to, groupId }, { withCredentials: true });
-            // console.log("DEBUG: response: ", response);
-            toast.success("Invite sent successfully");
-        } catch (error) {
-            console.error("Error sending invite: ", error);
-            if (error.response) {
-                // The request was made and the server responded with a status code
-                // that falls out of the range of 2xx
-                console.error(error.response.data);
-                console.error(error.response.status);
-                console.error(error.response.headers);
-            } else if (error.request) {
-                // The request was made but no response was received
-                console.error(error.request);
-                toast.error("Error sending invite: No response from the server");
-            } else {
-                // Something happened in setting up the request that triggered an Error
-                console.error('Error', error.message);
+    
+        const sendInvite = async (recipient) => {
+            try {
+                const response = await axios.post(`${BASE_URL}/notifications/groupinvite`, { from, to: recipient, groupId }, { withCredentials: true });
+                // console.log("DEBUG: response: ", response);
+                toast.success("Invite sent successfully");
+            } catch (error) {
+                console.error("Error sending invite: ", error);
+                if (error.response) {
+                    // The request was made and the server responded with a status code
+                    // that falls out of the range of 2xx
+                    console.error(error.response.data);
+                    console.error(error.response.status);
+                    console.error(error.response.headers);
+                } else if (error.request) {
+                    // The request was made but no response was received
+                    console.error(error.request);
+                    toast.error("Error sending invite: No response from the server");
+                } else {
+                    // Something happened in setting up the request that triggered an Error
+                    console.error('Error', error.message);
+                }
             }
+        };
+    
+        if (Array.isArray(to)) {
+            for (const recipient of to) {
+                await sendInvite(recipient);
+            }
+        } else {
+            await sendInvite(to);
         }
-    }
+    };
 
     /**
      * Accepts a group invitation.
