@@ -3,6 +3,7 @@ import { Autocomplete, Popper, FormControl, Button, TextField } from '@mui/mater
 import { useNotificationContext } from '../../../../../contexts/NotificationContexts';
 import { useUserContext } from '../../../../../contexts/UserContext';
 import './GroupModalPopper.css';
+import { useTranslation } from "react-i18next";
 
 const GroupModalPopper = ({ anchorEl, open, onClose, userList, mode, group }) => {
     const [selectedUsers, setSelectedUsers] = useState([]);
@@ -11,6 +12,7 @@ const GroupModalPopper = ({ anchorEl, open, onClose, userList, mode, group }) =>
     const [filteredUsers, setFilteredUsers] = useState([]);
     const [error, setError] = useState('');
     const [fadeOut, setFadeOut] = useState(false);
+    const { t, i18n } = useTranslation();
 
     const initialFilteredUsers = useMemo(() => {
 

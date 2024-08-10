@@ -14,6 +14,7 @@ import {
     mdiMinusCircle, mdiArrowLeftBoldCircle, mdiHumanGreetingProximity
 } from '@mdi/js';
 import GroupModalPopper from './GroupModalPopper/GroupModalPopper';
+import { useTranslation } from "react-i18next";
 
 const TabPanel = (props) => { //TODO: Move this at some point
     const { children, value, index, ...other } = props;
@@ -51,6 +52,7 @@ const GroupModal = ({ isOpen, onClose }) => {
     const [popperOpen, setPopperOpen] = useState(false);
     const [popperMode, setPopperMode] = useState('');
     const [selectedGroup, setSelectedGroup] = useState(null);
+    const { t, i18n } = useTranslation();
 
     useEffect(() => {
         setFilteredGroups(allGroupList.slice(0, 10)); 

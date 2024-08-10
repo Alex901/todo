@@ -9,6 +9,7 @@ import { TextField, Button, InputAdornment, IconButton, FormControl, InputLabel,
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import Icon from '@mdi/react';
 import { mdiDelete, mdiDeleteEmpty } from '@mdi/js';
+import { useTranslation } from "react-i18next";
 
 ReactModal.setAppElement('#root');
 
@@ -34,6 +35,7 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
         estimatedTime: 0,
         tags: []
     });
+    const { t, i18n } = useTranslation();
 
     const options = [
         { value: 'VERY HIGH', label: 'VERY HIGH' },
