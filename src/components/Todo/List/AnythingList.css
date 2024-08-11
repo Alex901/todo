@@ -80,6 +80,7 @@
 
 .list-settings-todo{
     background-color: rgb(230, 81, 81);
+    color: white;
 }
 
 .list-settings-doing{
@@ -89,6 +90,7 @@
 
 .list-settings-done{
     background-color: rgb(100, 158, 49); 
+    color: white;
 }
 
 /* Media queries */

@@ -134,8 +134,33 @@ const GroupProvider = ({ children }) => {
     };
 
     const leaveGroup = async (group) => {
-        console.log(`DEBUG: leaveGroup ${group}`);
-    }
+        console.log(`DEBUG: leaveGroup ${group.name}`);
+        try {
+            const response = await axios.put(
+                `${BASE_URL}/groups/leaveGroup/${group._id}`,
+                { user: loggedInUser },
+                { withCredentials: true }
+            );
+            if (response.status === 200) {
+                checkLogin();
+                toast.success("Left group successfully");
+            }
+        } catch (error) {
+            if (error.response) {
+                if (error.response.status === 404) {
+                    toast.error("Group or user not found");
+                } else if (error.response.status === 500) {
+                    toast.error("Internal server error");
+                } else {
+                    toast.error("Error leaving group");
+                }
+            } else if (error.request) {
+                toast.error("No response from server");
+            } else {
+                toast.error("Error leaving group");
+            }
+        }
+    };
 
     const removeUserFromGroup = async (group, user) => {
         console.log(`DEBUG: removeUserFromGroup ${user} from group ${group}`);

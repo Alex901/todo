@@ -246,7 +246,7 @@ const AnythingList = ({ type }) => {
             {isLoggedIn ? <div className={`title-${type}`}></div> : null}
             {isLoggedIn && (
                 <div className={`list-settings list-settings-${type}`} style={{ display: 'flex', justifyContent: 'space-between', border: '2px solid gray' }}>
-                    <div className="seartch-container" style={{ margin: '3px 20px' }}>
+                    <div className="search-container" style={{ margin: '7px 20px' }}>
 
                         <Stack spacing={1} sx={{}}>
                             <FormControl variant="outlined" style={{ minWidth: 120 }}>
@@ -292,9 +292,7 @@ const AnythingList = ({ type }) => {
                                             {...params}
                                             variant="outlined"
                                             label="Find tags"
-                                            InputLabelProps={{
-                                                style: { color: type === 'doing' ? 'black' : 'white' },
-                                            }}
+
                                         />
                                     )}
                                 />
@@ -344,7 +342,9 @@ const AnythingList = ({ type }) => {
                                 defaultValue="created"
                                 onChange={handleSortChange}
                                 size="small"
-                                sx={{ color: type === 'doing' ? 'black' : 'white' }}
+                                InputLabelProps={{
+                                    style: { color: type === 'doing' ? 'black' : 'white' },
+                                }}
                             >
                                 <MenuItem value="created" name="created">Created</MenuItem>
                                 <MenuItem value="task" name="task">Name</MenuItem>

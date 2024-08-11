@@ -54,6 +54,7 @@ const GroupModal = ({ isOpen, onClose }) => {
     const [popperOpen, setPopperOpen] = useState(false);
     const [popperMode, setPopperMode] = useState('');
     const [selectedGroup, setSelectedGroup] = useState(null);
+    const [selectedUser, setSelectedUser] = useState(null);
     const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
     const [confirmationMessage, setConfirmationMessage] = useState('');
     const [confirmationAction, setConfirmationAction] = useState(null);
@@ -65,7 +66,15 @@ const GroupModal = ({ isOpen, onClose }) => {
 
     const openConfirmation = (event, member = null, group, action) => {
         event.stopPropagation();
+        setSelectedGroup(group);
+        if (member) {
+            setSelectedUser(member);
+        }
         console.log("DEBUG: member, group, action: ", group, action);
+        if (action === "leave-group") {
+            setConfirmationMessage(`Are you sure you want to leave ${group.name}?`);
+            setConfirmationAction("leave-group");
+        }
         setIsConfirmationModalOpen(true);
     };
 
@@ -76,9 +85,12 @@ const GroupModal = ({ isOpen, onClose }) => {
     };
 
     const handleConfirmationAction = () => {
-        if (confirmationAction) {
-            confirmationAction();
+        if (confirmationAction === "leave-group") {
+            console.log("DEBUG: leave group: ", selectedGroup);
+            leaveGroup(selectedGroup);
         }
+        setConfirmationAction(null);
+        setConfirmationMessage('');
         cancelConfirmation();
     }
 
@@ -134,20 +146,29 @@ const GroupModal = ({ isOpen, onClose }) => {
         return member && member.role === 'moderator';
     };
 
-    const handleAddMember = (event, group) => {
+    const handleAddMember = (event, group) => { //bad name
         event.stopPropagation();
-        setSelectedGroup(group);
-        setPopperMode('add-user');
-        setPopperOpen(!popperOpen);
-        setAnchorElPopper(event.currentTarget);
+        if (popperOpen) {
+            setPopperOpen(false);
+        } else {
+
+            setSelectedGroup(group);
+            setPopperMode('add-user');
+            setPopperOpen(true);
+            setAnchorElPopper(event.currentTarget);
+        }
     };
 
-    const handleEditGroup = (event, group) => {
+    const handleEditGroup = (event, group) => { //bad name
         event.stopPropagation();
-        setSelectedGroup(group);
-        setPopperMode('edit-group');
-        setPopperOpen(!popperOpen);
-        setAnchorElPopper(event.currentTarget);
+        if (popperOpen) {
+            setPopperOpen(false);
+        } else {
+            setSelectedGroup(group);
+            setPopperMode('edit-group');
+            setPopperOpen(true);
+            setAnchorElPopper(event.currentTarget);
+        }
     };
 
     const handleDeleteGroup = (event, group) => {
@@ -164,11 +185,6 @@ const GroupModal = ({ isOpen, onClose }) => {
         }
 
 
-    };
-
-    const handleLeaveGroup = (event) => {
-        event.stopPropagation();
-        console.log('Leave group');
     };
 
     const handleRemoveMember = (member, group) => {
