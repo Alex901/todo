@@ -327,9 +327,8 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
                     isOpen={isModalOpen}
                     onConfirm={confirmStart}
                     onClose={cancelConfirm}
-                    message={addLineBreak(`You are already working on ${isLoggedIn ? getActiveListDoingCount() : getDoingCount()} tasks. 
-                    \n Are you sure you want to start another one?
-                    `)}
+                    message={addLineBreak(`You are working on ${isLoggedIn ? getActiveListDoingCount() : getDoingCount()} tasks already. 
+                    Are you certain you wish to start another one?`)}
                 />
 
                 <ConfirmationModal
@@ -562,7 +561,7 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
                     isOpen={isConfirmCancelModalOpen}
                     onConfirm={confirmCancel}
                     onClose={cancelCancel}
-                    message={<span>Are you sure you wish to cancel <strong>{todoData.task}</strong> ? <br /><br /> This will reset the time spent on this task, and steps will be reset.</span>}
+                    message={<span>Are you sure you wish to cancel <strong>{todoData.task}</strong> ? <br /><br /> Time spent on this task will not be reset, and completed steps will remain so.</span>}
                 />
             </div>
         );

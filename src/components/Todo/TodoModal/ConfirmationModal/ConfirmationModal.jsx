@@ -1,4 +1,4 @@
-import React, { useEffect} from 'react';
+import React, { useEffect } from 'react';
 import ReactModal from 'react-modal';
 import './ConfirmationModal.css';
 
@@ -22,7 +22,7 @@ const ConfirmationModal = ({ isOpen, onRequestClose, message, onConfirm, onClose
             document.removeEventListener('click', handleOverlayClick);
         };
     }, [isOpen, onRequestClose]);
-    
+
     return (
         <ReactModal
             isOpen={isOpen}
@@ -32,8 +32,12 @@ const ConfirmationModal = ({ isOpen, onRequestClose, message, onConfirm, onClose
             overlayClassName="modal-overlay"
             shouldCloseOnOverlayClick={true}
         >
-            <div className='modalTitle'> <h3 className="title"> Notification </h3></div>
-            <p className="message">{message}</p>
+            <div className='modalTitle'> <h3 className="title"> Are you sure? </h3></div>
+            <div className="message-container">
+                <div className="message-content">
+                <p className="message">{message}</p>
+                </div>
+            </div>
             <div className="modal-buttons">
                 <button onClick={onConfirm} className='modal-button confirm-button'> Confirm </button>
                 <button onClick={onClose} className='modal-button cancel'> Cancel </button>

@@ -125,10 +125,26 @@ const GroupProvider = ({ children }) => {
      
     }
 
+    const updateRole = async (groupId, memberId, role) => {
+        console.log(`DEBUG: updateRole for groupMember ${memberId} in group ${group.name} to ${role}`);
+    };
+
+    const deleteGroup = async (group) => {
+        console.log(`DEBUG: deleteGroup for group ${group}`);
+    };
+
+    const leaveGroup = async (group) => {
+        console.log(`DEBUG: leaveGroup ${group}`);
+    }
+
+    const removeUserFromGroup = async (group, user) => {
+        console.log(`DEBUG: removeUserFromGroup ${user} from group ${group}`);
+    }
+
     return (
         <GroupContext.Provider value={{
             userGroupList, allGroupList, setUserGroupList, setAllGroupList, createGroup,
-            addUserToGroup, updateGroupInfo
+            addUserToGroup, updateGroupInfo, updateRole, deleteGroup, leaveGroup, removeUserFromGroup
         }}>
             {children}
         </GroupContext.Provider>

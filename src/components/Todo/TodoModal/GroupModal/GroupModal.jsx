@@ -15,6 +15,8 @@ import {
 } from '@mdi/js';
 import GroupModalPopper from './GroupModalPopper/GroupModalPopper';
 import { useTranslation } from "react-i18next";
+import { toast } from "react-toastify";
+import ConfirmationModal from '../ConfirmationModal/ConfirmationModal';
 
 const TabPanel = (props) => { //TODO: Move this at some point
     const { children, value, index, ...other } = props;
@@ -42,7 +44,7 @@ const GroupModal = ({ isOpen, onClose }) => {
     const { loggedInUser, userList } = useUserContext();
     const initialGroupData = { name: '', description: '', listName: '', users: [], visibility: 'private' };
     const [groupData, setGroupData] = useState(initialGroupData);
-    const { createGroup, userGroupList, allGroupList } = useGroupContext();
+    const { createGroup, userGroupList, allGroupList, leaveGroup } = useGroupContext();
     const [createGroupError, setCreateGroupError] = useState('');
     const { inviteToGroup } = useNotificationContext();
     const roles = ['edit', 'observer', 'moderator']; // huh ? 
@@ -52,11 +54,33 @@ const GroupModal = ({ isOpen, onClose }) => {
     const [popperOpen, setPopperOpen] = useState(false);
     const [popperMode, setPopperMode] = useState('');
     const [selectedGroup, setSelectedGroup] = useState(null);
+    const [isConfirmationModalOpen, setIsConfirmationModalOpen] = useState(false);
+    const [confirmationMessage, setConfirmationMessage] = useState('');
+    const [confirmationAction, setConfirmationAction] = useState(null);
     const { t, i18n } = useTranslation();
 
     useEffect(() => {
         setFilteredGroups(allGroupList.slice(0, 10));
     }, [allGroupList]);
+
+    const openConfirmation = (event, member = null, group, action) => {
+        event.stopPropagation();
+        console.log("DEBUG: member, group, action: ", group, action);
+        setIsConfirmationModalOpen(true);
+    };
+
+    const cancelConfirmation = () => {
+        setIsConfirmationModalOpen(false);
+        setConfirmationMessage('');
+        setConfirmationAction(null);
+    };
+
+    const handleConfirmationAction = () => {
+        if (confirmationAction) {
+            confirmationAction();
+        }
+        cancelConfirmation();
+    }
 
     const handleChange = (event, newValue) => { //Some bad naming going on here
         setValue(newValue);
@@ -126,9 +150,20 @@ const GroupModal = ({ isOpen, onClose }) => {
         setAnchorElPopper(event.currentTarget);
     };
 
-    const handleDeleteGroup = (event) => {
+    const handleDeleteGroup = (event, group) => {
         event.stopPropagation();
-        console.log('Delete group');
+        if (group.members.length > 1) {
+            toast.error("You can't delete a group with members in it");
+            return;
+        } else if (loggedInUser._id !== group.owner) {
+            toast.error("Congrats, you've found a easter egg, you still cannot do this though.");
+            return;
+        } else {
+            console.log("DEBUG: group to delete: ", group);
+            //deleteGroup(group);
+        }
+
+
     };
 
     const handleLeaveGroup = (event) => {
@@ -136,8 +171,8 @@ const GroupModal = ({ isOpen, onClose }) => {
         console.log('Leave group');
     };
 
-    const handleRemoveMember = (member) => {
-        console.log('Remove member', member);
+    const handleRemoveMember = (member, group) => {
+        console.log(`Remove member ${member.member_id} from ${group.name}`);
         if (member.role === 'moderator') {
             alert("A moderator can't remove themselves or other moderators");
             return;
@@ -145,7 +180,7 @@ const GroupModal = ({ isOpen, onClose }) => {
     };
 
     const handleRoleChange = (member, newRole) => {
-        console.log('Role change', member, newRole);
+        console.log(`Change role for ${member._id} to ${newRole}`);
     };
 
     const handleSearchChange = (event, value) => {
@@ -227,10 +262,10 @@ const GroupModal = ({ isOpen, onClose }) => {
                                                             <>
                                                                 <Icon className="group-icon-button add-member" path={mdiPlusCircle} size={1.2} onClick={(event) => handleAddMember(event, group)} />
                                                                 <Icon className="group-icon-button edit-group" path={mdiPencilCircle} size={1.2} onClick={(event) => handleEditGroup(event, group)} />
-                                                                <Icon className="group-icon-button delete-group" path={mdiDeleteCircle} size={1.2} onClick={(event) => handleDeleteGroup(event)} />
+                                                                <Icon className="group-icon-button delete-group" path={mdiDeleteCircle} size={1.2} onClick={(event) => handleDeleteGroup(event, group)} />
                                                             </>
                                                         ) : (
-                                                            <Icon className="group-icon-button leave-group" path={mdiArrowLeftBoldCircle} size={1.2} onClick={(event) => handleLeaveGroup(event)} />
+                                                            <Icon className="group-icon-button leave-group" path={mdiArrowLeftBoldCircle} size={1.2} onClick={(event) => openConfirmation(event, null, group, "leave-group")} />
                                                         )}
                                                     </div>
                                                 </div>
@@ -240,6 +275,7 @@ const GroupModal = ({ isOpen, onClose }) => {
                                                     ))}
                                                 </div>
                                             </div>
+
                                         </AccordionSummary>
                                         <AccordionDetails>
                                             <div className='group-members' style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
@@ -255,15 +291,24 @@ const GroupModal = ({ isOpen, onClose }) => {
                                                             </div>
                                                             <div className='member-actions' style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', marginLeft: 'auto', gap: '10px' }}>
                                                                 {isUserModerator(loggedInUser, group) && member.role !== 'moderator' && (
-                                                                    <Icon className="group-icon-button remove-member" path={mdiMinusCircle} size={1.2} onClick={() => handleRemoveMember(member)} style={{ cursor: 'pointer' }} />
+                                                                    <Icon className="group-icon-button remove-member" path={mdiMinusCircle} size={1.2} onClick={() => handleRemoveMember(member, group)} style={{ cursor: 'pointer' }} />
                                                                 )}
                                                                 {isUserModerator(loggedInUser, group) && member.role !== 'moderator' && (
                                                                     <Autocomplete
+                                                                        disableClearable
                                                                         options={roles}
                                                                         getOptionLabel={(option) => option}
-                                                                        style={{ width: 100, marginRight: 10 }}
-                                                                        renderInput={(params) => <TextField {...params} label="Set Role" variant="outlined" />}
+                                                                        style={{ width: 130, marginRight: 10 }}
+                                                                        renderInput={(params) => (
+                                                                            <TextField
+                                                                                {...params}
+                                                                                label="Set Role"
+                                                                                variant="outlined"
+                                                                                InputProps={{ ...params.InputProps, readOnly: true }}
+                                                                            />
+                                                                        )}
                                                                         onChange={(event, newValue) => handleRoleChange(member, newValue)}
+                                                                        value={member.role}
                                                                     />
                                                                 )}
                                                             </div>
@@ -272,6 +317,14 @@ const GroupModal = ({ isOpen, onClose }) => {
                                                 })}
                                             </div>
                                         </AccordionDetails>
+                                        <ConfirmationModal
+                                            onRequestClose={cancelConfirmation}
+                                            isOpen={isConfirmationModalOpen}
+                                            onConfirm={handleConfirmationAction}
+                                            onClose={cancelConfirmation}
+                                            message={<span>{confirmationMessage}</span>}
+                                        />
+
                                         <GroupModalPopper
                                             anchorEl={anchorElPopper}
                                             open={popperOpen}
