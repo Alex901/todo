@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
     AppBar, Tabs, Tab, Box, Typography, TextField, Autocomplete, FormControl, Accordion,
-    AccordionSummary, AccordionDetails, Avatar
+    AccordionSummary, AccordionDetails, Avatar, Checkbox, FormControlLabel
 } from '@mui/material';
 import ReactModal from 'react-modal';
 import './GroupModal.css';
@@ -11,7 +11,7 @@ import { useNotificationContext } from '../../../../contexts/NotificationContext
 import Icon from '@mdi/react';
 import {
     mdiAccountGroupOutline, mdiFolderMultipleOutline, mdiPlusCircle, mdiPencilCircle, mdiDeleteCircle,
-    mdiMinusCircle, mdiArrowLeftBoldCircle, mdiHumanGreetingProximity
+    mdiMinusCircle, mdiArrowLeftBoldCircle, mdiHumanGreetingProximity, mdiLockOutline, mdiLockOpenVariantOutline
 } from '@mdi/js';
 import GroupModalPopper from './GroupModalPopper/GroupModalPopper';
 import { useTranslation } from "react-i18next";
@@ -40,7 +40,7 @@ const TabPanel = (props) => { //TODO: Move this at some point
 const GroupModal = ({ isOpen, onClose }) => {
     const [value, setValue] = useState(0);
     const { loggedInUser, userList } = useUserContext();
-    const initialGroupData = { name: '', description: '', listName: '', users: [] };
+    const initialGroupData = { name: '', description: '', listName: '', users: [], visibility: 'private' };
     const [groupData, setGroupData] = useState(initialGroupData);
     const { createGroup, userGroupList, allGroupList } = useGroupContext();
     const [createGroupError, setCreateGroupError] = useState('');
@@ -55,7 +55,7 @@ const GroupModal = ({ isOpen, onClose }) => {
     const { t, i18n } = useTranslation();
 
     useEffect(() => {
-        setFilteredGroups(allGroupList.slice(0, 10)); 
+        setFilteredGroups(allGroupList.slice(0, 10));
     }, [allGroupList]);
 
     const handleChange = (event, newValue) => { //Some bad naming going on here
@@ -113,14 +113,17 @@ const GroupModal = ({ isOpen, onClose }) => {
     const handleAddMember = (event, group) => {
         event.stopPropagation();
         setSelectedGroup(group);
-        setPopperMode('create-user');
+        setPopperMode('add-user');
         setPopperOpen(!popperOpen);
         setAnchorElPopper(event.currentTarget);
     };
 
-    const handleEditGroup = (event) => {
+    const handleEditGroup = (event, group) => {
         event.stopPropagation();
-        console.log('Edit group');
+        setSelectedGroup(group);
+        setPopperMode('edit-group');
+        setPopperOpen(!popperOpen);
+        setAnchorElPopper(event.currentTarget);
     };
 
     const handleDeleteGroup = (event) => {
@@ -197,33 +200,39 @@ const GroupModal = ({ isOpen, onClose }) => {
                                 {userGroupList.map((group) => (
                                     <Accordion key={group._id}>
                                         <AccordionSummary>
-                                            <div className='group-summary-columns' style={{ width: '100%' }}>
-                                                <div className='group-summary-info' style={{ width: 'auto' }}>
-                                                    <div style={{ display: 'flex', alignItems: 'left', width: '33%' }}>
-                                                        <Typography><strong>{group.name}</strong></Typography>
+                                            <div className='group-summary-columns'>
+                                                <div className='group-summary-info'>
+                                                    <div className='group-summary-section'>
+                                                        <Typography className='group-summary-name'><strong>{group.name}</strong></Typography>
                                                     </div>
-
-                                                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                                                        <Icon path={mdiAccountGroupOutline} size={.8} style={{ marginRight: '8px' }} />
-                                                        <Typography>{group.members.length}</Typography>
+                                                    <div className='group-summary-icons'>
+                                                        <div className='group-summary-icon'>
+                                                            <Icon path={mdiAccountGroupOutline} size={.8} className='icon' />
+                                                            <Typography>{group.members.length}</Typography>
+                                                        </div>
+                                                        <div className='group-summary-icon'>
+                                                            <Icon path={mdiFolderMultipleOutline} size={.8} className='icon' />
+                                                            <Typography>{group.groupListsModel.length}</Typography>
+                                                        </div>
+                                                        <div className='group-summary-icon'>
+                                                            <Icon
+                                                                path={group.visibility === 'public' ? mdiLockOpenVariantOutline : mdiLockOutline}
+                                                                size={.8}
+                                                                className='icon'
+                                                            />
+                                                        </div>
                                                     </div>
-                                                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                                                        <Icon path={mdiFolderMultipleOutline} size={.8} style={{ marginRight: '8px' }} />
-                                                        <Typography>{group.groupListsModel.length}</Typography>
-                                                    </div>
-
-                                                    <div className='group-summary-actions' style={{ width: '33%', display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly' }}>
+                                                    <div className='group-summary-actions'>
                                                         {loggedInUser._id === group.owner ? (
                                                             <>
-                                                                <Icon className="group-icon-button add-member" path={mdiPlusCircle} size={1.2} onClick={(event) => handleAddMember(event, group)} style={{ cursor: 'pointer' }} />
-                                                                <Icon className="group-icon-button edit-group" path={mdiPencilCircle} size={1.2} onClick={(event) => handleEditGroup(event)} style={{ cursor: 'pointer' }} />
-                                                                <Icon className="group-icon-button delete-group" path={mdiDeleteCircle} size={1.2} onClick={(event) => handleDeleteGroup(event)} style={{ cursor: 'pointer' }} />
+                                                                <Icon className="group-icon-button add-member" path={mdiPlusCircle} size={1.2} onClick={(event) => handleAddMember(event, group)} />
+                                                                <Icon className="group-icon-button edit-group" path={mdiPencilCircle} size={1.2} onClick={(event) => handleEditGroup(event, group)} />
+                                                                <Icon className="group-icon-button delete-group" path={mdiDeleteCircle} size={1.2} onClick={(event) => handleDeleteGroup(event)} />
                                                             </>
                                                         ) : (
-                                                            <Icon className="group-icon-button leave-group" path={mdiArrowLeftBoldCircle} size={1.2} onClick={(event) => handleLeaveGroup(event)} style={{ cursor: 'pointer' }} />
+                                                            <Icon className="group-icon-button leave-group" path={mdiArrowLeftBoldCircle} size={1.2} onClick={(event) => handleLeaveGroup(event)} />
                                                         )}
                                                     </div>
-
                                                 </div>
                                                 <div className='group-summary-description'>
                                                     {group.description && group.description.match(/.{1,60}/g).map((text, index) => (
@@ -241,10 +250,10 @@ const GroupModal = ({ isOpen, onClose }) => {
                                                         <div className='group-member' key={index} style={{ display: 'flex', flexDirection: 'row', gap: '15px', borderRadius: '20px', backgroundColor: '#F2F2F2', padding: '5px' }}>
                                                             <Avatar src={user ? user.profilePicture : ''} alt={user ? user.username : 'User not found'} />
                                                             <div className='member-information'>
-                                                                <Typography><strong>name:</strong> {user ? user.username : 'User not found'}</Typography>
-                                                                <Typography>{member.role}</Typography>
+                                                                <Typography><strong>User:</strong> {user ? user.username : 'User not found'}</Typography>
+                                                                <Typography><strong>Role: </strong>{member.role}</Typography>
                                                             </div>
-                                                            <div className='member-actions' style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', minWidth: '50%', width: 'auto', gap: '10px' }}>
+                                                            <div className='member-actions' style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', marginLeft: 'auto', gap: '10px' }}>
                                                                 {isUserModerator(loggedInUser, group) && member.role !== 'moderator' && (
                                                                     <Icon className="group-icon-button remove-member" path={mdiMinusCircle} size={1.2} onClick={() => handleRemoveMember(member)} style={{ cursor: 'pointer' }} />
                                                                 )}
@@ -263,13 +272,13 @@ const GroupModal = ({ isOpen, onClose }) => {
                                                 })}
                                             </div>
                                         </AccordionDetails>
-                                        <GroupModalPopper 
-                                        anchorEl={anchorElPopper}
-                                        open={popperOpen}
-                                        onClose={handlePopperClose}
-                                        userList={userList}
-                                        mode={popperMode}
-                                        group={selectedGroup ? selectedGroup : null}
+                                        <GroupModalPopper
+                                            anchorEl={anchorElPopper}
+                                            open={popperOpen}
+                                            onClose={handlePopperClose}
+                                            userList={userList}
+                                            mode={popperMode}
+                                            group={selectedGroup ? selectedGroup : null}
                                         />
                                     </Accordion>
                                 ))}
@@ -329,6 +338,22 @@ const GroupModal = ({ isOpen, onClose }) => {
                             ) : (
                                 <div>Loading...</div>
                             )}
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        checked={groupData.visibility === 'public'}
+                                        onChange={(e) => createHandleInputChange({
+                                            target: {
+                                                name: 'visibility',
+                                                value: e.target.checked ? 'public' : 'private'
+                                            }
+                                        })}
+                                        name="visibility"
+                                        color="primary"
+                                    />
+                                }
+                                label="Public"
+                            />
                             {createGroupError && <div className='error'>{createGroupError}</div>}
                             <button className='modal-button' type='submit'>Create Group</button>
                         </form>
@@ -357,23 +382,23 @@ const GroupModal = ({ isOpen, onClose }) => {
                                 .map((group) => (
                                     <Accordion key={group._id}>
                                         <AccordionSummary>
-                                            <div className='group-summary-columns' style={{ width: '100%' }}>
-                                                <div className='group-summary-info' style={{ width: 'auto' }}>
-                                                    <div style={{ display: 'flex', alignItems: 'left', width: '33%' }}>
-                                                        <Typography><strong>{group.name}</strong></Typography>
+                                            <div className='group-summary-columns'>
+                                                <div className='group-summary-info'>
+                                                    <div className='group-summary-section'>
+                                                        <Typography className='group-summary-name find-groups'><strong>{group.name}</strong></Typography>
                                                     </div>
-
-                                                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                                                        <Icon path={mdiAccountGroupOutline} size={.8} style={{ marginRight: '8px' }} />
-                                                        <Typography>{group.members.length}</Typography>
+                                                    <div className='group-summary-icons'>
+                                                        <div className='group-summary-icon'>
+                                                            <Icon path={mdiAccountGroupOutline} size={.8} className='icon' />
+                                                            <Typography>{group.members.length}</Typography>
+                                                        </div>
+                                                        <div className='group-summary-icon'>
+                                                            <Icon path={mdiFolderMultipleOutline} size={.8} className='icon' />
+                                                            <Typography>{group.groupListsModel.length}</Typography>
+                                                        </div>
                                                     </div>
-                                                    <div style={{ display: 'flex', alignItems: 'center' }}>
-                                                        <Icon path={mdiFolderMultipleOutline} size={.8} style={{ marginRight: '8px' }} />
-                                                        <Typography>{group.groupListsModel.length}</Typography>
-                                                    </div>
-
-                                                    <div className='group-summary-actions' style={{ width: '33%', display: 'flex', flexDirection: 'row', justifyContent: 'space-evenly' }}>
-                                                        <Icon className="group-icon-button request-join" path={mdiHumanGreetingProximity} size={1.2} onClick={(event) => handleRequestJoin(event)} style={{ cursor: 'pointer' }} />
+                                                    <div className='group-summary-actions'>
+                                                        <Icon className="group-icon-button request-join" path={mdiHumanGreetingProximity} size={1.2} onClick={(event) => handleRequestJoin(event)} />
                                                     </div>
                                                 </div>
                                             </div>

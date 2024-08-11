@@ -44,22 +44,81 @@
   }
 
   .group {
-    width: auto%;
-  }
-
-  .group-summary-info {
-    display: flex;
-    flex-direction: row;
-    gap: 40px;
-    align-items: center;
     width: auto;
   }
 
-  .group-summary-description {
-    width: 100%;
-    resize: none;
+  .group-summary-name {
+    max-width: 150px; 
+    white-space: nowrap; 
+    overflow: hidden;
+    text-overflow: ellipsis; 
   }
 
+.group-summary-name .list-groups {
+    max-width: 300px; 
+}
+
+  .group-summary-columns {
+    display: flex;
+    flex-direction: column;
+    width: 380px;
+    padding: 10px; 
+    box-sizing: border-box; 
+
+  }
+  
+  .group-summary-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+  }
+  
+  .group-summary-icons {
+    display: flex;
+    justify-content: center; 
+    align-items: center;
+    padding: 0 10px; 
+    flex-basis: 33%; 
+    flex-grow: 0; 
+    flex-shrink: 0; 
+  }
+  
+  .group-summary-icon {
+    display: flex;
+    align-items: center;
+    margin: 0 8px; 
+  }
+  
+  .group-summary-actions {
+    display: flex;
+    justify-content: space-evenly;
+  
+    flex-basis: 33%; 
+    flex-grow: 0; 
+    flex-shrink: 0; 
+  }
+
+  .group-summary-section {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-basis: 33%;
+    flex-grow: 0; 
+    flex-shrink: 0; 
+    overflow: hidden;
+  }
+  
+  .icon {
+    margin-right: 4px;
+  }
+  
+  .group-summary-description {
+    display: flex;
+    align-items: center;
+    width: 100%; /* Take up 100% width */
+  }
+  
   .find-group {
     margin-top: 16px;
   }

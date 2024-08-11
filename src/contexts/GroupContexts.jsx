@@ -107,10 +107,28 @@ const GroupProvider = ({ children }) => {
         }
     }
 
+    const updateGroupInfo = async (groupData) => {
+        const { _id, name, description, visibility } = groupData;
+        const updatedData = { name, description, visibility };
+        console.log("DEBUG: _id: ", _id);
+        console.log("DEBUG: updatedData: ", updatedData);
+
+        try {
+            const response = await axios.put(`${BASE_URL}/groups/updateGroupInfo/${_id}`, updatedData, { withCredentials: true });
+            if (response.status === 200) {
+                checkLogin();
+            }
+            toast.success("Group updated successfully");
+        } catch (error) {
+            toast.error("Error updating group");
+        }
+     
+    }
+
     return (
         <GroupContext.Provider value={{
             userGroupList, allGroupList, setUserGroupList, setAllGroupList, createGroup,
-            addUserToGroup
+            addUserToGroup, updateGroupInfo
         }}>
             {children}
         </GroupContext.Provider>
