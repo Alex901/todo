@@ -184,7 +184,28 @@ const GroupProvider = ({ children }) => {
     };
 
     const deleteGroup = async (group) => {
-        console.log(`DEBUG: deleteGroup for group ${group}`);
+        console.log(`DEBUG: deleteGroup for group ${group.name}`);
+        try {
+            const response = await axios.delete(`${BASE_URL}/groups/deleteGroup/${group._id}`, { withCredentials: true });
+            if (response.status === 200) {
+                checkLogin();
+                toast.success("Group deleted successfully");
+            }
+        } catch (error) {
+            if (error.response) {
+                if (error.response.status === 404) {
+                    toast.error("Group not found");
+                } else if (error.response.status === 500) {
+                    toast.error("Internal server error");
+                } else {
+                    toast.error("Error deleting group");
+                }
+            } else if (error.request) {
+                toast.error("No response from server");
+            } else {
+                toast.error("Error deleting group");
+            }
+        }
     };
 
 

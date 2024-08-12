@@ -44,7 +44,7 @@ const GroupModal = ({ isOpen, onClose }) => {
     const { loggedInUser, userList } = useUserContext();
     const initialGroupData = { name: '', description: '', listName: '', users: [], visibility: 'private' };
     const [groupData, setGroupData] = useState(initialGroupData);
-    const { createGroup, userGroupList, allGroupList, leaveGroup, updateRole, removeUserFromGroup } = useGroupContext();
+    const { createGroup, userGroupList, allGroupList, leaveGroup, updateRole, removeUserFromGroup, deleteGroup } = useGroupContext();
     const [createGroupError, setCreateGroupError] = useState('');
     const { inviteToGroup } = useNotificationContext();
     const roles = ['edit', 'observer', 'moderator']; // huh ? 
@@ -95,8 +95,14 @@ const GroupModal = ({ isOpen, onClose }) => {
             console.log("DEBUG: leave group: ", selectedGroup);
             leaveGroup(selectedGroup);
         } else if (confirmationAction === "delete-group") {
+            if(selectedGroup.members.length > 1) {
+                toast.error("You can't delete a group with members in it");
+                cancelConfirmation();
+                return;
+            }
             console.log("DEBUG: delete group: ", selectedGroup);
-            //deleteGroup(selectedGroup);
+            leaveGroup(selectedGroup);
+            deleteGroup(selectedGroup);
         } else if (confirmationAction === "remove-member") {
             console.log("DEBUG: remove member: ", selectedUser, selectedGroup);
             removeUserFromGroup(selectedGroup._id, selectedUser.member_id);
