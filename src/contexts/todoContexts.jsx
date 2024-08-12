@@ -285,7 +285,7 @@ const TodoProvider = ({ children }) => {
   };
 
   const editTodo = async (updatedTask) => {
-    console.log("todoContext: editTodo: updatedTask", updatedTask);
+    //console.log("todoContext: editTodo: updatedTask", updatedTask);
     try {
       const taskId = todoList.find(todo => todo.id === updatedTask.id)._id;
 

@@ -191,7 +191,33 @@ const GroupProvider = ({ children }) => {
 
     const removeUserFromGroup = async (groupId, userId) => {
         console.log(`DEBUG: removeUserFromGroup ${userId} from group ${groupId}`);
-    }
+    
+        try {
+            const response = await axios.put(
+                `${BASE_URL}/groups/removeMember/${groupId}`,
+                { userId: userId },
+                { withCredentials: true }
+            );
+            if (response.status === 200) {
+                checkLogin();
+                toast.success("Removed user from group successfully");
+            }
+        } catch (error) {
+            if (error.response) {
+                if (error.response.status === 404) {
+                    toast.error("Group or user not found");
+                } else if (error.response.status === 500) {
+                    toast.error("Internal server error");
+                } else {
+                    toast.error("Error removing user from group");
+                }
+            } else if (error.request) {
+                toast.error("No response from server");
+            } else {
+                toast.error("Error removing user from group");
+            }
+        }
+    };
 
     return (
         <GroupContext.Provider value={{
