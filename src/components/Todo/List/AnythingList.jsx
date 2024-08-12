@@ -342,7 +342,7 @@ const AnythingList = ({ type }) => {
                                 defaultValue="created"
                                 onChange={handleSortChange}
                                 size="small"
-                                InputLabelProps={{
+                                inputlabelprops={{
                                     style: { color: type === 'doing' ? 'black' : 'white' },
                                 }}
                             >

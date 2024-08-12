@@ -41,7 +41,7 @@ const GroupProvider = ({ children }) => {
     const fetchAllGroups = async () => {
         try {
             const response = await axios.get(`${BASE_URL}/groups/fetchAllGroups`, { withCredentials: true });
-            console.log("DEBUG: response.data: ", response.data);
+            // console.log("DEBUG: response.data: ", response.data);
             if (response.status === 200) {
                 setAllGroupList(response.data);
             }
@@ -125,20 +125,13 @@ const GroupProvider = ({ children }) => {
      
     }
 
-    const updateRole = async (groupId, memberId, role) => {
-        console.log(`DEBUG: updateRole for groupMember ${memberId} in group ${group.name} to ${role}`);
-    };
-
-    const deleteGroup = async (group) => {
-        console.log(`DEBUG: deleteGroup for group ${group}`);
-    };
-
     const leaveGroup = async (group) => {
         console.log(`DEBUG: leaveGroup ${group.name}`);
+        
         try {
             const response = await axios.put(
-                `${BASE_URL}/groups/leaveGroup/${group._id}`,
-                { user: loggedInUser },
+                `${BASE_URL}/groups/removeMember/${group._id}`,
+                { userId: loggedInUser._id },
                 { withCredentials: true }
             );
             if (response.status === 200) {
@@ -162,8 +155,42 @@ const GroupProvider = ({ children }) => {
         }
     };
 
-    const removeUserFromGroup = async (group, user) => {
-        console.log(`DEBUG: removeUserFromGroup ${user} from group ${group}`);
+    const updateRole = async (groupId, memberId, role) => {
+        try {
+            const response = await axios.put(
+                `${BASE_URL}/groups/updateRole/${groupId}`,
+                { memberId, role },
+                { withCredentials: true }
+            );
+            if (response.status === 200) {
+                checkLogin();
+                toast.success("Role updated successfully");
+            }
+        } catch (error) {
+            if (error.response) {
+                if (error.response.status === 404) {
+                    toast.error("Group or user not found");
+                } else if (error.response.status === 500) {
+                    toast.error("Internal server error");
+                } else {
+                    toast.error("Error updating role");
+                }
+            } else if (error.request) {
+                toast.error("No response from server");
+            } else {
+                toast.error("Error updating role");
+            }
+        }
+    };
+
+    const deleteGroup = async (group) => {
+        console.log(`DEBUG: deleteGroup for group ${group}`);
+    };
+
+
+
+    const removeUserFromGroup = async (groupId, userId) => {
+        console.log(`DEBUG: removeUserFromGroup ${userId} from group ${groupId}`);
     }
 
     return (

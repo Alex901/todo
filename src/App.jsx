@@ -479,8 +479,7 @@ function App() {
                   <div className='tags' style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' }}>
 
                     {loggedInUser.myLists
-                      .find(list => list.listName === loggedInUser.activeList)
-                      .tags.slice(0, showAll ? undefined : 3)
+                      .find(list => list.listName === loggedInUser.activeList)?.tags.slice(0, showAll ? undefined : 3)
                       .map((tag, index) => {
                         return (
                           <Chip
@@ -562,7 +561,7 @@ function App() {
                   <form className='new-tag-popper-form' onSubmit={handleNewTagSubmit}>
                     <div className="new-tag-inputs">
                       <TextField label="Tag name" variant="outlined" size="small" />
-                      <ColorPickerButton webSafeColors={webSafeColors}  selectedColor={selectedColor} handleColorSelect={handleColorChange} />
+                      <ColorPickerButton webSafeColors={webSafeColors} selectedColor={selectedColor} handleColorSelect={handleColorChange} />
                     </div>
                     <Button type="submit" variant="contained" >
                       Submit

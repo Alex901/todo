@@ -44,7 +44,7 @@ const GroupModal = ({ isOpen, onClose }) => {
     const { loggedInUser, userList } = useUserContext();
     const initialGroupData = { name: '', description: '', listName: '', users: [], visibility: 'private' };
     const [groupData, setGroupData] = useState(initialGroupData);
-    const { createGroup, userGroupList, allGroupList, leaveGroup } = useGroupContext();
+    const { createGroup, userGroupList, allGroupList, leaveGroup, updateRole, removeUserFromGroup } = useGroupContext();
     const [createGroupError, setCreateGroupError] = useState('');
     const { inviteToGroup } = useNotificationContext();
     const roles = ['edit', 'observer', 'moderator']; // huh ? 
@@ -70,10 +70,16 @@ const GroupModal = ({ isOpen, onClose }) => {
         if (member) {
             setSelectedUser(member);
         }
-        console.log("DEBUG: member, group, action: ", group, action);
+
         if (action === "leave-group") {
             setConfirmationMessage(`Are you sure you want to leave ${group.name}?`);
             setConfirmationAction("leave-group");
+        } else if (action === "delete-group") {
+            setConfirmationMessage(`Are you sure you want to delete ${group.name}?`);
+            setConfirmationAction("delete-group");
+        } else if (action === "remove-member") {
+            setConfirmationMessage(`Are you sure you want to remove ${member.member_id} from ${group.name}?`);
+            setConfirmationAction("remove-member");
         }
         setIsConfirmationModalOpen(true);
     };
@@ -88,6 +94,12 @@ const GroupModal = ({ isOpen, onClose }) => {
         if (confirmationAction === "leave-group") {
             console.log("DEBUG: leave group: ", selectedGroup);
             leaveGroup(selectedGroup);
+        } else if (confirmationAction === "delete-group") {
+            console.log("DEBUG: delete group: ", selectedGroup);
+            //deleteGroup(selectedGroup);
+        } else if (confirmationAction === "remove-member") {
+            console.log("DEBUG: remove member: ", selectedUser, selectedGroup);
+            removeUserFromGroup(selectedGroup._id, selectedUser.member_id);
         }
         setConfirmationAction(null);
         setConfirmationMessage('');
@@ -139,9 +151,9 @@ const GroupModal = ({ isOpen, onClose }) => {
         }
         setGroupData(initialGroupData); //reset the form
     };
+
     //TODO: I'm not happy about this one. Change it so i fetch moderator lists in the furure
     const isUserModerator = (loggedInUser, group) => {
-        // Assuming group.members is an array of objects with properties 'member_id' and 'role'
         const member = group.members.find(member => member.member_id === loggedInUser._id);
         return member && member.role === 'moderator';
     };
@@ -188,15 +200,20 @@ const GroupModal = ({ isOpen, onClose }) => {
     };
 
     const handleRemoveMember = (member, group) => {
-        console.log(`Remove member ${member.member_id} from ${group.name}`);
         if (member.role === 'moderator') {
-            alert("A moderator can't remove themselves or other moderators");
+            toast.error("A moderator can't remove themselves or other moderators");
             return;
         }
     };
 
-    const handleRoleChange = (member, newRole) => {
-        console.log(`Change role for ${member._id} to ${newRole}`);
+    const handleRoleChange = (member, group, newRole) => {
+        if (member._id === loggedInUser._id) {
+            toast.error("You can't change your own role, but you somehow found a way. Congrats!")
+            return;
+        } else {
+            updateRole(group._id, member.member_id, newRole);
+        }
+        
     };
 
     const handleSearchChange = (event, value) => {
@@ -274,11 +291,11 @@ const GroupModal = ({ isOpen, onClose }) => {
                                                         </div>
                                                     </div>
                                                     <div className='group-summary-actions'>
-                                                        {loggedInUser._id === group.owner ? (
+                                                        {isUserModerator(loggedInUser, group) ? (
                                                             <>
                                                                 <Icon className="group-icon-button add-member" path={mdiPlusCircle} size={1.2} onClick={(event) => handleAddMember(event, group)} />
                                                                 <Icon className="group-icon-button edit-group" path={mdiPencilCircle} size={1.2} onClick={(event) => handleEditGroup(event, group)} />
-                                                                <Icon className="group-icon-button delete-group" path={mdiDeleteCircle} size={1.2} onClick={(event) => handleDeleteGroup(event, group)} />
+                                                                <Icon className="group-icon-button delete-group" path={mdiDeleteCircle} size={1.2} onClick={(event) => openConfirmation(event, null, group, "delete-group")} />
                                                             </>
                                                         ) : (
                                                             <Icon className="group-icon-button leave-group" path={mdiArrowLeftBoldCircle} size={1.2} onClick={(event) => openConfirmation(event, null, group, "leave-group")} />
@@ -307,7 +324,7 @@ const GroupModal = ({ isOpen, onClose }) => {
                                                             </div>
                                                             <div className='member-actions' style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', marginLeft: 'auto', gap: '10px' }}>
                                                                 {isUserModerator(loggedInUser, group) && member.role !== 'moderator' && (
-                                                                    <Icon className="group-icon-button remove-member" path={mdiMinusCircle} size={1.2} onClick={() => handleRemoveMember(member, group)} style={{ cursor: 'pointer' }} />
+                                                                    <Icon className="group-icon-button remove-member" path={mdiMinusCircle} size={1.2} onClick={(event) => openConfirmation(event, member, group, "remove-member")} style={{ cursor: 'pointer' }} />
                                                                 )}
                                                                 {isUserModerator(loggedInUser, group) && member.role !== 'moderator' && (
                                                                     <Autocomplete
@@ -323,7 +340,7 @@ const GroupModal = ({ isOpen, onClose }) => {
                                                                                 InputProps={{ ...params.InputProps, readOnly: true }}
                                                                             />
                                                                         )}
-                                                                        onChange={(event, newValue) => handleRoleChange(member, newValue)}
+                                                                        onChange={(event, newValue) => handleRoleChange(member, group, newValue)}
                                                                         value={member.role}
                                                                     />
                                                                 )}

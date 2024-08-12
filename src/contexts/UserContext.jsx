@@ -73,6 +73,10 @@ const UserProvider = ({ children }) => {
                 // console.log("Valid user is logged in", response.data.user)
                 // console.log("DEBUG -- CheckLogin user data in response: ", response.data.user)
                 setLoggedInUser(response.data.user);
+                // to make sure I don't get an invalid activeList
+                if(loggedInUser?.activeList === null || loggedInUser?.activeList === undefined){
+                    setActiveList("all");
+                }
                 setIsLoggedIn(true);
             }
         } catch (error) {
