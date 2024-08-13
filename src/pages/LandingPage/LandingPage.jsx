@@ -36,13 +36,12 @@ const LandingPage = () => { //Could break this out into a header component ofc
     const closeLoginModal = () => setShowLoginModal(false);
 
     const features = [
-
-        { image: ideaImage, title: 'Define your goal', description: 'Do you finally want to learn how to code? Maybe get rid of a bad habbit or why not learn how to get a girlfriend? Spoiler alert mister: it start with talking to another human being.. Now sign-up you virgin FUCK! ' },
+        { image: ideaImage, title: 'Define your goal', description: 'Do you finally want to learn how to code? Maybe get rid of a bad habit or why not learn how to get a girlfriend? Spoiler alert mister: it starts with talking to another human being.. Now sign-up you virgin FUCK!' },
         { image: stepsImage, title: 'Daily steps and reminders', description: 'To keep you engaged in your new activity each day, to maximize the effectiveness.' },
-        { image: cooperateImage, title: 'Cooperate', description: 'You can go on an entierly solo learning journey. Or you can do so as a group. Where you can simply keep eachother accountable. Or you can work together towards a common goal.' },
+        { image: cooperateImage, title: 'Cooperate', description: 'You can go on an entirely solo learning journey. Or you can do so as a group. Where you can simply keep each other accountable. Or you can work together towards a common goal.' },
         { image: trackImage, title: 'Track your progress', description: 'All progress is being recorded so our algorithm can decide if things are too easy/hard and adjust the difficulty of your daily tasks based on that. Also, you get some shiny graphs!!' },
-        { image: motivatedImage, title: 'Elmiminate stress', description: 'By always knowing what the next thing you have to do to reach your goal is' },
-        { image: testingImage, title: 'Discover new technologies', description: 'Along this journey, you can laverage the power of AI in each step of the way. And if you are not happy with the results, you can always modify your plans accordingly. We all know that this technology is not perfect(yet). ' },
+        { image: motivatedImage, title: 'Eliminate stress', description: 'By always knowing what the next thing you have to do to reach your goal is' },
+        { image: testingImage, title: 'Discover new technologies', description: 'Along this journey, you can leverage the power of AI in each step of the way. And if you are not happy with the results, you can always modify your plans accordingly. We all know that this technology is not perfect (yet).' },
     ];
 
 
