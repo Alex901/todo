@@ -13,6 +13,7 @@ dist-ssr
 *.local
 todo-backend/
 pb_data
+TranslationOutput
 
 # Editor directories and files
 .vscode/*
