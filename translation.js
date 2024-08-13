@@ -88,6 +88,7 @@ function filterDisplayStrings(strings) {
     const nonDisplayPatterns = [
         /if\s*\(/,
         /console\.log/,
+        /console\.error/,
         /toast\./,
         /error/,
         /catch\s*\(/,
@@ -96,7 +97,12 @@ function filterDisplayStrings(strings) {
     ];
 
     return strings.filter(str => {
-        return !nonDisplayPatterns.some(pattern => pattern.test(str));
+        const startsWithCapital = /^[A-Z]/.test(str);
+        const matchesNonDisplayPattern = nonDisplayPatterns.some(pattern => pattern.test(str));
+        const startsWithDebug = /^DEBUG/.test(str);
+        const containsValidCharacters = /^[A-Za-z0-9\s.,!?'"-]+$/.test(str);
+
+        return startsWithCapital && !matchesNonDisplayPattern && !startsWithDebug && containsValidCharacters;
     });
 }
 
@@ -134,11 +140,20 @@ function createKeyValuePairs(strings) {
 function generateShortKey(str) {
     // Generate a short, descriptive key from the string
     // This is a simple example, you can customize it as needed
-    return str
+    let key = str
         .toLowerCase() // Convert to lowercase
         .replace(/[^a-z0-9]+/g, '_') // Replace non-alphanumeric characters with underscores
-        .replace(/^_+|_+$/g, '') // Remove leading and trailing underscores
-        .substring(0, 20); // Limit the length to 20 characters
+        .replace(/^_+|_+$/g, ''); // Remove leading and trailing underscores
+
+    // Limit the length to 20 characters
+    if (key.length > 20) {
+        key = key.substring(0, 20);
+        // Remove trailing underscores and incomplete words
+        key = key.replace(/_+$/, ''); // Remove trailing underscores
+        key = key.replace(/_[^_]*$/, ''); // Remove incomplete last word
+    }
+
+    return key;
 }
 
 function replaceStringsWithKeys(code, keyValuePairs) {
@@ -172,15 +187,19 @@ function processFile(filePath) {
         fs.mkdirSync(outputDir);
     }
 
+    const baseName = path.basename(filePath);
+
     // Write strings to file
     
     fs.appendFileSync(path.join(outputDir, 'strings.txt'), JSON.stringify(strings, null, 2) + '\n', 'utf-8');
 
-    // Write display strings to file
-    fs.writeFileSync(path.join(outputDir, 'display.txt'), JSON.stringify(displayStrings, null, 2), 'utf-8');
-
-    // Write key-value pairs to file
-    fs.writeFileSync(path.join(outputDir, 'keyValuePairs.txt'), JSON.stringify(keyValuePairs, null, 2), 'utf-8');
+    // Append display strings to file
+    fs.appendFileSync(path.join(outputDir, 'display.txt'), `// ${baseName}\n`, 'utf-8');
+    fs.appendFileSync(path.join(outputDir, 'display.txt'), JSON.stringify(displayStrings, null, 2) + '\n', 'utf-8');
+    
+    // Append key-value pairs to file
+    fs.appendFileSync(path.join(outputDir, 'keyValuePairs.txt'), `// ${baseName}\n`, 'utf-8');
+    fs.appendFileSync(path.join(outputDir, 'keyValuePairs.txt'), JSON.stringify(keyValuePairs, null, 2) + '\n', 'utf-8');
 
     /* let modifiedCode = replaceStringsWithKeys(code, keyValuePairs);
     modifiedCode = addImportStatement(modifiedCode); */
