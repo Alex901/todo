@@ -46,7 +46,7 @@ const LandingPage = () => { //Could break this out into a header component ofc
 
 
     return (
-        <div className='landing-page'>
+        <div className="landing-page">
             <Header className="sticky" />
             <div className="hero">
                 <div className='hero-left'>

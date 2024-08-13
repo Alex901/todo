@@ -4,18 +4,22 @@ import * as acorn from 'acorn';
 import { simple as walkSimple } from 'acorn-walk';
 import { fileURLToPath } from 'url';
 
+
 const translationFiles = [
     'src/locales/en/translation.json', //Eng
     'src/locales/sv/translation.json' //Swe
 ];
-
 let translations = {};
 
 function loadTranslations() {
+    translations = {};
+
     translationFiles.forEach((file) => {
         const data = fs.readFileSync(file, 'utf8');
         translations[file] = JSON.parse(data);
     });
+
+    return translations;
 }
 
 function saveTranslations() {
@@ -39,6 +43,7 @@ function extractStrings(code) {
         });
     } catch (error) {
         console.error("Error parsing code:", error);
+        console.error("Problematic code:", code.substring(error.pos - 20, error.pos + 20)); // Log the problematic code snippet
     }
 
     return strings;
@@ -147,3 +152,4 @@ function main() {
 const __filename = fileURLToPath(import.meta.url);
 
 main();
+console.log(translations);
