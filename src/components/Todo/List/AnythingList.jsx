@@ -60,6 +60,7 @@ const AnythingList = ({ type }) => {
         difficulty: (a, b) => difficultyMapping[a.difficulty] - difficultyMapping[b.difficulty],
         dueDate: (a, b) => a.dueDate - b.dueDate,
         estimatedTime: (a, b) => a.estimatedTime - b.estimatedTime,
+        lastUpdated: (a, b) => a.lastUpdated - b.lastUpdated,
     };
 
     const getStartOfWeek = (date) => {
@@ -346,6 +347,7 @@ const AnythingList = ({ type }) => {
                                 <MenuItem value="difficulty" name="difficulty">Difficulty</MenuItem>
                                 <MenuItem value="dueDate" name="dueDate">Deadline</MenuItem>
                                 <MenuItem value="estimatedTime" name="estimatedTime">Time</MenuItem>
+                                <MenuItem value="lastUpdated" name="lastUpdated">Updated</MenuItem>
                             </Select>
                         </FormControl>
 
