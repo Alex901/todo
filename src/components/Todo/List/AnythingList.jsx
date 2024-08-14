@@ -407,7 +407,7 @@ const AnythingList = ({ type }) => {
                 />
             )}
 
-            {type === 'todo' && (
+            {type === 'todo' && loggedInUser.userName === "Alzner"  && ( //LOL
                 <div className="button-view">
                     <TodoButton onClick={handleClick} />
                     <TodoModal isOpen={isModalOpen} onRequestClose={handleCloseSubmitModal} />
