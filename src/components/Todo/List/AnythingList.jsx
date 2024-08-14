@@ -133,11 +133,19 @@ const AnythingList = ({ type }) => {
         }
 
         if (selectedTags.length > 0) {
-            list = list.filter(todo =>
-                selectedTags.every(tag =>
-                    todo.tags.map(t => t._id).includes(tag._id)
-                )
-            );
+            console.log("DEBUG -- selectedTags: ", selectedTags);
+            list = list.filter(todo => {
+               // console.log('Filtering todo:', todo);
+                return selectedTags.every(tag => {
+                    return todo.tags.map(t => {
+                       // console.log('Comparing tag._id:', tag._id, 'with t._id:', t._id);
+                        if (t._id === tag._id) {
+                          //  console.log('Match found for tag._id:', tag._id);
+                        }
+                        return t._id;
+                    }).includes(tag._id);
+                });
+            });
         }
 
         return list;
@@ -188,21 +196,6 @@ const AnythingList = ({ type }) => {
     const handleCloseSubmitModal = () => {
         setIsModalOpen(false);
     }
-
-    const filterTodoList = () => {
-        setIsFiltering(true);
-        if (isLoggedIn && loggedInUser.activeList) {
-            const filteredList = todoList.filter(todo => todo.inList.includes(loggedInUser.activeList));
-            if (JSON.stringify(filteredList) !== JSON.stringify(activeTodoList)) {
-                setActiveTodoList(filteredList);
-            }
-        } else {
-            if (JSON.stringify(todoList) !== JSON.stringify(activeTodoList)) {
-                setActiveTodoList(todoList);
-            }
-        }
-        setIsFiltering(false);
-    };
 
 
     const handleSortChange = (selectedOption) => {

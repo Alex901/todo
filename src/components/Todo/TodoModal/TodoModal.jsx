@@ -361,6 +361,7 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
                                 ))}
                             </Select>
                         </FormControl>
+                        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginTop: '14px' }}>
                         <FormControlLabel
                             control={
                                 <Checkbox
@@ -371,7 +372,7 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
                             }
                             label="Urgent?"
                         />
-
+                        </div>
                     </div>
 
 

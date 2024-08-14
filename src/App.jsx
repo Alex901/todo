@@ -21,7 +21,7 @@ import Popper from '@mui/material/Popper';
 import { SketchPicker } from 'react-color';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
-import { Select, MenuItem, ListItemText, FormControl, InputLabel, Typography, IconButton, Tooltip } from '@mui/material';
+import { Select, MenuItem, ListItemText, FormControl, InputLabel, Typography, IconButton, Tooltip, Checkbox, FormControlLabel } from '@mui/material';
 import GroupModal from './components/Todo/TodoModal/GroupModal/GroupModal'
 import LandingPage from './pages/LandingPage/LandingPage'
 import { MagnifyingGlass } from "react-loader-spinner";
@@ -34,7 +34,7 @@ function App() {
   const [activeView, setActiveView] = useState('todo');
   const { getTodoCount, getDoneCount, getDoingCount, getActiveListTodoCount, getActiveListDoingCount, getActiveListDoneCount,
     getListDoingCount, getListDoneCount, getListTodoCount, todoList } = useTodoContext();
-  const { loggedInUser, isLoggedIn, setLoggedInUser, setActiveList, deleteList, addTag, deleteTag, checkLogin, toggleShowDetails } = useUserContext();
+  const { loggedInUser, isLoggedIn, setLoggedInUser, setActiveList, deleteList, addTag, deleteTag, checkLogin, toggleShowDetails, updateSettings } = useUserContext();
   const [isCreateListModalOpen, setIsCreateListModalOpen] = useState(false);
   const [isdDeleteListModalOpen, setIsDeleteListModalOpen] = useState(false);
   const [deleteListError, setDeleteListError] = useState("");
@@ -53,6 +53,14 @@ function App() {
   const [totalTimeSpent, setTotalTimeSpent] = useState("");
   const [selectedColor, setSelectedColor] = useState('#1e34a4');
   const popperRef = useRef(null);
+  const [isGroupOnlySelected, setIsGroupOnlySelected] = useState(false);
+
+    //Load settings
+  useEffect(() => {
+    if (loggedInUser?.settings?.todoList?.groupOnly !== undefined) {
+      setIsGroupOnlySelected(loggedInUser.settings.todoList.groupOnly);
+    }
+  }, [loggedInUser]);
 
   const webSafeColors = [
     '#000000', '#0000FF', '#00FF00', '#FF0000',
@@ -302,6 +310,11 @@ function App() {
     setSelectedColor(color);
   }
 
+  const toggleGroupOnly = () => {
+    updateSettings( "groupOnly", !isGroupOnlySelected );
+    setIsGroupOnlySelected(prevState => !prevState);
+  }
+
 
   //TODO: This shouldbe moved to a separate component
   return (
@@ -318,9 +331,21 @@ function App() {
         <div className="content" style={{ display: 'flex', flexDirection: 'column' }}>
           <Card>
             <div className='nav' style={{ display: 'flex', flexDirection: 'column' }}>
+
               {/* First row */}
               {isLoggedIn && (
                 <div className="listSelection">
+                  <div className="list-selection-settings">
+                    <div className="list-checkbox-container">
+                      <FormControlLabel
+                        control={<Checkbox 
+                        checked={isGroupOnlySelected}
+                        onChange={toggleGroupOnly}
+                        />}
+                        label="Show groups only"
+                      />
+                    </div>
+                  </div>
                   <FormControl variant='standard' style={{ width: '22em', margin: '10px' }}>
                     <InputLabel id="active-list-label" style={{ fontWeight: 'bold' }}>Active Project </InputLabel>
                     <Select
@@ -395,59 +420,73 @@ function App() {
               )}
 
               {isShowDetailsSelected && (
-                <div className="details-container">
-                  <div style={{ flex: 1 }}>
-                    <strong className="list-description-title">Description</strong>
-                    <br />
-                    <span className="list-description-text">
-                      {activeList?.description || 'No description'}
-                    </span>
+                <div className="details-rows">
+                  <div className="details-container">
+                    <div style={{ flex: 1 }}>
+                      <strong className="list-description-title">Description</strong>
+                      <br />
+                      <span className="list-description-text">
+                        {activeList?.description || 'No description'}
+                      </span>
+                    </div>
+                    <div className="details-grid" style={{ flex: 2 }}>
+                      <Tooltip title="Owner of this project">
+                        <div>
+                          <Icon path={mdiBadgeAccountOutline} size={1.2} />
+                          {activeList?.type === 'userList' ? activeList?.owner.username : activeList?.owner.name}
+                        </div>
+                      </Tooltip>
+                      <Tooltip title="Type of list, Group or Personal">
+                        <div>
+                          <Icon className="details-icon" path={mdiFormatListBulletedType} size={1.2} />
+                          {activeList?.ownerModel === 'User' ? 'Personal' : 'Group'}
+                        </div>
+                      </Tooltip>
+                      <Tooltip title="Date when the list was created">
+                        <div>
+                          <Icon path={mdiFolderPlusOutline} size={1.2} />
+                          {activeList?.createdAt ? formatDate(activeList.createdAt) : 'N/A'}
+                        </div>
+                      </Tooltip>
+                      <Tooltip title="Visibility of the list">
+                        <div>
+                          <Icon path={mdiEyeOutline} size={1.2} />
+                          {activeList?.visibility}
+                        </div>
+                      </Tooltip>
+                      <Tooltip title="Estimated time to complete the project">
+                        <div>
+                          <Icon path={mdiTimerCheckOutline} size={1.2} />
+                          {totalTimeToComplete || 'N/A'}
+                        </div>
+                      </Tooltip>
+                      <Tooltip title="Date when the list was last modified">
+                        <div>
+                          <Icon path={mdiWrenchClock} size={1.2} />
+                          {activeList?.updatedAt ? formatDate(activeList.updatedAt) : 'N/A'}
+                        </div>
+                      </Tooltip>
+                      <Tooltip title="Total time spent on the project">
+                        <div>
+                          <Icon path={mdiTimelineClockOutline} size={1.2} />
+                          {totalTimeSpent || 'N/A'}
+                        </div>
+                      </Tooltip>
+                    </div>
+
                   </div>
-                  <div className="details-grid" style={{ flex: 2 }}>
-                    <Tooltip title="Owner of this project">
-                      <div>
-                        <Icon path={mdiBadgeAccountOutline} size={1.2} />
-                        {activeList?.type === 'userList' ? activeList?.owner.username : activeList?.owner.name}
-                      </div>
-                    </Tooltip>
-                    <Tooltip title="Type of list, Group or Personal">
-                      <div>
-                        <Icon className="details-icon" path={mdiFormatListBulletedType} size={1.2} />
-                        {activeList?.ownerModel === 'User' ? 'Personal' : 'Group'}
-                      </div>
-                    </Tooltip>
-                    <Tooltip title="Date when the list was created">
-                      <div>
-                        <Icon path={mdiFolderPlusOutline} size={1.2} />
-                        {activeList?.createdAt ? formatDate(activeList.createdAt) : 'N/A'}
-                      </div>
-                    </Tooltip>
-                    <Tooltip title="Visibility of the list">
-                      <div>
-                        <Icon path={mdiEyeOutline} size={1.2} />
-                        {activeList?.visibility}
-                      </div>
-                    </Tooltip>
-                    <Tooltip title="Estimated time to complete the project">
-                      <div>
-                        <Icon path={mdiTimerCheckOutline} size={1.2} />
-                        {totalTimeToComplete || 'N/A'}
-                      </div>
-                    </Tooltip>
-                    <Tooltip title="Date when the list was last modified">
-                      <div>
-                        <Icon path={mdiWrenchClock} size={1.2} />
-                        {activeList?.updatedAt ? formatDate(activeList.updatedAt) : 'N/A'}
-                      </div>
-                    </Tooltip>
-                    <Tooltip title="Total time spent on the project">
-                      <div>
-                        <Icon path={mdiTimelineClockOutline} size={1.2} />
-                        {totalTimeSpent || 'N/A'}
-                      </div>
-                    </Tooltip>
+                  <div className="details-settings">
+                    <div className="settings-section">
+                      <h6 className="title">Settings</h6>
+                      {/* Add relevant settings here */}
+                    </div>
+                    <div className="share-section">
+                      <h6 className="title">Share</h6>
+                      {/* Add share details here */}
+                    </div>
                   </div>
                 </div>
+
               )}
 
               {isLoggedIn && (

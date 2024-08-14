@@ -183,6 +183,7 @@ body {
   display: flex;
   justify-content: center;
   gap: 5px;
+  
 }
 
 .list-description-title {
@@ -205,25 +206,66 @@ body {
   text-align: center;
 }
 
+.details-settings {
+  display: flex;
+  flex-wrap: wrap;
+  margin-top: 20px;
+}
+
+.settings-section, .share-section {
+  flex: 1;
+  min-width: 300px; /* Adjust as needed */
+  padding: 10px;
+  box-sizing: border-box;
+  border: 1px solid #ccc;
+}
+
+.settings-section .title, .share-section .title {
+  font-size: 16px; /* Adjust the size as needed */
+  text-align: center;
+  margin-top: 0;
+}
+
+.list-selection-settings {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-right: 20px;
+}
+
+.checkbox-container {
+  display: flex;
+  align-items: center;
+}
+
 .details-grid div {
   display: flex;
   align-items: center;
   gap: 10px;
 }
 
+.listSelection {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  gap: 5px;
+}
+
+@media (max-width: 768px) {
+  .settings-section, .share-section {
+    flex: 100%;
+    min-width: 100%;
+  }
+}
+
+
+
 @media (max-width: 599px) {
   .details-container {
     flex-direction: column;
   }
 }
-
-.listSelection {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 5px;
-}
-
 
 @media screen and (max-width: 1024px) {
   .content {
@@ -242,12 +284,23 @@ body {
   .listSelection {
     display: flex;
     flex-direction: column;
+    align-items: center;
   }
 
   .icon-buttons {
     display: flex;
     flex-direction: row;
     gap: 5px;
-    margin-left: 0;
+    align-items: center;
+    justify-content: center; /* Center the icon-buttons */
+    width: 100%; /* Ensure it takes the full width of the container */
+  }
+
+  .list-selection-settings {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-right: 0;
+    width: 100%;
   }
 }
