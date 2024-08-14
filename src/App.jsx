@@ -55,7 +55,7 @@ function App() {
   const popperRef = useRef(null);
   const [isGroupOnlySelected, setIsGroupOnlySelected] = useState(false);
 
-    //Load settings
+  //Load settings
   useEffect(() => {
     if (loggedInUser?.settings?.todoList?.groupOnly !== undefined) {
       setIsGroupOnlySelected(loggedInUser.settings.todoList.groupOnly);
@@ -311,7 +311,7 @@ function App() {
   }
 
   const toggleGroupOnly = () => {
-    updateSettings( "groupOnly", !isGroupOnlySelected );
+    updateSettings("groupOnly", !isGroupOnlySelected);
     setIsGroupOnlySelected(prevState => !prevState);
   }
 
@@ -338,9 +338,9 @@ function App() {
                   <div className="list-selection-settings">
                     <div className="list-checkbox-container">
                       <FormControlLabel
-                        control={<Checkbox 
-                        checked={isGroupOnlySelected}
-                        onChange={toggleGroupOnly}
+                        control={<Checkbox
+                          checked={isGroupOnlySelected}
+                          onChange={toggleGroupOnly}
                         />}
                         label="Show groups only"
                       />
@@ -357,19 +357,21 @@ function App() {
                       onChange={handleListChange}
                     >
 
-                      {loggedInUser.myLists && loggedInUser.myLists.map(list => {
-                        const todoCount = getListTodoCount(list.listName);
-                        const doingCount = getListDoingCount(list.listName);
-                        const doneCount = getListDoneCount(list.listName);
-                        return (
-                          <MenuItem key={list.listName} value={list.listName}>
-                            <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-                              <div>{list.listName.charAt(0).toUpperCase() + list.listName.slice(1)}</div>
-                              <div>{`(${todoCount},${doingCount},${doneCount})`}</div>
-                            </div>
-                          </MenuItem>
-                        );
-                      })}
+                      {loggedInUser.myLists && loggedInUser.myLists
+                        .filter(list => !isGroupOnlySelected || list.ownerModel === "Group")
+                        .map(list => {
+                          const todoCount = getListTodoCount(list.listName);
+                          const doingCount = getListDoingCount(list.listName);
+                          const doneCount = getListDoneCount(list.listName);
+                          return (
+                            <MenuItem key={list.listName} value={list.listName}>
+                              <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+                                <div>{list.listName.charAt(0).toUpperCase() + list.listName.slice(1)}</div>
+                                <div>{`(${todoCount},${doingCount},${doneCount})`}</div>
+                              </div>
+                            </MenuItem>
+                          );
+                        })}
                     </Select>
                   </FormControl>
 
