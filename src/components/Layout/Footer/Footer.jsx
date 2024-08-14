@@ -9,7 +9,6 @@ import { mdiLinkedin } from '@mdi/js';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useTheme } from '@mui/material/styles';
 import { styled } from '@mui/system';
-import { useTranslation } from "react-i18next";
 
 
 const CustomTextField = styled(TextField)({
@@ -28,9 +27,6 @@ const CustomTextField = styled(TextField)({
 
 const Footer = () => {
     const theme = useTheme();
-    const { t, i18n } = useTranslation();
-
-
 
 
     return (

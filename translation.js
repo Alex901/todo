@@ -27,7 +27,7 @@ function saveTranslations() {
 
 function extractStrings(code, filename) {
     const strings = new Set();
-    console.log("Code being parsed:", code); // Log the code being parsed
+    // console.log("Code being parsed:", code); // Log the code being parsed
 
     // Regular expression to match strings within "", '', or ``
     const regex = /(["'`])(?:(?=(\\?))\2.)*?\1/g;
@@ -121,6 +121,12 @@ function createKeyValuePairs(strings) {
 
     strings.forEach(str => {
         let key = generateShortKey(str);
+
+        // Skip the string if the key already exists
+        if (existingKeys.has(key)) {
+            return;
+        }
+
         let originalKey = key;
         let counter = 1;
 
@@ -158,29 +164,74 @@ function generateShortKey(str) {
 
 function replaceStringsWithKeys(code, keyValuePairs) {
     let modifiedCode = code;
-    for (const [key, value] of Object.entries(keyValuePairs)) {
-        const regex = new RegExp(`(["'\`])${value}\\1`, 'g');
-        modifiedCode = modifiedCode.replace(regex, `{t("${key}")}`);
+
+    // Sort keyValuePairs by the length of their values in descending order
+    const sortedKeyValuePairs = Object.entries(keyValuePairs).sort((a, b) => b[1].length - a[1].length);
+
+    for (const [key, value] of sortedKeyValuePairs) {
+        console.log(`Processing key: "${key}", value: "${value}"`);
+        
+        // Escape special characters in the value
+        const escapedValue = escapeRegExp(value);
+        // Create a regex to match the value case-insensitively
+        const regex = new RegExp(escapedValue, 'gi');
+        console.log(`Regex: ${regex}`);
+        const matches = modifiedCode.match(regex);
+        if (matches) {
+            modifiedCode = modifiedCode.replace(regex, key);
+        } else {
+            console.error(`\x1b[31mError: No match found for value "${value}"\x1b[0m`);
+        }
     }
     return modifiedCode;
 }
 
-function addImportStatement(code) {
+function escapeRegExp(string) {
+    return string.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function addImportStatement(code, baseName) {
     const importStatement = `const { t, i18n } = useTranslation();\n`;
+    const useTranslationStatement = `const { t } = useTranslation();`;
+
+    // Add import statement if it doesn't exist
     if (!code.includes(importStatement)) {
-        return importStatement + code;
+        code = importStatement + code;
     }
-    return code;
+
+    // Check if useTranslation statement already exists
+    if (code.includes(useTranslationStatement)) {
+        return code;
+    }
+
+    // Extract component name from base name
+    const componentName = baseName.replace('.jsx', '');
+
+    // Split the code into lines
+    const lines = code.split('\n');
+
+    // Find the line that starts with 'const ComponentName'
+    const componentNameIndex = lines.findIndex(line => line.trim().startsWith(`const ${componentName}`));
+
+    if (componentNameIndex !== -1) {
+        // Find the first empty line after 'const ComponentName'
+        let insertIndex = componentNameIndex + 1;
+        while (insertIndex < lines.length && lines[insertIndex].trim() !== '') {
+            insertIndex++;
+        }
+
+        // Insert the useTranslation statement
+        lines.splice(insertIndex, 0, useTranslationStatement);
+    }
+
+    return lines.join('\n');
 }
 
 function processFile(filePath) {
     const code = fs.readFileSync(filePath, 'utf-8');
     const strings = extractStrings(code, path.basename(filePath));
-    console.log("Strings: ", strings);
     const displayStrings = filterDisplayStrings(strings);
-    console.log("Display Strings: ", displayStrings);
     const keyValuePairs = createKeyValuePairs(displayStrings);
-    console.log("Key Value Pairs: ", keyValuePairs);
 
     const outputDir = path.join(__dirname, 'TranslationOutput');
     if (!fs.existsSync(outputDir)) {
@@ -190,21 +241,21 @@ function processFile(filePath) {
     const baseName = path.basename(filePath);
 
     // Write strings to file
-    
+
     fs.appendFileSync(path.join(outputDir, 'strings.txt'), JSON.stringify(strings, null, 2) + '\n', 'utf-8');
 
-    // Append display strings to file
     fs.appendFileSync(path.join(outputDir, 'display.txt'), `// ${baseName}\n`, 'utf-8');
     fs.appendFileSync(path.join(outputDir, 'display.txt'), JSON.stringify(displayStrings, null, 2) + '\n', 'utf-8');
-    
-    // Append key-value pairs to file
+
     fs.appendFileSync(path.join(outputDir, 'keyValuePairs.txt'), `// ${baseName}\n`, 'utf-8');
     fs.appendFileSync(path.join(outputDir, 'keyValuePairs.txt'), JSON.stringify(keyValuePairs, null, 2) + '\n', 'utf-8');
 
-    /* let modifiedCode = replaceStringsWithKeys(code, keyValuePairs);
-    modifiedCode = addImportStatement(modifiedCode); */
+    let modifiedCode = replaceStringsWithKeys(code, keyValuePairs);
+    modifiedCode = addImportStatement(modifiedCode, baseName);
+    //console.log(`DEBUG -- ${baseName} modified code\n${modifiedCode}`);
+   // console.log("\n", translations);
     // fs.writeFileSync(filePath, modifiedCode, 'utf-8');
-    console.log(`Processed ${filePath}`);
+    console.log(`\x1b[34mProcessed ${filePath}\x1b[0m`);
 
     /* for (const [key, value] of Object.entries(keyValuePairs)) {
         translationFilePaths.forEach(file => {
@@ -266,4 +317,4 @@ const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
 main();
-console.log(translations);
+//console.log(translations);
