@@ -112,7 +112,7 @@ const AnythingList = ({ type }) => {
 
     const filteredTodoList = useMemo(() => {
         let list = todoList; //All todo entries
-       // console.log("DEBUG -- list: ", list);
+        // console.log("DEBUG -- list: ", list);
 
         list = list.filter(todo => todo.inListNew.some(list => list.listName === loggedInUser.activeList));
 
@@ -136,12 +136,12 @@ const AnythingList = ({ type }) => {
         if (selectedTags.length > 0) {
             console.log("DEBUG -- selectedTags: ", selectedTags);
             list = list.filter(todo => {
-               // console.log('Filtering todo:', todo);
+                // console.log('Filtering todo:', todo);
                 return selectedTags.every(tag => {
                     return todo.tags.map(t => {
-                       // console.log('Comparing tag._id:', tag._id, 'with t._id:', t._id);
+                        // console.log('Comparing tag._id:', tag._id, 'with t._id:', t._id);
                         if (t._id === tag._id) {
-                          //  console.log('Match found for tag._id:', tag._id);
+                            //  console.log('Match found for tag._id:', tag._id);
                         }
                         return t._id;
                     }).includes(tag._id);
@@ -407,12 +407,20 @@ const AnythingList = ({ type }) => {
                 />
             )}
 
-            {type === 'todo' && loggedInUser.userName === "Alzner"  && ( //LOL
+            {type === 'todo' && loggedInUser.activeList !== 'all' ? ( //LOL
                 <div className="button-view">
                     <TodoButton onClick={handleClick} />
                     <TodoModal isOpen={isModalOpen} onRequestClose={handleCloseSubmitModal} />
                 </div>
-            )}
+            ) : (
+                <div className="button-view">
+                    <strong>
+                        cannot create new tasks in this list. <br />
+                        please select another list!
+                    </strong>
+                </div>
+            )
+            }
         </div>
     );
 };

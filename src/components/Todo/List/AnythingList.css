@@ -1,5 +1,5 @@
 .button-view {
-    background-color: rgba(123, 31, 162, .1); /* This is the primary color, but i need some opacity */
+    background-color: rgba(123, 31, 162, .5); /* This is the primary color, but i need some opacity */
     border-radius: 10px;
     display: flex;
     justify-content: center; /* Center horizontally */
@@ -11,6 +11,7 @@
     position: relative;
     height: 64px;
     width: auto;
+    color: white;
 }
 
 .list-container {
