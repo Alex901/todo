@@ -171,20 +171,23 @@ const UserProvider = ({ children }) => {
         }
     }
 
-    const createList = async (listName) => {
-        console.log("add new list with name: ", listName);
+    const createList = async (newListData) => {
+        console.log("create list with data: ", newListData);
+
         try {
             if (!isLoggedIn) {
                 console.log("User not logged in");
                 return;
             }
             const _id = loggedInUser._id;
-            const response = await axios.patch(`${BASE_URL}/users/addlist/${_id}`, { listName });
+            const response = await axios.patch(`${BASE_URL}/users/addlist/${_id}`, { newListData });
             if (response.status === 200) {
                 console.log("List added: ", response.data);
                 checkLogin();
                 console.log("loggedInUser: ", loggedInUser);
                 toast.success("List added");
+            } else if (response.status === 400) {
+                toast.error("You already have a list by that name");
             } else if (response.status === 404) {
                 console.log("User not found");
             } else {

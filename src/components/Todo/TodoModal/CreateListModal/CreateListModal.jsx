@@ -93,6 +93,7 @@ const CreateListModal = ({ isOpen, onRequestClose }) => {
       listName: '',
       description: ''
     });
+    setSelectedGroup(null);
     onRequestClose();
   }
 
@@ -215,7 +216,7 @@ const CreateListModal = ({ isOpen, onRequestClose }) => {
         />
 
 
-        <div className="save-button-div">
+        <div className="save-button-div-create-list">
           {error && <p className='error'>{error}</p>}
           <button type="submit" className='modal-button'> Create </button>
         </div>

@@ -243,6 +243,29 @@ const GroupProvider = ({ children }) => {
     const createGroupList = async (groupId, listData) => {
         console.log(`DEBUG: createGroupList for group ${groupId}`);
         console.log(`DEBUG: listData: `, listData);
+        try {
+            const response = await axios.post(`${BASE_URL}/groups/createGroupList/${groupId}`, listData, { withCredentials: true });
+            if (response.status === 200) {
+                checkLogin();
+                toast.success("List created successfully");
+            }
+        } catch (error) {
+            if (error.response) {
+                if (error.response.status === 400) {
+                    toast.error("Group already has a list with that name");
+                } else if (error.response.status === 404) {
+                    toast.error("Group not found");
+                } else if (error.response.status === 500) {
+                    toast.error("Internal server error");
+                } else {
+                    toast.error("Error creating list");
+                }
+            } else if (error.request) {
+                toast.error("No response from server");
+            } else {
+                toast.error("Error creating list");
+            }
+        }
     };
 
     return (

@@ -15,7 +15,7 @@
     max-height: 80vh;
 }
 
-.save-button-div {
+.save-button-div-create-list {
     display: flex;
     flex-direction: column;
     justify-content: center;
