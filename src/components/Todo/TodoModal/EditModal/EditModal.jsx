@@ -536,7 +536,7 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
 
                     <TextField
                         label='Description'
-                        placeholder='Enter task description(optional)'
+                        placeholder='Enter task description'
                         maxLength={500}
                         rows={4}
                         onChange={handleInputChange}
