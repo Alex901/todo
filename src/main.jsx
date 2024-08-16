@@ -57,6 +57,7 @@ const theme = createTheme({
       styleOverrides: {
         root: {
           height: '2em',
+          border: '1px solid rgba(0, 0, 0, 0.23)',
         },
       },
     },

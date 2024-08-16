@@ -11,6 +11,7 @@ function Tags({ tags }) {
                     style={{
                         backgroundColor: tag.color,
                         color: tag.textColor,
+                        border: '1px solid rgba(0, 0, 0, 0.23)',
                     }}
                 />
             ))}
