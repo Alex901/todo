@@ -43,14 +43,8 @@ const CreateListModal = ({ isOpen, onRequestClose }) => {
 
   }, [userGroupList, loggedInUser]);
 
-  useEffect(() => {
-    console.log("DEBUG -- Groups where moderator: ", groupsWhereModerator);
-  }, [groupsWhereModerator]);
-
   const handleInputChange = (event) => {
     const { name, value } = event.target;
-    console.log("DEBUG -- Name: ", name);
-    console.log("DEBUG -- Value: ", value);
     if (name === 'isPublic') {
       setNewGroupData(prevState => ({
         ...prevState,
@@ -64,18 +58,12 @@ const CreateListModal = ({ isOpen, onRequestClose }) => {
         [name]: value
       }));
     }
-
-    console.log("New group data: ", newGroupData);
     setError('');
   };
 
   const handleSubmit = (event) => {
     event.preventDefault();
     const { listName, description, visibility } = newGroupData;
-    console.log("List name: ", listName);
-    console.log("Description: ", description);
-    console.log("visibility: ", visibility);
-    console.log("Selected group: ", selectedGroup);
     if (!listName.trim()) {
       setError('List name cannot be empty');
       return;

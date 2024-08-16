@@ -74,7 +74,7 @@ const UserProvider = ({ children }) => {
                 // console.log("DEBUG -- CheckLogin user data in response: ", response.data.user)
                 setLoggedInUser(response.data.user);
                 // to make sure I don't get an invalid activeList
-                if(loggedInUser?.activeList === null || loggedInUser?.activeList === undefined){
+                if (loggedInUser?.activeList === null || loggedInUser?.activeList === undefined) {
                     setActiveList("all");
                 }
                 setIsLoggedIn(true);
@@ -161,6 +161,7 @@ const UserProvider = ({ children }) => {
             const response = await axios.patch(`${BASE_URL}/users/setlist/${_id}`, { activeList: listName });
             if (response.status === 200) {
                 console.log("Active list set to: ", listName);
+                checkLogin();
             } else if (response.status === 404) {
                 console.log("User not found");
             } else {
@@ -427,8 +428,15 @@ const UserProvider = ({ children }) => {
             const _id = loggedInUser._id;
             const response = await axios.patch(`${BASE_URL}/users/update-todo-settings/${_id}`, { settingName, value });
             if (response.status === 200) {
-                console.log("Settings updated: ", response.data);
                 toast.success("Settings updated");
+                if (settingName === "groupOnly" || value === true) {
+                    const groupList = loggedInUser.myLists.find(list => list.ownerModel === "Group").listName;
+                    const groupListNameCapitalized = groupList.charAt(0).toUpperCase() + groupList.slice(1);
+                    console.log("DEBUG: groupList: ", groupListNameCapitalized); 
+                    if (groupList) {
+                        setActiveList(groupList);
+                    }
+                }
                 checkLogin();
             } else if (response.status === 404) {
                 console.log("User not found");
