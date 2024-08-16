@@ -11,8 +11,8 @@ import { mdiInformation } from '@mdi/js';
 ReactModal.setAppElement('#root');
 
 const CreateListModal = ({ isOpen, onRequestClose }) => {
-  const { addList, loggedInUser } = useUserContext();
-  const { userGroupList } = useGroupContext();
+  const { createList, loggedInUser } = useUserContext();
+  const { userGroupList, createGroupList } = useGroupContext();
   const [selectedGroup, setSelectedGroup] = useState(null); // Default to the first group in the list if available, otherwise empty object
   const [groupsWhereModerator, setGroupsWhereModerator] = useState([]); // List of groups where the logged in user is a moderator
   const [error, setError] = useState('');
@@ -81,6 +81,12 @@ const CreateListModal = ({ isOpen, onRequestClose }) => {
       return;
     }
     setError('');
+    if(selectedGroup === "Personal list" || selectedGroup === null) {
+      createList(newGroupData);
+    } else {
+      createGroupList(selectedGroup,newGroupData);
+    }
+
     // addList(newGroupData);
     setNewGroupData({
       isPrivate: "private",
@@ -157,26 +163,28 @@ const CreateListModal = ({ isOpen, onRequestClose }) => {
                 {generateOptions()}
               </Select>
             </FormControl>
-            <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', marginTop: '10px' }}>
-              <FormControlLabel
-                control={
-                  <Checkbox
-                    name="isPublic"
-                    value={isListPublic}
-                    onChange={handleInputChange}
-                    checked={!isListPublic}
-                  />
-                }
-                label="Private"
-              />
-              <InputAdornment position="end">
-                <Tooltip title="Private lists can only be seen by you and your group members">
-                  <IconButton>
-                    <Icon className="information-icon" path={mdiInformation} size={1.2} />
-                  </IconButton>
-                </Tooltip>
-              </InputAdornment>
-            </div>
+            {selectedGroup && selectedGroup !== "Personal list" && (
+              <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
+                <FormControlLabel
+                  control={
+                    <Checkbox
+                      name="isPublic"
+                      value={isListPublic}
+                      onChange={handleInputChange}
+                      checked={!isListPublic}
+                    />
+                  }
+                  label="Private"
+                />
+                <InputAdornment position="end">
+                  <Tooltip title="Private lists can only be seen by you and your group members">
+                    <IconButton>
+                      <Icon className="information-icon" path={mdiInformation} size={1.2} />
+                    </IconButton>
+                  </Tooltip>
+                </InputAdornment>
+              </div>
+            )}
           </>
         )}
 

@@ -240,10 +240,16 @@ const GroupProvider = ({ children }) => {
         }
     };
 
+    const createGroupList = async (groupId, listData) => {
+        console.log(`DEBUG: createGroupList for group ${groupId}`);
+        console.log(`DEBUG: listData: `, listData);
+    };
+
     return (
         <GroupContext.Provider value={{
             userGroupList, allGroupList, setUserGroupList, setAllGroupList, createGroup,
-            addUserToGroup, updateGroupInfo, updateRole, deleteGroup, leaveGroup, removeUserFromGroup
+            addUserToGroup, updateGroupInfo, updateRole, deleteGroup, leaveGroup, removeUserFromGroup,
+            createGroupList
         }}>
             {children}
         </GroupContext.Provider>

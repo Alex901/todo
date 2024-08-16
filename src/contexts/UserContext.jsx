@@ -171,7 +171,7 @@ const UserProvider = ({ children }) => {
         }
     }
 
-    const addList = async (listName) => {
+    const createList = async (listName) => {
         console.log("add new list with name: ", listName);
         try {
             if (!isLoggedIn) {
@@ -443,7 +443,7 @@ const UserProvider = ({ children }) => {
     return (
         <UserContext.Provider value={{
             isLoggedIn, loggedInUser, userList, login, logout, registerNewUser,
-            setLoggedInUser, setActiveList, addList, deleteList, toggleUrgent, addTag,
+            setLoggedInUser, setActiveList, createList, deleteList, toggleUrgent, addTag,
             deleteTag, updateProfilePicture, editUser, checkLogin, toggleShowDetails,
             updateSettings,
         }} >
