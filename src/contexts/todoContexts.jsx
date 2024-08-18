@@ -404,6 +404,9 @@ const TodoProvider = ({ children }) => {
   //Other functions
 
   //TODO: Clean up this mess and make it into a single function
+  if(loggedInUser && !dataFetched) {
+  console.log("DEBUG: loggedInUser.myLists", loggedInUser.myLists);
+  }
 
   const getTodoCount = (isUrgent = false) => {
     return todoList.filter(todo => !todo.isDone && !todo.isStarted && (!isUrgent || todo.isUrgent)).length;

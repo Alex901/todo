@@ -208,7 +208,7 @@ function App() {
 
   const handleDelete = () => {
     const lisToDelete = loggedInUser.activeList
-    if (lisToDelete === 'all' || lisToDelete === 'shared' || lisToDelete === 'today') {
+    if (lisToDelete === 'all' || lisToDelete === 'today') {
       toast.error(`You cannot delete the list "${lisToDelete}"!`);
       setIsDeleteListModalOpen(false);
       return;

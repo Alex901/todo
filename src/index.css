@@ -9,6 +9,11 @@
   --light-orange: #FFA500;
   --dark-orange: #FF4500;
 
+  --primary-color: #7b1fa2;
+  /* Fallback color */
+  --secondary-color: #ff9800;
+  /* Fallback color */
+
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -40,15 +45,16 @@ a {
   color: #646cff;
   text-decoration: inherit;
 }
+
 a:hover {
   color: #535bf2;
 }
 
 body {
- min-height: 100vh;
- height: auto;
- background: linear-gradient(to top, #ffffff14 30%, var(--primary-color) 96%);
- overflow-y: auto;
+  min-height: 100vh;
+  height: auto;
+  background: linear-gradient(to top, #ffffff14 30%, var(--primary-color) 96%);
+  overflow-y: auto;
 }
 
 h1 {
@@ -62,6 +68,7 @@ h1 {
     color: #171c20;
     background-color: #ffffff;
   }
+
   a:hover {
     color: #747bff;
   }
@@ -96,7 +103,7 @@ h1 {
   height: 3.8em;
   font-weight: 700;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
-  transition: all 0.3s ease; 
+  transition: all 0.3s ease;
 }
 
 .modal-button:hover {
@@ -136,7 +143,44 @@ h1 {
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
 }
 
-.drag{
-  top:auto !important;
+.drag {
+  top: auto !important;
   left: auto !important;
-  }
+}
+
+/* WebKit Browsers (Chrome, Safari) */
+::-webkit-scrollbar {
+  width: 6px;
+  color: black;
+}
+
+
+/* Track */
+::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+}
+
+/* Handle */
+::-webkit-scrollbar-thumb {
+  -webkit-border-radius: 10px;
+  border-radius: 10px;
+  background: var(--secondary-color);
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.5);
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #ffbf5e;
+  width: 12px;
+}
+
+::-webkit-scrollbar:hover {
+  width: 12px; 
+}
+
+::-webkit-scrollbar-button {
+  display: none;
+}
+
+/* Remember Firefox! */
