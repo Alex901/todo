@@ -36,6 +36,7 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
         tags: []
     });
     const { t, i18n } = useTranslation();
+    console.log("DEBUG: newTaskData in TodoModal: ", newTaskData);
 
     const options = [
         { value: 'VERY HIGH', label: 'VERY HIGH' },
@@ -202,11 +203,26 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
         });
     };
 
+    const handleRequestClose = () => {
+        setNewTaskData({
+            taskName: '',
+            description: '',
+            priority: '',
+            isUrgent: false,
+            dueDate: null,
+            steps: [],
+            difficulty: "",
+            estimatedTime: 0,
+            tags: []
+        });
+        onRequestClose();
+    }
+
     return (
 
         <ReactModal
             isOpen={isOpen}
-            onRequestClose={onRequestClose}
+            onRequestClose={handleRequestClose}
             contentLabel="Add new todo task"
             className="modal-content"
             overlayClassName="modal-overlay"
