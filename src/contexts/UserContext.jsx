@@ -106,9 +106,9 @@ const UserProvider = ({ children }) => {
                         .then(userResponse => {
                             if (userResponse.status === 200) {
                                 toast.success("Login successful");
+                                console.log("User logged in, fetching user-data: ", userResponse.data);
                                 setLoggedInUser(userResponse.data);
                                 setIsLoggedIn(true);
-
                             } else {
 
                                 console.log("could not load user data, login terminated");
@@ -150,10 +150,9 @@ const UserProvider = ({ children }) => {
     }
 
     const setActiveList = async (listName) => {
-        console.log("listname: ", listName);
         try {
             if (!isLoggedIn) {
-                console.log("User not logged in");
+                //console.log("User not logged in");
                 return;
             }
             const _id = loggedInUser._id;
@@ -451,13 +450,18 @@ const UserProvider = ({ children }) => {
         }
     }
 
+    const editUserList = async (editedListData) => {
+        console.log("Edit user list with editedListData:", editedListData, "and loggedInUser.activeList:", loggedInUser.activeList);
+    }
+
+
 
     return (
         <UserContext.Provider value={{
             isLoggedIn, loggedInUser, userList, login, logout, registerNewUser,
             setLoggedInUser, setActiveList, createList, deleteList, toggleUrgent, addTag,
             deleteTag, updateProfilePicture, editUser, checkLogin, toggleShowDetails,
-            updateSettings,
+            updateSettings, editUserList, 
         }} >
             {children}
         </UserContext.Provider>

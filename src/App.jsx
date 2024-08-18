@@ -5,6 +5,7 @@ import React, { useState, useRef, useEffect, useMemo } from 'react'
 import AnythingList from './components/Todo/List/AnythingList'
 import { useTodoContext } from './contexts/todoContexts'
 import { useUserContext } from './contexts/UserContext'
+import { useGroupContext } from './contexts/GroupContexts'
 //import Select from 'react-select'
 import CreateListModal from './components/Todo/TodoModal/CreateListModal/CreateListModal'
 import DeleteListModal from './components/Todo/TodoModal/DeleteListModal/DeleteListModal'
@@ -29,6 +30,7 @@ import ColorPickerButton from './components/UtilityComponents/ColorPickerButton/
 import 'material-design-lite/dist/material.min.css';
 import 'material-design-lite/dist/material.min.js';
 import ExportListModal from './components/Todo/TodoModal/ExportListModal/ExportListModal'
+import EditListModal from './components/Todo/TodoModal/EditListModal/EditListModal'
 
 function App() {
   const [activeView, setActiveView] = useState('todo');
@@ -54,6 +56,8 @@ function App() {
   const [selectedColor, setSelectedColor] = useState('#1e34a4');
   const popperRef = useRef(null);
   const [isGroupOnlySelected, setIsGroupOnlySelected] = useState(false);
+  const [isEditListModalOpen, setIsEditListModalOpen] = useState(false);
+  const { isModerator } = useGroupContext();
 
   //Load settings
   useEffect(() => {
@@ -283,8 +287,19 @@ function App() {
     setIsGroupModalOpen(false);
   };
 
-  const openEditListModal = () => {
-    console.log("Edit list modal opened");
+  const openEditListModal = (list) => {
+    console.log("DEBUG -- activeList: ", loggedInUser.activeList)
+    console.log("DEBUG -- LoggedInUser: ", loggedInUser)
+    console.log("DEBUG -- list owner: ", list.owner._id)
+    if (loggedInUser.activeList === 'all' || loggedInUser.activeList === 'today') {
+      toast.error(`You cannot edit this project!`);
+      return;
+    } else if (list.ownerModel === "Group" && !isModerator(loggedInUser, loggedInUser.activeList, list.owner._id)) {
+      toast.error("You don't have permission to edit this project!");
+      return;
+    }
+   
+    setIsEditListModalOpen(!isEditListModalOpen);
   }
 
   const toggleDetails = () => {
@@ -382,9 +397,10 @@ function App() {
 
                     <div
                       className="icon-button edit"
-                      onClick={openEditListModal}
+                      onClick={() => openEditListModal(loggedInUser.myLists.find(list => list.listName === loggedInUser.activeList))}
                       onMouseEnter={() => setIsEditHovered(true)}
                       onMouseLeave={() => setIsEditHovered(false)}
+                      
                     >
                       <Icon path={isEditHovered ? mdiPencil : mdiTextBoxEditOutline} size={1.4} />
                     </div>
@@ -409,6 +425,12 @@ function App() {
                   <CreateListModal
                     isOpen={isCreateListModalOpen}
                     onRequestClose={closeCreateListModal} />
+
+                  <EditListModal
+                    isOpen={isEditListModalOpen}
+                    onRequestClose={() => setIsEditListModalOpen(false)}
+                    listData={loggedInUser.myLists.find(list => list.listName === loggedInUser.activeList)}
+                  />
 
                   <DeleteListModal
                     isOpen={isdDeleteListModalOpen}

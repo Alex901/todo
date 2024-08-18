@@ -48,8 +48,13 @@ const BaseModal = ({ isOpen, onRequestClose, title, children }) => {
       overlayClassName="modal-overlay"
       shouldCloseOnOverlayClick={true}
     >
-      <h3 className="title">{title}</h3>
-      {children}
+        <div className="modal-header">
+        <h2 className="modal-title">{title}</h2>
+        <button className="modal-close-button" onClick={onRequestClose}>&times;</button>
+      </div>
+      <div className="modal-body">
+        {children}
+      </div>
     </ReactModal>
   );
 };

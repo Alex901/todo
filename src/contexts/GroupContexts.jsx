@@ -122,12 +122,12 @@ const GroupProvider = ({ children }) => {
         } catch (error) {
             toast.error("Error updating group");
         }
-     
+
     }
 
     const leaveGroup = async (group) => {
         console.log(`DEBUG: leaveGroup ${group.name}`);
-        
+
         try {
             const response = await axios.put(
                 `${BASE_URL}/groups/removeMember/${group._id}`,
@@ -212,7 +212,7 @@ const GroupProvider = ({ children }) => {
 
     const removeUserFromGroup = async (groupId, userId) => {
         console.log(`DEBUG: removeUserFromGroup ${userId} from group ${groupId}`);
-    
+
         try {
             const response = await axios.put(
                 `${BASE_URL}/groups/removeMember/${groupId}`,
@@ -268,11 +268,32 @@ const GroupProvider = ({ children }) => {
         }
     };
 
+    const editGroupList = async (listData) => {
+        console.log(`DEBUG: editGroupList ${loggedInUser.activeList} for list ${listData.listName}`);
+    }
+
+    const isModerator = (user, listName, groupId) => {
+        console.log(`DEBUG: isModerator for user ${user.username}`);
+        console.log("DEBUG checkModerator status for list: ", listName);
+        console.log("DEBUG group to check: ", groupId);
+        
+        const group = userGroupList.find(group => group._id === groupId);
+        if (!group) {
+            console.log("DEBUG: group not found");
+            return false;
+        }
+    
+        const isMod = group.members.some(member => member.member_id === user._id && member.role === 'moderator');
+        return isMod;
+    };
+
+
+
     return (
         <GroupContext.Provider value={{
             userGroupList, allGroupList, setUserGroupList, setAllGroupList, createGroup,
             addUserToGroup, updateGroupInfo, updateRole, deleteGroup, leaveGroup, removeUserFromGroup,
-            createGroupList
+            createGroupList, editGroupList, isModerator
         }}>
             {children}
         </GroupContext.Provider>

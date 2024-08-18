@@ -1,0 +1,13 @@
+.form-control-with-adornment {
+    display: flex;
+    align-items: center;
+    width: 60%; 
+  }
+  
+  .form-control-with-adornment .MuiFormControl-root {
+    flex-grow: 1;
+  }
+  
+  .form-control-with-adornment .MuiInputAdornment-root {
+    margin-left: 10px;
+  }
