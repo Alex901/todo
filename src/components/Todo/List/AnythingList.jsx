@@ -60,7 +60,7 @@ const AnythingList = ({ type }) => {
         difficulty: (a, b) => difficultyMapping[a.difficulty] - difficultyMapping[b.difficulty],
         dueDate: (a, b) => a.dueDate - b.dueDate,
         estimatedTime: (a, b) => a.estimatedTime - b.estimatedTime,
-        lastUpdated: (a, b) => a.lastUpdated - b.lastUpdated,
+        lastUpdated: (a, b) => new Date(a.updatedAt) - new Date(b.updatedAt),
     };
 
     const getStartOfWeek = (date) => {
