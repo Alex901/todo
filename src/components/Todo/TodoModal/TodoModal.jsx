@@ -36,7 +36,6 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
         tags: []
     });
     const { t, i18n } = useTranslation();
-    console.log("DEBUG: newTaskData in TodoModal: ", newTaskData);
 
     const options = [
         { value: 'VERY HIGH', label: 'VERY HIGH' },

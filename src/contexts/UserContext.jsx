@@ -429,7 +429,8 @@ const UserProvider = ({ children }) => {
             const response = await axios.patch(`${BASE_URL}/users/update-todo-settings/${_id}`, { settingName, value });
             if (response.status === 200) {
                 toast.success("Settings updated");
-                if (settingName === "groupOnly" || value === true) {
+                if (settingName === "groupOnly" && value === true) {
+                    console.log("DEBUG: groupOnly is true, setting active list to group list");
                     const groupList = loggedInUser.myLists.find(list => list.ownerModel === "Group").listName;
                     const groupListNameCapitalized = groupList.charAt(0).toUpperCase() + groupList.slice(1);
                     console.log("DEBUG: groupList: ", groupListNameCapitalized); 

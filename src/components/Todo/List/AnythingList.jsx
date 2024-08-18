@@ -415,8 +415,16 @@ const AnythingList = ({ type }) => {
             ) : (
                 <div className="button-view">
                     <strong>
-                        cannot create new tasks in this list. <br />
-                        please select another list!
+                        {type === 'doing' || type === 'done' ? (
+                            <>
+                                Go to "prepared"-tab to create new task.
+                            </>
+                        ) : (
+                            <>
+                                cannot create new tasks in this list. <br />
+                                please select another list!
+                            </>
+                        )}
                     </strong>
                 </div>
             )
