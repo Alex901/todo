@@ -92,7 +92,6 @@ const GroupModal = ({ isOpen, onClose }) => {
 
     const handleConfirmationAction = () => {
         if (confirmationAction === "leave-group") {
-            console.log("DEBUG: leave group: ", selectedGroup);
             leaveGroup(selectedGroup);
         } else if (confirmationAction === "delete-group") {
             if(selectedGroup.members.length > 1) {

@@ -432,7 +432,7 @@ const UserProvider = ({ children }) => {
                     console.log("DEBUG: groupOnly is true, setting active list to group list");
                     const groupList = loggedInUser.myLists.find(list => list.ownerModel === "Group").listName;
                     const groupListNameCapitalized = groupList.charAt(0).toUpperCase() + groupList.slice(1);
-                    console.log("DEBUG: groupList: ", groupListNameCapitalized); 
+                    console.log("DEBUG: groupList: ", groupListNameCapitalized);
                     if (groupList) {
                         setActiveList(groupList);
                     }
@@ -450,8 +450,31 @@ const UserProvider = ({ children }) => {
         }
     }
 
-    const editUserList = async (editedListData) => {
-        console.log("Edit user list with editedListData:", editedListData, "and loggedInUser.activeList:", loggedInUser.activeList);
+    const editUserList = async (listToEdit, editedListData) => {
+
+        console.log("Edit list", listToEdit, "with editedListData:", editedListData, "and loggedInUser.activeList:");
+        try {
+            if (!isLoggedIn) {
+                console.log("User not logged in");
+                return;
+            }
+            const _id = loggedInUser._id;
+            const response = await axios.patch(`${BASE_URL}/users/edit-user-list/${_id}`, { listToEdit, editedListData });
+            if (response.status === 200) {
+
+                console.log("List edited: ", response.data);
+                checkLogin();
+                console.log("loggedInUser: ", loggedInUser);
+                setActiveList(editedListData.listName);
+                toast.success("List edited");
+            } else if (response.status === 404) {
+                console.log("User not found");
+            } else {
+                console.log("Internal server error");
+            }
+        } catch (error) {
+            console.error('Error editing list', error);
+        }
     }
 
 
@@ -461,7 +484,7 @@ const UserProvider = ({ children }) => {
             isLoggedIn, loggedInUser, userList, login, logout, registerNewUser,
             setLoggedInUser, setActiveList, createList, deleteList, toggleUrgent, addTag,
             deleteTag, updateProfilePicture, editUser, checkLogin, toggleShowDetails,
-            updateSettings, editUserList, 
+            updateSettings, editUserList,
         }} >
             {children}
         </UserContext.Provider>

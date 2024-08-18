@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import BaseModal from "../BaseModal/BaseModal";
-import { UserContext } from "../../../../contexts/UserContext";
+import { useUserContext } from "../../../../contexts/UserContext";
 import { useGroupContext } from "../../../../contexts/GroupContexts";
 //import Select from 'react-select';
 import { toast } from 'react-toastify';
@@ -13,8 +13,8 @@ import './EditListModal.css';
 
 
 const EditListModal = ({ isOpen, onRequestClose, listData }) => {
-    //    const { editUserList } = useTodoContext();
-    // const { editGroupList } = userGroupContext(); 
+    const { editUserList } = useUserContext();
+    const { editGroupList } = useGroupContext();
     //console.log("DEBUG -- list data to edit, ", listData);
     const [errorMessage, setErrorMessage] = useState('');
     const [editedListData, setEditedListData] = useState({
@@ -39,6 +39,12 @@ const EditListModal = ({ isOpen, onRequestClose, listData }) => {
         if (editedListData.listName === '') {
             setErrorMessage('List name cannot be empty');
             return;
+        }
+
+        if (listData.type === "groupList") {
+            editGroupList(listData._id, editedListData);
+        } else {
+            editUserList(listData._id, editedListData);
         }
         //editList(listData);
         onRequestClose();

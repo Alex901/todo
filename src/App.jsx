@@ -288,9 +288,6 @@ function App() {
   };
 
   const openEditListModal = (list) => {
-    console.log("DEBUG -- activeList: ", loggedInUser.activeList)
-    console.log("DEBUG -- LoggedInUser: ", loggedInUser)
-    console.log("DEBUG -- list owner: ", list.owner._id)
     if (loggedInUser.activeList === 'all' || loggedInUser.activeList === 'today') {
       toast.error(`You cannot edit this project!`);
       return;
