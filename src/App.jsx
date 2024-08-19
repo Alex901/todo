@@ -57,7 +57,7 @@ function App() {
   const popperRef = useRef(null);
   const [isGroupOnlySelected, setIsGroupOnlySelected] = useState(false);
   const [isEditListModalOpen, setIsEditListModalOpen] = useState(false);
-  const { isModerator } = useGroupContext();
+  const { isModerator, deleteGroupList, isGroupList } = useGroupContext();
 
   //Load settings
   useEffect(() => {
@@ -210,16 +210,31 @@ function App() {
     setIsDeleteListModalOpen(true);
   };
 
-  const handleDelete = () => {
+  const handleDelete = (list, event) => {
+    console.log("DEBUG -- is list to delete a group list? ", isGroupList(list))
+    event.preventDefault();
     const lisToDelete = loggedInUser.activeList
     if (lisToDelete === 'all' || lisToDelete === 'today') {
-      toast.error(`You cannot delete the list "${lisToDelete}"!`);
+      toast.error("You cannot delete this list!");
       setIsDeleteListModalOpen(false);
       return;
     }
+    if (isGroupList(list)) {
+      console.log("List is a group list, delete group list now!")
+      if (isModerator(loggedInUser, lisToDelete, list.owner._id)) {
+        console.log("You are a moderator of this group, delete group list now!")
+        deleteGroupList(list);
+      } else {
+        console.log("You are not a moderator of this group, you cannot delete this group list!")
+        toast.error("You don't have permission to delete this project");
+      }
+      //deleteGroupList
+    } else {
+      console.log("Delete user list now")
+      deleteList(lisToDelete);
+    }
 
-    deleteList(lisToDelete);
-    toast.success(`List "${lisToDelete}" deleted!`);
+    //toast.success(`List "${lisToDelete}" deleted!`);
     setDeleteListError("");
     setIsDeleteListModalOpen(false);
   }
@@ -295,7 +310,7 @@ function App() {
       toast.error("You don't have permission to edit this project!");
       return;
     }
-   
+
     setIsEditListModalOpen(!isEditListModalOpen);
   }
 
@@ -388,7 +403,10 @@ function App() {
                   </FormControl>
 
                   <div className="icon-buttons">
-                    <div className="icon-button add" onClick={openCreateListModal} style={{ marginLeft: 10 }}>
+                    <div className="icon-button add"
+                      onClick={openCreateListModal}
+                      style={{ marginLeft: 10 }}
+                    >
                       <Icon path={mdiPlus} size={1.6} />
                     </div>
 
@@ -397,7 +415,7 @@ function App() {
                       onClick={() => openEditListModal(loggedInUser.myLists.find(list => list.listName === loggedInUser.activeList))}
                       onMouseEnter={() => setIsEditHovered(true)}
                       onMouseLeave={() => setIsEditHovered(false)}
-                      
+
                     >
                       <Icon path={isEditHovered ? mdiPencil : mdiTextBoxEditOutline} size={1.4} />
                     </div>
@@ -421,7 +439,9 @@ function App() {
 
                   <CreateListModal
                     isOpen={isCreateListModalOpen}
-                    onRequestClose={closeCreateListModal} />
+                    onRequestClose={closeCreateListModal}
+
+                  />
 
                   <EditListModal
                     isOpen={isEditListModalOpen}
@@ -433,7 +453,10 @@ function App() {
                     isOpen={isdDeleteListModalOpen}
                     onRequestClose={() => { setIsDeleteListModalOpen(false); setDeleteListError("") }}
                     listName={loggedInUser.activeList}
-                    onDelete={handleDelete}
+                    onDelete={(event) => {
+                      event.preventDefault();
+                      handleDelete(loggedInUser.myLists.find(list => list.listName === loggedInUser.activeList), event);
+                    }}
                     onCancel={() => { setIsDeleteListModalOpen(false); setDeleteListError("") }}
                     errorMessage={deleteListError}
                   />

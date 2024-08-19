@@ -272,20 +272,64 @@ const GroupProvider = ({ children }) => {
         console.log(`DEBUG: editGroupList ${loggedInUser.activeList} for list ${listData.listName}`);
     }
 
+
+
+    const deleteGroupList = async (listtoDelete) => {
+        console.log("DEBUG -- List to delete ", listtoDelete);
+        console.log(`DEBUG: deleteGroupList for group ${listtoDelete.owner._id} and list ${listtoDelete._id}`);
+    }
+
+    // Utility functions related to group
+
+    /**
+ * Checks if a user is a moderator for a specific list within a group.
+ *
+ * @param {Object} user - The user object containing user details.
+ * @param {string} user.username - The username of the user.
+ * @param {string} user._id - The unique identifier of the user.
+ * @param {string} listName - The name of the list to check.
+ * @param {string} groupId - The unique identifier of the group.
+ * @returns {boolean} - Returns true if the user is a moderator for the specified list within the group, otherwise false.
+ */
     const isModerator = (user, listName, groupId) => {
-        console.log(`DEBUG: isModerator for user ${user.username}`);
-        console.log("DEBUG checkModerator status for list: ", listName);
-        console.log("DEBUG group to check: ", groupId);
-        
+
         const group = userGroupList.find(group => group._id === groupId);
         if (!group) {
             console.log("DEBUG: group not found");
             return false;
         }
-    
+
         const isMod = group.members.some(member => member.member_id === user._id && member.role === 'moderator');
         return isMod;
     };
+
+    /**
+ * Checks if a given list is part of any group in the userGroupList.
+ *
+ * @param {Object|string} listToCheck - The list to check, which can be an object or a string.
+ * @param {string} [listToCheck._id] - The unique identifier of the list (if listToCheck is an object).
+ * @param {string} [listToCheck.listName] - The name of the list (if listToCheck is a string).
+ * @returns {boolean} - Returns true if the list is found in any group, otherwise false.
+ */
+    const isGroupList = (listToCheck) => {
+        if (typeof (listToCheck) === 'object' && listToCheck != null) {
+            const found = userGroupList.some(group => {
+                if (group.groupListsModel.some(list => list._id === listToCheck._id)) {
+                    return true;
+                }
+                return false;
+            });
+            return found;
+        } else if (typeof (listToCheck) === 'string' && listToCheck != null) {
+            const found = userGroupList.some(group => {
+                return group.groupListsModel.some(list => list.listName === listToCheck);
+            });
+            return found;
+        } else {
+            console.error("Error: listToCheck is not a valid list");
+            return false;
+        }
+    }
 
 
 
@@ -293,7 +337,7 @@ const GroupProvider = ({ children }) => {
         <GroupContext.Provider value={{
             userGroupList, allGroupList, setUserGroupList, setAllGroupList, createGroup,
             addUserToGroup, updateGroupInfo, updateRole, deleteGroup, leaveGroup, removeUserFromGroup,
-            createGroupList, editGroupList, isModerator
+            createGroupList, editGroupList, isModerator, deleteGroupList, isGroupList
         }}>
             {children}
         </GroupContext.Provider>

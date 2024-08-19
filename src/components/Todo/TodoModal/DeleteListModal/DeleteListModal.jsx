@@ -34,7 +34,9 @@ const DeleteListModal = ({ isOpen, onRequestClose, listName, onDelete, onCancel,
             shouldCloseOnOverlayClick={true}
         >
             <div className='modalTitle'> <h3 className="title"> Delete List </h3></div>
-            <p className="message">Are you sure you want to delete <strong> {listName} </strong>?</p>
+            <div className="message-container">
+            <p className="message">Are you sure you want to delete <strong>{listName}</strong>?</p>
+            </div>
             <p className='error'>{errorMessage}</p>
             <div className="modal-buttons">
                 <button onClick={onDelete} className='modal-button delete-button'> Delete </button>

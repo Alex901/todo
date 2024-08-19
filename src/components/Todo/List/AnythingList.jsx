@@ -50,6 +50,7 @@ const AnythingList = ({ type }) => {
         'NORMAL': 3,
         'HARD': 4,
         'VERY HARD': 5,
+        '': 0,
     };
 
     const sortFunctions = {
