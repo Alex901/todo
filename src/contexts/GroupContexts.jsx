@@ -278,7 +278,7 @@ const GroupProvider = ({ children }) => {
         console.log("DEBUG -- List to delete ", listToDelete);
         console.log(`DEBUG: deleteGroupList for group ${listToDelete.owner._id} and list ${listToDelete._id}`);
         try {
-            const response = await axios.delete(`${BASE_URL}/group/deleteGroupList/${listToDelete.owner._id}/${listToDelete._id}`, { withCredentials: true });
+            const response = await axios.delete(`${BASE_URL}/groups/deleteGroupList/${listToDelete._id}/${listToDelete.owner._id}`, { withCredentials: true });
             if (response.status === 200) {
                 checkLogin();
                 toast.success("List deleted successfully");
