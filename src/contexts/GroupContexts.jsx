@@ -274,9 +274,30 @@ const GroupProvider = ({ children }) => {
 
 
 
-    const deleteGroupList = async (listtoDelete) => {
-        console.log("DEBUG -- List to delete ", listtoDelete);
-        console.log(`DEBUG: deleteGroupList for group ${listtoDelete.owner._id} and list ${listtoDelete._id}`);
+    const deleteGroupList = async (listToDelete) => {
+        console.log("DEBUG -- List to delete ", listToDelete);
+        console.log(`DEBUG: deleteGroupList for group ${listToDelete.owner._id} and list ${listToDelete._id}`);
+        try {
+            const response = await axios.delete(`${BASE_URL}/group/deleteGroupList/${listToDelete.owner._id}/${listToDelete._id}`, { withCredentials: true });
+            if (response.status === 200) {
+                checkLogin();
+                toast.success("List deleted successfully");
+            }
+        } catch (error) {
+            if (error.response) {
+                if (error.response.status === 404) {
+                    toast.error("Group or list not found");
+                } else if (error.response.status === 500) {
+                    toast.error("Internal server error");
+                } else {
+                    toast.error("Error deleting list");
+                }
+            } else if (error.request) {
+                toast.error("No response from server");
+            } else {
+                toast.error("Error deleting list");
+            }
+        }
     }
 
     // Utility functions related to group

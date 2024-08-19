@@ -187,7 +187,7 @@ const UserProvider = ({ children }) => {
                 console.log("loggedInUser: ", loggedInUser);
                 toast.success("List added");
             } else if (response.status === 400) {
-                toast.error("You already have a list by that name");
+                toast.error(response.data.error || "You already have a list by that name");
             } else if (response.status === 404) {
                 console.log("User not found");
             } else {
@@ -199,7 +199,7 @@ const UserProvider = ({ children }) => {
     }
 
     const deleteList = async (listName) => {
-        // console.log("delete list with name: ", listName);
+        console.log("delete list with name: ", listName);
         try {
             if (!isLoggedIn) {
                 console.log("User not logged in");
@@ -210,6 +210,8 @@ const UserProvider = ({ children }) => {
             if (response.status === 200) {
                 console.log("List , response: ", response.data);
                 checkLogin();
+            } else if (response.status === 400) {
+                toast.error("Name already exists");
             } else if (response.status === 404) {
                 console.log("User not found");
             } else {
