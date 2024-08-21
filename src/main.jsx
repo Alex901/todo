@@ -76,7 +76,7 @@ function Main() {
   }, []);
 
   return (
-    <React.StrictMode>
+   
     <I18nextProvider i18n={i18n}>
       <ThemeProvider theme={theme}>
         <UserProvider>
@@ -104,7 +104,7 @@ function Main() {
         </UserProvider>
       </ThemeProvider>
     </I18nextProvider>
-    </React.StrictMode>
+   
   );
 }
 

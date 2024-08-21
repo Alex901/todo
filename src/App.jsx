@@ -31,6 +31,8 @@ import 'material-design-lite/dist/material.min.css';
 import 'material-design-lite/dist/material.min.js';
 import ExportListModal from './components/Todo/TodoModal/ExportListModal/ExportListModal'
 import EditListModal from './components/Todo/TodoModal/EditListModal/EditListModal'
+import Draggable from 'react-draggable';
+import ProgressArea from './components/UtilityComponents/ProgressArea/ProgressArea'
 
 function App() {
   const [activeView, setActiveView] = useState('todo');
@@ -58,6 +60,57 @@ function App() {
   const [isGroupOnlySelected, setIsGroupOnlySelected] = useState(false);
   const [isEditListModalOpen, setIsEditListModalOpen] = useState(false);
   const { isModerator, deleteGroupList, isGroupList } = useGroupContext();
+  const [progressBarWidth, setProgressBarWidth] = useState(50);
+  const [bounds, setBounds] = useState({ left: 0, right: 0 });
+  const containerRef = useRef(null);
+  const [entriesInActiveList, setEntriesInActiveList] = useState([]);
+
+  useMemo(() => {
+    console.log("DEBUG -- Changing lists");
+    setEntriesInActiveList([]);
+    if (todoList && loggedInUser) {
+      todoList.forEach(todo => {
+        if (todo.inListNew.some(list => list.listName.toLowerCase() === loggedInUser.activeList.toLowerCase())) {
+          setEntriesInActiveList(entriesInActiveList => [...entriesInActiveList, todo]);
+        }
+      });
+    }
+  }, [todoList, loggedInUser]);
+
+  const handleDrag = (e, data) => {
+    const containerWidth = containerRef.current.offsetWidth;
+    const deltaWidth = (data.deltaX / containerWidth) * 100;
+    let newWidth = progressBarWidth + deltaWidth;
+
+    // Clamp the new width between 25% and 75%
+    newWidth = Math.max(25, Math.min(newWidth, 75));
+
+    setProgressBarWidth(newWidth);
+  };
+
+  const calculateBounds = () => {
+    if (containerRef.current) {
+      const containerWidth = containerRef.current.offsetWidth;
+      const boundOffset = containerWidth * 0.25;
+      return { left: -boundOffset, right: boundOffset };
+    }
+    return { left: 0, right: 0 };
+  };
+
+  const memoizedBounds = useMemo(calculateBounds, [containerRef.current?.offsetWidth]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      setBounds(calculateBounds());
+    };
+
+    window.addEventListener('resize', handleResize);
+    setBounds(memoizedBounds);
+
+    return () => {
+      window.removeEventListener('resize', handleResize);
+    };
+  }, [memoizedBounds]);
 
   //Load settings
   useEffect(() => {
@@ -532,26 +585,29 @@ function App() {
                 </div>
 
               )}
-
               {isLoggedIn && (
-                <div className="functions-container" style={{
+                <div className="functions-container" ref={containerRef} style={{
                   display: 'flex', justifyContent: 'center', alignItems: 'flex-start',
                   margin: '.5em 0 .5em 0', gap: '5px',
-                  height: '42px'
+                  height: '42px', position: 'relative'
                 }}>
-
-                  <IconButton className="icon-button" onClick={openGroupModal}>
-                    <Icon path={mdiGroup} size={1.2} />
-                  </IconButton>
-
-
-                  <IconButton className="icon-button" onClick={openExportModal}>
-                    <Icon path={mdiFileExport} size={1.2} />
-                  </IconButton>
-
+                  <div className="progress-bar-container" style={{ width: `${progressBarWidth}%` }}>
+                    <>
+                      <ProgressArea tasksInActiveList={entriesInActiveList}>
+                        {/* Children components or elements go here */}
+                      </ProgressArea>
+                    </>
+                  </div>
+              
+                  <div className="icons-container" style={{ display: 'flex', gap: '5px', width: `${100 - progressBarWidth}%` }}>
+                    <IconButton className="icon-button" onClick={openGroupModal}>
+                      <Icon path={mdiGroup} size={1.2} />
+                    </IconButton>
+                    <IconButton className="icon-button" onClick={openExportModal}>
+                      <Icon path={mdiFileExport} size={1.2} />
+                    </IconButton>
+                  </div>
                 </div>
-
-
               )}
 
               <ExportListModal isOpen={isOpenListModalOpen} onClose={closeExportListModal} />

@@ -1,0 +1,23 @@
+.progress-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
+    width: 100%;
+  }
+  
+  .progress-title {
+    font-size: 1.5em;
+  }
+  
+  .progress-bar {
+    width: 50%; 
+  }
+
+  
+  .toggle-container {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+  }
+

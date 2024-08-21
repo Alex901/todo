@@ -158,6 +158,39 @@ body {
   margin-right: 10px;
 }
 
+.functions-container {
+  background-color: rgb(230, 232, 230);
+  border-radius: 10px;
+}
+
+.icons-container {
+  display: inline-flex;
+  justify-content: center; 
+  gap: 5px;
+  overflow: hidden;
+  position: relative;
+  background-color: #f1a3a3;
+  max-width: fit-content;
+}
+
+.progress-bar-container {
+  
+}
+
+.icons-container::after {
+  content: '...';
+  position: absolute;
+  right: 0;
+  background: white; 
+  padding-left: 5px;
+  display: none;
+}
+
+.icons-container.overflow::after {
+  display: block; 
+}
+
+
 /* Functions container and icon buttons */
 .functions-container .icon-button {
   margin: 3px 0;
