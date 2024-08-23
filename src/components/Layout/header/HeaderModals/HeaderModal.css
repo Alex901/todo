@@ -116,3 +116,8 @@ p.error {
     color: #c25353;
 }
 
+.admin-modal {
+    width: 600px; /* Adjust the width as needed */
+    max-width: 100%; /* Ensure it doesn't exceed the viewport width */
+}
+

@@ -1,0 +1,120 @@
+.feedback-list-entry {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    border-radius: 5px;
+    box-sizing: border-box;
+    width: 100%;
+}
+
+.feedback-row {
+    display: flex;
+    justify-content: center;
+    /* Center the content */
+    align-items: center;
+    gap: 5px;
+    /* Less padding between label and value */
+}
+
+.feedback-row.spaced {
+    justify-content: space-between;
+    /* Distribute space between pairs */
+}
+
+.pair {
+    display: flex;
+    gap: 10px;
+    /* Less padding between label and value */
+    margin-left: 50px;
+    margin-right: 50px;
+}
+
+.message-area {
+    padding: 10px;
+    flex: 3;
+    font-size: 14px;
+    border: 1px solid #b29a9a;
+    border-radius: 20px;
+    margin: 0px 10px 0px 10px
+}
+
+.button-area {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+
+.feedback-button {
+    padding: 3px;
+    /* Smaller button size */
+    border: none;
+    border-radius: 50%;
+    /* Make buttons round */
+    cursor: pointer;
+    width: 26px;
+    /* Ensure the button is round */
+    height: 26px;
+    /* Ensure the button is round */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.feedback-button.feedback-approve {
+    color: var(--success-color);
+}
+
+.feedback-button.feedback-decline {
+    color: var(--error-color);
+}
+
+.feedback-button.feedback-ok-button {
+    padding: 3px;
+    /* Smaller button size */
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 3px;
+
+}
+
+.feedback-button.feedback-ok-button:hover {
+    padding: 3px;
+    /* Smaller button size */
+    background-color: var(--secondary-color);
+    color: black;
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+    transform: scale(1.1);
+}
+
+.feedback-button {
+    padding: 3px;
+    /* Smaller button size */
+    border: none;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+
+button:hover {
+    background-color: #ddd;
+}
+
+.modal-button.approve {
+    background-color: var(--success-color);
+}
+
+.modal-button.decline {
+    background-color: var(--error-color);
+}
+
+.label {
+    font-size: 12px;
+}
+
+.value {
+    font-size: 12px;
+    font-weight: bold;
+}

@@ -14,12 +14,13 @@ const UserListEntry = ({ user }) => {
 
     const handleDelete = (userToDelete) => {
         if (userToDelete.role === 'admin')
-            toast.error('Cannot delete admin');
+            toast.error('You cannot delete admins');
         else
             deleteUser(userToDelete);
 
     }
 
+    //This should be global
     const stringToColor = (string) => {
         let hash = 0;
         for (let i = 0; i < string.length; i++) {

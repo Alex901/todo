@@ -1,20 +1,30 @@
 import React, { useEffect, useState } from 'react';
-import { Tab, Tabs, Box, TextField, Button, Avatar, Grid, Typography } from '@mui/material';
+import { Tab, Tabs, Box, TextField, Button, Avatar, Grid, Typography, MenuItem, Select } from '@mui/material';
 import { useUserContext } from '../../../../contexts/UserContext';
+import { useFeedbackContext } from '../../../../contexts/FeedbackContext';
 import './HeaderModal.css';
 import ReactModal from 'react-modal';
 import ChangePassword from '../../ChangePassword/ChangePassword';
 import SettingsList from '../SettingsList/SettingsList';
 import UserListEntry from '../UserListEntry/UserListEntry';
+import FeedbackListEntry from './FeedbackListEntry/FeedbackListEntry';
 
 const SettingsModal = ({ isOpen, onClose }) => {
     const [selectedTab, setSelectedTab] = useState(0);
     const { loggedInUser, updateProfilePicture, editUser, userList, deleteUser } = useUserContext();
     const [hasChanges, setHasChanges] = useState(false);
     const [formData, setFormData] = useState({ ...loggedInUser });
+    const { feedbackList } = useFeedbackContext();
     const [imageSizeError, setImageSizeError] = useState('');
     const [newPassword, setNewPassword] = useState('');
     const [oldPassword, setOldPassword] = useState('');
+    const [selectedType, setSelectedType] = useState('');
+
+    const types = [...new Set(feedbackList.map(feedback => feedback.type))];
+
+    const filteredFeedbackList = selectedType
+        ? feedbackList.filter(feedback => feedback.type === selectedType)
+        : feedbackList;
 
     const MAX_SIZE = 1 * 1024 * 1024; // 1MB
 
@@ -146,8 +156,29 @@ const SettingsModal = ({ isOpen, onClose }) => {
                 </Box>
             )}
             {selectedTab === 2 && loggedInUser?.role === 'admin' && (
-                <Box className="modal-form">
-                    {/* Add admin tools here */}
+                 <Box className={`modal-form ${selectedTab === 2 ? 'admin-modal' : ''}`}>
+                    <Box className="settings-bar" >
+                        <Select
+                            value={selectedType}
+                            onChange={(e) => setSelectedType(e.target.value)}
+                            displayEmpty
+                            sx={{ width: 140, margin: '10px' }}
+                            size="small"
+                        >
+                            <MenuItem value="">
+                                <em>All</em>
+                            </MenuItem>
+                            {types.map((type) => (
+                                <MenuItem key={type} value={type}>
+                                    {type}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </Box>
+                    <SettingsList
+                        items={feedbackList ? feedbackList : []}
+                        renderItem={(feedback) => <FeedbackListEntry feedback={feedback} />}
+                    />
                 </Box>
             )}
         </ReactModal>

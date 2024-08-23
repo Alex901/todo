@@ -77,28 +77,27 @@ function Main() {
   }, []);
 
   return (
-   
+
     <I18nextProvider i18n={i18n}>
       <ThemeProvider theme={theme}>
+
         <UserProvider>
           <GroupProvider>
             <TodoProvider>
-
               <NotificationProvider>
                 <FeedbackProvider>
-
-                <ToastContainer
-                  newestOnTop={true}
-                  theme='colored'
-                  position="top-center"
-                  closeOnClick
-                  draggable
-                  pauseOnHover={false}
-                  pauseOnFocusLoss={false}
-                  autoClose={3000}
-                />
-                <TodoDrawer />
-                <App />
+                  <ToastContainer
+                    newestOnTop={true}
+                    theme='colored'
+                    position="top-center"
+                    closeOnClick
+                    draggable
+                    pauseOnHover={false}
+                    pauseOnFocusLoss={false}
+                    autoClose={3000}
+                  />
+                  <TodoDrawer />
+                  <App />
                 </FeedbackProvider>
               </NotificationProvider>
 
@@ -107,7 +106,7 @@ function Main() {
         </UserProvider>
       </ThemeProvider>
     </I18nextProvider>
-   
+
   );
 }
 
