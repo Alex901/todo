@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './Footer.css';
 import { TextField, Button, Checkbox, FormControlLabel } from '@mui/material';
 import Icon from '@mdi/react';
@@ -9,6 +9,8 @@ import { mdiLinkedin } from '@mdi/js';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useTheme } from '@mui/material/styles';
 import { styled } from '@mui/system';
+import { toast } from "react-toastify";
+
 
 
 const CustomTextField = styled(TextField)({
@@ -27,7 +29,32 @@ const CustomTextField = styled(TextField)({
 
 const Footer = () => {
     const theme = useTheme();
+    const [message, setMessage] = useState('');
+    const [email, setEmail] = useState('');
+    const [checkbox, setCheckbox] = useState(false);
 
+    const validateEmail = (email) => {
+        const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        return re.test(email);
+    };
+
+    const handleSubmit = (event) => {
+        event.preventDefault();
+        console.log('Submitting feedback...');
+        console.log('Message:', message);
+        console.log('Email:', email);
+        console.log('Checkbox:', checkbox);
+        if (email && !validateEmail(email)) {
+            toast.error('Please enter a valid email address.');
+            return;
+        }
+
+        toast.success('Feedback submitted successfully!');
+
+        setMessage('');
+        setEmail('');
+        setCheckbox(false);
+    };
 
     return (
         <footer className="footer-main" style={{ padding: '20px' }}>
@@ -60,10 +87,11 @@ const Footer = () => {
                     <p>Support</p>
                 </div>
                 <div>
-                    <h4>Learn more about us</h4>
-                    <form className='footer-form' >
+                    <h4>Get in touch!</h4>
+                    <form className='footer-form' onSubmit={handleSubmit}>
                         <CustomTextField
-                            label="What is the habbit missing in your life?"
+                            label="Anything missing? Let us know"
+                            value={message}
                             variant="outlined"
                             size="small"
                             multiline
@@ -72,22 +100,31 @@ const Footer = () => {
                             style={{ marginBottom: '10px' }}
                             inputProps={{ style: { color: theme.palette.white.main } }}
                             InputLabelProps={{ style: { color: theme.palette.secondary.main } }}
+                            onChange={(e) => setMessage(e.target.value)}
+
                         />
                         <CustomTextField
-                            label="Email"
+                            label="Email*"
+                            value={email}
                             variant="outlined"
                             size="small"
                             fullWidth
                             style={{ marginBottom: '10px' }}
                             inputProps={{ style: { color: theme.palette.white.main } }}
                             InputLabelProps={{ style: { color: theme.palette.secondary.main } }}
+                            onChange={(e) => setEmail(e.target.value)}
                         />
                         <FormControlLabel
-                            control={<Checkbox color="secondary" />}
+                            control={
+                                <Checkbox
+                                    color="secondary"
+                                    onChange={(e) => setCheckbox(e.target.checked)}
+                                />
+                            }
                             label="Be the first one to know about our new features and updates."
                             style={{ marginBottom: '10px' }}
                         />
-                        <button className='footer-button' color="primary">
+                        <button className='footer-button' color="primary" disabled={message === ''}>
                             Submit
                         </button>
                     </form>
