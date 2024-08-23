@@ -4,10 +4,12 @@ import { useUserContext } from '../../../../contexts/UserContext';
 import './HeaderModal.css';
 import ReactModal from 'react-modal';
 import ChangePassword from '../../ChangePassword/ChangePassword';
+import SettingsList from '../SettingsList/SettingsList';
+import UserListEntry from '../UserListEntry/UserListEntry';
 
 const SettingsModal = ({ isOpen, onClose }) => {
     const [selectedTab, setSelectedTab] = useState(0);
-    const { loggedInUser, updateProfilePicture, editUser } = useUserContext();
+    const { loggedInUser, updateProfilePicture, editUser, userList, deleteUser } = useUserContext();
     const [hasChanges, setHasChanges] = useState(false);
     const [formData, setFormData] = useState({ ...loggedInUser });
     const [imageSizeError, setImageSizeError] = useState('');
@@ -22,12 +24,12 @@ const SettingsModal = ({ isOpen, onClose }) => {
                 onClose();
             }
         };
-    
+
         if (open) {
             document.addEventListener('click', handleOverlayClick);
             document.addEventListener('touchend', handleOverlayClick);
         }
-    
+
         return () => {
             document.removeEventListener('click', handleOverlayClick);
             document.removeEventListener('touchend', handleOverlayClick);
@@ -93,7 +95,8 @@ const SettingsModal = ({ isOpen, onClose }) => {
             {loggedInUser?.role === 'admin' && (
                 <Tabs value={selectedTab} onChange={handleChange} className="modal-form">
                     <Tab label={"Profile"} />
-                    <Tab label="Admin" />
+                    <Tab label="Users(A)" />
+                    <Tab label="Feedback(A)" />
                 </Tabs>
             )}
             {selectedTab === 0 && (
@@ -123,7 +126,27 @@ const SettingsModal = ({ isOpen, onClose }) => {
             )}
             {selectedTab === 1 && loggedInUser?.role === 'admin' && (
                 <Box className="modal-form">
-                    <button className="modal-button">Add User</button>
+                    <div
+                        className="admin-user-buttons"
+                        style={{
+                            display: 'flex',
+                            gap: '10px',
+                            flexWrap: 'wrap',
+                            flexDirection: window.innerWidth <= 600 ? 'column' : 'row',
+                        }}
+                    >
+                        <button className="modal-button">Add User</button>
+                        <button className="modal-button">Invite user</button>
+                    </div>
+                    <SettingsList
+                        items={userList}
+                        renderItem={(user) => <UserListEntry user={user} />}
+                    />
+
+                </Box>
+            )}
+            {selectedTab === 2 && loggedInUser?.role === 'admin' && (
+                <Box className="modal-form">
                     {/* Add admin tools here */}
                 </Box>
             )}

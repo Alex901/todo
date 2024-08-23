@@ -479,6 +479,27 @@ const UserProvider = ({ children }) => {
         }
     }
 
+    const deleteUser = async (userToDelete) => {
+        console.log("delete user ", userToDelete);
+        try {
+            const response = await axios.delete(`${BASE_URL}/users/delete-user/${userToDelete._id}`);
+    
+            if (response.status === 200) {
+                toast.success("User deleted successfully");
+                // Optionally, update the user list in the context
+                checkLogin();
+            } else if (response.status === 404) {
+                console.log("User not found");
+                toast.error("User not found");
+            } else {
+                console.log("Internal server error");
+                toast.error("Internal server error");
+            }
+        } catch (error) {
+            console.error('Error deleting user', error);
+            toast.error('Error deleting user');
+        }
+    }
 
 
     return (
@@ -486,7 +507,7 @@ const UserProvider = ({ children }) => {
             isLoggedIn, loggedInUser, userList, login, logout, registerNewUser,
             setLoggedInUser, setActiveList, createList, deleteList, toggleUrgent, addTag,
             deleteTag, updateProfilePicture, editUser, checkLogin, toggleShowDetails,
-            updateSettings, editUserList,
+            updateSettings, editUserList, deleteUser
         }} >
             {children}
         </UserContext.Provider>

@@ -1,0 +1,40 @@
+.user-list-entry {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    padding: 10px;
+    box-sizing: border-box;
+  }
+  
+  .avatar-section {
+    flex: 0 0 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+  
+  .user-list-entry .avatar {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+  }
+  
+  .information-section {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px; /* Optional: Adds space between items */
+    font-size: 10px;
+}
+
+.information-section span {
+    flex: 1 1 auto; /* Allows items to grow and shrink */
+    min-width: 150px; /* Optional: Sets a minimum width for each item */
+}
+  
+  .delete-button-section {
+    flex: 0 0 100px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }

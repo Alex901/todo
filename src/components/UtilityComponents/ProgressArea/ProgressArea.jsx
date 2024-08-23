@@ -3,6 +3,8 @@ import './ProgressArea.css';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress';
+import Switch from '@mui/material/Switch';
+import FormControlLabel from '@mui/material/FormControlLabel';
 import { styled } from '@mui/material/styles';
 
 const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
@@ -34,11 +36,9 @@ const ProgressArea = ({ tasksInActiveList }) => {
         : (timeSpent / totalTime) * 100;
 
 
-    const handleViewChange = (event, newView) => {
-        if (newView !== null) {
-            setView(newView);
-        }
-    };
+        const handleViewChange = (event) => {
+            setView(event.target.checked ? 'time' : 'tasks');
+        };
 
     return (
         <div className="progress-container">
@@ -53,19 +53,17 @@ const ProgressArea = ({ tasksInActiveList }) => {
             {view === 'tasks' ? `${tasksCompleted}/${totalTasks}` : `${progress.toFixed(0)}%`}
             </div>
             <div className="toggle-container">
-                <ToggleButtonGroup
-                    value={view}
-                    exclusive
-                    onChange={handleViewChange}
-                    aria-label="view toggle"
-                >
-                    <ToggleButton value="tasks" aria-label="tasks view">
-                        Tasks
-                    </ToggleButton>
-                    <ToggleButton value="time" aria-label="time view">
-                        Time
-                    </ToggleButton>
-                </ToggleButtonGroup>
+            <FormControlLabel
+                control={
+                    <Switch
+                        checked={view === 'time'}
+                        onChange={handleViewChange}
+                        name="viewToggle"
+                        color="primary"
+                    />
+                }
+                label={view === 'time' ? 'Time' : 'Tasks'}
+            />
             </div>
         </div>
     );

@@ -588,8 +588,8 @@ function App() {
               {isLoggedIn && (
                 <div className="functions-container" ref={containerRef} style={{
                   display: 'flex', justifyContent: 'center', alignItems: 'flex-start',
-                  margin: '.5em 0 .5em 0', gap: '5px',
-                  height: '42px', position: 'relative'
+                  margin: '.5em 0 .5em 0', gap: '50px',
+                  height: 'auto', position: 'relative'
                 }}>
                   <div className="progress-bar-container" style={{ width: `${progressBarWidth}%` }}>
                     <>
