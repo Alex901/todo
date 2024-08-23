@@ -3,6 +3,7 @@ import './Notification.css';
 import { useNotificationContext } from '../../../../contexts/NotificationContexts'; 
 import Icon from '@mdi/react';
 import { mdiCheckCircle, mdiCloseCircle } from '@mdi/js';
+import Feedback from "react-bootstrap/esm/Feedback";
 
 const Notification = ({ notificationData, type, message, timestamp }) => {
     const [isVisible, setIsVisible] = useState(true);
@@ -40,6 +41,13 @@ const Notification = ({ notificationData, type, message, timestamp }) => {
                         <Icon path={mdiCloseCircle} size={1.2} />
                     </button>
                 </div>
+            </div>
+        );
+    } else if (type === 'feedback') {
+        return (
+            <div className={`notification-item ${isVisible ? '' : 'fade-out'}`}>
+                <p className='date'> {new Date(timestamp).toLocaleString()}</p>
+                <p className="message">{message}</p>
             </div>
         );
     }

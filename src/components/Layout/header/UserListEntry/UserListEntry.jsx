@@ -14,7 +14,7 @@ const UserListEntry = ({ user }) => {
 
     const handleDelete = (userToDelete) => {
         if (userToDelete.role === 'admin')
-            toast.error('Cannot delete admins');
+            toast.error('Cannot delete admin');
         else
             deleteUser(userToDelete);
 

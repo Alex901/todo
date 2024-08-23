@@ -10,6 +10,7 @@ import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useTheme } from '@mui/material/styles';
 import { styled } from '@mui/system';
 import { toast } from "react-toastify";
+import { useFeedbackContext } from '../../../contexts/FeedbackContext';
 
 
 
@@ -32,6 +33,7 @@ const Footer = () => {
     const [message, setMessage] = useState('');
     const [email, setEmail] = useState('');
     const [checkbox, setCheckbox] = useState(false);
+    const { submitFeedback } = useFeedbackContext();
 
     const validateEmail = (email) => {
         const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -48,6 +50,16 @@ const Footer = () => {
             toast.error('Please enter a valid email address.');
             return;
         }
+
+        const submitData = {
+            message,
+            from: email,
+            mailingList: checkbox,
+            subType: 'other',
+            type: 'feedback'
+        };
+
+        submitFeedback(submitData);
 
         toast.success('Feedback submitted successfully!');
 

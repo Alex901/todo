@@ -29,12 +29,33 @@ const FeedbackProvider = ({ children }) => {
         }
     }, [loggedInUser]);
 
+    //Method to fetch all feedbacks
     const fetchFeedback = async () => {
     console.log('Fetching feedback...');
     };
 
+    const submitFeedback = (feedbackData) =>  {
+        console.log('Submitting feedback...', feedbackData);
+        try {
+            axios.post(`${BASE_URL}/feedback/post-feedback`, feedbackData, { withCredentials: true });
+           
+        } catch (error) {
+            console.error('Error submitting feedback:', error);
+            if (error.response) {
+                console.error(error.response.data);
+                console.error(error.response.status);
+                console.error(error.response.headers);
+            } else if (error.request) {
+                console.error(error.request);
+            } else {
+                console.error('Error', error.message);
+            }
+        }
+    };
+
+
     return (
-        <FeedbackContext.Provider value={{ feedbackList, setFeedbackList }}>
+        <FeedbackContext.Provider value={{ feedbackList, setFeedbackList, submitFeedback }}>
             {children}
         </FeedbackContext.Provider>
     );
