@@ -22,9 +22,11 @@ const SettingsModal = ({ isOpen, onClose }) => {
 
     const types = [...new Set(feedbackList.map(feedback => feedback.type))];
 
+    const unresolvedFeedbackList = feedbackList ? feedbackList.filter(feedback => feedback.resolved === null) : [];
+
     const filteredFeedbackList = selectedType
-        ? feedbackList.filter(feedback => feedback.type === selectedType)
-        : feedbackList;
+        ? unresolvedFeedbackList.filter(feedback => feedback.type === selectedType)
+        : unresolvedFeedbackList;
 
     const MAX_SIZE = 1 * 1024 * 1024; // 1MB
 
@@ -156,7 +158,7 @@ const SettingsModal = ({ isOpen, onClose }) => {
                 </Box>
             )}
             {selectedTab === 2 && loggedInUser?.role === 'admin' && (
-                 <Box className={`modal-form ${selectedTab === 2 ? 'admin-modal' : ''}`}>
+                <Box className={`modal-form ${selectedTab === 2 ? 'admin-modal' : ''}`}>
                     <Box className="settings-bar" >
                         <Select
                             value={selectedType}
@@ -176,7 +178,7 @@ const SettingsModal = ({ isOpen, onClose }) => {
                         </Select>
                     </Box>
                     <SettingsList
-                        items={feedbackList ? feedbackList : []}
+                        items={unresolvedFeedbackList ? unresolvedFeedbackList : []}
                         renderItem={(feedback) => <FeedbackListEntry feedback={feedback} />}
                     />
                 </Box>

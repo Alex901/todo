@@ -20,7 +20,7 @@ const FeedbackContext = createContext();
 
 const FeedbackProvider = ({ children }) => {
     const { loggedInUser } = useUserContext();
-    const { setNotification } = useNotificationContext();
+    const { setNotification, getNotifications } = useNotificationContext();
     const [feedbackList, setFeedbackList] = useState([]);
 
     useEffect(() => {
@@ -50,6 +50,10 @@ const FeedbackProvider = ({ children }) => {
         }
     };
 
+    const fetchApprovedFeedback = async () => {
+        console.log('Fetching approved feedback...');
+    };
+
     const submitFeedback = (feedbackData) =>  {
         console.log('Submitting feedback...', feedbackData);
         try {
@@ -69,13 +73,35 @@ const FeedbackProvider = ({ children }) => {
         }
     };
 
-    const approveFeedback = async (feedbackId) => {
-        console.log('Approving feedback...', feedbackId);
+    const changeResolvedStatus = async (feedbackId, resolved) => {
+        console.log('Changing resolved status...', feedbackId, resolved);
+        try {
+            const response = await axios.put(`${BASE_URL}/feedback/resolveFeedback/${feedbackId}`, { resolved }, { withCredentials: true });
+            if(response.status === 200){
+                fetchFeedback(); //To update the feedback list
+                getNotifications(); //To update the notification list
+            } else if(response.status === 404) {
+                console.error('Feedback not found:', response);
+            } else {
+                console.error('Error changing resolved status:', response);
+            }       
+        } catch (error) {
+            console.error('Error changing resolved status:', error);
+            if (error.response) {
+                console.error(error.response.data);
+                console.error(error.response.status);
+                console.error(error.response.headers);
+            } else if (error.request) {
+                console.error(error.request);
+            } else {
+                console.error('Error', error.message);
+            }
+        }
     };
 
 
     return (
-        <FeedbackContext.Provider value={{ feedbackList, setFeedbackList, submitFeedback, approveFeedback }}>
+        <FeedbackContext.Provider value={{ feedbackList, setFeedbackList, submitFeedback, changeResolvedStatus }}>
             {children}
         </FeedbackContext.Provider>
     );

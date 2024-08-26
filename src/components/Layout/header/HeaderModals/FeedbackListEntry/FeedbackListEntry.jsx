@@ -3,8 +3,10 @@ import Icon from '@mdi/react';
 import { mdiThumbUpOutline, mdiCheck, mdiThumbDownOutline } from '@mdi/js';
 import IconButton from '@mui/material/IconButton';
 import './FeedbackListEntry.css'; // Import the CSS file
+import { useFeedbackContext } from '../../../../../contexts/FeedbackContext';
 
 const FeedbackListEntry = ({ feedback }) => {
+    const { changeResolvedStatus } = useFeedbackContext();
 
     const formatDate = (dateString) => {
         const date = new Date(dateString);
@@ -15,6 +17,12 @@ const FeedbackListEntry = ({ feedback }) => {
         const minutes = String(date.getMinutes()).padStart(2, '0');
         return `${day}:${month}:${year} -- ${hours}:${minutes}`;
     };
+
+    
+    const onResolve = (feedbackId) => {
+        changeResolvedStatus(feedbackId, true);
+    };
+
 
     return (
         <div className="feedback-list-entry">
@@ -30,18 +38,18 @@ const FeedbackListEntry = ({ feedback }) => {
                 </div>
             </div>
 
-           
+
             <div className="feedback-row message-area">
                 <span>{feedback.message}</span>
             </div>
 
-          
+
             <div className="feedback-row">
                 <span className="label">Submitted at: </span>
                 <span className="value">{formatDate(feedback.createdAt)}</span>
             </div>
 
-           
+
             <div className="feedback-row button-area">
                 {feedback.type === 'feature' || feedback.type === 'review' ? (
                     <>
@@ -53,7 +61,7 @@ const FeedbackListEntry = ({ feedback }) => {
                         </IconButton>
                     </>
                 ) : (
-                    <IconButton className="feedback-button feedback-ok-button">
+                    <IconButton className="feedback-button feedback-ok-button" onClick={() => onResolve(feedback._id)}>
                         <Icon path={mdiCheck} size={1} />
                     </IconButton>
                 )}

@@ -183,7 +183,7 @@ const NotificationProvider = ({ children }) => {
 
 
     return (
-        <NotificationContexts.Provider value={{ inviteToGroup, userNotifications, acceptGroupInvite, declineGroupInvite }}>
+        <NotificationContexts.Provider value={{ inviteToGroup, userNotifications, acceptGroupInvite, declineGroupInvite, getNotifications }}>
             {children}
         </NotificationContexts.Provider>
     );
