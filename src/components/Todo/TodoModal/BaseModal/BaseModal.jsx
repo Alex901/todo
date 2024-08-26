@@ -9,6 +9,10 @@ const BaseModal = ({ isOpen, onRequestClose, title, children }) => {
   const modalRef = useRef(null);
 
   useEffect(() => {
+    console.log("DEBUG -- isBaseModalOpen ", isOpen);
+}, [isOpen]);
+
+  useEffect(() => {
     const handleOverlayClick = (event) => {
       if (event.target === overlayElement) {
         onRequestClose();

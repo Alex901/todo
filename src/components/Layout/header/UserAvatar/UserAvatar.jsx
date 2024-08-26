@@ -3,11 +3,14 @@ import './UserAvatar.css'; // Import the CSS file for styling
 import { useUserContext } from '../../../../contexts/UserContext';
 import { toast } from "react-toastify";
 import SettingsModal from '../HeaderModals/SettingsModal';
+import FeedbackModal from '../HeaderModals/FeedbackModal';
 
 const UserAvatar = () => {
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
   const { loggedInUser, logout, isLoggedIn } = useUserContext();
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
+  const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
+  const [isHelpModalOpen, setIsHelpModalOpen] = useState(false);
   const dropdownRef = useRef(null);
 
   const toggleDropdown = () => {
@@ -43,8 +46,17 @@ const UserAvatar = () => {
     setIsDropdownOpen(false);
   }
 
+  const openFeedbackModal = (event) => {
+    event.preventDefault();
+    setIsFeedbackModalOpen(true);
+    setIsDropdownOpen(false);
+  }
+
   const onRequestClose = () => {
+    console.log('DEBUG -- onRequestClose called');
+    setIsFeedbackModalOpen(false);
     setIsSettingsModalOpen(false);
+   
   }
 
   return (
@@ -70,7 +82,7 @@ const UserAvatar = () => {
           <hr></hr>
 
             <a onClick={openSettingsModal} className="menu-link">Settings</a>
-            <a href="#" className="menu-link">Feedback</a>
+            <a onClick={openFeedbackModal} className="menu-link">Feedback</a>
             <a href="#" className="menu-link">Help</a>
           <hr></hr>
           <div className="logout">
@@ -79,6 +91,7 @@ const UserAvatar = () => {
         </div>
       </div>
       {loggedInUser && <SettingsModal isOpen={isSettingsModalOpen} onClose={onRequestClose} />}
+      {loggedInUser && <FeedbackModal isOpen={isFeedbackModalOpen} onClose={onRequestClose} />}
     </div>
   );
 };

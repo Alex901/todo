@@ -30,23 +30,7 @@ const SettingsModal = ({ isOpen, onClose }) => {
 
     const MAX_SIZE = 1 * 1024 * 1024; // 1MB
 
-    useEffect(() => {
-        const handleOverlayClick = (event) => {
-            if (event.target.className === 'modal-overlay') {
-                onClose();
-            }
-        };
-
-        if (open) {
-            document.addEventListener('click', handleOverlayClick);
-            document.addEventListener('touchend', handleOverlayClick);
-        }
-
-        return () => {
-            document.removeEventListener('click', handleOverlayClick);
-            document.removeEventListener('touchend', handleOverlayClick);
-        };
-    }, [open, onClose]);
+ 
 
     const handleChange = (event, newValue) => {
         setSelectedTab(newValue);
