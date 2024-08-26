@@ -276,11 +276,10 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
                         <FormControl variant="outlined" size="small" style={{ width: '140px', marginRight: '20px' }}>
                             <InputLabel id="priority-label">Priority</InputLabel>
                             <Select
-                                labelId="priority-label"
-                                id="priority"
+                                labelId="priority-label"  
                                 defaultValue=""
                                 onChange={handleSelectChange}
-                                label="Priority" // Add this line
+                                label="Priority" 
                             >
                                 {options.map((option) => (
                                     <MenuItem key={option.value} value={option.value}>

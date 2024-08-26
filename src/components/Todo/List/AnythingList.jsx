@@ -135,7 +135,7 @@ const AnythingList = ({ type }) => {
         }
 
         if (selectedTags.length > 0) {
-            console.log("DEBUG -- selectedTags: ", selectedTags);
+            //console.log("DEBUG -- selectedTags: ", selectedTags);
             list = list.filter(todo => {
                 // console.log('Filtering todo:', todo);
                 return selectedTags.every(tag => {

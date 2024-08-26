@@ -66,7 +66,7 @@ function App() {
   const [entriesInActiveList, setEntriesInActiveList] = useState([]);
 
   useMemo(() => {
-    console.log("DEBUG -- Changing lists");
+    //console.log("DEBUG -- Changing lists");
     setEntriesInActiveList([]);
     if (todoList && loggedInUser) {
       todoList.forEach(todo => {
@@ -264,7 +264,7 @@ function App() {
   };
 
   const handleDelete = (list, event) => {
-    console.log("DEBUG -- is list to delete a group list? ", isGroupList(list))
+    //console.log("DEBUG -- is list to delete a group list? ", isGroupList(list))
     event.preventDefault();
     const lisToDelete = loggedInUser.activeList
     if (lisToDelete === 'all' || lisToDelete === 'today') {

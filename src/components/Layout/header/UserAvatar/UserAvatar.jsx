@@ -53,7 +53,6 @@ const UserAvatar = () => {
   }
 
   const onRequestClose = () => {
-    console.log('DEBUG -- onRequestClose called');
     setIsFeedbackModalOpen(false);
     setIsSettingsModalOpen(false);
    
