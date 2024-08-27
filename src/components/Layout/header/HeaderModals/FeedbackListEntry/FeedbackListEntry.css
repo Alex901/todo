@@ -60,8 +60,15 @@
     justify-content: center;
 }
 
+.feedback-button-large {
+    font-size: 2rem; /* Adjust as needed */
+    width: 36px; /* Adjust as needed */
+    height: 36px; /* Adjust as needed */
+}
+
 .feedback-button.feedback-approve {
     color: var(--success-color);
+
 }
 
 .feedback-button.feedback-decline {
@@ -71,10 +78,10 @@
 .feedback-button.feedback-ok-button {
     padding: 3px;
     /* Smaller button size */
-    background-color: var(--primary-color);
-    color: white;
+
+    color: var(--primary-color);
     border: none;
-    border-radius: 3px;
+    border-radius: 100px;
 
 }
 

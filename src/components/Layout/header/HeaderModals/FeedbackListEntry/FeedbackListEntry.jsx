@@ -1,6 +1,6 @@
 import React from 'react';
 import Icon from '@mdi/react';
-import { mdiThumbUpOutline, mdiCheck, mdiThumbDownOutline } from '@mdi/js';
+import { mdiThumbUpOutline, mdiCheckboxMarkedCircle, mdiThumbDownOutline } from '@mdi/js';
 import IconButton from '@mui/material/IconButton';
 import './FeedbackListEntry.css'; // Import the CSS file
 import { useFeedbackContext } from '../../../../../contexts/FeedbackContext';
@@ -23,6 +23,15 @@ const FeedbackListEntry = ({ feedback }) => {
         changeResolvedStatus(feedbackId, true);
     };
 
+    const onAccept = (feedbackId) => {
+        console.log('Accepting feedback:', feedbackId);
+        changeResolvedStatus(feedbackId, "accepted");
+    };
+
+    const onDecline = (feedbackId) => {
+        console.log('Declining feedback:', feedbackId);
+        changeResolvedStatus(feedbackId, "declined");
+    };
 
     return (
         <div className="feedback-list-entry">
@@ -53,16 +62,16 @@ const FeedbackListEntry = ({ feedback }) => {
             <div className="feedback-row button-area">
                 {feedback.type === 'feature' || feedback.type === 'review' ? (
                     <>
-                        <IconButton className="feedback-button feedback-approve">
+                        <IconButton className="feedback-button feedback-button-large feedback-approve" onClick={() => onAccept(feedback._id)}>
                             <Icon path={mdiThumbUpOutline} size={1} />
                         </IconButton>
-                        <IconButton className="feedback-button feedback-decline">
+                        <IconButton className="feedback-button feedback-button-large feedback-decline" onClick={() => onDecline(feedback._id)}>
                             <Icon path={mdiThumbDownOutline} size={1} />
                         </IconButton>
                     </>
                 ) : (
                     <IconButton className="feedback-button feedback-ok-button" onClick={() => onResolve(feedback._id)}>
-                        <Icon path={mdiCheck} size={1} />
+                        <Icon path={mdiCheckboxMarkedCircle} size={1} />
                     </IconButton>
                 )}
             </div>
