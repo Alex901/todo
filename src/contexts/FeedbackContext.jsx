@@ -99,9 +99,19 @@ const FeedbackProvider = ({ children }) => {
         }
     };
 
+    const fetchOfflineFeedback = async () => {
+        console.log('Fetching offline feedback...');
+        try {
+            const response = await axios.get(`${BASE_URL}/feedback/fetchOfflineFeedback`);
+            console.log('Offline feedback fetched:', response.data);
+        } catch (error) {
+            console.error('Error fetching offline feedback:', error);
+        }
+    };
+
 
     return (
-        <FeedbackContext.Provider value={{ feedbackList, setFeedbackList, submitFeedback, changeResolvedStatus }}>
+        <FeedbackContext.Provider value={{ feedbackList, setFeedbackList, submitFeedback, changeResolvedStatus, fetchOfflineFeedback }}>
             {children}
         </FeedbackContext.Provider>
     );

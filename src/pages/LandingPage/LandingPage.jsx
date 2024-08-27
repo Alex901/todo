@@ -17,13 +17,34 @@ import motivatedImage from '../../assets/Features_icons/Motivated-icon2_trans.pn
 import Header from '../../components/Layout/header/Header';
 import Footer from '../../components/Layout/Footer/Footer';
 import { useTranslation } from "react-i18next";
-
+import { useFeedbackContext } from '../../contexts/FeedbackContext';
+import { useUserContext } from '../../contexts/UserContext';
 
 
 const LandingPage = () => { //Could break this out into a header component ofc
     const [showRegisterModal, setShowRegisterModal] = useState(false);
     const [showLoginModal, setShowLoginModal] = useState(false);
+    const { fetchOfflineFeedback } = useFeedbackContext();
+    const { loggedInUser } = useUserContext();
     const { t } = useTranslation();
+    const [reviews, setReviews] = useState([]);
+    const [featureRecommendations, setFeatureRecommendations] = useState([]);
+
+    useEffect(() => {
+        const fetchData = async () => {
+            const data = await fetchOfflineFeedback();
+            const reviews = data.filter(item => item.type === 'review');
+            const featureRecommendations = data.filter(item => item.type === 'featureRecommendation');
+
+            setReviews(reviews);
+            setFeatureRecommendations(featureRecommendations);
+        };
+
+        if (!loggedInUser) {
+            fetchData();
+        }
+    }, [loggedInUser, fetchOfflineFeedback]);
+
 
     const openRegisterModal = (event) => {
         event.preventDefault();
