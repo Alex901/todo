@@ -21,7 +21,7 @@ body {
 }
 
 .details-container svg {
-  color: var(--foresta-green);
+  color: var(--forestGreen-color);
 }
 
 .content {
@@ -223,7 +223,7 @@ body {
 .list-description-title {
   font-size: 1.5em;
   font-weight: bold;
-  color: var(--foresta-green);
+  color: var(--forestGreen-color);
 }
 
 .details-container {

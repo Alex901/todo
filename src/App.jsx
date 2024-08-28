@@ -15,7 +15,8 @@ import Icon from '@mdi/react';
 import {
   mdiDelete, mdiPlus, mdiMinus, mdiFileExport, mdiGroup, mdiTextBoxEditOutline,
   mdiPlaylistEdit, mdiDeleteEmpty, mdiPencil, mdiArchiveArrowDownOutline, mdiArchiveArrowUpOutline, mdiCloseCircle,
-  mdiTimerCheckOutline, mdiTimelineClockOutline, mdiEyeOutline, mdiWrenchClock, mdiFolderPlusOutline, mdiFormatListBulletedType, mdiBadgeAccountOutline
+  mdiTimerCheckOutline, mdiTimelineClockOutline, mdiEyeOutline, mdiWrenchClock, mdiFolderPlusOutline, mdiFormatListBulletedType, mdiBadgeAccountOutline,
+  mdiSelectGroup, mdiVoteOutline 
 } from '@mdi/js';
 import Chip from '@mui/material/Chip';
 import Popper from '@mui/material/Popper';
@@ -33,6 +34,7 @@ import ExportListModal from './components/Todo/TodoModal/ExportListModal/ExportL
 import EditListModal from './components/Todo/TodoModal/EditListModal/EditListModal'
 import Draggable from 'react-draggable';
 import ProgressArea from './components/UtilityComponents/ProgressArea/ProgressArea'
+import VoteModal from './components/Todo/TodoModal/VoteModal/VoteModal'
 
 function App() {
   const [activeView, setActiveView] = useState('todo');
@@ -64,6 +66,7 @@ function App() {
   const [bounds, setBounds] = useState({ left: 0, right: 0 });
   const containerRef = useRef(null);
   const [entriesInActiveList, setEntriesInActiveList] = useState([]);
+  const [isVoteModalOpen, setIsVoteModalOpen] = useState(false);
 
   useMemo(() => {
     //console.log("DEBUG -- Changing lists");
@@ -351,6 +354,16 @@ function App() {
     }
   };
 
+  const openVoteModal = () => {
+    if (!isVoteModalOpen) {
+      setIsVoteModalOpen(true);
+    }
+  };
+
+  const closeVoteModal = () => {
+    setIsVoteModalOpen(false);
+  };
+
   const closeGroupModal = () => {
     setIsGroupModalOpen(false);
   };
@@ -601,7 +614,10 @@ function App() {
               
                   <div className="icons-container" style={{ display: 'flex', gap: '5px', width: `${100 - progressBarWidth}%` }}>
                     <IconButton className="icon-button" onClick={openGroupModal}>
-                      <Icon path={mdiGroup} size={1.2} />
+                      <Icon path={mdiSelectGroup } size={1.2} />
+                    </IconButton>
+                    <IconButton className="icon-button" onClick={openVoteModal}>
+                      <Icon path={mdiVoteOutline} size={1.2} />
                     </IconButton>
                     <IconButton className="icon-button" onClick={openExportModal}>
                       <Icon path={mdiFileExport} size={1.2} />
@@ -612,6 +628,7 @@ function App() {
 
               <ExportListModal isOpen={isOpenListModalOpen} onClose={closeExportListModal} />
               <GroupModal isOpen={isGroupModalOpen} onClose={closeGroupModal} />
+              <VoteModal isOpen={isVoteModalOpen} onClose={closeVoteModal} />
 
               {isLoggedIn && (
                 <div className="tags-container">

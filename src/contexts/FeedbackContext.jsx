@@ -22,10 +22,14 @@ const FeedbackProvider = ({ children }) => {
     const { loggedInUser } = useUserContext();
     const { setNotification, getNotifications } = useNotificationContext();
     const [feedbackList, setFeedbackList] = useState([]);
+    const [approvedFeedbackList, setApprovedFeedbackList] = useState([]);
 
     useEffect(() => {
         if (loggedInUser?.role === 'admin') {
             fetchFeedback();
+            fetchOfflineFeedback();
+        } else {
+            fetchOfflineFeedback();
         }
     }, [loggedInUser]);
 
@@ -48,10 +52,6 @@ const FeedbackProvider = ({ children }) => {
                 console.error('Error', error.message);
             }
         }
-    };
-
-    const fetchApprovedFeedback = async () => {
-        console.log('Fetching approved feedback...');
     };
 
     const submitFeedback = (feedbackData) =>  {
@@ -100,18 +100,50 @@ const FeedbackProvider = ({ children }) => {
     };
 
     const fetchOfflineFeedback = async () => {
-        console.log('Fetching offline feedback...');
         try {
             const response = await axios.get(`${BASE_URL}/feedback/fetchOfflineFeedback`);
-            console.log('Offline feedback fetched:', response.data);
+            setApprovedFeedbackList(response.data);
+            return response.data;
         } catch (error) {
             console.error('Error fetching offline feedback:', error);
         }
     };
 
+    const upvoteFeature = async (feedbackId) => {
+        console.log('Upvoting feature...', feedbackId);
+        try {
+            const response = await axios.put(
+                `${BASE_URL}/feedback/upvote/${feedbackId}`,
+                { userId: loggedInUser._id }, // Include loggedInUser._id in the request body
+                { withCredentials: true }
+            );
+            console.log('Feature upvoted:', response.data);
+            fetchOfflineFeedback();
+        } catch (error) {
+            console.error('Error upvoting feature:', error);
+        }
+    };
+
+    const downvoteFeature = async (feedbackId) => {
+        console.log('Downvoting feature...', feedbackId);
+        try {
+            const response = await axios.put(
+                `${BASE_URL}/feedback/downvote/${feedbackId}`,
+                { userId: loggedInUser._id }, // Include loggedInUser._id in the request body
+                { withCredentials: true }
+            );
+            console.log('Feature downvoted:', response.data);
+            fetchOfflineFeedback();
+        } catch (error) {
+            console.error('Error downvoting feature:', error);
+        }
+    }
+
 
     return (
-        <FeedbackContext.Provider value={{ feedbackList, setFeedbackList, submitFeedback, changeResolvedStatus, fetchOfflineFeedback }}>
+        <FeedbackContext.Provider value={{ feedbackList, setFeedbackList, submitFeedback, changeResolvedStatus, fetchOfflineFeedback,
+            upvoteFeature, downvoteFeature, approvedFeedbackList
+         }}>
             {children}
         </FeedbackContext.Provider>
     );
