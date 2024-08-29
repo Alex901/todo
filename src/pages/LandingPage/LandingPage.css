@@ -402,6 +402,7 @@
   .feedback-list {
     flex-direction: column;
     overflow-x: visible;
+    align-items: center;
   }
 
   .feedback-entry {

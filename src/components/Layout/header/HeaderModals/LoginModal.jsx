@@ -77,7 +77,7 @@ const LoginModal = ({ isOpen, onRequestClose }) => {
             <form className='modal-form' onSubmit={handleLogin}>
                 <TextField
                     id="username"
-                    label="Username"
+                    label="Mail or Username"
                     variant="outlined"
                     value={username}
                     onChange={e => { setUsername(e.target.value); setPasswordError(""); setUserNameError(""); }}

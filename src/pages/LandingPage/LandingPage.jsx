@@ -51,7 +51,9 @@ const LandingPage = () => { //Could break this out into a header component ofc
         const fetchData = async () => {
             const data = await fetchOfflineFeedback();
             const reviews = data.filter(item => item.type === 'review');
-            const featureRecommendations = data.filter(item => item.type === 'feature');
+            const featureRecommendations = data
+                .filter(item => item.type === 'feature')
+                .sort((a, b) => b.upvotes - a.upvotes);
 
             setReviews(reviews);
             setFeatureRecommendations(featureRecommendations);
