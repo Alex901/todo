@@ -394,8 +394,9 @@ const UserProvider = ({ children }) => {
             const response = await axios.patch(`${BASE_URL}/users/edituser/${_id}`, { userData, oldPassword, newPassword }, { withCredentials: true });
             if (response.status === 200) {
                 console.log("User edited: ", response.data);
-                setLoggedInUser(response.data);
+               // setLoggedInUser(response.data);
                 toast.success("User edited");
+                checkLogin();
             } else if (response.status === 404) {
                 console.log("User not found");
             } else {

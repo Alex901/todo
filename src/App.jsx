@@ -16,7 +16,7 @@ import {
   mdiDelete, mdiPlus, mdiMinus, mdiFileExport, mdiGroup, mdiTextBoxEditOutline,
   mdiPlaylistEdit, mdiDeleteEmpty, mdiPencil, mdiArchiveArrowDownOutline, mdiArchiveArrowUpOutline, mdiCloseCircle,
   mdiTimerCheckOutline, mdiTimelineClockOutline, mdiEyeOutline, mdiWrenchClock, mdiFolderPlusOutline, mdiFormatListBulletedType, mdiBadgeAccountOutline,
-  mdiSelectGroup, mdiVoteOutline 
+  mdiSelectGroup, mdiVoteOutline
 } from '@mdi/js';
 import Chip from '@mui/material/Chip';
 import Popper from '@mui/material/Popper';
@@ -35,6 +35,7 @@ import EditListModal from './components/Todo/TodoModal/EditListModal/EditListMod
 import Draggable from 'react-draggable';
 import ProgressArea from './components/UtilityComponents/ProgressArea/ProgressArea'
 import VoteModal from './components/Todo/TodoModal/VoteModal/VoteModal'
+import FirstTimeLoginModal from './components/Todo/TodoModal/FirstTimeLoginModal/FirstTimeLoginModal'
 
 function App() {
   const [activeView, setActiveView] = useState('todo');
@@ -67,6 +68,23 @@ function App() {
   const containerRef = useRef(null);
   const [entriesInActiveList, setEntriesInActiveList] = useState([]);
   const [isVoteModalOpen, setIsVoteModalOpen] = useState(false);
+  const [isFirstTimeLoginModalOpen, setIsFirstTimeLoginModalOpen] = useState(false);
+
+  const openNewLoginModal = () => {
+    setIsFirstTimeLoginModalOpen(true);
+  }
+
+  useEffect(() => {
+    if (loggedInUser) {
+      if (loggedInUser.__v === 0) {
+        openNewLoginModal();
+      }
+    }
+  }, [loggedInUser]);
+
+  // useEffect(() => {
+  //   console.log("DEBUG -- App.js -- loggedInUser: ", loggedInUser)
+  // }, [loggedInUser]);
 
   useMemo(() => {
     //console.log("DEBUG -- Changing lists");
@@ -80,6 +98,8 @@ function App() {
     }
   }, [todoList, loggedInUser]);
 
+
+  //WTF is this ? 
   const handleDrag = (e, data) => {
     const containerWidth = containerRef.current.offsetWidth;
     const deltaWidth = (data.deltaX / containerWidth) * 100;
@@ -266,6 +286,12 @@ function App() {
     setIsDeleteListModalOpen(true);
   };
 
+
+
+  const closeNewLoginModal = () => {
+    setIsFirstTimeLoginModalOpen(false);
+  }
+
   const handleDelete = (list, event) => {
     //console.log("DEBUG -- is list to delete a group list? ", isGroupList(list))
     event.preventDefault();
@@ -409,10 +435,11 @@ function App() {
   }
 
 
-  //TODO: This shouldbe moved to a separate component
+
   return (
 
     <div className='app'>
+      <FirstTimeLoginModal open={isFirstTimeLoginModalOpen} onClose={closeNewLoginModal} />
       <div>
         {isLoggedIn && <Header />}
       </div>
@@ -611,10 +638,10 @@ function App() {
                       </ProgressArea>
                     </>
                   </div>
-              
+
                   <div className="icons-container" style={{ display: 'flex', gap: '5px', width: `${100 - progressBarWidth}%` }}>
                     <IconButton className="icon-button" onClick={openGroupModal}>
-                      <Icon path={mdiSelectGroup } size={1.2} />
+                      <Icon path={mdiSelectGroup} size={1.2} />
                     </IconButton>
                     <IconButton className="icon-button" onClick={openVoteModal}>
                       <Icon path={mdiVoteOutline} size={1.2} />
@@ -631,6 +658,7 @@ function App() {
               <VoteModal isOpen={isVoteModalOpen} onClose={closeVoteModal} />
 
               {isLoggedIn && (
+
                 <div className="tags-container">
                   <div className='tags' style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' }}>
 
