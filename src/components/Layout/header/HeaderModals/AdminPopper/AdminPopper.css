@@ -1,0 +1,11 @@
+.error-message {
+    color: red;
+    text-align: center;
+    margin-top: 5px;
+    opacity: 1;
+    transition: opacity 10000s ease-in-out; /* Ensure transition is defined */
+}
+
+.error-message.fade-out {
+    opacity: 0; /* Modify opacity to 0 for fade-out effect */
+}

@@ -125,14 +125,14 @@ const LandingPage = () => { //Could break this out into a header component ofc
                     <Feature key={index} image={feature.image} title={feature.title} description={feature.description} />
                 ))}
             </div>
-            <div className='qoute-div'>
+            {/* <div className='qoute-div'>
                 <h1 className='ins-quote first-quote'>
                     <span className='quote-mark'>"</span>Forge a strong enough habit, and you are halfway there already.<span className='quote-mark'>"</span>
                 </h1>
-            </div>
+            </div> */}
 
 
-            <div className="success-case">
+            {/* <div className="success-case">
                 <div className="success-case-section">
                     <div className="success-case-image">
                         <img className="image1" src="src\assets\Overwhelmed_2.jpg" alt="Success Case" />
@@ -161,12 +161,12 @@ const LandingPage = () => { //Could break this out into a header component ofc
                         <p>More text here</p>
                     </div>
                 </div>
-            </div>
-            <div id='1' className='qoute-div'>
+            </div> */}
+            {/* <div id='1' className='qoute-div'>
                 <h1 className='ins-quote second-quote'>
                     <span className='quote-mark'>"</span>Test quote2<span className='quote-mark'>"</span>
                 </h1>
-            </div>
+            </div> */}
 
 
             {featureRecommendations.length > 0 && (
@@ -207,7 +207,7 @@ const LandingPage = () => { //Could break this out into a header component ofc
 
             <div className='qoute-div'>
                 <h1 className='ins-quote'>
-                    <span className='quote-mark'>"</span>Test quote1.<span className='quote-mark'>"</span>
+                    <span className='quote-mark'>"</span>Best thing since sliced bread! Now I know what to do with my life!.<span className='quote-mark'>"</span>
                 </h1>
             </div>
 

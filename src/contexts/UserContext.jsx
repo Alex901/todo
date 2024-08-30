@@ -88,6 +88,20 @@ const UserProvider = ({ children }) => {
 
         try {
             const response = await axios.post(`${BASE_URL}/users/create`, userData);
+            if(response.status === 200) {
+               
+                if(loggedInUser) {
+                    toast.success("User added successfully!");
+                    checkLogin();
+                } else {
+                    toast.success("Registration successful!");
+                }
+            } else if(response.status === 400) {
+                toast.error("Username taken!");
+            } else if(response.status === 409) {
+                toast.error("Email already in use");
+            }
+
         } catch (error) {
             console.error('Error registering user', error);
         }
@@ -500,7 +514,6 @@ const UserProvider = ({ children }) => {
             toast.error('Error deleting user');
         }
     }
-
 
     return (
         <UserContext.Provider value={{

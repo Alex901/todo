@@ -8,6 +8,7 @@ import ChangePassword from '../../ChangePassword/ChangePassword';
 import SettingsList from '../SettingsList/SettingsList';
 import UserListEntry from '../UserListEntry/UserListEntry';
 import FeedbackListEntry from './FeedbackListEntry/FeedbackListEntry';
+import AdminPopper from './AdminPopper/AdminPopper';
 
 const SettingsModal = ({ isOpen, onClose }) => {
     const [selectedTab, setSelectedTab] = useState(0);
@@ -19,6 +20,9 @@ const SettingsModal = ({ isOpen, onClose }) => {
     const [newPassword, setNewPassword] = useState('');
     const [oldPassword, setOldPassword] = useState('');
     const [selectedType, setSelectedType] = useState('');
+    const [anchorEl, setAnchorEl] = useState(null);
+    const [popperOpen, setPopperOpen] = useState(false);
+    const [popperMode, setPopperMode] = useState('');
 
     const types = [...new Set(feedbackList.map(feedback => feedback.type))];
 
@@ -30,7 +34,16 @@ const SettingsModal = ({ isOpen, onClose }) => {
 
     const MAX_SIZE = 1 * 1024 * 1024; // 1MB
 
- 
+    const handleOpenPopper = (event, mode) => {
+        setAnchorEl(event.currentTarget);
+        setPopperMode(mode);
+        setPopperOpen(true);
+    };
+
+    const handleClosePopper = () => {
+        setPopperOpen(false);
+        setAnchorEl(null);
+    };
 
     const handleChange = (event, newValue) => {
         setSelectedTab(newValue);
@@ -131,8 +144,8 @@ const SettingsModal = ({ isOpen, onClose }) => {
                             flexDirection: window.innerWidth <= 600 ? 'column' : 'row',
                         }}
                     >
-                        <button className="modal-button">Add User</button>
-                        <button className="modal-button">Invite user</button>
+                        <button className="modal-button" onClick={(e) => handleOpenPopper(e, 'add-user')}>Add User</button>
+                        <button className="modal-button" onClick={(e) => handleOpenPopper(e, 'invite-user')}>Invite User</button>
                     </div>
                     <SettingsList
                         items={userList}
@@ -141,6 +154,8 @@ const SettingsModal = ({ isOpen, onClose }) => {
 
                 </Box>
             )}
+            <AdminPopper anchorEl={anchorEl} open={popperOpen} onClose={handleClosePopper} mode={popperMode} />
+
             {selectedTab === 2 && loggedInUser?.role === 'admin' && (
                 <Box className={`modal-form ${selectedTab === 2 ? 'admin-modal' : ''}`}>
                     <Box className="settings-bar" >
