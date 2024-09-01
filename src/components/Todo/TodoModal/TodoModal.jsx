@@ -137,13 +137,13 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
     }
 
     const handleAddStep = () => {
-        if (newTaskData.steps.length < 10) {
+        if (newTaskData.steps.length < 20) {
             setNewTaskData(prevData => ({
                 ...prevData,
                 steps: [...prevData.steps, { id: prevData.steps.length + 1, taskName: '', isDone: false }]
             }));
         } else {
-            setErrorMessage('You can only add 10 steps');
+            setErrorMessage('You can max have 20 steps');
             setTimeout(() => { setErrorMessage('') }, 5000);
             return;
         }

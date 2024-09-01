@@ -159,13 +159,13 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
     };
 
     const handleAddStep = () => {
-        if (taskData.steps.length < 10) {
+        if (taskData.steps.length < 20) {
             setTaskData(prevData => ({
                 ...prevData,
                 steps: [...prevData.steps, { taskName: '', isDone: false, _id: generateNewId() }]
             }));
         } else {
-            setErrorMessage('You can only add 10 steps');
+            setErrorMessage('You can only have 20 steps');
             setTimeout(() => { setErrorMessage('') }, 5000);
             return;
         }
