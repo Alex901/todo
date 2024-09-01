@@ -133,17 +133,25 @@ const UserProvider = ({ children }) => {
 
                         });
                 } else if (response.status === 401) {
-                    console.log("User not found");
+                    toast.error("Incorrect username or password");
 
+                } else if (response.status === 403) {
+                    alert("Please verify your email before logging in");
                 } else {
-                    console.log("Internal server error");
-
-
+                    toast.error("Incorrect username or password");
                 }
             })
             .catch(error => {
-                console.error('Error logging in', error);
-
+                if(error.response.status === 400 || error.response.status === 404) {
+                    toast.error("Incorrect username or password");
+                } else if (error.response.status === 403) {
+                    console.error('Error logging in', error);
+                    toast.error(error.response.data.error);
+                } else {
+                    console.error('Error logging in', error);
+                    toast.error("Something went wrong, please try again later");
+                }
+                
             });
     };
 
