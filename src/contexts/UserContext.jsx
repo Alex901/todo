@@ -397,6 +397,10 @@ const UserProvider = ({ children }) => {
                // setLoggedInUser(response.data);
                 toast.success("User edited");
                 checkLogin();
+                return response;
+            } else if (response.status === 401) {
+                console.log("Incorrect password");
+                toast.error(response.message || "Incorrect password");
             } else if (response.status === 404) {
                 console.log("User not found");
             } else {
@@ -405,7 +409,11 @@ const UserProvider = ({ children }) => {
             }
         } catch (error) {
             console.error('Error editing user', error);
+            if(loggedInUser.__v === 0) {
+                toast.error("Wrong password, please try again");
+            } else {
             toast.error("Failed to edit user");
+            }
         }
     }
 

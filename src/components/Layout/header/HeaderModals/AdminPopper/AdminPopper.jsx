@@ -32,7 +32,7 @@ const AdminPopper = ({ anchorEl, open, onClose, mode }) => {
 
         try {
             await registerNewUser(userData);
-           // toast.success(mode === 'invite-user' ? 'Invitation sent successfully' : 'User added successfully');
+            toast.success(mode === 'invite-user' ? 'Invitation sent successfully' : 'User added successfully');
             setUsername('');
             setPassword('');
             setEmail('');

@@ -76,11 +76,11 @@ const LandingPage = () => { //Could break this out into a header component ofc
     const closeLoginModal = () => setShowLoginModal(false);
 
     const features = [
-        { image: ideaImage, title: 'Begin from the simplest idea', description: 'Do you want to learn something new? Maybe get rid of a bad habit? Or why not replace that bad habit with a good one? It all starts from a concept, that you will nurture into reality! And we will help you stay on track.' },
+        { image: ideaImage, title: 'Bring your idea into reality', description: 'Do you want to learn something new? Maybe get rid of a bad habit? Or why not replace that bad habit with a good one? It all starts from a concept, that you will nurture into reality! And we will help you stay on track.' },
         { image: stepsImage, title: 'Daily steps and reminders', description: 'To keep you engaged in your new activity each day, to maximize the effectiveness.' },
-        { image: cooperateImage, title: 'Cooperate', description: 'You can go on an entirely solo learning journey. Or you can do so as a group. Where you can simply keep each other accountable. Or you can work together towards a common goal.' },
         { image: trackImage, title: 'Track your progress', description: 'All progress is being recorded so our algorithm can decide if things are too easy/hard and adjust the difficulty of your daily tasks based on that. Also, you get some shiny graphs!!' },
         { image: motivatedImage, title: 'Eliminate stress', description: 'By always knowing what the next thing you have to do is, and no need to spend countless hours in planning out your days' },
+        { image: cooperateImage, title: 'Cooperate', description: 'You can go on an entirely solo learning journey. Or you can do so as a group. Where you can simply keep each other accountable. Or you can work together towards a common goal.' },
         { image: testingImage, title: 'Discover new ways of doing things', description: 'Try out all our tools to bolster productivity, and streamline your workflow!' },
     ];
 
@@ -94,7 +94,7 @@ const LandingPage = () => { //Could break this out into a header component ofc
                         <h1>{t("hero-title")}</h1>
                         <p className='hero-sub-text'> {t("hero-subtitle")}</p>
                         <div className='hero-get-started'>
-                            <a href="#1" className="hero-development-link" style={{ fontSize: 'smaller', textDecoration: 'underline', color: 'var(--primary-color)' }}>
+                            <a href="#feedback-section-id" className="hero-development-link" style={{ fontSize: 'smaller', textDecoration: 'underline', color: 'var(--primary-color)' }}>
                                 Be part of the development!
                             </a>
                             <div className='hero-get-started-actions'>
@@ -170,7 +170,7 @@ const LandingPage = () => { //Could break this out into a header component ofc
 
 
             {featureRecommendations.length > 0 && (
-                <div className="feedback-section">
+                <div id="feedback-section-id" className="feedback-section">
                     <h2>
                         Best suggestions right now
                         <Tooltip title="Submit suggestions when logged in: Settings>Feedback, if the suggestion is approved, it will be posted here">

@@ -69,11 +69,12 @@ const FirstTimeLoginModal = ({ open, onClose }) => {
         }
 
         try {
-            console.log('DEBUG -- username: ', username, ' oldPassword: ', oldPassword, ' newPassword ' , newPassword);
-            editUser({ username }, oldPassword, newPassword);
-            onClose();
+            const response = await editUser({ username }, oldPassword, newPassword);
+            if (response.status === 200) {
+                onClose();
+            }
         } catch (error) {
-            setError('An error occurred while updating your information');
+            setError('Wrong password, please try again');
         }
     };
 
