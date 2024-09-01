@@ -190,18 +190,7 @@
   box-shadow: 0 5px 20px rgba(0, 0, 0, 0.3);
 }
 
-.features {
-  width: 99%;
-  height: auto;
-  background-color: rgba(6, 48, 20, 00);
-  display: flex;
-  justify-content: center;
-  align-items: stretch;
-  margin: 10px auto;
-  border-radius: 30px;
-  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.6), 0 6px 6px rgba(0, 0, 0, 0.23);
-  padding: 15px;
-}
+
 
 .qoute-div {
   width: auto;
@@ -288,7 +277,17 @@
   z-index: 1000;
 }
 
-
+.features {
+  height: auto;
+  background-color: rgba(6, 48, 20, 00);
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  margin: 10px auto;
+  border-radius: 20px;
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.6), 0 6px 6px rgba(0, 0, 0, 0.23);
+  padding: 15px;
+}
 
 
 .feedback-section {
