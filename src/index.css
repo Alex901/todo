@@ -4,10 +4,8 @@
   font-weight: 400;
 
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
-  background-color: #242424;
-  --light-orange: #FFA500;
-  --dark-orange: #FF4500;
+  color: rgba(0, 0, 0, 0.87);
+
 
   --primary-color: #7b1fa2;
   /* Fallback color */
