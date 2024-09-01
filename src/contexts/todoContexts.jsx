@@ -109,7 +109,6 @@ const TodoProvider = ({ children }) => {
       if (loggedInUser.activeList !== 'all') {
         const activeListId = loggedInUser.myLists.find(list => list.listName === loggedInUser.activeList);
         if (activeListId) {
-          console.log("DEBUG: activeListId", activeListId);
           if (activeListId.type === 'groupList') {
             groupOwner = activeListId.owner; //lists can be owned by groups, so in case of group the group owns the todo
             

@@ -86,12 +86,13 @@ function App() {
   //   console.log("DEBUG -- App.js -- loggedInUser: ", loggedInUser)
   // }, [loggedInUser]);
 
+  const activeList = loggedInUser?.myLists.find(list => list.listName === loggedInUser.activeList);
+
   useMemo(() => {
-    //console.log("DEBUG -- Changing lists");
     setEntriesInActiveList([]);
     if (todoList && loggedInUser) {
       todoList.forEach(todo => {
-        if (todo.inListNew.some(list => list.listName.toLowerCase() === loggedInUser.activeList.toLowerCase())) {
+        if (todo.inListNew.some(list => list?.listName?.toLowerCase() === loggedInUser.activeList.toLowerCase())) {
           setEntriesInActiveList(entriesInActiveList => [...entriesInActiveList, todo]);
         }
       });
@@ -150,7 +151,7 @@ function App() {
   ];
 
 
-  const activeList = loggedInUser?.myLists.find(list => list.listName === loggedInUser.activeList);
+ 
 
   const handleClickOutside = (event) => {
     if (event.target.classList.contains('color-swatch') || event.target.classList.contains('color-picker')) {
@@ -212,7 +213,6 @@ function App() {
 
   useMemo(() => {
     if (todoList && activeList) {
-
       const totalTimeToComplete = todoList
         .filter(todo => {
           const isMatch = todo.inListNew.some(list => list.listName.toLowerCase() === activeList.listName.toLowerCase());
