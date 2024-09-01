@@ -289,18 +289,7 @@
 }
 
 
-@media (max-width: 1024px) {
-  .hero-right {
-    display: none;
-  }
 
-  .hero-left {
-    width: 100%;
-    margin-bottom: 20px;
-    padding-top: 0;
-    margin-top: 0px;
-  }
-}
 
 .feedback-section {
   display: flex;
@@ -364,7 +353,19 @@
   right: 10px;
 }
 
+@media (max-width: 1024px) {
+  .hero-right {
+    display: none;
+  }
 
+  .hero-left {
+    width: 100%;
+    margin-bottom: 20px;
+    padding-top: 0;
+    margin-top: 0px;
+    height: auto;
+  }
+}
 
 @media (min-width: 769px) {
   .feedback-section {
