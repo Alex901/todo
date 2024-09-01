@@ -390,6 +390,10 @@
     align-items: center;
   }
 
+  .carusel-arrow-div {
+    display: none;
+  }
+
   .feedback-carousel {
     height: auto;
   }

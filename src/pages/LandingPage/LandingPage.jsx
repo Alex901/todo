@@ -182,11 +182,13 @@ const LandingPage = () => { //Could break this out into a header component ofc
                         </Tooltip>
                     </h2>
                     <div className="feedback-carousel">
-                        <IconButton onClick={scrollLeft} className="carousel-arrow left-arrow">
-                            <SvgIcon>
-                                <path d={mdiChevronLeft} />
-                            </SvgIcon>
-                        </IconButton>
+                        <div className='carusel-arrow-div'>
+                            <IconButton onClick={scrollLeft} className="carousel-arrow left-arrow">
+                                <SvgIcon>
+                                    <path d={mdiChevronLeft} />
+                                </SvgIcon>
+                            </IconButton>
+                        </div>
                         <div className="feedback-list" ref={carouselRef}>
                             {featureRecommendations.map((feature, index) => (
                                 <FeedbackVoteEntry
@@ -196,11 +198,13 @@ const LandingPage = () => { //Could break this out into a header component ofc
                             ))}
 
                         </div>
+                        <div className='carusel-arrow-div'>
                         <IconButton onClick={scrollRight} className="carousel-arrow right-arrow">
                             <SvgIcon>
                                 <path d={mdiChevronRight} />
                             </SvgIcon>
                         </IconButton>
+                        </div>
                     </div>
                 </div>
             )}
