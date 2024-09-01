@@ -5,7 +5,9 @@
 
   color-scheme: light dark;
   color: rgba(0, 0, 0, 0.87);
-
+  background-color: #242424;
+  --light-orange: #FFA500;
+  --dark-orange: #FF4500;
 
   --primary-color: #7b1fa2;
   /* Fallback color */
