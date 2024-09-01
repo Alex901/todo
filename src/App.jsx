@@ -627,11 +627,9 @@ function App() {
               )}
               {isLoggedIn && (
                 <div className="functions-container" ref={containerRef} style={{
-                  display: 'flex', justifyContent: 'center', alignItems: 'flex-start',
-                  margin: '.5em 0 .5em 0', gap: '50px',
-                  height: 'auto', position: 'relative'
+                 
                 }}>
-                  <div className="progress-bar-container" style={{ width: `${progressBarWidth}%` }}>
+                  <div className="progress-bar-container" style={{ width: `${progressBarWidth+20}%` }}>
                     <>
                       <ProgressArea tasksInActiveList={entriesInActiveList}>
                         {/* Children components or elements go here */}

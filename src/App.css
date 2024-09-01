@@ -98,16 +98,21 @@ body {
   opacity: .9;
 }
 
-.tags-container {
+.tags-container,
+.functions-container {
   display: flex;
   flex-wrap: wrap;
   gap: 5px;
   justify-content: center;
-  width: auto;
   background-color: #f0eded;
   border: 1px solid #cdc3c3;
   border-radius: 10px;
   padding: 4px;
+}
+
+.functions-container {
+  margin: 10px 0 5px 0;
+  gap: 20px;
 }
 
 .add-tag span {
@@ -158,19 +163,14 @@ body {
   margin-right: 10px;
 }
 
-.functions-container {
-  background-color: rgb(230, 232, 230);
-  border-radius: 10px;
-}
-
 .icons-container {
   display: inline-flex;
-  justify-content: center; 
+  justify-content: flex-end; 
   gap: 5px;
   overflow: hidden;
   position: relative;
   max-width: fit-content;
-  background-color: rgb(179, 185, 179);
+  background-color: rgb(213, 220, 213);
   border-radius: 10px;
   padding: 0 10px 0 10px;
 }
@@ -305,6 +305,7 @@ body {
   .content {
     padding: 0;
   }
+
 }
 
 @media (max-width: 599px) {
@@ -336,5 +337,17 @@ body {
     align-items: center;
     margin-right: 0;
     width: 100%;
+  }
+  .functions-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .progress-title {
+    display: none
+  }
+
+  .progress-bar-container {
+    width: 50%;
   }
 }

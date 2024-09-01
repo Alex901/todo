@@ -2,8 +2,9 @@
     display: flex;
     flex-direction: row;
     align-items: center;
+    justify-content: left;
     gap: 20px;
-    width: 100%;
+    width: auto;
   }
   
   .progress-title {
@@ -15,9 +16,4 @@
   }
 
   
-  .toggle-container {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-  }
-
+ 
