@@ -80,7 +80,7 @@ const LandingPage = () => { //Could break this out into a header component ofc
         { image: stepsImage, title: 'Daily steps and reminders', description: 'To keep you engaged in your new activity each day, to maximize the effectiveness.' },
         { image: cooperateImage, title: 'Cooperate', description: 'You can go on an entirely solo learning journey. Or you can do so as a group. Where you can simply keep each other accountable. Or you can work together towards a common goal.' },
         { image: trackImage, title: 'Track your progress', description: 'All progress is being recorded so our algorithm can decide if things are too easy/hard and adjust the difficulty of your daily tasks based on that. Also, you get some shiny graphs!!' },
-        { image: motivatedImage, title: 'Eliminate stress', description: 'By always knowing what the next thing you have to do to reach your goal is' },
+        { image: motivatedImage, title: 'Eliminate stress', description: 'By always knowing what the next thing you have to do is, and no need to spend countless hours in planning out your days' },
         { image: testingImage, title: 'Discover new ways of doing things', description: 'Try out all our tools to bolster productivity, and streamline your workflow!' },
     ];
 
