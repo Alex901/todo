@@ -295,8 +295,8 @@ const AnythingList = ({ type }) => {
                         </Stack>
                     </div>
 
-
-                    <div className="checkbox-container" style={{ margin: '3px 20px' }}>
+                    <div className="checkbox-row">
+                    <div className="checkbox-container" style={{ }}>
                         <FormControlLabel
                             control={
                                 <Checkbox
@@ -307,7 +307,7 @@ const AnythingList = ({ type }) => {
                             label="Urgent"
                         />
                     </div>
-                    <div className="checkbox-container" style={{ margin: '3px 20px' }}>
+                    <div className="checkbox-container" style={{ }}>
                         <FormControlLabel
                             control={
                                 <Checkbox
@@ -318,7 +318,7 @@ const AnythingList = ({ type }) => {
                             label="Deadline this week"
                         />
                     </div>
-                    <div className="checkbox-container" style={{ margin: '3px 20px' }}>
+                    <div className="checkbox-container" style={{}}>
                         <FormControlLabel
                             control={
                                 <Checkbox
@@ -328,6 +328,7 @@ const AnythingList = ({ type }) => {
                             }
                             label="New"
                         />
+                    </div>
                     </div>
                     <div className="Select-sorting-order" style={{ display: 'flex', flexDirection: 'row', margin: '3px 15px' }}>
                         <FormControl variant="outlined" style={{ minWidth: 150 }}>

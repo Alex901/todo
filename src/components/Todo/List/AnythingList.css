@@ -59,6 +59,15 @@
     overflow-x: hidden;
 }
 
+.checkbox-row {
+    display: flex;
+    justify-content: space-around;
+}
+
+.checkbox-container {
+    margin: 3px 20px;
+}
+
 .doing-item .doing-text {
     transition: text-decoration 200ms ease-out 200ms;
 }
@@ -69,6 +78,7 @@
 
 .list-settings {
     display: flex;
+    flex-direction: row;
     justify-content: center;
     align-items: center;
     padding: 0px;
@@ -95,9 +105,13 @@
 }
 
 /* Media queries */
-@media screen and (max-width: 599px) {
+@media screen and (max-width: 820px) {
     .checkbox-container {
-      display: none;
+        margin: auto;
+    }
+
+    .list-settings {
+        flex-direction: column;
     }
   }
 
