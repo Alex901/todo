@@ -92,3 +92,29 @@
     justify-content: center;
     height: 100%;
 }
+
+.drawer-header {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    gap: 5px;
+}
+
+.logo-title {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+}
+
+.logo-title img {
+    width: 100%;
+    max-width: 5%;
+    min-width: 26px;
+    position: relative;
+    top: -2px;
+}
+

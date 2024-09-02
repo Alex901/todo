@@ -94,7 +94,7 @@ const GroupModal = ({ isOpen, onClose }) => {
         if (confirmationAction === "leave-group") {
             leaveGroup(selectedGroup);
         } else if (confirmationAction === "delete-group") {
-            if(selectedGroup.members.length > 1) {
+            if (selectedGroup.members.length > 1) {
                 toast.error("You can't delete a group with members in it");
                 cancelConfirmation();
                 return;
@@ -218,7 +218,7 @@ const GroupModal = ({ isOpen, onClose }) => {
         } else {
             updateRole(group._id, member.member_id, newRole);
         }
-        
+
     };
 
     const handleSearchChange = (event, value) => {
@@ -261,9 +261,9 @@ const GroupModal = ({ isOpen, onClose }) => {
                         indicatorColor="secondary"
                         textColor="inherit"
                     >
-                        <Tab label="My Groups" />
-                        <Tab label="Create" />
-                        <Tab label="Find" />
+                        <Tab label="My Groups" classes={{ root: 'custom-tab' }} />
+                        <Tab label="Create" classes={{ root: 'custom-tab' }} />
+                        <Tab label="Find" classes={{ root: 'custom-tab' }} />
                     </Tabs>
                 </AppBar>
                 <TabPanel value={value} index={0}>

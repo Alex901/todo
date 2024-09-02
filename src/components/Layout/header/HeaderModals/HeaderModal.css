@@ -57,11 +57,7 @@ p.error {
     align-content: center;
 }
 
-@media (max-width: 768px) {
-    .register-modal-content {
-        width: 300px;
-    }
-}
+
 
 
 .modal-input {
@@ -138,5 +134,15 @@ p.error {
     justify-content: center;
     gap: 10px;
     margin: 10px 0;
+}
+@media (max-width: 768px) {
+    .register-modal-content {
+        width: 90%;
+    }
+}
+@media (max-width: 500px) {
+    .register-modal-content {
+        width: 80%;
+    }
 }
 

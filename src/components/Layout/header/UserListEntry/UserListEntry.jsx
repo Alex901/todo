@@ -63,8 +63,8 @@ const UserListEntry = ({ user }) => {
 
             {/* Delete Button Section */}
             <div className="delete-button-section">
-                <IconButton>
-                    <Icon path={mdiDelete} size={1} onClick={() => handleDelete(user)} />
+                <IconButton onClick={() => handleDelete(user)}>
+                    <Icon path={mdiDelete} size={1} />
                 </IconButton>
             </div>
         </div>

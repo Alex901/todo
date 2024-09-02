@@ -8,6 +8,7 @@ import logo from "../../../assets/Anvil_logo_v1.png";
 import LoginModal from '../header/HeaderModals/LoginModal';
 import RegisterModal from '../header/HeaderModals/RegisterModal';
 import SettingsModal from '../header/HeaderModals/SettingsModal';
+import FeedbackModal from '../header/HeaderModals/FeedbackModal';
 import { useUserContext } from "../../../contexts/UserContext";
 import { toast } from 'react-toastify';
 
@@ -19,6 +20,7 @@ const TodoDrawer = () => {
     const [isRegisterModalOpen, setRegisterModalOpen] = useState(false);
     const { loggedInUser, logout } = useUserContext();
     const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
+    const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
 
     const handleClick = () => {
         setClicked(true);
@@ -46,6 +48,7 @@ const TodoDrawer = () => {
         setLoginModalOpen(false);
         setRegisterModalOpen(false);
         setIsSettingsModalOpen(false);
+        setIsFeedbackModalOpen(false);
     };
 
     const handleSettingsClick = (event) => {
@@ -54,6 +57,11 @@ const TodoDrawer = () => {
         toggleDrawer(false)();
     };
 
+    const handleFeedbackClick = (event) => {
+        event.preventDefault();
+        setIsFeedbackModalOpen(true);
+        toggleDrawer(false)();
+    }
 
     const handleLogout = () => {
         logout();
@@ -69,12 +77,16 @@ const TodoDrawer = () => {
                 </button>
                 <Drawer anchor='bottom' open={isOpen} onClose={toggleDrawer(false)}>
                     <div className="drawer" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
-                        <div className="drawer-header" style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', width: '100%', gap: '10px' }}>
-                            <div className="logo-title" style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', margin:'auto', gap: '5px' }}>
-                                <img src={logo} alt="Logo" style={{ width: '100%', maxWidth: '5%', minWidth: '30px', position: 'relative', top: '-6px' }} />
-                                <Typography variant="h5" component="div" style={{  }}>
-                                    HabitForge
-                                </Typography>
+                        <div className="drawer-header">
+                            <div className="logo-title">
+                                <div>
+                                    <img src={logo} alt="Logo" />
+                                </div>
+                                <div>
+                                    <Typography variant="h5" component="div">
+                                        HabitForge version 0.1
+                                    </Typography>
+                                </div>
                             </div>
                         </div>
                         <div className="drawer-content">
@@ -86,7 +98,7 @@ const TodoDrawer = () => {
                                     </div>
                                     <hr></hr>
                                     <Typography variant="body1" component="p" className="menu-link" onClick={handleSettingsClick}>Settings</Typography>
-                                    <Typography variant="body1" component="p" className="menu-link">Feedback</Typography>
+                                    <Typography variant="body1" component="p" className="menu-link" onClick={handleFeedbackClick}>Feedback</Typography>
                                     <Typography variant="body1" component="p" className="menu-link">Help</Typography>
                                     <hr></hr>
                                     <div className="logout">
@@ -119,7 +131,8 @@ const TodoDrawer = () => {
                 </Drawer>
                 <RegisterModal isOpen={isRegisterModalOpen} onRequestClose={handleCloseModal} />
                 <LoginModal isOpen={isLoginModalOpen} onRequestClose={handleCloseModal} />
-                <SettingsModal isOpen={isSettingsModalOpen} onRequestClose={handleCloseModal} />
+                <SettingsModal isOpen={isSettingsModalOpen} onClose={handleCloseModal} />
+                <FeedbackModal isOpen={isFeedbackModalOpen} onClose={handleCloseModal} />
             </React.Fragment>
 
         </div>
