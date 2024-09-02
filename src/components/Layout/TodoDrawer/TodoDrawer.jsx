@@ -84,7 +84,7 @@ const TodoDrawer = () => {
                                 </div>
                                 <div>
                                     <Typography variant="h5" component="div">
-                                        HabitForge version 0.1
+                                        HabitForge
                                     </Typography>
                                 </div>
                             </div>
@@ -106,13 +106,7 @@ const TodoDrawer = () => {
                                     </div>
                                 </div>
                             ) : (
-
-
-
                                 <>
-
-
-
                                     <Typography variant="body1" component="p" className="menu-link" onClick={handleRegisterClick}>
                                         Register
                                     </Typography>
