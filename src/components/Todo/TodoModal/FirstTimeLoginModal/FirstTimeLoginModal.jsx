@@ -19,7 +19,12 @@ const FirstTimeLoginModal = ({ open, onClose }) => {
     const handleUsernameChange = (event) => {
         const value = event.target.value;
         setUsername(value);
-        if (userList.some(user => user.username.toLowerCase() === value.toLowerCase())) {
+    
+        // Filter out the logged-in user from the user list
+        const filteredUserList = userList.filter(user => user.username.toLowerCase() !== loggedInUser.username.toLowerCase());
+    
+        // Check if the username is already taken in the filtered list
+        if (filteredUserList.some(user => user.username.toLowerCase() === value.toLowerCase())) {
             setUsernameError('Username is already taken');
         } else {
             setUsernameError('');

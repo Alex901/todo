@@ -6,7 +6,8 @@ function CookieConsent() {
 
     useEffect(() => {
         const consent = localStorage.getItem('cookie-consent');
-        if (consent !== 'true') {
+        console.log('CookieConsent useEffect', consent);
+        if (consent !== 'true' || !consent) {
             document.body.classList.add('modal-open');
             setShowConsent(true);
         }
