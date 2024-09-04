@@ -1,0 +1,19 @@
+.notification-badge {
+    top: 1px;
+    margin-right: 20px;
+  }
+  
+  .notification-icon {
+    cursor: pointer;
+  }
+  
+
+  
+  .notification-item {
+    padding: 5px 0;
+    border-bottom: 1px solid #eee;
+  }
+  
+  .notification-item:last-child {
+    border-bottom: none;
+  }

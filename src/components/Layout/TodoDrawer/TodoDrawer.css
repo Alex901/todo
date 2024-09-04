@@ -65,9 +65,13 @@
 }
 
 .drawer-header {
+    display: flex;
+    justify-content: space-between; /* Space between logo-title and header-functions */
+    align-items: center;
+    width: 100%;
+    padding: 10px; /* Add padding for spacing */
     background-color: var(--primary-color);
     color: white;
-    height: 40px;
 }
 
 .drawer-header img {
@@ -77,12 +81,7 @@
     margin: auto;
 }
 
-@media screen and (min-width: 1024px) {
-    .mobile-nav-button {
-        display: none;
-    }
 
-}
 
 /* Drawer content */
 .drawer-content {
@@ -105,14 +104,27 @@
 .logo-title {
     display: flex;
     flex-direction: row;
-    justify-content: center;
     align-items: center;
-    gap: 5px;
+    gap: 10px;
 }
 
 .logo-title img {
     min-width: 26px;
     position: relative;
     top: -2px;
+}
+
+.header-functions {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Adjust gap as needed */
+    /* Add any additional styles for the header functions */
+}
+
+@media screen and (min-width: 1024px) {
+    .mobile-nav-button {
+        display: none;
+    }
+
 }
 

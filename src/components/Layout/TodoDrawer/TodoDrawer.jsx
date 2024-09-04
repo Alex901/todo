@@ -11,6 +11,7 @@ import SettingsModal from '../header/HeaderModals/SettingsModal';
 import FeedbackModal from '../header/HeaderModals/FeedbackModal';
 import { useUserContext } from "../../../contexts/UserContext";
 import { toast } from 'react-toastify';
+import NotificationsButton from '../header/HeaderButtons/NotificationButton/NotificationsButton';
 
 const TodoDrawer = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -87,6 +88,9 @@ const TodoDrawer = () => {
                                         HabitForge
                                     </Typography>
                                 </div>
+                            </div>
+                            <div className="header-functions">
+                                {/* Add your header functions here */}
                             </div>
                         </div>
                         <div className="drawer-content">

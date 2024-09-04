@@ -25,23 +25,23 @@ const Notification = ({ notificationData, type, message, timestamp }) => {
     if (type === 'group') {
         return (
             <div className={`notification-item ${isVisible ? '' : 'fade-out'}`}>
-                <p className='date'> {new Date(timestamp).toLocaleString()}</p>
-                
-                <p className="message">
-                    <span className="highlight">{firstWord}</span> 
-                    {" " + words.join(' ') + " "}
-                    <span className="highlight">{lastWord}</span>
-                </p>
-                
-                <div className="button-container">
-                <button className="notification-button accept-notify" onClick={handleAcceptGroupInvite}>
-                        <Icon path={mdiCheckCircle} size={1.2} />
-                    </button>
-                    <button className="notification-button decline-notify" onClick={handleDeclineGroupInvite}>
-                        <Icon path={mdiCloseCircle} size={1.2} />
-                    </button>
-                </div>
+            <p className='date'>{new Date(timestamp).toLocaleString()}</p>
+            
+            <p className="message">
+              <span className="highlight">{firstWord}</span> 
+              {" " + words.join(' ') + " "}
+              <span className="highlight">{lastWord}</span>
+            </p>
+            
+            <div className="button-container">
+              <button className="notification-button accept-notify" onClick={handleAcceptGroupInvite}>
+                <Icon path={mdiCheckCircle} size={1.2} />
+              </button>
+              <button className="notification-button decline-notify" onClick={handleDeclineGroupInvite}>
+                <Icon path={mdiCloseCircle} size={1.2} />
+              </button>
             </div>
+          </div>
         );
     } else if (type === 'feedback') {
         return (

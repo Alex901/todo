@@ -15,6 +15,8 @@ import { useTranslation } from "react-i18next";
 import { Menu, MenuItem, IconButton, Badge, Popper, ClickAwayListener } from '@mui/material';
 import ukFlag from "../../../assets/language_icons/uk-flag.png";
 import sweFlag from "../../../assets/language_icons/flag-sweden.png";
+import NotificationsButton from "./HeaderButtons/NotificationButton/NotificationsButton";
+import SelectLanguageButton from "./HeaderButtons/SelectLanguageButton/SelectLanguageButton";
 
 
 const Header = () => {
@@ -26,9 +28,7 @@ const Header = () => {
   const { userNotifications } = useNotificationContext();
   const { t, i18n } = useTranslation();
   const theme = useTheme();
-  const [languageAnchorEl, setLanguageAnchorEl] = useState(null);
   const [open, setOpen] = useState(false);
-  const notificationContainerRef = useRef(null);
 
   useEffect(() => {
     document.addEventListener('mousedown', handleClickAway);
@@ -66,27 +66,6 @@ const Header = () => {
     setIsRegisterModalOpen(false);
   }
 
-  const handleLogout = () => {
-    logout();
-    toast.success("Bye, see you soon!");
-  }
-
-  const handleLanguageMenuClick = (event) => {
-    setLanguageAnchorEl(event.currentTarget);
-  };
-
-
-  const handleLanguageMenuClose = () => {
-    setLanguageAnchorEl(null);
-  };
-
-  const handleLanguageChange = (language) => {
-    console.log(`Changing language to: ${language}`);
-    i18n.changeLanguage(language);
-    handleLanguageMenuClose();
-  };
-
-  const languageMenuOpen = Boolean(languageAnchorEl);
   return (
     <div className="mdl-layout header" style={{ overflow: "visible" }}>
       <header className="mdl-layout__header header_layout" style={{ backgroundColor: theme.palette.primary.main }}>
@@ -105,50 +84,13 @@ const Header = () => {
 
           {/* Right section */}
           <div style={{ display: 'flex', alignItems: 'center', position: 'relative', justifyContent: 'space-between', gap: isLoggedIn ? '12px' : '25px' }}>
-            <IconButton onClick={handleLanguageMenuClick} color="inherit" style={{ top: '1px', marginRight: !isLoggedIn ? '15px' : '0' }}>
-              <Icon className="language-icon" path={mdiTranslateVariant} size={1.2} />
-            </IconButton>
-            <Menu
-              anchorEl={languageAnchorEl}
-              open={languageMenuOpen}
-              onClose={handleLanguageMenuClose}
-              disableScrollLock={true}
-            >
-              <MenuItem onClick={() => handleLanguageChange('en')}>
-                <img src={ukFlag} alt="English" style={{ width: '20px', height: '20px', marginRight: '8px' }} />
-                {t('english')}
-              </MenuItem>
-              <MenuItem onClick={() => handleLanguageChange('sv')}>
-                <img src={sweFlag} alt="Swedish" style={{ width: '20px', height: '20px', marginRight: '8px' }} />
-                {t('swedish')}
-              </MenuItem>
-            </Menu>
+          <SelectLanguageButton isLoggedIn={isLoggedIn} />
             {isLoggedIn ? (
               <>
-                <Badge badgeContent={userNotifications.length} className="notification-badge" color="secondary" style={{ top: '1px', marginRight: '20px' }}>
-                  <Icon className='notification-icon' path={mdiBellOutline} size={1.2} onClick={handleClickNotification} />
-                </Badge>
-                <ClickAwayListener onClickAway={handleClickAway}>
-                <Popper open={open} anchorEl={anchorEl} placement='bottom-end' style={{ zIndex: 10000 }}>
-                  <div className={`notification-container ${open ? 'active' : ''}`}>
-                    {userNotifications.length > 0 ? (
-                      userNotifications.map((notification, index) => (
-                        <Notification
-                          key={index}
-                          notificationData={notification}
-                          type={notification.type}
-                          message={notification.message}
-                          timestamp={notification.createdAt}
-                        />
-                      ))
-                    ) : (
-
-                      <p style={{ padding: '0', margin: '0' }}>{t('no-notifications')}</p>
-
-                    )}
-                  </div>
-                </Popper>
-                </ClickAwayListener>
+                <NotificationsButton
+                  isLoggedIn={isLoggedIn}
+                  userNotifications={userNotifications}
+                />
                 <UserAvatar />
               </>
             ) : null}
