@@ -24,6 +24,14 @@
   cursor: default;
 }
 
+html, body {
+  margin: 0;
+  padding: 0;
+  width: 100%;
+  
+ overflow-x: hidden;
+}
+
 .modal-overlay {
   z-index: 10;
 }
@@ -185,3 +193,13 @@ h1 {
 }
 
 /* Remember Firefox! */
+
+@media screen and (max-width: 1024px) {
+  .content-card {
+      width: 100%;
+      min-height: fit-content;
+      box-sizing: border-box; /* Include padding and border in the element's total width and height */
+      padding: 2px; /* Add padding for a comfortable layout */
+      border: none;
+  }
+}

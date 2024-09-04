@@ -151,7 +151,7 @@ function App() {
   ];
 
 
- 
+
 
   const handleClickOutside = (event) => {
     if (event.target.classList.contains('color-swatch') || event.target.classList.contains('color-picker')) {
@@ -559,13 +559,15 @@ function App() {
               {isShowDetailsSelected && (
                 <div className="details-rows">
                   <div className="details-container">
-                    <div style={{ flex: 1 }}>
-                      <strong className="list-description-title">Description</strong>
-                      <br />
-                      <span className="list-description-text">
-                        {activeList?.description || 'No description'}
-                      </span>
-                    </div>
+                    {activeList?.description ? (
+                      <div style={{ flex: 1 }}>
+                        <strong className="list-description-title">Description</strong>
+                        <br />
+                        <span className="list-description-text">
+                          {activeList.description}
+                        </span>
+                      </div>
+                    ) : null}
                     <div className="details-grid" style={{ flex: 2 }}>
                       <Tooltip title="Owner of this project">
                         <div>
@@ -627,9 +629,9 @@ function App() {
               )}
               {isLoggedIn && (
                 <div className="functions-container" ref={containerRef} style={{
-                 
+
                 }}>
-                  <div className="progress-bar-container" style={{ width: `${progressBarWidth+20}%` }}>
+                  <div className="progress-bar-container" style={{ width: `${progressBarWidth + 20}%` }}>
                     <>
                       <ProgressArea tasksInActiveList={entriesInActiveList}>
                         {/* Children components or elements go here */}
