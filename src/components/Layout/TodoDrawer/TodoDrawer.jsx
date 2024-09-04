@@ -10,8 +10,10 @@ import RegisterModal from '../header/HeaderModals/RegisterModal';
 import SettingsModal from '../header/HeaderModals/SettingsModal';
 import FeedbackModal from '../header/HeaderModals/FeedbackModal';
 import { useUserContext } from "../../../contexts/UserContext";
+import { useNotificationContext } from '../../../contexts/NotificationContexts';
 import { toast } from 'react-toastify';
 import NotificationsButton from '../header/HeaderButtons/NotificationButton/NotificationsButton';
+import SelectLanguageButton from '../header/HeaderButtons/SelectLanguageButton/SelectLanguageButton';
 
 const TodoDrawer = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -20,6 +22,7 @@ const TodoDrawer = () => {
     const [isLoginModalOpen, setLoginModalOpen] = useState(false);
     const [isRegisterModalOpen, setRegisterModalOpen] = useState(false);
     const { loggedInUser, logout } = useUserContext();
+    const { userNotifications } = useNotificationContext();
     const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
     const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
 
@@ -90,7 +93,9 @@ const TodoDrawer = () => {
                                 </div>
                             </div>
                             <div className="header-functions">
-                                {/* Add your header functions here */}
+                               
+                                <SelectLanguageButton isLoggedIn={loggedInUser} isMobile={true} />
+                                <NotificationsButton isLoggedIn={loggedInUser} userNotifications={userNotifications} isMobile={true} />
                             </div>
                         </div>
                         <div className="drawer-content">
