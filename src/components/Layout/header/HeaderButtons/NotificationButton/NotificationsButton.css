@@ -1,7 +1,14 @@
+.icon-badge-container {
+  position: relative;
+  display: inline-block;
+}
+
 .notification-badge {
-    top: 1px;
-    margin-right: 20px;
-  }
+  position: absolute;
+  top: -15px;
+  right: -2px;
+  z-index: 10;
+}
   
   .notification-icon {
     cursor: pointer;

@@ -9,7 +9,7 @@ import ukFlag from '../../../../../assets/language_icons/uk-flag.png';
 import sweFlag from '../../../../../assets/language_icons/flag-sweden.png';
 import { useTranslation } from "react-i18next";
 
-const SelectLanguageButton = ({ isLoggedIn, isMobile }) => {
+const SelectLanguageButton = ({ isLoggedIn, isMobile, className }) => {
   const { t, i18n } = useTranslation();
   const [anchorEl, setAnchorEl] = useState(null);
 
@@ -28,8 +28,8 @@ const SelectLanguageButton = ({ isLoggedIn, isMobile }) => {
 
   return (
     <>
-      <IconButton onClick={handleLanguageMenuClick} color="inherit" className={`language-button ${!isLoggedIn ? 'logged-out' : ''}`}>
-        <Icon className="language-icon" path={mdiTranslateVariant} size={1.2} />
+      <IconButton onClick={handleLanguageMenuClick} color="inherit" className={`language-button ${className} ${!isLoggedIn ? 'logged-out' : ''}`}>
+        <Icon className={`notification-icon`} path={mdiTranslateVariant} size={1.2} />
       </IconButton>
       <Menu
         anchorEl={anchorEl}
@@ -37,13 +37,13 @@ const SelectLanguageButton = ({ isLoggedIn, isMobile }) => {
         onClose={handleLanguageMenuClose}
         disableScrollLock={true}
         anchorOrigin={{
-            vertical: isMobile ? 'top' : 'bottom',
-            horizontal: 'center',
-          }}
-          transformOrigin={{
-            vertical: isMobile ? 'bottom' : 'top',
-            horizontal: 'center',
-          }}
+          vertical: 'bottom',
+          horizontal: isMobile ? 'left' : 'center',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: isMobile ? 'right' : 'center',
+        }}
       >
         <MenuItem onClick={() => handleLanguageChange('en')}>
           <img src={ukFlag} alt="English" className="flag-icon" />

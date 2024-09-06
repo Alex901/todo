@@ -1,9 +1,8 @@
-import React, { useState } from 'react';
-import Drawer from '@mui/material/Drawer';
+import React, { useRef, useState, useEffect } from 'react';
+import { Drawer, IconButton } from '@mui/material';
 import Button from '@mui/material/Button';
 import Typography from '@mui/material/Typography';
 import Link from '@mui/material/Link';
-import './TodoDrawer.css';
 import logo from "../../../assets/Anvil_logo_v1.png";
 import LoginModal from '../header/HeaderModals/LoginModal';
 import RegisterModal from '../header/HeaderModals/RegisterModal';
@@ -16,7 +15,10 @@ import NotificationsButton from '../header/HeaderButtons/NotificationButton/Noti
 import SelectLanguageButton from '../header/HeaderButtons/SelectLanguageButton/SelectLanguageButton';
 import Badge from '@mui/material/Badge';
 import { styled } from '@mui/material/styles';
+import Icon from '@mdi/react';
+import { mdiLogout, mdiLogin, mdiAbTesting, mdiAccountPlus, mdiHelpCircle, mdiCommentQuote, mdiCog } from '@mdi/js';
 
+import './TodoDrawer.css';
 const TodoDrawer = () => {
     const [isOpen, setIsOpen] = useState(false);
     const [opacity, setOpacity] = useState(1);
@@ -27,6 +29,27 @@ const TodoDrawer = () => {
     const { userNotifications } = useNotificationContext();
     const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
     const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
+    const iconContainerRef = useRef(null);
+    const drawerRef = useRef(null);
+    const buttonRef = useRef(null);
+    const hasNotifications = userNotifications.length > 0;
+
+    useEffect(() => {
+        const iconContainer = iconContainerRef.current;
+        if (iconContainer) {
+            const iconCount = iconContainer.children.length;
+            const columns = Math.ceil(iconCount / 4);
+            iconContainer.style.gridTemplateColumns = `repeat(${columns}, 1fr)`;
+        }
+    }, [loggedInUser]);
+
+    useEffect(() => {
+        if (drawerRef.current && buttonRef.current) {
+          const drawerHeight = drawerRef.current.getBoundingClientRect().height;
+          console.log(drawerHeight);   
+          buttonRef.current.style.height = `${drawerHeight}px`;
+        }
+      }, [loggedInUser, isOpen]);
 
     const StyledBadge = styled(Badge)(({ theme }) => ({
         '& .MuiBadge-badge': {
@@ -89,59 +112,51 @@ const TodoDrawer = () => {
             <React.Fragment>
 
                 {/* <StyledBadge className='badge' badgeContent={userNotifications.length} color="secondary"> */}
-                    <button className="mobile-nav-button" onClick={handleClick} style={{ opacity: opacity, transition: 'opacity 10s' }}>
-                        <img src={logo} alt="Logo" />
-                    </button>
+                <button ref={buttonRef} className={`mobile-nav-button ${hasNotifications ? 'has-notifications' : ''}`} onClick={handleClick}>
+
+                </button>
                 {/* </StyledBadge> */}
 
-                <Drawer anchor='bottom' open={isOpen} onClose={toggleDrawer(false)}>
-                    <div className="drawer" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
-                        <div className="drawer-header">
-                            <div className="logo-title">
-                                <div>
-                                    <img src={logo} alt="Logo" />
-                                </div>
-                                <div>
-                                    <Typography variant="h5" component="div">
-                                        HabitForge
-                                    </Typography>
-                                </div>
-                            </div>
-                            <div className="header-functions">
-                                <SelectLanguageButton isLoggedIn={loggedInUser} isMobile={true} />
-                                <NotificationsButton isLoggedIn={loggedInUser} userNotifications={userNotifications} isMobile={true} />
-                            </div>
-                        </div>
-                        <div className="drawer-content">
+                <Drawer anchor='right' open={isOpen} onClose={toggleDrawer(false)} className="custom-drawer">
+                    <div ref={drawerRef} className="drawer-content">
+                        <div className="icon-container" ref={iconContainerRef}>
+
                             {loggedInUser ? (
-                                <div style={{ textAlign: 'center' }}>
-                                    <div className="user-details">
-                                        <div className="user-type" style={{ color: 'white', textAlign: 'center' }}> {loggedInUser.role} </div>
-                                        <div className="user-somethingcool" style={{ color: 'white', textAlign: 'center' }}> {loggedInUser.email} </div>
-                                    </div>
-                                    <hr></hr>
-                                    <Typography variant="body1" component="p" className="menu-link" onClick={handleSettingsClick}>Settings</Typography>
-                                    <Typography variant="body1" component="p" className="menu-link" onClick={handleFeedbackClick}>Feedback</Typography>
-                                    <Typography variant="body1" component="p" className="menu-link">Help</Typography>
-                                    <hr></hr>
-                                    <div className="logout">
-                                        <Typography variant="body1" component="p" className="menu-link" style={{ color: 'white' }} onClick={handleLogout}>Logout</Typography>
-                                    </div>
-                                </div>
+                                <>
+                                    <NotificationsButton
+                                        isLoggedIn={true}
+                                        userNotifications={userNotifications}
+                                        isMobile={true}
+                                        className="drawer-icon"
+                                    />
+                                    <IconButton onClick={handleFeedbackClick} className="drawer-icon">
+                                        <Icon path={mdiCommentQuote} size={1.2} color="black" />
+                                    </IconButton>
+
+                                    <IconButton onClick={handleSettingsClick} className="drawer-icon">
+                                        <Icon path={mdiCog} size={1.2} color="black" />
+                                    </IconButton>
+                                    
+                                </>
                             ) : (
                                 <>
-                                    <Typography variant="body1" component="p" className="menu-link" onClick={handleRegisterClick}>
-                                        Register
-                                    </Typography>
-                                    <Typography variant="body1" component="p" className="menu-link" onClick={handleLoginClick}>
-                                        Login
-                                    </Typography>
-                                    <hr />
-                                    <Typography variant="body1" component="p" style={{ color: 'white' }}>
-                                        Something very important
-                                    </Typography>
+                                    <IconButton onClick={handleRegisterClick} className="drawer-icon">
+                                        <Icon path={mdiAccountPlus} size={1.2} color="black" />
+                                    </IconButton>
+                                    <IconButton onClick={() => alert("coming soon")} className="drawer-icon">
+                                        <Icon path={mdiHelpCircle} size={1.2} color="black" />
+                                    </IconButton>
                                 </>
                             )}
+                            <SelectLanguageButton
+                            className="drawer-icon" />
+                        </div>
+                        <hr className='separator-drawer' />
+                        <div className="login-logout-container">
+
+                            <IconButton onClick={loggedInUser ? handleLogout : handleLoginClick} className="drawer-icon">
+                                <Icon path={loggedInUser ? mdiLogout : mdiLogin} size={1.2} color="black" />
+                            </IconButton>
                         </div>
                     </div>
 

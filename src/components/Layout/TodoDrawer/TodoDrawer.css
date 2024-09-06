@@ -1,11 +1,11 @@
 .mobile-nav-button {
     position: fixed;
-    bottom: 50%;
-    right: 80%;
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    background-color: var(--primary-color);
+    top: 30%;
+    right: 0%;
+    width: 20px;
+    height: 45%;
+    border-radius: 10px 0 0 10px;
+    background-color: rgb(255, 255, 255);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -13,121 +13,93 @@
     border: none;
     cursor: pointer;
     z-index: 5;
+    border: 0px solid #787679;
+    border-right: none;
     box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.25);
-    transition: opacity 0.3s ease;
+    transition: background-color 0.3s, box-shadow 0.3s, transform 0.3s;
 }
 
-.mobile-nav-button img {
-    width: 30px;
-    height: 30px;
-    object-fit: contain;
-    margin: auto;
+.mobile-nav-button.has-notifications {
+    box-shadow: 1px 10px 20px rgba(255, 0, 0, 1); /* Red box-shadow for notifications */
+    animation: pulse 1.5s infinite;
 }
 
-.mobile-nav-button img {
-    width: 30px;
-    height: 30px;
-    object-fit: contain;
-    margin: auto;
+.custom-drawer .MuiDrawer-paper {
+    position: fixed; /* Ensure the drawer is fixed */
+    top: 30%; /* Align with the button's top position */
+    right: 0;
+    width: auto; /* Adjust width as needed */
+    height: auto; /* Adjust height to fit content */
+    max-height: 100%; /* Ensure it doesn't exceed screen height */
+    background-color: #f5f5f5; /* Adjust background color as needed */
+    transition: transform 0.3s ease-in-out;
+    transform: translateX(100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center; /* Center content vertically */
+    border-radius: 10px 0 0 10px;
+    border: 2px solid #6d6a6e;
+    border-right: none;
+    z-index: 4; /* Ensure it appears below the button */
+}
+
+.separator-drawer {
+    width: 100%;
+    height: 3px;
+    background-color: rgba(109, 106, 110, 1); 
+    padding: 0;
+    margin: 0;
+}
+
+.icon-container {
+    display: grid;
+    gap: 5px;
+    padding: 5px;
+}
+
+.drawer-icon {
+    width: 40px;
+    height: 40px;
+    margin: 10px;
+    cursor: pointer;
+    border-radius: 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: #f5f5f5;
+    border: 2px solid #6d6a6e;
+    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.25);
+}
+
+.login-logout-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 0; /* Push to the bottom */
+    padding-top: 5px; /* Adjust padding as needed */
+}
+
+.custom-drawer.MuiDrawer-paperAnchorRight {
+    transform: translateX(0);
+}
+
+.drawer-content {
+    padding: 8px; /* Adjust padding as needed */
 }
 
 .mobile-nav-button:active {
     transform: scale(0.95);
 }
 
-.drawer {
-    overflow: hidden;
+.mobile-nav-button:active {
+    transform: scale(0.95);
 }
 
-.drawer-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    padding: 20px;
-    z-index: 10;
-    background-color: #9240b5;
-    width: 100%;
-    color: white;
-}
-
-.drawer-content p {
-    margin: 2px;
-    color: var(--secondary-color);
-}
-
-.drawer-content p {
-    margin: 2px;
-    transition: transform 0.3s ease;
-  }
-  
-  .drawer-content p:active {
-    transform: scale(0.85);
-  }
-
-
-
-.drawer-content hr {
-    width: 60%;
-    margin: auto;
-    color: rgb(89, 84, 84);
-}
-
-.drawer-header {
-    display: flex;
-    justify-content: space-between; /* Space between logo-title and header-functions */
-    align-items: center;
-    width: 100%;
-    padding: 10px 20px; /* Add padding for spacing */
-    background-color: var(--primary-color);
-    color: white;
-}
-
-.drawer-header img {
-    width: 30px;
-    height: 30px;
-    object-fit: contain;
-    margin: auto;
-}
-
-
-
-/* Drawer content */
-.drawer-content {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100%;
-}
-
-.drawer-header {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-evenly;
-    width: 100%;
-    gap: 5px;
-}
-
-.logo-title {
-    display: flex;
-    flex-direction: row;
-    gap: 10px;
-     /* Add margin to the left */
-}
-
-
-.logo-title img {
-    min-width: 26px;
-    position: relative;
-    top: -2px;
-}
-
-.header-functions {
-    display: flex;
-    align-items: center;
-    margin-left: 20px;
+@media (max-height: 600px) {
+    .icon-container {
+        flex-wrap: wrap;
+        justify-content: space-around;
+    }
 }
 
 @media screen and (min-width: 1024px) {
@@ -137,3 +109,17 @@
 
 }
 
+@keyframes pulse {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 rgba(30, 30, 30, 0.7);
+    }
+    70% {
+        transform: scale(1.0);
+        box-shadow: 0 0 10px rgba(255, 0, 0, 0.7);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 rgba(255, 0, 0, 0.7);
+    }
+}

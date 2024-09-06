@@ -9,7 +9,7 @@ import { useTranslation } from "react-i18next";
 import Notification from '../../Notification/Notification';
 import './NotificationsButton.css';
 
-const NotificationsButton = ({ isLoggedIn, userNotifications, isMobile }) => {
+const NotificationsButton = ({ isLoggedIn, userNotifications, isMobile, className }) => {
   const { t } = useTranslation();
   const [anchorEl, setAnchorEl] = useState(null);
 
@@ -28,15 +28,16 @@ const NotificationsButton = ({ isLoggedIn, userNotifications, isMobile }) => {
           <IconButton
             onClick={handleNotificationMenuClick}
             color="inherit"
-            className="notification-icon"
+            className={`notification-button ${className}`}
           >
-            <Badge
-              badgeContent={userNotifications.length}
-              color="secondary"
-              className="notification-badge"
-            >
+            <div className="icon-badge-container">
               <Icon path={mdiBellOutline} size={1.2} />
-            </Badge>
+              <Badge
+                badgeContent={userNotifications.length}
+                color="secondary"
+                className="notification-badge"
+              />
+            </div>
           </IconButton>
           <Menu
             anchorEl={anchorEl}
@@ -45,11 +46,11 @@ const NotificationsButton = ({ isLoggedIn, userNotifications, isMobile }) => {
             disableScrollLock={true}
             anchorOrigin={{
               vertical: isMobile ? 'top' : 'bottom',
-              horizontal: 'center',
+              horizontal: isMobile ? 'left' : 'center',
             }}
             transformOrigin={{
-              vertical: isMobile ? 'bottom' : 'top',
-              horizontal: 'center',
+              vertical: 'bottom',
+              horizontal: isMobile ? 'right' : 'center',
             }}
             PaperProps={{
               style: {
