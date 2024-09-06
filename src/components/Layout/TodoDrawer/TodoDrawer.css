@@ -1,7 +1,7 @@
 .mobile-nav-button {
     position: fixed;
-    bottom: 200px;
-    right: 100px;
+    bottom: 50%;
+    right: 80%;
     width: 60px;
     height: 60px;
     border-radius: 50%;
@@ -15,6 +15,13 @@
     z-index: 5;
     box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.25);
     transition: opacity 0.3s ease;
+}
+
+.mobile-nav-button img {
+    width: 30px;
+    height: 30px;
+    object-fit: contain;
+    margin: auto;
 }
 
 .mobile-nav-button img {

@@ -14,6 +14,8 @@ import { useNotificationContext } from '../../../contexts/NotificationContexts';
 import { toast } from 'react-toastify';
 import NotificationsButton from '../header/HeaderButtons/NotificationButton/NotificationsButton';
 import SelectLanguageButton from '../header/HeaderButtons/SelectLanguageButton/SelectLanguageButton';
+import Badge from '@mui/material/Badge';
+import { styled } from '@mui/material/styles';
 
 const TodoDrawer = () => {
     const [isOpen, setIsOpen] = useState(false);
@@ -25,6 +27,15 @@ const TodoDrawer = () => {
     const { userNotifications } = useNotificationContext();
     const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
     const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
+
+    const StyledBadge = styled(Badge)(({ theme }) => ({
+        '& .MuiBadge-badge': {
+            right: -3,
+            top: 13,
+            border: `2px solid ${theme.palette.background.paper}`,
+            padding: '0 4px',
+        },
+    }));
 
     const handleClick = () => {
         setClicked(true);
@@ -76,9 +87,13 @@ const TodoDrawer = () => {
     return (
         <div>
             <React.Fragment>
-                <button className="mobile-nav-button" onClick={handleClick} style={{ opacity: opacity, transition: 'opacity 10s' }}>
-                    <img src={logo} alt="Logo" />
-                </button>
+
+                {/* <StyledBadge className='badge' badgeContent={userNotifications.length} color="secondary"> */}
+                    <button className="mobile-nav-button" onClick={handleClick} style={{ opacity: opacity, transition: 'opacity 10s' }}>
+                        <img src={logo} alt="Logo" />
+                    </button>
+                {/* </StyledBadge> */}
+
                 <Drawer anchor='bottom' open={isOpen} onClose={toggleDrawer(false)}>
                     <div className="drawer" style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', width: '100%' }}>
                         <div className="drawer-header">
@@ -93,7 +108,6 @@ const TodoDrawer = () => {
                                 </div>
                             </div>
                             <div className="header-functions">
-                               
                                 <SelectLanguageButton isLoggedIn={loggedInUser} isMobile={true} />
                                 <NotificationsButton isLoggedIn={loggedInUser} userNotifications={userNotifications} isMobile={true} />
                             </div>

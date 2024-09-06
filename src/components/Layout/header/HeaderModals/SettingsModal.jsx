@@ -14,7 +14,7 @@ const SettingsModal = ({ isOpen, onClose }) => {
     const [selectedTab, setSelectedTab] = useState(0);
     const { loggedInUser, updateProfilePicture, editUser, userList, deleteUser } = useUserContext();
     const [hasChanges, setHasChanges] = useState(false);
-    const [formData, setFormData] = useState({ ...loggedInUser });
+    const [formData, setFormData] = useState({ });
     const { feedbackList } = useFeedbackContext();
     const [imageSizeError, setImageSizeError] = useState('');
     const [newPassword, setNewPassword] = useState('');
@@ -23,6 +23,12 @@ const SettingsModal = ({ isOpen, onClose }) => {
     const [anchorEl, setAnchorEl] = useState(null);
     const [popperOpen, setPopperOpen] = useState(false);
     const [popperMode, setPopperMode] = useState('');
+
+    useEffect(() => {
+        if (loggedInUser) {
+          setFormData({ ...loggedInUser });
+        }
+      }, [loggedInUser]);
 
     const types = [...new Set(feedbackList.map(feedback => feedback.type))];
 

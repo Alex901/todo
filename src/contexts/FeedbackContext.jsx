@@ -35,10 +35,10 @@ const FeedbackProvider = ({ children }) => {
 
 
     const fetchFeedback = async () => {
-        console.log('Fetching feedback...');
+        //console.log('Fetching feedback...');
         try {
             const response = await axios.get(`${BASE_URL}/feedback/getAll`, { withCredentials: true });
-            console.log('Feedback fetched:', response.data);
+            //console.log('Feedback fetched:', response.data);
             setFeedbackList(response.data);
         } catch (error) {
             console.error('Error fetching feedback:', error);
