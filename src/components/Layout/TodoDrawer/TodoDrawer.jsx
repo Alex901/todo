@@ -124,7 +124,7 @@ const TodoDrawer = () => {
                 {/* <StyledBadge className='badge' badgeContent={userNotifications.length} color="secondary"> */}
                 <button 
                 ref={buttonRef} 
-                className={`mobile-nav-button ${hasNotifications ? 'has-notifications' : ''} ${open ? 'drawer-open' : ''}`}
+                className={`mobile-nav-button ${hasNotifications && !isOpen ? 'has-notifications' : ''} ${isOpen ? 'drawer-open' : ''}`}
                 onClick={handleClick}>
 
                 </button>

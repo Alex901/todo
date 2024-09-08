@@ -10,6 +10,7 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import Icon from '@mdi/react';
 import { mdiDelete, mdiDeleteEmpty } from '@mdi/js';
 import { useTranslation } from "react-i18next";
+import BaseModal from './BaseModal/BaseModal';
 
 ReactModal.setAppElement('#root');
 
@@ -219,7 +220,7 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
 
     return (
 
-        <ReactModal
+        <BaseModal
             isOpen={isOpen}
             onRequestClose={handleRequestClose}
             contentLabel="Add new todo task"
@@ -464,7 +465,7 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
                     <button className='modal-button' type='button'> Submit </button>
                 </form>
             )}
-        </ReactModal>
+        </BaseModal>
 
     )
 }

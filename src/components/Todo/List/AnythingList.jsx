@@ -15,7 +15,7 @@ import { MagnifyingGlass } from "react-loader-spinner";
 import {
     FormControl, InputLabel, MenuItem, Select, IconButton,
     Checkbox, FormControlLabel, Autocomplete, TextField, Stack,
-    Chip
+    Chip, useMediaQuery
 } from '@mui/material';
 
 const AnythingList = ({ type }) => {
@@ -35,6 +35,9 @@ const AnythingList = ({ type }) => {
     const [originalTodoList, setOriginalTodoList] = useState([]);
     const [isTagsOpen, setIsTagsOpen] = useState(false);
     const [isFiltering, setIsFiltering] = useState(false);
+    const [keepMenuOpen, setKeepMenuOpen] = useState(false);
+
+    const isMobile = useMediaQuery('(max-width: 800px)');
 
     const priorityMapping = {
         'VERY LOW': 1,
@@ -156,11 +159,15 @@ const AnythingList = ({ type }) => {
     const sortedTodoList = useMemo(() => {
         const sortedList = [...filteredTodoList].sort((a, b) => {
             if (selectedOptionSort.value === 'deadline') {
-                return customSortFunction(a, b, !isAscending);
+                return isAscending ? customSortFunction(a, b, isAscending) : customSortFunction(b, a, !isAscending);
+            } else if (selectedOptionSort.value === 'new') { //This is messy
+                return;
+            } else if (selectedOptionSort.value === 'urgent') {
+                return;
             }
-            return sortFunctions[selectedOptionSort.value](a, b, !isAscending);
+            return isAscending ? sortFunctions[selectedOptionSort.value](a, b, isAscending) : sortFunctions[selectedOptionSort.value](b, a, !isAscending);
         });
-        return isAscending ? sortedList.reverse() : sortedList;
+        return sortedList;
     }, [filteredTodoList, selectedOptionSort, isAscending]);
 
 
@@ -204,6 +211,16 @@ const AnythingList = ({ type }) => {
         setSelectedOptionSort(selectedOption.target);
     }
 
+    const handleSortChangeWrapper = (event) => {
+        console.log("DEBUG -- event.target.value: ", event);
+        const validSortOptions = ['created', 'task', 'priority', 'steps', 'difficulty', 'dueDate', 'estimatedTime', 'lastUpdated'];
+        if (validSortOptions.includes(event.target.value)) {
+            handleSortChange(event);
+        } 
+        event.stopPropagation();
+    };
+    
+
     const toggleSortOrder = () => {
         const newOrder = !isAscending;
         updateSettings('ascending', newOrder);
@@ -225,8 +242,9 @@ const AnythingList = ({ type }) => {
     }
 
     const toggleNewOnly = () => {
-        setIsNewOnly(!isNewOnly);
-        updateSettings('newOnly', !isNewOnly);
+        const newIsNewOnly = !isNewOnly;
+        setIsNewOnly(newIsNewOnly);
+        updateSettings('newOnly', newIsNewOnly);
     }
 
     const handleTagChange = (event, values) => {
@@ -235,12 +253,38 @@ const AnythingList = ({ type }) => {
         setIsTagsOpen(true)
     };
 
+    const handleMenuCheckboxClick = (event) => {
+        console.log("DEBUG -- event: ", event);
+        event.stopPropagation();
+    }
+
+    const renderValue = (selected) => {
+        const validSortOptions = {
+            created: 'Created',
+            task: 'Name',
+            priority: 'Priority',
+            steps: 'Steps',
+            difficulty: 'Difficulty',
+            dueDate: 'Deadline',
+            estimatedTime: 'Time',
+            lastUpdated: 'Updated'
+        };
+        return validSortOptions[selected] || 'Created';
+    };
+
+    // const MenuProps = {
+    //     onClose: (event) => {
+    //         // Prevent the menu from closing
+    //         event.preventDefault();
+    //     }
+    // };
+
     //Create the todo lists
     return (
         <div className="list-container">
             {isLoggedIn ? <div className={`title-${type}`}></div> : null}
             {isLoggedIn && (
-                <div className={`list-settings list-settings-${type}`} style={{ display: 'flex', justifyContent: 'space-between', border: '2px solid gray' }}>
+                <div className={`list-settings list-settings-${type}`} style={{ display: 'flex',  border: '2px solid gray' }}>
                     <div className="search-container" style={{ margin: '7px 20px' }}>
 
                         <Stack spacing={1} sx={{}}>
@@ -296,39 +340,43 @@ const AnythingList = ({ type }) => {
                     </div>
 
                     <div className="checkbox-row">
-                    <div className="checkbox-container" style={{ }}>
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    checked={isUrgentOnly}
-                                    onChange={toggleUrgentTasks}
-                                />
-                            }
-                            label="Urgent"
-                        />
-                    </div>
-                    <div className="checkbox-container" style={{ }}>
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    checked={isDeadlineOnly}
-                                    onChange={toggleDeadlineOnly}
-                                />
-                            }
-                            label="Deadline this week"
-                        />
-                    </div>
-                    <div className="checkbox-container" style={{}}>
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    checked={isNewOnly}
-                                    onChange={toggleNewOnly}
-                                />
-                            }
-                            label="New"
-                        />
-                    </div>
+                        {!isMobile && (
+                            <>
+                                <div className="checkbox-container" style={{}}>
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox
+                                                checked={isUrgentOnly}
+                                                onChange={toggleUrgentTasks}
+                                            />
+                                        }
+                                        label="Urgent"
+                                    />
+                                </div>
+                                <div className="checkbox-container" style={{}}>
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox
+                                                checked={isDeadlineOnly}
+                                                onChange={toggleDeadlineOnly}
+                                            />
+                                        }
+                                        label="Deadline this week"
+                                    />
+                                </div>
+                                <div className="checkbox-container" style={{}}>
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox
+                                                checked={isNewOnly}
+                                                onChange={toggleNewOnly}
+                                            />
+                                        }
+                                        label="New"
+                                    />
+                                </div>
+                            </>
+                        )}
                     </div>
                     <div className="Select-sorting-order" style={{ display: 'flex', flexDirection: 'row', margin: '3px 15px' }}>
                         <FormControl variant="outlined" style={{ minWidth: 150 }}>
@@ -336,8 +384,10 @@ const AnythingList = ({ type }) => {
                             <Select
                                 labelId="sorting-order-label"
                                 defaultValue="created"
-                                onChange={handleSortChange}
+                                onChange={handleSortChangeWrapper}
                                 size="small"
+                                renderValue={renderValue}
+                                // MenuProps={MenuProps}
                                 inputlabelprops={{
                                     style: { color: type === 'doing' ? 'black' : 'white' },
                                 }}
@@ -350,6 +400,50 @@ const AnythingList = ({ type }) => {
                                 <MenuItem value="dueDate" name="dueDate">Deadline</MenuItem>
                                 <MenuItem value="estimatedTime" name="estimatedTime">Time</MenuItem>
                                 <MenuItem value="lastUpdated" name="lastUpdated">Updated</MenuItem>
+                                {isMobile && [
+                                    <MenuItem key="urgent" value="urgent" name="urgent" onClick={handleMenuCheckboxClick}>
+                                        <FormControlLabel
+                                            control={
+                                                <Checkbox
+                                                checked={isUrgentOnly}
+                                                onChange={(e) => {
+                                                    handleMenuCheckboxClick(e);
+                                                    toggleUrgentTasks(e);
+                                                }}
+                                            />
+                                            }
+                                            label="Urgent"
+                                        />
+                                    </MenuItem>,
+                                    <MenuItem key="deadline" value="deadline" name="deadline" onClick={handleMenuCheckboxClick}>
+                                        <FormControlLabel
+                                            control={
+                                                <Checkbox
+                                                checked={isDeadlineOnly}
+                                                onChange={(e) => {
+                                                    handleMenuCheckboxClick(e);
+                                                    toggleDeadlineOnly(e);
+                                                }}
+                                            />
+                                            }
+                                            label="Deadline this week"
+                                        />
+                                    </MenuItem>,
+                                    <MenuItem key="new" value="new" name="new" onClick={handleMenuCheckboxClick}>
+                                        <FormControlLabel
+                                            control={
+                                                <Checkbox
+                                                checked={isNewOnly}
+                                                onChange={(e) => {
+                                                    handleMenuCheckboxClick(e);
+                                                    toggleNewOnly(e);
+                                                }}
+                                            />
+                                            }
+                                            label="New"
+                                        />
+                                    </MenuItem>
+                                ]}
                             </Select>
                         </FormControl>
 
