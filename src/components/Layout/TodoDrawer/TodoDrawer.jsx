@@ -16,7 +16,9 @@ import SelectLanguageButton from '../header/HeaderButtons/SelectLanguageButton/S
 import Badge from '@mui/material/Badge';
 import { styled } from '@mui/material/styles';
 import Icon from '@mdi/react';
-import { mdiLogout, mdiLogin, mdiAbTesting, mdiAccountPlus, mdiHelpCircle, mdiCommentQuote, mdiCog } from '@mdi/js';
+import { mdiLogout, mdiLogin, mdiAbTesting, mdiAccountPlus, mdiHelpCircle, mdiCommentQuote, mdiCog, mdiServerPlus } from '@mdi/js';
+import TodoButton from '../../Todo/TodoButton/TodoButton';
+import TodoModal from '../../Todo/TodoModal/TodoModal';
 
 import './TodoDrawer.css';
 const TodoDrawer = () => {
@@ -29,6 +31,7 @@ const TodoDrawer = () => {
     const { userNotifications } = useNotificationContext();
     const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
     const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
+    const [isTodoModalOpen, setIsTodoModalOpen] = useState(false);
     const iconContainerRef = useRef(null);
     const drawerRef = useRef(null);
     const buttonRef = useRef(null);
@@ -87,6 +90,7 @@ const TodoDrawer = () => {
         setRegisterModalOpen(false);
         setIsSettingsModalOpen(false);
         setIsFeedbackModalOpen(false);
+        setIsTodoModalOpen(false);
     };
 
     const handleSettingsClick = (event) => {
@@ -101,6 +105,12 @@ const TodoDrawer = () => {
         toggleDrawer(false)();
     }
 
+    const handleTodoClick = (event) => {
+        event.preventDefault();
+        setIsTodoModalOpen(true);
+        toggleDrawer(false)();
+    }
+
     const handleLogout = () => {
         logout();
         toast.success("Bye, see you soon!");
@@ -112,22 +122,34 @@ const TodoDrawer = () => {
             <React.Fragment>
 
                 {/* <StyledBadge className='badge' badgeContent={userNotifications.length} color="secondary"> */}
-                <button ref={buttonRef} className={`mobile-nav-button ${hasNotifications ? 'has-notifications' : ''}`} onClick={handleClick}>
+                <button 
+                ref={buttonRef} 
+                className={`mobile-nav-button ${hasNotifications ? 'has-notifications' : ''} ${open ? 'drawer-open' : ''}`}
+                onClick={handleClick}>
 
                 </button>
                 {/* </StyledBadge> */}
 
-                <Drawer anchor='right' open={isOpen} onClose={toggleDrawer(false)} className="custom-drawer">
+                <Drawer anchor='right' 
+                open={isOpen} 
+                onClose={toggleDrawer(false)} 
+                className="custom-drawer">
                     <div ref={drawerRef} className="drawer-content">
+                        
                         <div className="icon-container" ref={iconContainerRef}>
 
                             {loggedInUser ? (
                                 <>
+                                    <IconButton onClick={handleTodoClick} className="drawer-icon add-entry">
+                                        <Icon path={mdiServerPlus} size={1.2} color="black" />
+                                    </IconButton>
+                                    
+
                                     <NotificationsButton
                                         isLoggedIn={true}
                                         userNotifications={userNotifications}
                                         isMobile={true}
-                                        className="drawer-icon"
+                                        className={`drawer-icon ${hasNotifications ? 'has-notifications' : ''}`}
                                     />
                                     <IconButton onClick={handleFeedbackClick} className="drawer-icon">
                                         <Icon path={mdiCommentQuote} size={1.2} color="black" />
@@ -165,6 +187,7 @@ const TodoDrawer = () => {
                 <LoginModal isOpen={isLoginModalOpen} onRequestClose={handleCloseModal} />
                 <SettingsModal isOpen={isSettingsModalOpen} onClose={handleCloseModal} />
                 <FeedbackModal isOpen={isFeedbackModalOpen} onClose={handleCloseModal} />
+                <TodoModal isOpen={isTodoModalOpen} onRequestClose={handleCloseModal} />
             </React.Fragment>
 
         </div>

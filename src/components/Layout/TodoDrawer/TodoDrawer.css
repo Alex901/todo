@@ -19,7 +19,7 @@
     transition: background-color 0.3s, box-shadow 0.3s, transform 0.3s;
 }
 
-.mobile-nav-button.has-notifications {
+.has-notifications {
     box-shadow: 1px 10px 20px rgba(255, 0, 0, 1); /* Red box-shadow for notifications */
     animation: pulse 1.5s infinite;
 }
@@ -71,6 +71,10 @@
     box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.25);
 }
 
+.drawer-icon.add-entry {
+    animation: pulse2 5s infinite;
+}
+
 .login-logout-container {
     display: flex;
     flex-direction: column;
@@ -115,11 +119,26 @@
         box-shadow: 0 0 0 rgba(30, 30, 30, 0.7);
     }
     70% {
-        transform: scale(1.0);
+        transform: scale(1.02);
         box-shadow: 0 0 10px rgba(255, 0, 0, 0.7);
     }
     100% {
         transform: scale(1);
         box-shadow: 0 0 0 rgba(255, 0, 0, 0.7);
+    }
+}
+
+@keyframes pulse2 {
+    0% {
+        transform: scale(1);
+        box-shadow: 0 0 0 rgba(53, 81, 44, 0.7);
+    }
+    70% {
+        transform: scale(1.01);
+        box-shadow: 0 0 10px rgba(67, 216, 26, 0.7);
+    }
+    100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 rgba(53, 81, 44, 0.7);
     }
 }
