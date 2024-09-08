@@ -456,7 +456,7 @@ function App() {
         <CookieConsent />
       </>
       {isMobile && (
-                <BottomDrawer isOpen={isDrawerOpen} onClose={handleCloseDrawer} > test </BottomDrawer>
+                <BottomDrawer isOpen={isDrawerOpen} onClose={handleCloseDrawer} > Coming soon, but much nicer than this trash :) </BottomDrawer>
               )}
       {isLoggedIn && (
 
