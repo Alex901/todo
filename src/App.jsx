@@ -6,7 +6,7 @@ import AnythingList from './components/Todo/List/AnythingList'
 import { useTodoContext } from './contexts/todoContexts'
 import { useUserContext } from './contexts/UserContext'
 import { useGroupContext } from './contexts/GroupContexts'
-//import Select from 'react-select'
+import { useMediaQuery } from '@mui/material';
 import CreateListModal from './components/Todo/TodoModal/CreateListModal/CreateListModal'
 import DeleteListModal from './components/Todo/TodoModal/DeleteListModal/DeleteListModal'
 import CookieConsent from './components/CookieConsent/CookieConsent'
@@ -36,6 +36,8 @@ import Draggable from 'react-draggable';
 import ProgressArea from './components/UtilityComponents/ProgressArea/ProgressArea'
 import VoteModal from './components/Todo/TodoModal/VoteModal/VoteModal'
 import FirstTimeLoginModal from './components/Todo/TodoModal/FirstTimeLoginModal/FirstTimeLoginModal'
+import BottomDrawer from './components/Mobile/BottomDrawer/BottomDrawer'
+import BottomDrawerButton from './components/Mobile/BottomDrawerButton/BottomDrawerButton'
 
 function App() {
   const [activeView, setActiveView] = useState('todo');
@@ -69,6 +71,11 @@ function App() {
   const [entriesInActiveList, setEntriesInActiveList] = useState([]);
   const [isVoteModalOpen, setIsVoteModalOpen] = useState(false);
   const [isFirstTimeLoginModalOpen, setIsFirstTimeLoginModalOpen] = useState(false);
+  const [isDrawerOpen, setDrawerOpen] = useState(false);
+  const isMobile = useMediaQuery('(max-width:600px)');
+
+  const handleOpenDrawer = () => setDrawerOpen(true);
+  const handleCloseDrawer = () => setDrawerOpen(false);
 
   const openNewLoginModal = () => {
     setIsFirstTimeLoginModalOpen(true);
@@ -434,7 +441,9 @@ function App() {
     setIsGroupOnlySelected(prevState => !prevState);
   }
 
-
+  const content = (
+    <h1> test </h1>
+  )
 
   return (
 
@@ -446,8 +455,11 @@ function App() {
       <>
         <CookieConsent />
       </>
-
+      {isMobile && (
+                <BottomDrawer isOpen={isDrawerOpen} onClose={handleCloseDrawer} > test </BottomDrawer>
+              )}
       {isLoggedIn && (
+
         <div className="content" style={{ display: 'flex', flexDirection: 'column' }}>
           <Card>
             <div className='nav' style={{ display: 'flex', flexDirection: 'column' }}>
@@ -779,8 +791,11 @@ function App() {
             </div>
 
             <AnythingList type={activeView} />
-
+            {isMobile && (
+                <BottomDrawerButton listName={loggedInUser.activeList} onOpen={handleOpenDrawer} />
+              )}
           </Card>
+          
         </div>
       )}
       {!isLoggedIn && !loggedInUser && <LandingPage />}

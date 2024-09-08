@@ -17,6 +17,7 @@ import {
     Checkbox, FormControlLabel, Autocomplete, TextField, Stack,
     Chip, useMediaQuery
 } from '@mui/material';
+import BottomDrawerButton from "../../Mobile/BottomDrawerButton/BottomDrawerButton";
 
 const AnythingList = ({ type }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -216,10 +217,10 @@ const AnythingList = ({ type }) => {
         const validSortOptions = ['created', 'task', 'priority', 'steps', 'difficulty', 'dueDate', 'estimatedTime', 'lastUpdated'];
         if (validSortOptions.includes(event.target.value)) {
             handleSortChange(event);
-        } 
+        }
         event.stopPropagation();
     };
-    
+
 
     const toggleSortOrder = () => {
         const newOrder = !isAscending;
@@ -284,7 +285,7 @@ const AnythingList = ({ type }) => {
         <div className="list-container">
             {isLoggedIn ? <div className={`title-${type}`}></div> : null}
             {isLoggedIn && (
-                <div className={`list-settings list-settings-${type}`} style={{ display: 'flex',  border: '2px solid gray' }}>
+                <div className={`list-settings list-settings-${type}`} style={{ display: 'flex', border: '2px solid gray' }}>
                     <div className="search-container" style={{ margin: '7px 20px' }}>
 
                         <Stack spacing={1} sx={{}}>
@@ -405,12 +406,12 @@ const AnythingList = ({ type }) => {
                                         <FormControlLabel
                                             control={
                                                 <Checkbox
-                                                checked={isUrgentOnly}
-                                                onChange={(e) => {
-                                                    handleMenuCheckboxClick(e);
-                                                    toggleUrgentTasks(e);
-                                                }}
-                                            />
+                                                    checked={isUrgentOnly}
+                                                    onChange={(e) => {
+                                                        handleMenuCheckboxClick(e);
+                                                        toggleUrgentTasks(e);
+                                                    }}
+                                                />
                                             }
                                             label="Urgent"
                                         />
@@ -419,12 +420,12 @@ const AnythingList = ({ type }) => {
                                         <FormControlLabel
                                             control={
                                                 <Checkbox
-                                                checked={isDeadlineOnly}
-                                                onChange={(e) => {
-                                                    handleMenuCheckboxClick(e);
-                                                    toggleDeadlineOnly(e);
-                                                }}
-                                            />
+                                                    checked={isDeadlineOnly}
+                                                    onChange={(e) => {
+                                                        handleMenuCheckboxClick(e);
+                                                        toggleDeadlineOnly(e);
+                                                    }}
+                                                />
                                             }
                                             label="Deadline this week"
                                         />
@@ -433,12 +434,12 @@ const AnythingList = ({ type }) => {
                                         <FormControlLabel
                                             control={
                                                 <Checkbox
-                                                checked={isNewOnly}
-                                                onChange={(e) => {
-                                                    handleMenuCheckboxClick(e);
-                                                    toggleNewOnly(e);
-                                                }}
-                                            />
+                                                    checked={isNewOnly}
+                                                    onChange={(e) => {
+                                                        handleMenuCheckboxClick(e);
+                                                        toggleNewOnly(e);
+                                                    }}
+                                                />
                                             }
                                             label="New"
                                         />
@@ -494,6 +495,7 @@ const AnythingList = ({ type }) => {
                 </>
             )}
 
+
             {isEditModalOpen && editingTask && (
                 <EditModal
                     isOpen={isEditModalOpen}
@@ -503,28 +505,41 @@ const AnythingList = ({ type }) => {
                 />
             )}
 
-            {type === 'todo' && loggedInUser.activeList !== 'all' ? ( //LOL
-                <div className="button-view">
-                    <TodoButton onClick={handleClick} />
-                    <TodoModal isOpen={isModalOpen} onRequestClose={handleCloseSubmitModal} />
-                </div>
-            ) : (
-                <div className="button-view">
-                    <strong>
-                        {type === 'doing' || type === 'done' ? (
-                            <>
-                                Go to "prepared"-tab to create new task.
-                            </>
+            <>
+                {isMobile ? (
+                    <>
+
+
+                    </>
+                ) : (
+                    <>
+                        {type === 'todo' && loggedInUser.activeList !== 'all' ? (
+                            <div className="button-view">
+                                <TodoButton onClick={handleClick} />
+                                <TodoModal
+                                    isOpen={isModalOpen}
+                                    onRequestClose={handleCloseSubmitModal}
+                                />
+                            </div>
                         ) : (
-                            <>
-                                cannot create new tasks in this list. <br />
-                                please select another list!
-                            </>
+                            <div className="button-view">
+                                <strong>
+                                    {type === 'doing' || type === 'done' ? (
+                                        <>
+                                            Go to "prepared"-tab to create new task.
+                                        </>
+                                    ) : (
+                                        <>
+                                            cannot create new tasks in this list. <br />
+                                            please select another list!
+                                        </>
+                                    )}
+                                </strong>
+                            </div>
                         )}
-                    </strong>
-                </div>
-            )
-            }
+                    </>
+                )}
+            </>
         </div>
     );
 };

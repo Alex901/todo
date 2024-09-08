@@ -1,0 +1,30 @@
+.bottom-drawer-button-container {
+    display: flex;
+    position: sticky;
+    bottom: 0;
+    width: 100%;
+    background-color: #fff;
+    box-shadow: 0 -2px 5px rgba(0, 0, 0, 0.1);
+    z-index: 1000; /* Ensure it stays above other content */
+  }
+  
+  .drawer-button {
+    flex: 1;
+    padding: 10px;
+    border: none;
+    cursor: pointer;
+  }
+  
+  .drawer-button.left {
+    flex: 2;
+    background-color: #eaeaef;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .drawer-button.right {
+    flex: 1;
+    background-color: #649e31;
+    color: white;
+  }

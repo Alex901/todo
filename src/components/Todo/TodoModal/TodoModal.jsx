@@ -5,7 +5,7 @@ import { useTodoContext } from '../../../contexts/todoContexts';
 import { useUserContext } from '../../../contexts/UserContext';
 //import Select from 'react-select';
 import { toast } from 'react-toastify';
-import { TextField, Button, InputAdornment, IconButton, FormControl, InputLabel, Select, MenuItem, Checkbox, FormControlLabel, Chip } from '@mui/material';
+import { TextField, Button, InputAdornment, IconButton, FormControl, InputLabel, Select, MenuItem, Checkbox, FormControlLabel, Chip, Collapse } from '@mui/material';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import Icon from '@mdi/react';
 import { mdiDelete, mdiDeleteEmpty } from '@mdi/js';
@@ -25,6 +25,7 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
     const [errorMessage, setErrorMessage] = useState('');
     const { isLoggedIn, loggedInUser } = useUserContext();
     const [hoveredStepId, setHoveredStepId] = useState(null);
+    const [showAdvancedOptions, setShowAdvancedOptions] = useState(false);
     const [newTaskData, setNewTaskData] = useState({
         taskName: '',
         description: '',
@@ -55,7 +56,9 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
     ];
 
 
-
+    const handleToggleAdvancedOptions = () => {
+        setShowAdvancedOptions(!showAdvancedOptions);
+    };
 
     const handleInputChange = (event) => {
         let value = event.target.value;
@@ -127,6 +130,7 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
             estimatedTime: null,
             tags: []
         });
+        setShowAdvancedOptions(false);
     }
 
     const handleKeyPress = (e) => {
@@ -215,6 +219,8 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
             estimatedTime: 0,
             tags: []
         });
+        setErrorMessage('');
+        setShowAdvancedOptions(false);
         onRequestClose();
     }
 
@@ -232,7 +238,7 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
 
             {isLoggedIn ? (
 
-                <form className="create-entry-form" onSubmit={handleSubmit} style={{ gap: '15px' }}>
+                <form className="create-entry-form" onSubmit={handleSubmit} style={{ }}>
                     <TextField
                         id="taskName"
                         label="Enter task name"
@@ -244,18 +250,24 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
                         inputProps={{ maxLength: 70 }}
                         name='taskName'
                     />
-                    <TextField
-                        id="description"
-                        label="Enter task description(optional)"
-                        variant="outlined"
-                        multiline
-                        rows={4}
-                        onChange={handleInputChange}
-                        className='create-modal-input-description'
-                        inputProps={{ maxLength: 500 }}
-                        name="description"
-                    />
-                    <hr style={{ width: '80%', margin: '10px auto' }} />
+                    <Button onClick={handleToggleAdvancedOptions} style={{ margin: `10px 0 ${showAdvancedOptions ? '10px' : '0'} 0` }}>
+                        {showAdvancedOptions ? 'Hide Advanced Options' : 'Show Advanced Options'}
+                    </Button>
+                    <div className={`advanced-options ${showAdvancedOptions ? 'show' : 'hide'}`}>
+                        <TextField
+                            id="description"
+                            label="Enter task description(optional)"
+                            variant="outlined"
+                            multiline
+                            rows={4}
+                            onChange={handleInputChange}
+                            className='create-modal-input-description'
+                            inputProps={{ maxLength: 500 }}
+                            name="description"
+                        />
+                    
+
+
 
                     <div className="input-container" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%', gap: '20px' }}>
                         <FormControl style={{ width: '200px' }}>
@@ -275,10 +287,10 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
                         <FormControl variant="outlined" size="small" style={{ width: '140px', marginRight: '20px' }}>
                             <InputLabel id="priority-label">Priority</InputLabel>
                             <Select
-                                labelId="priority-label"  
+                                labelId="priority-label"
                                 defaultValue=""
                                 onChange={handleSelectChange}
-                                label="Priority" 
+                                label="Priority"
                             >
                                 {options.map((option) => (
                                     <MenuItem key={option.value} value={option.value}>
@@ -288,7 +300,7 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
                             </Select>
                         </FormControl>
                     </div>
-
+                                
                     <div className="input-container" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%', gap: '20px' }}>
                         <TextField
                             type='number'
@@ -375,16 +387,16 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
                             </Select>
                         </FormControl>
                         <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginTop: '14px' }}>
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    id='isUrgent'
-                                    name='isUrgent'
-                                    onChange={handleCheckboxChange}
-                                />
-                            }
-                            label="Urgent?"
-                        />
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        id='isUrgent'
+                                        name='isUrgent'
+                                        onChange={handleCheckboxChange}
+                                    />
+                                }
+                                label="Urgent?"
+                            />
                         </div>
                     </div>
 
@@ -424,7 +436,7 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
                             )}
                         </Droppable>
                     </DragDropContext>
-
+                    </div>
 
                     {errorMessage && <p className="error">{errorMessage}</p>}
                     <button className='modal-button' type="submit" style={{ textAlign: 'center' }}>

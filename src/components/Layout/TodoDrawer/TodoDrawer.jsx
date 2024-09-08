@@ -17,7 +17,6 @@ import Badge from '@mui/material/Badge';
 import { styled } from '@mui/material/styles';
 import Icon from '@mdi/react';
 import { mdiLogout, mdiLogin, mdiAbTesting, mdiAccountPlus, mdiHelpCircle, mdiCommentQuote, mdiCog, mdiServerPlus } from '@mdi/js';
-import TodoButton from '../../Todo/TodoButton/TodoButton';
 import TodoModal from '../../Todo/TodoModal/TodoModal';
 
 import './TodoDrawer.css';
