@@ -227,10 +227,8 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
             className="modal-content"
             overlayClassName="modal-overlay"
             shouldCloseOnOverlayClick={true}
+            title="Create task"
         >
-
-
-            <div className='modalTitle' style={{ textAlign: 'center' }}> <h3 className="title"> Create task </h3></div>
 
             {isLoggedIn ? (
 
