@@ -195,9 +195,9 @@ h1 {
 @media screen and (max-width: 1024px) {
   .content-card {
       width: 100%;
-      min-height: fit-content;
+      min-height: 100vh;
       box-sizing: border-box; /* Include padding and border in the element's total width and height */
-      padding: 2px; /* Add padding for a comfortable layout */
+      padding: 0px; /* Add padding for a comfortable layout */
       border: none;
   }
 }
