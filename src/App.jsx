@@ -1073,7 +1073,7 @@ function App() {
               {isLoggedIn && !isMobile && <hr style={{ width: '80%', margin: '1em auto' }}></hr>}
 
               {/* Second row */}
-              <div style={{ display: 'flex', justifyContent: 'center' }}>
+              <div style={{ display: 'flex', justifyContent: 'center', position: 'sticky', top: 0 }}>
                 <button className="navButton" onClick={switchTodoView} style={{
                   background: activeView === 'todo' ? '#eaeaef' : '#E65151',
                   color: activeView === 'todo' ? 'black' : 'white',
