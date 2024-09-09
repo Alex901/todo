@@ -474,7 +474,7 @@ const AnythingList = ({ type }) => {
 
                     {isLoggedIn ? <div className={`title-${type}`}></div> : null}
 
-                    <div className="list-view">
+                    <div className={`list-view${isMobile ? '-mobile' : ''}`}>
 
                         {
                             (type === 'todo' && activeTodoList.filter(todo => !todo.isStarted && !todo.isDone).length > 0) ||
