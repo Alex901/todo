@@ -409,6 +409,9 @@ function App() {
   };
 
   const closeExportListModal = () => {
+    if (isMobile) {
+      setDrawerOpen(true);
+    }
     setIsOpenListModalOpen(false);
   };
 
@@ -762,7 +765,7 @@ function App() {
                       </div>
                     </div>
                   )}
-                  <Popper open={isNewTagPopperOpen} ref={popperRef} anchorEl={newTagAnchorRef.current} placement='bottom'>
+                  <Popper open={isNewTagPopperOpen} ref={popperRef} anchorEl={newTagAnchorRef.current} placement='top' className="popper-content-mobile">  
                     <div className={`new-tag-popper-container${isMobile ? '-mobile' : ''}`}>
                       <h5 style={{ margin: '8px', marginBottom: '8px' }}>Create new tag</h5>
                       <form className={`new-tag-popper-form${isMobile ? '-mobile' : ''}`} onSubmit={handleNewTagSubmit}>
