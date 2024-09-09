@@ -159,7 +159,6 @@
     display: inline-flex;
     justify-content: flex-end; 
     gap: 5px;
-    overflow: hidden;
     position: relative;
     max-width: fit-content;
     background-color: rgb(213, 220, 213);
