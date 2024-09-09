@@ -49,12 +49,14 @@ const NotificationsButton = ({ isLoggedIn, userNotifications, isMobile, classNam
               horizontal: isMobile ? 'left' : 'center',
             }}
             transformOrigin={{
-              vertical: 'bottom',
+              vertical: isMobile ? 'bottom' : 'top',
               horizontal: isMobile ? 'right' : 'center',
             }}
             PaperProps={{
               style: {
-                padding: '5px', // Add padding to create a gap
+                padding: '5px', 
+                marginTop: isMobile ? '0px' : '5px',
+                marginLeft: isMobile ? '-15px' : '0px',
               },
             }}
           >
