@@ -63,7 +63,7 @@
 .list-view-mobile {
     border-radius: 10px;
     overflow: auto;
-    height: 100vh; /* Cover the entire screen height */
+    height: auto; 
     overflow-x: hidden;
 }
 
