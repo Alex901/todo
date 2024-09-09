@@ -27,7 +27,6 @@ body {
 .content {
   flex: 1;
   /* Allow content to expand to fill remaining space */
-  height: 100vh;
   padding: 5em;
   /* Add padding to create space between content and edges */
 }
