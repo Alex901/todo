@@ -88,3 +88,12 @@
   outline: none;
   transform: scale(0.9);
 }
+
+@supports (-webkit-overflow-scrolling: touch) {
+  .bottom-drawer-button-container {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+  }
+}
