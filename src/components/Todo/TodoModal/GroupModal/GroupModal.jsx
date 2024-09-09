@@ -61,7 +61,9 @@ const GroupModal = ({ isOpen, onClose }) => {
     const { t, i18n } = useTranslation();
 
     useEffect(() => {
-        setFilteredGroups(allGroupList.slice(0, 10));
+        if (loggedInUser) {
+            setFilteredGroups(allGroupList.slice(0, 10));
+        }
     }, [allGroupList]);
 
     const openConfirmation = (event, member = null, group, action) => {
@@ -469,7 +471,7 @@ const GroupModal = ({ isOpen, onClose }) => {
 
                         <div className="group find-group">
                             {filteredGroups
-                                .filter(group => group.owner !== null && !group.members.some(member => member.member_id._id === loggedInUser._id))
+                                .filter(group => group.owner !== null && loggedInUser && !group.members.some(member => member.member_id._id === loggedInUser._id))
                                 .map((group) => (
                                     <Accordion key={group._id}>
                                         <AccordionSummary>

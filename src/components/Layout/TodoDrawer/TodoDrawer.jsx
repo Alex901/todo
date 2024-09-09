@@ -16,8 +16,9 @@ import SelectLanguageButton from '../header/HeaderButtons/SelectLanguageButton/S
 import Badge from '@mui/material/Badge';
 import { styled } from '@mui/material/styles';
 import Icon from '@mdi/react';
-import { mdiLogout, mdiLogin, mdiAbTesting, mdiAccountPlus, mdiHelpCircle, mdiCommentQuote, mdiCog, mdiServerPlus } from '@mdi/js';
-import TodoModal from '../../Todo/TodoModal/TodoModal';
+import { mdiLogout, mdiLogin, mdiAccountPlus, mdiHelpCircle, mdiCommentQuote, mdiCog, mdiVote, mdiAccountGroup   } from '@mdi/js';
+import VoteModal from '../../Todo/TodoModal/VoteModal/VoteModal';
+import GroupModal from '../../Todo/TodoModal/GroupModal/GroupModal';
 
 import './TodoDrawer.css';
 const TodoDrawer = () => {
@@ -31,16 +32,21 @@ const TodoDrawer = () => {
     const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
     const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
     const [isTodoModalOpen, setIsTodoModalOpen] = useState(false);
+    const [isGroupModalOpen, setIsGroupModalOpen] = useState(false);
+    const [isVoteModalOpen, setIsVoteModalOpen] = useState(false);
     const iconContainerRef = useRef(null);
     const drawerRef = useRef(null);
     const buttonRef = useRef(null);
     const hasNotifications = userNotifications.length > 0;
 
     useEffect(() => {
+        console.log("is this even running?")
         const iconContainer = iconContainerRef.current;
         if (iconContainer) {
+            console.log("icon container exists", iconContainer)
             const iconCount = iconContainer.children.length;
             const columns = Math.ceil(iconCount / 4);
+            console.log("columns", columns)
             iconContainer.style.gridTemplateColumns = `repeat(${columns}, 1fr)`;
         }
     }, [loggedInUser]);
@@ -84,12 +90,24 @@ const TodoDrawer = () => {
         toggleDrawer(false)();
     };
 
+    const handleGroupClick = () => {
+        setIsGroupModalOpen(true);
+        toggleDrawer(false)();
+    };
+
+    const handleVoteClick = () => {
+        setIsVoteModalOpen(true);
+        toggleDrawer(false)();
+    };
+
     const handleCloseModal = () => {
         setLoginModalOpen(false);
         setRegisterModalOpen(false);
         setIsSettingsModalOpen(false);
         setIsFeedbackModalOpen(false);
         setIsTodoModalOpen(false);
+        setIsVoteModalOpen(false);
+        setIsGroupModalOpen(false);
     };
 
     const handleSettingsClick = (event) => {
@@ -139,11 +157,7 @@ const TodoDrawer = () => {
 
                             {loggedInUser ? (
                                 <>
-                                    <IconButton onClick={handleTodoClick} className="drawer-icon add-entry">
-                                        <Icon path={mdiServerPlus} size={1.2} color="black" />
-                                    </IconButton>
                                     
-
                                     <NotificationsButton
                                         isLoggedIn={true}
                                         userNotifications={userNotifications}
@@ -152,6 +166,14 @@ const TodoDrawer = () => {
                                     />
                                     <IconButton onClick={handleFeedbackClick} className="drawer-icon">
                                         <Icon path={mdiCommentQuote} size={1.2} color="black" />
+                                    </IconButton>
+
+                                    <IconButton onClick={handleVoteClick} className="drawer-icon">
+                                        <Icon path={mdiVote} size={1.2} color="black" />
+                                    </IconButton>
+
+                                    <IconButton onClick={handleGroupClick} className="drawer-icon">
+                                        <Icon path={mdiAccountGroup} size={1.2} color="black" />
                                     </IconButton>
 
                                     <IconButton onClick={handleSettingsClick} className="drawer-icon">
@@ -186,7 +208,8 @@ const TodoDrawer = () => {
                 <LoginModal isOpen={isLoginModalOpen} onRequestClose={handleCloseModal} />
                 <SettingsModal isOpen={isSettingsModalOpen} onClose={handleCloseModal} />
                 <FeedbackModal isOpen={isFeedbackModalOpen} onClose={handleCloseModal} />
-                <TodoModal isOpen={isTodoModalOpen} onRequestClose={handleCloseModal} />
+                <VoteModal isOpen={isVoteModalOpen} onClose={handleCloseModal} />
+                <GroupModal isOpen={isGroupModalOpen} onClose={handleCloseModal} />  
             </React.Fragment>
 
         </div>
