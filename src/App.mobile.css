@@ -24,7 +24,6 @@
   
   .content-mobile {
     flex: 1;
-    padding: 5em;
   }
   
   .nav-mobile button {
@@ -293,11 +292,7 @@
     }
   }
   
-  @media screen and (max-width: 1024px) {
-    .content-mobile {
-      padding: 0;
-    }
-  }
+
   
   @media (max-width: 599px) {
     .details-container-mobile {
