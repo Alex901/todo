@@ -1,4 +1,5 @@
 import './App.css'
+import './App.mobile.css'
 import Header from './components/Layout/header/Header'
 import Card from './components/Layout/card/Card'
 import React, { useState, useRef, useEffect, useMemo } from 'react'
@@ -455,118 +456,417 @@ function App() {
       <>
         <CookieConsent />
       </>
-      {isMobile && (
-                <BottomDrawer isOpen={isDrawerOpen} onClose={handleCloseDrawer} > Coming soon, but much nicer than this trash :) </BottomDrawer>
-              )}
+
       {isLoggedIn && (
 
         <div className="content" style={{ display: 'flex', flexDirection: 'column' }}>
           <Card>
             <div className='nav' style={{ display: 'flex', flexDirection: 'column' }}>
 
-              {/* First row */}
-              {isLoggedIn && (
-                <div className="listSelection">
-                  <div className="list-selection-settings">
-                    <div className="list-checkbox-container">
-                      <FormControlLabel
-                        control={<Checkbox
-                          checked={isGroupOnlySelected}
-                          onChange={toggleGroupOnly}
-                        />}
-                        label="Show groups only"
+
+              {isMobile ? (
+                <BottomDrawer isOpen={isDrawerOpen} onClose={handleCloseDrawer} > 
+                  {/* First row */}
+                  {isLoggedIn && (
+  <div className={`listSelection${isMobile ? '-mobile' : ''}`}>
+    <div className={`list-selection-settings${isMobile ? '-mobile' : ''}`}>
+      <div className={`list-checkbox-container${isMobile ? '-mobile' : ''}`}>
+        <FormControlLabel
+          control={<Checkbox
+            checked={isGroupOnlySelected}
+            onChange={toggleGroupOnly}
+          />}
+          label="Show groups only"
+        />
+      </div>
+    </div>
+    <FormControl variant='standard' style={{ width: '22em', margin: '10px' }}>
+      <InputLabel id="active-list-label" style={{ fontWeight: 'bold' }}>Active Project </InputLabel>
+      <Select
+        labelId="active-list-label"
+        label="Active listt"
+        className={`select-list${isMobile ? '-mobile' : ''}`}
+        size='small'
+        value={loggedInUser.activeList || ""}
+        onChange={handleListChange}
+      >
+        {loggedInUser.myLists && loggedInUser.myLists
+          .filter(list => !isGroupOnlySelected || list.ownerModel === "Group")
+          .map(list => {
+            const todoCount = getListTodoCount(list.listName);
+            const doingCount = getListDoingCount(list.listName);
+            const doneCount = getListDoneCount(list.listName);
+            return (
+              <MenuItem key={list.listName} value={list.listName}>
+                <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+                  <div>{list.listName.charAt(0).toUpperCase() + list.listName.slice(1)}</div>
+                  <div>{`(${todoCount},${doingCount},${doneCount})`}</div>
+                </div>
+              </MenuItem>
+            );
+          })}
+      </Select>
+    </FormControl>
+
+    <div className={`icon-buttons${isMobile ? '-mobile' : ''}`}>
+      <div className={`icon-button add${isMobile ? '-mobile' : ''}`}
+        onClick={openCreateListModal}
+        style={{ marginLeft: 10 }}
+      >
+        <Icon path={mdiPlus} size={1.6} />
+      </div>
+
+      <div
+        className={`icon-button edit${isMobile ? '-mobile' : ''}`}
+        onClick={() => openEditListModal(loggedInUser.myLists.find(list => list.listName === loggedInUser.activeList))}
+        onMouseEnter={() => setIsEditHovered(true)}
+        onMouseLeave={() => setIsEditHovered(false)}
+      >
+        <Icon path={isEditHovered ? mdiPencil : mdiTextBoxEditOutline} size={1.4} />
+      </div>
+
+      <div className={`icon-button description${isMobile ? '-mobile' : ''}`} onClick={toggleDetails}>
+        <Icon path={isShowDetailsSelected ? mdiArchiveArrowUpOutline : mdiArchiveArrowDownOutline} size={1.4} />
+      </div>
+
+      <div
+        className={`icon-button delete${isMobile ? '-mobile' : ''}`}
+        onClick={openDeleteListModal}
+        onMouseEnter={() => setIsDeleteHovered(true)}
+        onMouseLeave={() => setIsDeleteHovered(false)}
+      >
+        <Icon path={isDeleteHovered ? mdiDeleteEmpty : mdiDelete} size={1.4} />
+      </div>
+
+      <div className={`list-details-section${isMobile ? '-mobile' : ''}`}>
+      </div>
+    </div>
+
+    <CreateListModal
+      isOpen={isCreateListModalOpen}
+      onRequestClose={closeCreateListModal}
+    />
+
+    <EditListModal
+      isOpen={isEditListModalOpen}
+      onRequestClose={() => setIsEditListModalOpen(false)}
+      listData={loggedInUser.myLists.find(list => list.listName === loggedInUser.activeList)}
+    />
+
+    <DeleteListModal
+      isOpen={isdDeleteListModalOpen}
+      onRequestClose={() => { setIsDeleteListModalOpen(false); setDeleteListError("") }}
+      listName={loggedInUser.activeList}
+      onDelete={(event) => {
+        event.preventDefault();
+        handleDelete(loggedInUser.myLists.find(list => list.listName === loggedInUser.activeList), event);
+      }}
+      onCancel={() => { setIsDeleteListModalOpen(false); setDeleteListError("") }}
+      errorMessage={deleteListError}
+    />
+  </div>
+)}
+
+{isShowDetailsSelected && (
+  <div className={`details-rows${isMobile ? '-mobile' : ''}`}>
+    <div className={`details-container${isMobile ? '-mobile' : ''}`}>
+      {activeList?.description ? (
+        <div style={{ flex: 1 }}>
+          <strong className={`list-description-title${isMobile ? '-mobile' : ''}`}>Description</strong>
+          <br />
+          <span className={`list-description-text${isMobile ? '-mobile' : ''}`}>
+            {activeList.description}
+          </span>
+        </div>
+      ) : null}
+      <div className={`details-grid${isMobile ? '-mobile' : ''}`} style={{ flex: 2 }}>
+        <Tooltip title="Owner of this project">
+          <div>
+            <Icon path={mdiBadgeAccountOutline} size={1.2} />
+            {activeList?.type === 'userList' ? activeList?.owner.username : activeList?.owner.name}
+          </div>
+        </Tooltip>
+        <Tooltip title="Type of list, Group or Personal">
+          <div>
+            <Icon className={`details-icon${isMobile ? '-mobile' : ''}`} path={mdiFormatListBulletedType} size={1.2} />
+            {activeList?.ownerModel === 'User' ? 'Personal' : 'Group'}
+          </div>
+        </Tooltip>
+        <Tooltip title="Date when the list was created">
+          <div>
+            <Icon path={mdiFolderPlusOutline} size={1.2} />
+            {activeList?.createdAt ? formatDate(activeList.createdAt) : 'N/A'}
+          </div>
+        </Tooltip>
+        <Tooltip title="Visibility of the list">
+          <div>
+            <Icon path={mdiEyeOutline} size={1.2} />
+            {activeList?.visibility}
+          </div>
+        </Tooltip>
+        <Tooltip title="Estimated time to complete the project">
+          <div>
+            <Icon path={mdiTimerCheckOutline} size={1.2} />
+            {totalTimeToComplete || 'N/A'}
+          </div>
+        </Tooltip>
+        <Tooltip title="Date when the list was last modified">
+          <div>
+            <Icon path={mdiWrenchClock} size={1.2} />
+            {activeList?.updatedAt ? formatDate(activeList.updatedAt) : 'N/A'}
+          </div>
+        </Tooltip>
+        <Tooltip title="Total time spent on the project">
+          <div>
+            <Icon path={mdiTimelineClockOutline} size={1.2} />
+            {totalTimeSpent || 'N/A'}
+          </div>
+        </Tooltip>
+      </div>
+    </div>
+    <div className={`details-settings${isMobile ? '-mobile' : ''}`}>
+      <div className={`settings-section${isMobile ? '-mobile' : ''}`}>
+        <h6 className={`title${isMobile ? '-mobile' : ''}`}>Settings</h6>
+        {/* Add relevant settings here */}
+      </div>
+      <div className={`share-section${isMobile ? '-mobile' : ''}`}>
+        <h6 className={`title${isMobile ? '-mobile' : ''}`}>Share</h6>
+        {/* Add share details here */}
+      </div>
+    </div>
+  </div>
+)}
+
+{isLoggedIn && (
+  <div className={`functions-container${isMobile ? '-mobile' : ''}`} ref={containerRef} style={{}}>
+    <div className={`progress-bar-container${isMobile ? '-mobile' : ''}`} style={{ width: `${progressBarWidth + 20}%` }}>
+      <>
+        <ProgressArea tasksInActiveList={entriesInActiveList}>
+          {/* Children components or elements go here */}
+        </ProgressArea>
+      </>
+    </div>
+
+    <div className={`icons-container${isMobile ? '-mobile' : ''}`} style={{ display: 'flex', gap: '5px', width: `${100 - progressBarWidth}%` }}>
+      <IconButton className={`icon-button${isMobile ? '-mobile' : ''}`} onClick={openGroupModal}>
+        <Icon path={mdiSelectGroup} size={1.2} />
+      </IconButton>
+      <IconButton className={`icon-button${isMobile ? '-mobile' : ''}`} onClick={openVoteModal}>
+        <Icon path={mdiVoteOutline} size={1.2} />
+      </IconButton>
+      <IconButton className={`icon-button${isMobile ? '-mobile' : ''}`} onClick={openExportModal}>
+        <Icon path={mdiFileExport} size={1.2} />
+      </IconButton>
+    </div>
+  </div>
+)}
+
+<ExportListModal isOpen={isOpenListModalOpen} onClose={closeExportListModal} />
+<GroupModal isOpen={isGroupModalOpen} onClose={closeGroupModal} />
+<VoteModal isOpen={isVoteModalOpen} onClose={closeVoteModal} />
+
+{isLoggedIn && (
+  <div className={`tags-container${isMobile ? '-mobile' : ''}`}>
+    <div className={`tags${isMobile ? '-mobile' : ''}`} style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' }}>
+      {loggedInUser.myLists
+        .find(list => list.listName === loggedInUser.activeList)?.tags.slice(0, showAll ? undefined : 3)
+        .map((tag, index) => {
+          return (
+            <Chip
+              key={index}
+              label={tag.label}
+              className={`chip${isMobile ? '-mobile' : ''}`}
+              style={{
+                background: `linear-gradient(135deg, ${tag.color} 25%, ${tag.color} 75%)`,
+                boxShadow: `0 3px 5px 2px rgba(255, 105, 135, .3), inset 0 1px 2px rgba(255, 255, 255, 0.3)`,
+                color: tag.textColor,
+              }}
+              onDelete={() => deleteTag(tag._id, tag)}
+              deleteIcon={
+                <Icon
+                  path={mdiCloseCircle}
+                  size={1}
+                  color={tag.textColor}
+                  className={`delete-icon${isMobile ? '-mobile' : ''}`} // Apply CSS class
+                />
+              }
+              sx={{
+                margin: '0.5em',
+                height: '2em',
+                '&:hover': {
+                  transform: 'scale(1.1)',
+                  boxShadow: `0 3px 5px 2px rgba(255, 105, 135, .6), inset 0 1px 2px rgba(255, 255, 255, 0.5)`,
+                  border: '1px solid rgba(255, 255, 255, 0.3)',
+                },
+              }}
+            />
+          );
+        })}
+
+      <div style={{ display: 'flex', justifyContent: 'center' }}>
+        <Chip
+          ref={newTagAnchorRef}
+          label="Add tag"
+          variant="outlined"
+          onClick={setIsNewTagPopperOpen.bind(this, !isNewTagPopperOpen)}
+          className={`add-tag${isMobile ? '-mobile' : ''}`}
+          sx={{
+            border: '2px dotted',
+            borderColor: 'action.active',
+            width: '8em',
+            height: '2em',
+            cursor: 'pointer',
+            margin: 'auto',
+            '&:hover': {
+              backgroundImage: 'none',
+              border: '1px solid',
+            },
+          }}
+        />
+      </div>
+
+      {loggedInUser.myLists.find(list => list.listName === loggedInUser.activeList).tags.length > 3 && (
+        <Chip
+          label={showAll ? 'Show fewer' : 'Show all'}
+          onClick={() => setShowAll(!showAll)}
+          variant="outlined"
+          sx={{
+            border: 'none',
+            margin: '0.5em',
+            height: '2em',
+            cursor: 'pointer',
+            '&:hover': {
+              transform: 'scale(1.1)',
+              fontWeight: 'bold',
+            },
+          }}
+        />
+      )}
+    </div>
+  </div>
+)}
+<Popper open={isNewTagPopperOpen} ref={popperRef} anchorEl={newTagAnchorRef.current} placement='bottom'>
+  <div className={`new-tag-popper-container${isMobile ? '-mobile' : ''}`}>
+    <h5 style={{ margin: '8px', marginBottom: '8px' }}>Create new tag</h5>
+    <form className={`new-tag-popper-form${isMobile ? '-mobile' : ''}`} onSubmit={handleNewTagSubmit}>
+      <div className={`new-tag-inputs${isMobile ? '-mobile' : ''}`}>
+        <TextField label="Tag name" variant="outlined" size="small" />
+        <ColorPickerButton webSafeColors={webSafeColors} selectedColor={selectedColor} handleColorSelect={handleColorChange} />
+      </div>
+      <Button type="submit" variant="contained" >
+        Submit
+      </Button>
+    </form>
+  </div>
+</Popper>
+
+              </BottomDrawer>
+              ) : (
+                <>
+                {isLoggedIn && (
+                    <div className="listSelection">
+                      <div className="list-selection-settings">
+                        <div className="list-checkbox-container">
+                          <FormControlLabel
+                            control={<Checkbox
+                              checked={isGroupOnlySelected}
+                              onChange={toggleGroupOnly}
+                            />}
+                            label="Show groups only"
+                          />
+                        </div>
+                      </div>
+                      <FormControl variant='standard' style={{ width: '22em', margin: '10px' }}>
+                        <InputLabel id="active-list-label" style={{ fontWeight: 'bold' }}>Active Project </InputLabel>
+                        <Select
+                          labelId="active-list-label"
+                          label="Active listt"
+                          className="select-list"
+                          size='small'
+                          value={loggedInUser.activeList || ""}
+                          onChange={handleListChange}
+                        >
+
+                          {loggedInUser.myLists && loggedInUser.myLists
+                            .filter(list => !isGroupOnlySelected || list.ownerModel === "Group")
+                            .map(list => {
+                              const todoCount = getListTodoCount(list.listName);
+                              const doingCount = getListDoingCount(list.listName);
+                              const doneCount = getListDoneCount(list.listName);
+                              return (
+                                <MenuItem key={list.listName} value={list.listName}>
+                                  <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+                                    <div>{list.listName.charAt(0).toUpperCase() + list.listName.slice(1)}</div>
+                                    <div>{`(${todoCount},${doingCount},${doneCount})`}</div>
+                                  </div>
+                                </MenuItem>
+                              );
+                            })}
+                        </Select>
+                      </FormControl>
+
+                      <div className="icon-buttons">
+                        <div className="icon-button add"
+                          onClick={openCreateListModal}
+                          style={{ marginLeft: 10 }}
+                        >
+                          <Icon path={mdiPlus} size={1.6} />
+                        </div>
+
+                        <div
+                          className="icon-button edit"
+                          onClick={() => openEditListModal(loggedInUser.myLists.find(list => list.listName === loggedInUser.activeList))}
+                          onMouseEnter={() => setIsEditHovered(true)}
+                          onMouseLeave={() => setIsEditHovered(false)}
+
+                        >
+                          <Icon path={isEditHovered ? mdiPencil : mdiTextBoxEditOutline} size={1.4} />
+                        </div>
+
+                        <div className="icon-button description" onClick={toggleDetails}>
+                          <Icon path={isShowDetailsSelected ? mdiArchiveArrowUpOutline : mdiArchiveArrowDownOutline} size={1.4} />
+                        </div>
+
+                        <div
+                          className="icon-button delete"
+                          onClick={openDeleteListModal}
+                          onMouseEnter={() => setIsDeleteHovered(true)}
+                          onMouseLeave={() => setIsDeleteHovered(false)}
+                        >
+                          <Icon path={isDeleteHovered ? mdiDeleteEmpty : mdiDelete} size={1.4} />
+                        </div>
+
+                        <div className="list-details-section">
+                        </div>
+                      </div>
+
+                      <CreateListModal
+                        isOpen={isCreateListModalOpen}
+                        onRequestClose={closeCreateListModal}
+
+                      />
+
+                      <EditListModal
+                        isOpen={isEditListModalOpen}
+                        onRequestClose={() => setIsEditListModalOpen(false)}
+                        listData={loggedInUser.myLists.find(list => list.listName === loggedInUser.activeList)}
+                      />
+
+                      <DeleteListModal
+                        isOpen={isdDeleteListModalOpen}
+                        onRequestClose={() => { setIsDeleteListModalOpen(false); setDeleteListError("") }}
+                        listName={loggedInUser.activeList}
+                        onDelete={(event) => {
+                          event.preventDefault();
+                          handleDelete(loggedInUser.myLists.find(list => list.listName === loggedInUser.activeList), event);
+                        }}
+                        onCancel={() => { setIsDeleteListModalOpen(false); setDeleteListError("") }}
+                        errorMessage={deleteListError}
                       />
                     </div>
-                  </div>
-                  <FormControl variant='standard' style={{ width: '22em', margin: '10px' }}>
-                    <InputLabel id="active-list-label" style={{ fontWeight: 'bold' }}>Active Project </InputLabel>
-                    <Select
-                      labelId="active-list-label"
-                      label="Active listt"
-                      className="select-list"
-                      size='small'
-                      value={loggedInUser.activeList || ""}
-                      onChange={handleListChange}
-                    >
+                  )}
 
-                      {loggedInUser.myLists && loggedInUser.myLists
-                        .filter(list => !isGroupOnlySelected || list.ownerModel === "Group")
-                        .map(list => {
-                          const todoCount = getListTodoCount(list.listName);
-                          const doingCount = getListDoingCount(list.listName);
-                          const doneCount = getListDoneCount(list.listName);
-                          return (
-                            <MenuItem key={list.listName} value={list.listName}>
-                              <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-                                <div>{list.listName.charAt(0).toUpperCase() + list.listName.slice(1)}</div>
-                                <div>{`(${todoCount},${doingCount},${doneCount})`}</div>
-                              </div>
-                            </MenuItem>
-                          );
-                        })}
-                    </Select>
-                  </FormControl>
-
-                  <div className="icon-buttons">
-                    <div className="icon-button add"
-                      onClick={openCreateListModal}
-                      style={{ marginLeft: 10 }}
-                    >
-                      <Icon path={mdiPlus} size={1.6} />
-                    </div>
-
-                    <div
-                      className="icon-button edit"
-                      onClick={() => openEditListModal(loggedInUser.myLists.find(list => list.listName === loggedInUser.activeList))}
-                      onMouseEnter={() => setIsEditHovered(true)}
-                      onMouseLeave={() => setIsEditHovered(false)}
-
-                    >
-                      <Icon path={isEditHovered ? mdiPencil : mdiTextBoxEditOutline} size={1.4} />
-                    </div>
-
-                    <div className="icon-button description" onClick={toggleDetails}>
-                      <Icon path={isShowDetailsSelected ? mdiArchiveArrowUpOutline : mdiArchiveArrowDownOutline} size={1.4} />
-                    </div>
-
-                    <div
-                      className="icon-button delete"
-                      onClick={openDeleteListModal}
-                      onMouseEnter={() => setIsDeleteHovered(true)}
-                      onMouseLeave={() => setIsDeleteHovered(false)}
-                    >
-                      <Icon path={isDeleteHovered ? mdiDeleteEmpty : mdiDelete} size={1.4} />
-                    </div>
-
-                    <div className="list-details-section">
-                    </div>
-                  </div>
-
-                  <CreateListModal
-                    isOpen={isCreateListModalOpen}
-                    onRequestClose={closeCreateListModal}
-
-                  />
-
-                  <EditListModal
-                    isOpen={isEditListModalOpen}
-                    onRequestClose={() => setIsEditListModalOpen(false)}
-                    listData={loggedInUser.myLists.find(list => list.listName === loggedInUser.activeList)}
-                  />
-
-                  <DeleteListModal
-                    isOpen={isdDeleteListModalOpen}
-                    onRequestClose={() => { setIsDeleteListModalOpen(false); setDeleteListError("") }}
-                    listName={loggedInUser.activeList}
-                    onDelete={(event) => {
-                      event.preventDefault();
-                      handleDelete(loggedInUser.myLists.find(list => list.listName === loggedInUser.activeList), event);
-                    }}
-                    onCancel={() => { setIsDeleteListModalOpen(false); setDeleteListError("") }}
-                    errorMessage={deleteListError}
-                  />
-                </div>
-              )}
+             
 
               {isShowDetailsSelected && (
                 <div className="details-rows">
@@ -639,6 +939,8 @@ function App() {
                 </div>
 
               )}
+
+              
               {isLoggedIn && (
                 <div className="functions-container" ref={containerRef} style={{
 
@@ -669,6 +971,8 @@ function App() {
               <GroupModal isOpen={isGroupModalOpen} onClose={closeGroupModal} />
               <VoteModal isOpen={isVoteModalOpen} onClose={closeVoteModal} />
 
+
+              
               {isLoggedIn && (
 
                 <div className="tags-container">
@@ -765,8 +1069,10 @@ function App() {
                   </form>
                 </div>
               </Popper>
-
-              {isLoggedIn && <hr style={{ width: '80%', margin: '1em auto' }}></hr>}
+               </>
+              )};
+              
+              {isLoggedIn && !isMobile && <hr style={{ width: '80%', margin: '1em auto' }}></hr>}
 
               {/* Second row */}
               <div style={{ display: 'flex', justifyContent: 'center' }}>
@@ -792,10 +1098,10 @@ function App() {
 
             <AnythingList type={activeView} />
             {isMobile && (
-                <BottomDrawerButton listName={loggedInUser.activeList} onOpen={handleOpenDrawer} />
-              )}
+              <BottomDrawerButton listName={loggedInUser.activeList} onOpen={handleOpenDrawer} />
+            )}
           </Card>
-          
+
         </div>
       )}
       {!isLoggedIn && !loggedInUser && <LandingPage />}

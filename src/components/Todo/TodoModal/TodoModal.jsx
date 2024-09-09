@@ -241,7 +241,7 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
                 <form className="create-entry-form" onSubmit={handleSubmit} style={{ }}>
                     <TextField
                         id="taskName"
-                        label="Enter task name"
+                        label="Enter task name*"
                         variant="outlined"
                         onChange={handleInputChange}
                         className='create-modal-input create-modal-name-input'
