@@ -113,12 +113,5 @@
 }
 
 /* Media queries */
-@media screen and (max-width: 800px) {
- 
-
-    .list-settings {
-        justify-content: space-around;
-    }
-  }
 
 

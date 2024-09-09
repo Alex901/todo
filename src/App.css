@@ -307,11 +307,7 @@ body {
 
 
 
-@media (max-width: 599px) {
-  .details-container {
-    flex-direction: column;
-  }
-}
+
 
 @media screen and (max-width: 1024px) {
   .content {
