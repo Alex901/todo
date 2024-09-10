@@ -40,13 +40,13 @@ const TodoDrawer = () => {
     const hasNotifications = userNotifications.length > 0;
 
     useEffect(() => {
-        console.log("is this even running?")
         const iconContainer = iconContainerRef.current;
         if (iconContainer) {
-            console.log("icon container exists", iconContainer)
+            console.log("icon container exists", iconContainer);
             const iconCount = iconContainer.children.length;
+            console.log("icon count", iconCount);
             const columns = Math.ceil(iconCount / 4);
-            console.log("columns", columns)
+            console.log("columns", columns);
             iconContainer.style.gridTemplateColumns = `repeat(${columns}, 1fr)`;
         }
     }, [loggedInUser]);
