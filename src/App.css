@@ -208,7 +208,7 @@ body {
 }
 
 .bottom-drawer-button-wrapper {
-  position: sticky;
+  position: fixed;
   bottom: 0;
   width: 100%;
 }
