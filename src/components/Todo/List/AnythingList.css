@@ -54,14 +54,14 @@
 .list-view {
     border-radius: 10px;
     flex: 1;
-    overflow: auto;
+    
     max-height: 600px;
     overflow-x: hidden;
 }
 
 .list-view-mobile {
     border-radius: 10px;
-    overflow: auto;
+  
     min-height: 80vh; /* Cover the entire screen height */
     overflow-x: hidden;
 }
