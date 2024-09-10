@@ -73,7 +73,7 @@ function App() {
   const [isVoteModalOpen, setIsVoteModalOpen] = useState(false);
   const [isFirstTimeLoginModalOpen, setIsFirstTimeLoginModalOpen] = useState(false);
   const [isDrawerOpen, setDrawerOpen] = useState(false);
-  const isMobile = useMediaQuery('(max-width:600px)');
+  const isMobile = useMediaQuery('(max-width:800px)');
 
   const handleOpenDrawer = () => setDrawerOpen(true);
   const handleCloseDrawer = () => setDrawerOpen(false);

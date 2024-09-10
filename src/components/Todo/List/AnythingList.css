@@ -65,10 +65,13 @@
     border-radius: 10px;
     flex: 1;
     height: auto;
-    min-height: 100vh; 
     overflow-x: hidden;
     overflow-y: auto;
-    padding-bottom: 100px;
+    padding-bottom: 105px;
+}
+
+.list-view-mobile::-webkit-scrollbar {
+    display: none;
 }
 
 .checkbox-row {
@@ -120,6 +123,6 @@
 
 @media (max-width: 768px) {
     .list-container {
-        height: 90vh; /* Set height to 100vh for mobile devices */
+        height: 100vh; /* Set height to 100vh for mobile devices */
     }
 }
