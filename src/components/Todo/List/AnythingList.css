@@ -55,15 +55,17 @@
     border-radius: 10px;
     flex: 1;
     
-    max-height: 600px;
+    max-height: 60vh;
     overflow-x: hidden;
+    overflow-y: scroll;
 }
 
 .list-view-mobile {
     border-radius: 10px;
+    flex: 1;
   
-    min-height: 80vh; /* Cover the entire screen height */
-    overflow-x: hidden;
+    min-height: 100vh; /* Cover the entire screen height */
+    overflow: auto;
 }
 
 .checkbox-row {
