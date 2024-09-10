@@ -91,7 +91,7 @@
 
 @supports (-webkit-overflow-scrolling: touch) {
   .bottom-drawer-button-container {
-    position: -webkit-sticky;
+    position: fixed;
     bottom: 0;
     left: 0;
     right: 0;
