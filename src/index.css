@@ -199,5 +199,6 @@ h1 {
       box-sizing: border-box; /* Include padding and border in the element's total width and height */
       padding: 0px; /* Add padding for a comfortable layout */
       border: none;
+      
   }
 }

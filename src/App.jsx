@@ -294,7 +294,7 @@ function App() {
 
   const closeCreateListModal = () => {
     setIsCreateListModalOpen(false);
-    if(isMobile) {
+    if (isMobile) {
       setDrawerOpen(true);
     }
   };
@@ -443,7 +443,7 @@ function App() {
       toast.error("You don't have permission to edit this project!");
       return;
     } else {
-      
+
       if (isDrawerOpen) {
         setDrawerOpen(false);
         setTimeout(() => {
@@ -763,7 +763,7 @@ function App() {
                       </div>
                     </div>
                   )}
-                  <Popper open={isNewTagPopperOpen} ref={popperRef} anchorEl={newTagAnchorRef.current} placement='top' className="popper-content-mobile">  
+                  <Popper open={isNewTagPopperOpen} ref={popperRef} anchorEl={newTagAnchorRef.current} placement='top' className="popper-content-mobile">
                     <div className={`new-tag-popper-container${isMobile ? '-mobile' : ''}`}>
                       <h5 style={{ margin: '8px', marginBottom: '8px' }}>Create new tag</h5>
                       <form className={`new-tag-popper-form${isMobile ? '-mobile' : ''}`} onSubmit={handleNewTagSubmit}>
@@ -1071,25 +1071,25 @@ function App() {
               {isLoggedIn && !isMobile && <hr style={{ width: '80%', margin: '1em auto' }}></hr>}
 
               {/* Second row */}
-              <div className='sticky-container'> 
-              <div style={{ display: 'flex', justifyContent: 'center', position: 'sticky', top: 0 }}>
-                <button className="navButton" onClick={switchTodoView} style={{
-                  background: activeView === 'todo' ? '#eaeaef' : '#E65151',
-                  color: activeView === 'todo' ? 'black' : 'white',
-                  flexGrow: '1'
-                }}> Prepared ({isLoggedIn ? getActiveListTodoCount() : getTodoCount()}) </button>
+              <div className='sticky-container'>
+                <div style={{ display: 'flex', justifyContent: 'center', position: 'sticky', top: 0 }}>
+                  <button className="navButton" onClick={switchTodoView} style={{
+                    background: activeView === 'todo' ? '#eaeaef' : '#E65151',
+                    color: activeView === 'todo' ? 'black' : 'white',
+                    flexGrow: '1'
+                  }}> Prepared ({isLoggedIn ? getActiveListTodoCount() : getTodoCount()}) </button>
 
-                <button className="navButton" onClick={switchDoingView} style={{
-                  background: activeView === 'doing' ? '#eaeaef' : '#EBCC67',
-                  color: 'black',
-                  flexGrow: '1'
-                }}> Ongoing ({isLoggedIn ? getActiveListDoingCount() : getDoingCount()}) </button>
+                  <button className="navButton" onClick={switchDoingView} style={{
+                    background: activeView === 'doing' ? '#eaeaef' : '#EBCC67',
+                    color: 'black',
+                    flexGrow: '1'
+                  }}> Ongoing ({isLoggedIn ? getActiveListDoingCount() : getDoingCount()}) </button>
 
-                <button className="navButton" onClick={switchDoneView} style={{
-                  background: activeView === 'done' ? '#eaeaef' : '#649E31',
-                  color: activeView === 'done' ? 'black' : 'white',
-                  flexGrow: '1'
-                }}> Review ({isLoggedIn ? getActiveListDoneCount() : getDoneCount()}) </button>
+                  <button className="navButton" onClick={switchDoneView} style={{
+                    background: activeView === 'done' ? '#eaeaef' : '#649E31',
+                    color: activeView === 'done' ? 'black' : 'white',
+                    flexGrow: '1'
+                  }}> Review ({isLoggedIn ? getActiveListDoneCount() : getDoneCount()}) </button>
                 </div>
               </div>
             </div>
@@ -1122,7 +1122,9 @@ function App() {
 
             <AnythingList type={activeView} />
             {isMobile && (
-              <BottomDrawerButton listName={loggedInUser.activeList} onOpen={handleOpenDrawer} />
+              <div className="bottom-drawer-button-wrapper">
+                <BottomDrawerButton listName={loggedInUser.activeList} onOpen={handleOpenDrawer} />
+              </div>
             )}
           </Card>
 

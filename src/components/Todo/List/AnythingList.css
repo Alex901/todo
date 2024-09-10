@@ -19,7 +19,8 @@
     flex-direction: column;
     border-radius: 10px;
     width: 100%;
-    
+    overflow: hidden;
+    height: fit-content;
 }
 
 
@@ -63,9 +64,11 @@
 .list-view-mobile {
     border-radius: 10px;
     flex: 1;
-  
-    min-height: 100vh; /* Cover the entire screen height */
-    overflow: auto;
+    height: auto;
+    min-height: 100vh; 
+    overflow-x: hidden;
+    overflow-y: auto;
+    padding-bottom: 100px;
 }
 
 .checkbox-row {
@@ -115,4 +118,8 @@
 
 /* Media queries */
 
-
+@media (max-width: 768px) {
+    .list-container {
+        height: 90vh; /* Set height to 100vh for mobile devices */
+    }
+}
