@@ -89,11 +89,3 @@
   transform: scale(0.9);
 }
 
-@supports (-webkit-overflow-scrolling: touch) {
-  .bottom-drawer-button-container {
-    position: -webkit-sticky;
-    bottom: 100px;
-    left: 0;
-    right: 0;
-  }
-}
