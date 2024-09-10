@@ -490,9 +490,7 @@ function App() {
     setIsGroupOnlySelected(prevState => !prevState);
   }
 
-  const content = (
-    <h1> test </h1>
-  )
+
 
   return (
 
