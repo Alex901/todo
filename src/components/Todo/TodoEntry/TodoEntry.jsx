@@ -284,8 +284,7 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
                         </button>
                     </div>
                 </div>
-                {
-                    isMoreChecked && isLoggedIn && (
+                { isLoggedIn && (
                         <div className={`more-information ${isMoreChecked ? 'open' : ''}`}>
                             <div className="steps-container">
                                 {steps && steps.length > 0 ? (
