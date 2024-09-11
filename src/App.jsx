@@ -511,7 +511,7 @@ function App() {
 
 
               {isMobile ? (
-                <BottomDrawer isOpen={isDrawerOpen} onClose={handleCloseDrawer} >
+                <BottomDrawer isOpen={isDrawerOpen} onClose={handleCloseDrawer} listName={loggedInUser.activeList} >
                   {/* First row */}
                   {isLoggedIn && (
                     <div className={`listSelection${isMobile ? '-mobile' : ''}`}>

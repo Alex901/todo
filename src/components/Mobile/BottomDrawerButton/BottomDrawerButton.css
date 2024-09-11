@@ -10,7 +10,7 @@
   padding: 0px;
   border-top: 2px solid rgb(198, 193, 193);
   box-shadow: 0px -5px 5px 0px rgba(0, 0, 0, 0.15);
-  border-radius: 10px;
+  border-radius: 10px 10px 0 0;
 }
 
 .drawer-button-section {
