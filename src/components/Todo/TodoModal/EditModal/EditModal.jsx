@@ -474,40 +474,55 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
                     <hr style={{ width: '80%', margin: '10px auto' }} />
 
                     <DragDropContext onDragEnd={handleOnDragEnd}>
-                        <Droppable droppableId="steps">
-                            {(provided) => (
-
-                                <div className='steps' style={{ width: '100%', justifyContent: 'flex-start' }} {...provided.droppableProps} ref={provided.innerRef}>
-                                    {taskData.steps.map((step, index) => {
-                                        return (
-                                            <Draggable key={step.id} draggableId={String(step.id)} index={index}>
-                                                {(provided) => (
-                                                    <div className="drag" ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} style={{ transform: 'none', display: 'flex', flexDirection: 'row', alignItems: 'center', ...provided.draggableProps.style }}>
-                                                        <label style={{ display: 'flex', alignItems: 'center' }}>{`#${index + 1}`}</label>
-                                                        <input className='create-modal-input' type='text' placeholder={`Enter subTask title`}
-                                                            onChange={event => handleInputChangeStep(step._id, event)}
-                                                            defaultValue={taskData.steps.find(s => s._id === step._id).taskName || ''} maxLength='50' />
-                                                        <div onMouseEnter={() => setHoveredStepId(step._id)} onMouseLeave={() => setHoveredStepId(null)}>
-                                                            <Icon
-                                                                path={hoveredStepId === step._id ? mdiDeleteEmpty : mdiDelete}
-                                                                size={1.2}
-                                                                color={hoveredStepId === step._id ? "red" : "gray"}
-                                                                onClick={() => handleDeleteStep(step._id)}
-                                                            />
-                                                        </div>
-                                                    </div>
-                                                )}
-                                            </Draggable>
-                                        );
-                                    })}
-                                    {provided.placeholder}
-                                    <div style={{ display: 'flex', justifyContent: 'center' }}>
-                                        <p className='add-step' onClick={handleAddStep} style={{}}> <strong> add step </strong> </p>
-                                    </div>
-                                </div>
-                            )}
-                        </Droppable>
-                    </DragDropContext>
+            <Droppable droppableId="steps">
+                {(provided) => (
+                    <div className='steps' style={{ width: '100%', justifyContent: 'flex-start' }} {...provided.droppableProps} ref={provided.innerRef}>
+                        {taskData.steps.map((step, index) => {
+                            return (
+                                <Draggable key={step.id} draggableId={String(step.id)} index={index}>
+                                    {(provided) => (
+                                        <div
+                                            className="drag"
+                                            ref={provided.innerRef}
+                                            {...provided.draggableProps}
+                                            {...provided.dragHandleProps}
+                                            style={{
+                                                ...provided.draggableProps.style,
+                                                display: 'flex',
+                                                flexDirection: 'row',
+                                                alignItems: 'center',
+                                            }}
+                                        >
+                                            <label style={{ display: 'flex', alignItems: 'center' }}>{`#${index + 1}`}</label>
+                                            <input
+                                                className='create-modal-input'
+                                                type='text'
+                                                placeholder={`Enter subTask title`}
+                                                onChange={event => handleInputChangeStep(step._id, event)}
+                                                defaultValue={taskData.steps.find(s => s._id === step._id).taskName || ''}
+                                                maxLength='50'
+                                            />
+                                            <div onMouseEnter={() => setHoveredStepId(step._id)} onMouseLeave={() => setHoveredStepId(null)}>
+                                                <Icon
+                                                    path={hoveredStepId === step._id ? mdiDeleteEmpty : mdiDelete}
+                                                    size={1.2}
+                                                    color={hoveredStepId === step._id ? "red" : "gray"}
+                                                    onClick={() => handleDeleteStep(step._id)}
+                                                />
+                                            </div>
+                                        </div>
+                                    )}
+                                </Draggable>
+                            );
+                        })}
+                        {provided.placeholder}
+                        <div style={{ display: 'flex', justifyContent: 'center' }}>
+                            <p className='add-step' onClick={handleAddStep}><strong>add step</strong></p>
+                        </div>
+                    </div>
+                )}
+            </Droppable>
+        </DragDropContext>
 
 
                     <hr style={{ width: '80%', margin: '10px auto' }} />

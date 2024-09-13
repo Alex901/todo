@@ -108,7 +108,7 @@ const SettingsModal = ({ isOpen, onClose }) => {
         >
 
             {loggedInUser?.role === 'admin' && (
-                <Tabs value={selectedTab} onChange={handleChange} className="modal-form">
+                <Tabs value={selectedTab} onChange={handleChange}>
                     <Tab label={"Profile"} />
                     <Tab label="Users(A)" />
                     <Tab label="Feedback(A)" />

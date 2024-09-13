@@ -5,7 +5,7 @@ import "./BaseModal.css";
 
 ReactModal.setAppElement('#root');
 
-const BaseModal = ({ isOpen, onRequestClose, title, children }) => {
+const BaseModal = ({ isTabs, isOpen, onRequestClose, title, children, ...props }) => {
   const modalRef = useRef(null);
 
   useEffect(() => {
@@ -14,6 +14,8 @@ const BaseModal = ({ isOpen, onRequestClose, title, children }) => {
         onRequestClose();
       }
     };
+
+    console.log("DEBUG: isTabs", isTabs)
 
     const overlayElement = document.querySelector('.modal-overlay');
 
@@ -48,7 +50,7 @@ const BaseModal = ({ isOpen, onRequestClose, title, children }) => {
       overlayClassName="modal-overlay"
       shouldCloseOnOverlayClick={true}
     >
-        <div className="modal-header">
+        <div className={` ${isTabs ? 'modal-header-tabs' : 'modal-header'}`}>
         <h2 className="modal-title">{title}</h2>
         <button className="modal-close-button" onClick={onRequestClose}>&times;</button>
       </div>

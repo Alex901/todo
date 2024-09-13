@@ -191,21 +191,7 @@ const GroupModal = ({ isOpen, onClose }) => {
         }
     };
 
-    const handleDeleteGroup = (event, group) => {
-        event.stopPropagation();
-        if (group.members.length > 1) {
-            toast.error("You can't delete a group with members in it");
-            return;
-        } else if (loggedInUser._id !== group.owner) {
-            toast.error("Congrats, you've found a easter egg, you still cannot do this though.");
-            return;
-        } else {
-            console.log("DEBUG: group to delete: ", group);
-            //deleteGroup(group);
-        }
 
-
-    };
 
     const handleRemoveMember = (member, group) => {
         if (member.role === 'moderator') {
@@ -248,270 +234,276 @@ const GroupModal = ({ isOpen, onClose }) => {
     return (
         <BaseModal
             isOpen={isOpen}
-
+            isTabs={true}
             onRequestClose={() => {
                 onClose();
                 handlePopperClose();
             }}
-
+            className="modal-content modal-with-tabs"
             shouldCloseOnOverlayClick={true}
             title="Groups"
+     
         >
-            <div className="modal-container">
-                <AppBar position="static" className='modal-appbar'>
-                    <Tabs value={value}
-                        onChange={handleChange}
-                     
-                        indicatorColor="secondary"
-                        textColor="inherit"
-                    >
-                        <Tab label="My Groups" classes={{ root: 'custom-tab' }} />
-                        <Tab label="Create" classes={{ root: 'custom-tab' }} />
-                        <Tab label="Find" classes={{ root: 'custom-tab' }} />
-                    </Tabs>
-                </AppBar>
-                <TabPanel value={value} index={0}>
-                    <div className='tab-modal-content'>
-                        {loggedInUser && userGroupList.length > 0 ? (
-                            <div className='group'>
-                                {userGroupList.map((group) => (
-                                    <Accordion key={group._id}>
-                                        <AccordionSummary>
-                                            <div className='group-summary-columns'>
-                                                <div className='group-summary-info'>
-                                                    <div className='group-summary-section'>
-                                                        <Typography className='group-summary-name'><strong>{group.name}</strong></Typography>
+
+            <AppBar  >
+                <Tabs value={value}
+                    onChange={handleChange}
+
+                    indicatorColor="secondary"
+                    textColor="inherit"
+                >
+                    <Tab label="My Groups" />
+                    <Tab label="Create" />
+                    <Tab label="Find" classes={{ root: 'custom-tab' }} />
+                </Tabs>
+            </AppBar>
+            <TabPanel value={value} index={0}>
+                <div className='tab-modal-content'>
+                    {loggedInUser && userGroupList.length > 0 ? (
+                        <div className='group'>
+                            {userGroupList.map((group) => (
+                                <Accordion key={group._id}>
+                                    <AccordionSummary>
+                                        <div className='group-summary-columns'>
+                                            <div className='group-summary-info'>
+                                                <div className='group-summary-section'>
+                                                    <Typography className='group-summary-name'><strong>Name: </strong>{group.name}</Typography>
+                                                </div>
+                                                <div className='group-summary-icons'>
+                                                    <div className='group-summary-icon'>
+                                                        <Icon path={mdiAccountGroupOutline} size={.8} className='icon' />
+                                                        <Typography>{group.members.length}</Typography>
                                                     </div>
-                                                    <div className='group-summary-icons'>
-                                                        <div className='group-summary-icon'>
-                                                            <Icon path={mdiAccountGroupOutline} size={.8} className='icon' />
-                                                            <Typography>{group.members.length}</Typography>
-                                                        </div>
-                                                        <div className='group-summary-icon'>
-                                                            <Icon path={mdiFolderMultipleOutline} size={.8} className='icon' />
-                                                            <Typography>{group.groupListsModel.length}</Typography>
-                                                        </div>
-                                                        <div className='group-summary-icon'>
-                                                            <Icon
-                                                                path={group.visibility === 'public' ? mdiLockOpenVariantOutline : mdiLockOutline}
-                                                                size={.8}
-                                                                className='icon'
-                                                            />
-                                                        </div>
+                                                    <div className='group-summary-icon'>
+                                                        <Icon path={mdiFolderMultipleOutline} size={.8} className='icon' />
+                                                        <Typography>{group.groupListsModel.length}</Typography>
                                                     </div>
-                                                    <div className='group-summary-actions'>
-                                                        {isUserModerator(loggedInUser, group) ? (
-                                                            <>
-                                                                <Icon className="group-icon-button add-member" path={mdiPlusCircle} size={1.2} onClick={(event) => handleAddMember(event, group)} />
-                                                                <Icon className="group-icon-button edit-group" path={mdiPencilCircle} size={1.2} onClick={(event) => handleEditGroup(event, group)} />
-                                                                <Icon className="group-icon-button delete-group" path={mdiDeleteCircle} size={1.2} onClick={(event) => openConfirmation(event, null, group, "delete-group")} />
-                                                            </>
-                                                        ) : (
-                                                            <Icon className="group-icon-button leave-group" path={mdiArrowLeftBoldCircle} size={1.2} onClick={(event) => openConfirmation(event, null, group, "leave-group")} />
-                                                        )}
+                                                    <div className='group-summary-icon'>
+                                                        <Icon
+                                                            path={group.visibility === 'public' ? mdiLockOpenVariantOutline : mdiLockOutline}
+                                                            size={.8}
+                                                            className='icon'
+                                                        />
                                                     </div>
                                                 </div>
-                                                <div className='group-summary-description'>
-                                                    {group.description && group.description.match(/.{1,60}/g).map((text, index) => (
-                                                        <Typography key={index}>{text}</Typography>
-                                                    ))}
-                                                </div>
                                             </div>
-
-                                        </AccordionSummary>
-                                        <AccordionDetails>
-                                            <div className='group-members' style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
-                                                {group.members && userList && group.members.map((member, index) => {
-                                                    const user = userList.find(user => user._id === member.member_id);
-                                                    //Make into a component at some point
-                                                    return (
-                                                        <div className='group-member' key={index} style={{ display: 'flex', flexDirection: 'row', gap: '15px', borderRadius: '20px', backgroundColor: '#F2F2F2', padding: '5px' }}>
-                                                            <Avatar src={user ? user.profilePicture : ''} alt={user ? user.username : 'User not found'} />
-                                                            <div className='member-information'>
-                                                                <Typography><strong>User:</strong> {user ? user.username : 'User not found'}</Typography>
-                                                                <Typography><strong>Role: </strong>{member.role}</Typography>
-                                                            </div>
-                                                            <div className='member-actions' style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', marginLeft: 'auto', gap: '10px' }}>
-                                                                {isUserModerator(loggedInUser, group) && member.role !== 'moderator' && (
-                                                                    <Icon className="group-icon-button remove-member" path={mdiMinusCircle} size={1.2} onClick={(event) => openConfirmation(event, member, group, "remove-member")} style={{ cursor: 'pointer' }} />
-                                                                )}
-                                                                {isUserModerator(loggedInUser, group) && member.role !== 'moderator' && (
-                                                                    <Autocomplete
-                                                                        disableClearable
-                                                                        options={roles}
-                                                                        getOptionLabel={(option) => option}
-                                                                        style={{ width: 130, marginRight: 10 }}
-                                                                        renderInput={(params) => (
-                                                                            <TextField
-                                                                                {...params}
-                                                                                label="Set Role"
-                                                                                variant="outlined"
-                                                                                InputProps={{ ...params.InputProps, readOnly: true }}
-                                                                            />
-                                                                        )}
-                                                                        onChange={(event, newValue) => handleRoleChange(member, group, newValue)}
-                                                                        value={member.role}
-                                                                    />
-                                                                )}
-                                                            </div>
+                                            <div className='group-summary-description'>
+                                                {group.description && group.description.match(/.{1,60}/g).map((text, index) => (
+                                                    <Typography key={index}><strong>Description: </strong> {text}</Typography>
+                                                ))}
+                                            </div>
+                                            <div className='group-summary-actions'>
+                                                {isUserModerator(loggedInUser, group) ? (
+                                                    <>
+                                                        <Icon className="group-icon-button add-member" path={mdiPlusCircle} size={1.2} onClick={(event) => handleAddMember(event, group)} />
+                                                        <Icon className="group-icon-button edit-group" path={mdiPencilCircle} size={1.2} onClick={(event) => handleEditGroup(event, group)} />
+                                                        <Icon className="group-icon-button delete-group" path={mdiDeleteCircle} size={1.2} onClick={(event) => openConfirmation(event, null, group, "delete-group")} />
+                                                    </>
+                                                ) : (
+                                                    <Icon className="group-icon-button leave-group" path={mdiArrowLeftBoldCircle} size={1.2} onClick={(event) => openConfirmation(event, null, group, "leave-group")} />
+                                                )}
+                                            </div>
+                                        </div>
+                                    </AccordionSummary>
+                                    <AccordionDetails>
+                                        <div className='group-members' style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                                            {group.members && userList && group.members.map((member, index) => {
+                                                const user = userList.find(user => user._id === member.member_id);
+                                                //Make into a component at some point
+                                                return (
+                                                    <div className='group-member' key={index} style={{ display: 'flex', flexDirection: 'row', gap: '15px', borderRadius: '20px', backgroundColor: '#F2F2F2', padding: '5px' }}>
+                                                        <Avatar src={user ? user.profilePicture : ''} alt={user ? user.username : 'User not found'} />
+                                                        <div className='member-information'>
+                                                            <Typography><strong>User:</strong> {user ? user.username : 'User not found'}</Typography>
+                                                            <Typography><strong>Role: </strong>{member.role}</Typography>
                                                         </div>
-                                                    );
-                                                })}
-                                            </div>
-                                        </AccordionDetails>
-                                        <ConfirmationModal
-                                            onRequestClose={cancelConfirmation}
-                                            isOpen={isConfirmationModalOpen}
-                                            onConfirm={handleConfirmationAction}
-                                            onClose={cancelConfirmation}
-                                            message={<span>{confirmationMessage}</span>}
-                                        />
-
-                                        <GroupModalPopper
-                                            anchorEl={anchorElPopper}
-                                            open={popperOpen}
-                                            onClose={handlePopperClose}
-                                            userList={userList}
-                                            mode={popperMode}
-                                            group={selectedGroup ? selectedGroup : null}
-                                        />
-                                    </Accordion>
-                                ))}
-                            </div>
-                        ) : (
-                            <>
-                                <Typography component="div">
-                                    It looks like you don't have any groups yet. <br />
-                                    Why not create one?
-                                </Typography>
-                                <button className='modal-button' onClick={() => setValue(1)} style={{ textAlign: 'center' }}> CreateGroup </button>
-                            </>
-                        )}
-                    </div>
-                </TabPanel >
-                <TabPanel value={value} index={1}>
-                    <div className='tab-modal-content'>
-                        <form className='create-group-form' onSubmit={handleCreateGroup}>
-                            <TextField
-                                name="name"
-                                label="Group Name"
-                                variant="outlined"
-                                value={groupData.name}
-                                style={{ width: '100%' }}
-                                onChange={createHandleInputChange}
-                            />
-                            <TextField
-                                name="description"
-                                label="Group Description"
-                                variant="outlined"
-                                value={groupData.description}
-                                multiline
-                                rows={3}
-                                style={{ width: '100%' }}
-                                onChange={createHandleInputChange}
-                            />
-                            <TextField
-                                name="listName"
-                                label="Default list name"
-                                value={groupData.listName}
-                                variant="outlined"
-                                style={{ width: '100%' }}
-                                onChange={createHandleInputChange}
-                            />
-                            {userList && loggedInUser ? (
-                                <Autocomplete
-                                    multiple
-                                    options={userList.filter(user => user.email !== loggedInUser.email)} // filter out the logged in user
-                                    getOptionLabel={(option) => option.email}
-                                    style={{ width: '100%' }}
-                                    value={groupData.users}
-                                    onChange={createHandleUsersChange}
-                                    renderInput={(params) => (
-                                        <TextField {...params} component="div" variant="outlined" label="Invite Users" />
-                                    )}
-                                />
-                            ) : (
-                                <div>Loading...</div>
-                            )}
-                            <FormControlLabel
-                                control={
-                                    <Checkbox
-                                        checked={groupData.visibility === 'public'}
-                                        onChange={(e) => createHandleInputChange({
-                                            target: {
-                                                name: 'visibility',
-                                                value: e.target.checked ? 'public' : 'private'
-                                            }
-                                        })}
-                                        name="visibility"
-                                        color="primary"
+                                                        <div className='member-actions' style={{ display: 'flex', flexDirection: 'row', justifyContent: 'flex-end', alignItems: 'center', marginLeft: 'auto', gap: '10px' }}>
+                                                            {isUserModerator(loggedInUser, group) && member.role !== 'moderator' && (
+                                                                <Icon className="group-icon-button remove-member" path={mdiMinusCircle} size={1.2} onClick={(event) => openConfirmation(event, member, group, "remove-member")} style={{ cursor: 'pointer' }} />
+                                                            )}
+                                                            {isUserModerator(loggedInUser, group) && member.role !== 'moderator' && (
+                                                                <Autocomplete
+                                                                    disableClearable
+                                                                    options={roles}
+                                                                    getOptionLabel={(option) => option}
+                                                                    style={{ width: 130, marginRight: 10 }}
+                                                                    renderInput={(params) => (
+                                                                        <TextField
+                                                                            {...params}
+                                                                            label="Set Role"
+                                                                            variant="outlined"
+                                                                            InputProps={{ ...params.InputProps, readOnly: true }}
+                                                                        />
+                                                                    )}
+                                                                    onChange={(event, newValue) => handleRoleChange(member, group, newValue)}
+                                                                    value={member.role}
+                                                                />
+                                                            )}
+                                                        </div>
+                                                    </div>
+                                                );
+                                            })}
+                                        </div>
+                                    </AccordionDetails>
+                                    <ConfirmationModal
+                                        onRequestClose={cancelConfirmation}
+                                        isOpen={isConfirmationModalOpen}
+                                        onConfirm={handleConfirmationAction}
+                                        onClose={cancelConfirmation}
+                                        message={<span>{confirmationMessage}</span>}
                                     />
-                                }
-                                label="Public"
-                            />
-                            {createGroupError && <div className='error'>{createGroupError}</div>}
-                            <button className='modal-button' type='submit'>Create Group</button>
-                        </form>
-                    </div>
-                </TabPanel>
-                <TabPanel value={value} index={2}>
-                    <div className='tab-modal-content'>
+
+                                    <GroupModalPopper
+                                        anchorEl={anchorElPopper}
+                                        open={popperOpen}
+                                        onClose={handlePopperClose}
+                                        userList={userList}
+                                        mode={popperMode}
+                                        group={selectedGroup ? selectedGroup : null}
+                                    />
+                                </Accordion>
+                            ))}
+                        </div>
+                    ) : (
+                        <>
+                            <Typography component="div">
+                                It looks like you don't have any groups yet. <br />
+                                Why not create one?
+                            </Typography>
+                            <button className='modal-button' onClick={() => setValue(1)} style={{ textAlign: 'center' }}> CreateGroup </button>
+                        </>
+                    )}
+                </div>
+            </TabPanel >
+            <TabPanel value={value} index={1}>
+            <div className='tab-modal-content'>
+                <form className='create-group-form' onSubmit={handleCreateGroup}>
+                    <TextField
+                        name="name"
+                        label="Group Name"
+                        variant="outlined"
+                        value={groupData.name}
+                        style={{ width: '100%' }}
+                        onChange={createHandleInputChange}
+                    />
+                    <TextField
+                        name="description"
+                        label="Group Description"
+                        variant="outlined"
+                        value={groupData.description}
+                        multiline
+                        rows={3}
+                        style={{ width: '100%' }}
+                        onChange={createHandleInputChange}
+                    />
+                    <TextField
+                        name="listName"
+                        label="Default list name"
+                        value={groupData.listName}
+                        variant="outlined"
+                        style={{ width: '100%' }}
+                        onChange={createHandleInputChange}
+                    />
+                    {userList && loggedInUser ? (
                         <Autocomplete
-                            freeSolo
-                            options={[]}
-                            inputValue={searchInput}
-                            onInputChange={handleSearchChange}
+                            multiple
+                            options={userList.filter(user => user.email !== loggedInUser.email)} // filter out the logged in user
+                            getOptionLabel={(option) => option.email}
+                            style={{ width: '100%' }}
+                            value={groupData.users}
+                            onChange={createHandleUsersChange}
                             renderInput={(params) => (
-                                <TextField
-                                    {...params}
-                                    label="Search Groups"
-                                    variant="outlined"
-                                    style={{ width: '250px' }}
-                                />
+                                <TextField {...params} component="div" variant="outlined" label="Invite Users" />
                             )}
                         />
+                    ) : (
+                        <div>Loading...</div>
+                    )}
+                    <div className='create-group-checkbox'>
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={groupData.visibility === 'public'}
+                                    onChange={(e) => createHandleInputChange({
+                                        target: {
+                                            name: 'visibility',
+                                            value: e.target.checked ? 'public' : 'private'
+                                        }
+                                    })}
+                                    name="visibility"
+                                    color="primary"
+                                />
+                            }
+                            label="Public"
+                        />
+                    </div>
+                    {createGroupError && <div className='error'>{createGroupError}</div>}
+                    <div className='modal-button-wrapper'>
+                        <button className='modal-button' type='submit'>Create Group</button>
+                    </div>
+                </form>
+            </div>
+            </TabPanel>
+            <TabPanel value={value} index={2}>
+                <div className='tab-modal-content'>
+                    <div className='search-wrapper'>
+                    <Autocomplete
+                        freeSolo
+                        options={[]}
+                        inputValue={searchInput}
+                        onInputChange={handleSearchChange}
+                        renderInput={(params) => (
+                            <TextField
+                                {...params}
+                                label="Search Groups"
+                                variant="outlined"
+                                style={{ width: '250px' }}
+                            />
+                        )}
+                    />
+                    </div>
 
-                        <div className="group find-group">
-                            {filteredGroups
-                                .filter(group => group.owner !== null && loggedInUser && !group.members.some(member => member.member_id._id === loggedInUser._id))
-                                .map((group) => (
-                                    <Accordion key={group._id}>
-                                        <AccordionSummary>
-                                            <div className='group-summary-columns'>
-                                                <div className='group-summary-info'>
-                                                    <div className='group-summary-section'>
-                                                        <Typography className='group-summary-name find-groups'><strong>{group.name}</strong></Typography>
+                    <div className="group find-group">
+                        {filteredGroups
+                            .filter(group => group.owner !== null && loggedInUser && !group.members.some(member => member.member_id._id === loggedInUser._id))
+                            .map((group) => (
+                                <Accordion key={group._id}>
+                                    <AccordionSummary>
+                                        <div className='group-summary-columns'>
+                                            <div className='group-summary-info'>
+                                                <div className='group-summary-section'>
+                                                    <Typography className='group-summary-name find-groups'><strong>{group.name}</strong></Typography>
+                                                </div>
+                                                <div className='group-summary-icons'>
+                                                    <div className='group-summary-icon'>
+                                                        <Icon path={mdiAccountGroupOutline} size={.8} className='icon' />
+                                                        <Typography>{group.members.length}</Typography>
                                                     </div>
-                                                    <div className='group-summary-icons'>
-                                                        <div className='group-summary-icon'>
-                                                            <Icon path={mdiAccountGroupOutline} size={.8} className='icon' />
-                                                            <Typography>{group.members.length}</Typography>
-                                                        </div>
-                                                        <div className='group-summary-icon'>
-                                                            <Icon path={mdiFolderMultipleOutline} size={.8} className='icon' />
-                                                            <Typography>{group.groupListsModel.length}</Typography>
-                                                        </div>
-                                                    </div>
-                                                    <div className='group-summary-actions'>
-                                                        <Icon className="group-icon-button request-join" path={mdiHumanGreetingProximity} size={1.2} onClick={(event) => handleRequestJoin(event)} />
+                                                    <div className='group-summary-icon'>
+                                                        <Icon path={mdiFolderMultipleOutline} size={.8} className='icon' />
+                                                        <Typography>{group.groupListsModel.length}</Typography>
                                                     </div>
                                                 </div>
+                                                <div className='group-summary-actions'>
+                                                    <Icon className="group-icon-button request-join" path={mdiHumanGreetingProximity} size={1.2} onClick={(event) => handleRequestJoin(event)} />
+                                                </div>
                                             </div>
-                                        </AccordionSummary>
-                                        <AccordionDetails>
-                                            <div className='group-details-description'>
-                                                <Typography><strong>Description:</strong> {group.description ? group.description : "no description"}</Typography>
-                                            </div>
-                                            <div className='group-details-owner'>
-                                                <Typography><strong>Group Owner:</strong> {group.owner.email}</Typography>
-                                            </div>
-                                        </AccordionDetails>
-                                    </Accordion>
-                                ))}
-                        </div>
+                                        </div>
+                                    </AccordionSummary>
+                                    <AccordionDetails>
+                                        <div className='group-details-description'>
+                                            <Typography><strong>Description:</strong> {group.description ? group.description : "no description"}</Typography>
+                                        </div>
+                                        <div className='group-details-owner'>
+                                            <Typography><strong>Group Owner:</strong> {group.owner.email}</Typography>
+                                        </div>
+                                    </AccordionDetails>
+                                </Accordion>
+                            ))}
                     </div>
-                </TabPanel>
-            </div>
+                </div>
+            </TabPanel>
+
         </BaseModal >
     );
 };
