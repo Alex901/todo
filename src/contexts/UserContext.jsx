@@ -3,7 +3,7 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import axios from "axios";
 import { useTodoContext } from "./todoContexts";
 import { toast } from "react-toastify";
-import { mdiYahoo } from "@mdi/js";
+
 let BASE_URL;
 
 if (process.env.NODE_ENV === 'test') {

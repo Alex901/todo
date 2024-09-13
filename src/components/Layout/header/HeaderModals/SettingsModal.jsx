@@ -9,6 +9,7 @@ import SettingsList from '../SettingsList/SettingsList';
 import UserListEntry from '../UserListEntry/UserListEntry';
 import FeedbackListEntry from './FeedbackListEntry/FeedbackListEntry';
 import AdminPopper from './AdminPopper/AdminPopper';
+import imageCompression from 'browser-image-compression';
 
 const SettingsModal = ({ isOpen, onClose }) => {
     const [selectedTab, setSelectedTab] = useState(0);
@@ -38,7 +39,7 @@ const SettingsModal = ({ isOpen, onClose }) => {
         ? unresolvedFeedbackList.filter(feedback => feedback.type === selectedType)
         : unresolvedFeedbackList;
 
-    const MAX_SIZE = 10 * 1024 * 1024; // 1MB
+    const MAX_SIZE = 100 * 1024 * 1024; // 1MB
 
     const handleOpenPopper = (event, mode) => {
         setAnchorEl(event.currentTarget);
@@ -59,7 +60,7 @@ const SettingsModal = ({ isOpen, onClose }) => {
     const handleAvatarChange = (event) => {
         const file = event.target.files[0];
         if (file.size > MAX_SIZE) {
-            setImageSizeError('File size is too large. Please upload an image less than 1MB');
+            setImageSizeError('File size is too large. Please upload an image less than 10MB');
             return;
         } else {
             setImageSizeError('');
