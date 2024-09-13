@@ -38,7 +38,7 @@ const SettingsModal = ({ isOpen, onClose }) => {
         ? unresolvedFeedbackList.filter(feedback => feedback.type === selectedType)
         : unresolvedFeedbackList;
 
-    const MAX_SIZE = 1 * 1024 * 1024; // 1MB
+    const MAX_SIZE = 10 * 1024 * 1024; // 1MB
 
     const handleOpenPopper = (event, mode) => {
         setAnchorEl(event.currentTarget);
