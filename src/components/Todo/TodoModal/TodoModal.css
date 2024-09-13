@@ -16,7 +16,7 @@
 }
 
 .advanced-options.show {
-    max-height: 890px; 
+    max-height: 3000px;  /* this is just for the animation */
     opacity: 1;
 }
 
