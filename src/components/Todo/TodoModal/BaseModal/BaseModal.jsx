@@ -15,7 +15,6 @@ const BaseModal = ({ isTabs, isOpen, onRequestClose, title, children, ...props }
       }
     };
 
-    console.log("DEBUG: isTabs", isTabs)
 
     const overlayElement = document.querySelector('.modal-overlay');
 

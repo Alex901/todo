@@ -7,7 +7,7 @@ import Feedback from "react-bootstrap/esm/Feedback";
 
 const Notification = ({ notificationData, type, message, timestamp }) => {
     const [isVisible, setIsVisible] = useState(true);
-    const { acceptGroupInvite, declineGroupInvite } = useNotificationContext();
+    const { acceptGroupInvite, declineGroupInvite, declineRequestToJoinGroup, acceptRequestToJoinGroup } = useNotificationContext();
     const words = message.split(' ');
     const firstWord = words.shift();
     const lastWord = words.pop();
@@ -21,6 +21,16 @@ const Notification = ({ notificationData, type, message, timestamp }) => {
         setIsVisible(false);
         setTimeout(() => declineGroupInvite(notificationData._id), 300);
     }
+
+    const handleAcceptUser = () => {
+      console.log(notificationData);
+      acceptRequestToJoinGroup(notificationData._id, notificationData.group, notificationData.from)
+    }
+
+    const handleDeclineUser = () => {
+      declineRequestToJoinGroup(notificationData._id, notificationData.from);
+    }
+
 
     if (type === 'group') {
         return (
@@ -43,7 +53,28 @@ const Notification = ({ notificationData, type, message, timestamp }) => {
             </div>
           </div>
         );
-    } else if (type === 'feedback') {
+    } else if (type === 'request-to-join-group') {
+      return (
+          <div className={`notification-item ${isVisible ? '' : 'fade-out'}`}>
+              <p className='date'>{new Date(timestamp).toLocaleString()}</p>
+              
+              <p className="message">
+                  <span className="highlight">{firstWord}</span> 
+                  {" " + words.join(' ') + " "}
+                  <span className="highlight">{lastWord}</span>
+              </p>
+              
+              <div className="button-container">
+                  <button className="notification-button accept-notify" onClick={handleAcceptUser}>
+                      <Icon path={mdiCheckCircle} size={1.2} />
+                  </button>
+                  <button className="notification-button decline-notify" onClick={handleDeclineUser}>
+                      <Icon path={mdiCloseCircle} size={1.2} />
+                  </button>
+              </div>
+          </div>
+      );
+  } else if (type === 'feedback') {
         return (
             <div className={`notification-item ${isVisible ? '' : 'fade-out'}`}>
                 <p className='date'> {new Date(timestamp).toLocaleString()}</p>

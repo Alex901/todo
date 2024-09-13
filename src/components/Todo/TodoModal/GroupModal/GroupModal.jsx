@@ -47,7 +47,7 @@ const GroupModal = ({ isOpen, onClose }) => {
     const [groupData, setGroupData] = useState(initialGroupData);
     const { createGroup, userGroupList, allGroupList, leaveGroup, updateRole, removeUserFromGroup, deleteGroup } = useGroupContext();
     const [createGroupError, setCreateGroupError] = useState('');
-    const { inviteToGroup } = useNotificationContext();
+    const { inviteToGroup, requestToJoinGroup } = useNotificationContext();
     const roles = ['edit', 'observer', 'moderator']; // huh ? 
     const [searchInput, setSearchInput] = useState('');
     const [filteredGroups, setFilteredGroups] = useState([]);
@@ -191,15 +191,6 @@ const GroupModal = ({ isOpen, onClose }) => {
         }
     };
 
-
-
-    const handleRemoveMember = (member, group) => {
-        if (member.role === 'moderator') {
-            toast.error("A moderator can't remove themselves or other moderators");
-            return;
-        }
-    };
-
     const handleRoleChange = (member, group, newRole) => {
         if (member._id === loggedInUser._id) {
             toast.error("You can't change your own role, but you somehow found a way. Congrats!")
@@ -220,9 +211,10 @@ const GroupModal = ({ isOpen, onClose }) => {
         }
     };
 
-    const handleRequestJoin = (event) => {
+    const handleRequestJoin = (event, group) => {
         event.stopPropagation();
-        console.log('Request join group', event.target);
+        console.log('Request join group', event.target._id);
+        requestToJoinGroup(loggedInUser._id, group);
     };
 
     const handlePopperClose = () => {
@@ -485,7 +477,7 @@ const GroupModal = ({ isOpen, onClose }) => {
                                                     </div>
                                                 </div>
                                                 <div className='group-summary-actions'>
-                                                    <Icon className="group-icon-button request-join" path={mdiHumanGreetingProximity} size={1.2} onClick={(event) => handleRequestJoin(event)} />
+                                                    <Icon className="group-icon-button request-join" path={mdiHumanGreetingProximity} size={1.2} onClick={(event) => handleRequestJoin(event, group)} />
                                                 </div>
                                             </div>
                                         </div>

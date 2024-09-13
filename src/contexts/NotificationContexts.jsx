@@ -75,7 +75,7 @@ const NotificationProvider = ({ children }) => {
      */
     const inviteToGroup = async (from, to, groupId) => {
         console.log("DEBUG: inviteToGroup: ", from, to, groupId);
-    
+
         const sendInvite = async (recipient) => {
             try {
                 const response = await axios.post(`${BASE_URL}/notifications/groupinvite`, { from, to: recipient, groupId }, { withCredentials: true });
@@ -99,7 +99,7 @@ const NotificationProvider = ({ children }) => {
                 }
             }
         };
-    
+
         if (Array.isArray(to)) {
             for (const recipient of to) {
                 await sendInvite(recipient);
@@ -115,6 +115,7 @@ const NotificationProvider = ({ children }) => {
      * 
      * @param {string} notificationId - The ID of the invitation notification.
      */
+    //TODO: notify user about the outcome
     const acceptGroupInvite = async (notificationId, groupId) => {
         console.log("DEBUG: acceptGroupInvite, notification id and group to add too: ", notificationId, groupId);
         //Add the user to the group and set up the lists 
@@ -124,7 +125,7 @@ const NotificationProvider = ({ children }) => {
         try {
             const response = await axios.delete(`${BASE_URL}/notifications/delete/${notificationId}`, { withCredentials: true });
             //  console.log("DEBUG: response: ", response);
-            if (response.status === 200) {  
+            if (response.status === 200) {
                 getNotifications();
                 toast.success("Invite accepted");
             }
@@ -153,13 +154,14 @@ const NotificationProvider = ({ children }) => {
      * -> Delete notification and notifty sender?(:TODO)
      * @param {string} notificationId - The ID of the invitation notification.
      */
+    //TODO: notify user about the outcome
     const declineGroupInvite = async (notificationId) => {
         console.log("DEBUG: declineGroupInvite: ", notificationId);
         //delete the notification and notify the sender at some point
         try {
             const response = await axios.delete(`${BASE_URL}/notifications/delete/${notificationId}`, { withCredentials: true });
             // console.log("DEBUG: response: ", response);
-            getNotifications();
+            checkLogin();
             toast.success("Invite declined");
         } catch (error) {
             console.error("Error declining invite: ", error);
@@ -180,10 +182,117 @@ const NotificationProvider = ({ children }) => {
         }
     }
 
+    const requestToJoinGroup = (userToJoin, group) => {
+        console.log("DEBUG: requestToJoinGroup - userToJoin: ", userToJoin);
+        console.log("DEBUG: requestToJoinGroup - group: ", group);
+
+        const groupId = group._id;
+
+        const moderatorIds = group.members
+            .filter(member => member.role === 'moderator')
+            .map(moderator => moderator.member_id._id);
+        console.log("DEBUG: moderators: ", moderatorIds);
+
+
+        try {
+            const request = axios.post(`${BASE_URL}/notifications/request-to-join-group`, { from: userToJoin, to: moderatorIds, group: groupId, }, { withCredentials: true });
+
+                toast.success("Request to join group sent");
+           
+        } catch (error) {
+            console.error("Error requesting to join group: ", error);
+            if (error.response) {
+                // The request was made and the server responded with a status code
+                // that falls out of the range of 2xx
+                console.error(error.response.data);
+                console.error(error.response.status);
+                console.error(error.response.headers);
+                toast.error("Error requesting to join group: unknown error");
+            } else if (error.request) {
+                // The request was made but no response was received
+                console.error(error.request);
+                toast.error("Error requesting to join group: No response from the server");
+            } else {
+                // Something happened in setting up the request that triggered an Error
+                toast.error("Error requesting to join group: unknown error");
+                console.error('Error', error.message);
+            }
+        }
+
+
+
+    }
+
+    //TODO: notify user about the outcome
+    const declineRequestToJoinGroup = (notificationToDelete, userToNotify) => {
+        console.log("DEBUG: notify user: ", userToNotify);
+
+        try {
+            const response = axios.delete(`${BASE_URL}/notifications/delete/${notificationToDelete}`, { withCredentials: true });
+            toast.success("Request declined");
+            checkLogin();
+        } catch (error) {
+            console.error("Error declining request to join group: ", error);
+            if (error.response) {
+                // The request was made and the server responded with a status code
+                // that falls out of the range of 2xx
+                console.error(error.response.data);
+                console.error(error.response.status);
+                console.error(error.response.headers);
+                toast.error("Error declining request to join group: unknown error");
+            } else if (error.request) {
+                // The request was made but no response was received
+                console.error(error.request);
+                toast.error("Error declining request to join group: No response from the server");
+            } else {
+                // Something happened in setting up the request that triggered an Error
+                toast.error("Error declining request to join group: unknown error");
+                console.error('Error', error.message);
+            }
+        }
+    }
+
+    //TODO: notify user about the outcome
+    const acceptRequestToJoinGroup = (notificationToDelete, groupToAddUserTo, userToAddToGroup) => {
+        console.log("DEBUG: accept RequestToJoinGroup");
+        console.log("DEBUG: Add and notify user: ", userToAddToGroup, " to group", groupToAddUserTo);
+        console.log("DEBUG: Delete notification: ", notificationToDelete);
+
+        addUserToGroup(groupToAddUserTo, userToAddToGroup);
+
+        try {
+            const response = axios.delete(`${BASE_URL}/notifications/delete/${notificationToDelete}`, { withCredentials: true });
+            toast.success("Request accepted");
+            checkLogin();
+        } catch (error) {
+            console.error("Error accepting request to join group: ", error);
+            if (error.response) {
+                // The request was made and the server responded with a status code
+                // that falls out of the range of 2xx
+                console.error(error.response.data);
+                console.error(error.response.status);
+                console.error(error.response.headers);
+                toast.error("Error accepting request to join group: unknown error");
+            } else if (error.request) {
+                // The request was made but no response was received
+                console.error(error.request);
+                toast.error("Error accepting request to join group: No response from the server");
+            } else {
+                // Something happened in setting up the request that triggered an Error
+                toast.error("Error accepting request to join group: unknown error");
+                console.error('Error', error.message);
+            }
+        }
+    }
+
+
 
 
     return (
-        <NotificationContexts.Provider value={{ inviteToGroup, userNotifications, acceptGroupInvite, declineGroupInvite, getNotifications }}>
+        <NotificationContexts.Provider value={{
+            inviteToGroup, userNotifications, acceptGroupInvite, declineGroupInvite, getNotifications,
+            requestToJoinGroup, declineRequestToJoinGroup, acceptRequestToJoinGroup
+        }}>
             {children}
         </NotificationContexts.Provider>
     );
