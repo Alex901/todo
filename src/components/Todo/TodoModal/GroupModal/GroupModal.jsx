@@ -17,6 +17,7 @@ import GroupModalPopper from './GroupModalPopper/GroupModalPopper';
 import { useTranslation } from "react-i18next";
 import { toast } from "react-toastify";
 import ConfirmationModal from '../ConfirmationModal/ConfirmationModal';
+import BaseModal from '../BaseModal/BaseModal';
 
 const TabPanel = (props) => { //TODO: Move this at some point
     const { children, value, index, ...other } = props;
@@ -239,27 +240,28 @@ const GroupModal = ({ isOpen, onClose }) => {
     };
 
     const handlePopperClose = () => {
-        setPopperOpen(!popperOpen);
+        setPopperOpen(false);
         setAnchorElPopper(null);
         setPopperMode('');
     };
 
     return (
-        <ReactModal
+        <BaseModal
             isOpen={isOpen}
+
             onRequestClose={() => {
                 onClose();
                 handlePopperClose();
             }}
-            className="modal-content modal-with-tabs"
-            overlayClassName="modal-overlay"
+
             shouldCloseOnOverlayClick={true}
+            title="Groups"
         >
             <div className="modal-container">
                 <AppBar position="static" className='modal-appbar'>
                     <Tabs value={value}
                         onChange={handleChange}
-                        variant="fullWidth"
+                     
                         indicatorColor="secondary"
                         textColor="inherit"
                     >
@@ -510,7 +512,7 @@ const GroupModal = ({ isOpen, onClose }) => {
                     </div>
                 </TabPanel>
             </div>
-        </ReactModal >
+        </BaseModal >
     );
 };
 

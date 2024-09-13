@@ -9,7 +9,7 @@ const BottomDrawer = ({ isOpen, onClose, children, listName }) => {
     <Drawer anchor="bottom" open={isOpen} onClose={onClose} className="bottom-drawer">
          <div className="drawer-header" onClick={onClose}>
         <Icon path={mdiChevronDown} size={1} color="white" className="left-icon" />
-        <span className="drawer-title">{listName}</span>
+        <span className="drawer-title"> List Settings</span>
         <Icon path={mdiChevronDown} size={1} color="white" className="right-icon" />
       </div>
       <div className="drawer-content">

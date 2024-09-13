@@ -1123,7 +1123,7 @@ function App() {
             <AnythingList type={activeView} />
             {isMobile && (
               <div className="bottom-drawer-button-wrapper">
-                <BottomDrawerButton listName={loggedInUser.activeList} onOpen={handleOpenDrawer} />
+                <BottomDrawerButton listName={loggedInUser.activeList} onOpen={handleOpenDrawer} user={loggedInUser} />
               </div>
             )}
           </Card>
