@@ -26,6 +26,7 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
     const { isLoggedIn, loggedInUser } = useUserContext();
     const [hoveredStepId, setHoveredStepId] = useState(null);
     const [showAdvancedOptions, setShowAdvancedOptions] = useState(false);
+    const [repeatable, setRepeatability] = useState(false);
     const [newTaskData, setNewTaskData] = useState({
         taskName: '',
         description: '',
@@ -35,8 +36,36 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
         steps: [],
         difficulty: "",
         estimatedTime: 0,
-        tags: []
+        tags: [],
     });
+
+    useEffect(() => {
+        setNewTaskData(prevData => ({
+            ...prevData,
+            ...(repeatable ? {
+                repeatable: true,
+                repeatInterval: '',
+                repeatDays: [],
+                repeatMonthlyOption: '',
+                repeatYearlyOption: '',
+                repeatUntill: null,
+                repeatTimes: null,
+                repeatableEmoji: '',
+                repeatNotify: false
+            } : {
+                repeatable: undefined,
+                repeatInterval: undefined,
+                repeatDays: undefined,
+                repeatMonthlyOption: undefined,
+                repeatYearlyOption: undefined,
+                repeatUntill: undefined,
+                repeatTimes: undefined,
+                repeatableEmoji: undefined,
+                repeatNotify: undefined
+            })
+        }));
+    }, [repeatable]);
+
     const { t, i18n } = useTranslation();
 
     const options = [
@@ -75,6 +104,16 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
         setErrorMessage('');
     };
 
+    const handleRepeatDaysChange = (event) => {
+        const { name, checked } = event.target;
+        setNewTaskData((prevData) => ({
+            ...prevData,
+            repeatDays: checked
+                ? [...prevData.repeatDays, name]
+                : prevData.repeatDays.filter((day) => day !== name),
+        }));
+    };
+
     const handleTagChange = (event) => {
         setNewTaskData({
             ...newTaskData,
@@ -89,15 +128,19 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
         });
     };
 
-    const handleSelectChange = (event) => {
-        const selectedOption = event.target.value;
+    const handleRepeatableChange = (event) => {
+        setRepeatability(event.target.checked);
+    };
 
-        if (options.some(option => option.value === selectedOption)) {
-            setNewTaskData({
-                ...newTaskData,
-                priority: selectedOption,
-            });
-        }
+    const handleSelectChange = (event) => {
+        const { name, value } = event.target;
+
+        setNewTaskData({
+            ...newTaskData,
+            [name]: value,
+        });
+
+        console.log(newTaskData);
     };
 
 
@@ -130,6 +173,7 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
             estimatedTime: null,
             tags: []
         });
+        setRepeatability(false);
         setShowAdvancedOptions(false);
     }
 
@@ -219,6 +263,7 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
             estimatedTime: 0,
             tags: []
         });
+        setRepeatability(false);
         setErrorMessage('');
         setShowAdvancedOptions(false);
         onRequestClose();
@@ -238,7 +283,7 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
 
             {isLoggedIn ? (
 
-                <form className="create-entry-form" onSubmit={handleSubmit} style={{ }}>
+                <form className="create-entry-form" onSubmit={handleSubmit} style={{}}>
                     <TextField
                         id="taskName"
                         label="Enter task name*"
@@ -250,6 +295,109 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
                         inputProps={{ maxLength: 70 }}
                         name='taskName'
                     />
+
+                    <FormControlLabel
+                        control={
+                            <Checkbox
+                                checked={repeatable}
+                                onChange={handleRepeatableChange}
+                                name="repeatable"
+                                color="primary"
+                            />
+                        }
+                        label="Repeatable"
+                    />
+
+                    {repeatable && (
+                        <FormControl variant="outlined" style={{ marginTop: '10px', minWidth: '150px' }} size='small'>
+                            <InputLabel id="repeat-interval-label">Repeat Interval</InputLabel>
+                            <Select
+                                name="repeatInterval"
+                                labelId="repeat-interval-label"
+                                id="repeat-interval"
+                                value={newTaskData.repeatInterval || ''}
+                                onChange={handleSelectChange}
+                                label="Repeat Interval"
+                            >
+                                <MenuItem value="daily">Daily</MenuItem>
+                                <MenuItem value="weekly">Weekly</MenuItem>
+                                <MenuItem value="monthly">Monthly</MenuItem>
+                                <MenuItem value="yearly">Yearly</MenuItem>
+                            </Select>
+                        </FormControl>
+                    )}
+
+                    {newTaskData.repeatInterval === 'daily' && (
+                        <FormControl variant="outlined" style={{ marginTop: '10px', minWidth: '150px' }} size='small'>
+                            <TextField
+                                label="Repeat Until"
+                                type="date"
+                                name="repeatUntil"
+                                onChange={handleInputChange}
+                                InputLabelProps={{
+                                    shrink: true,
+                                }}
+                            />
+                        </FormControl>
+                    )}
+
+                    {newTaskData.repeatInterval === 'weekly' && (
+                        <div style={{ marginTop: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].map((day) => (
+                                <div key={day} style={{ textAlign: 'center', margin: '0 5px' }}>
+                                    <div style={{ marginBottom: '5px' }}>{day.charAt(0)}</div>
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox
+                                                checked={newTaskData.repeatDays.includes(day)}
+                                                onChange={handleRepeatDaysChange}
+                                                name={day}
+                                                color="primary"
+                                            />
+                                        }
+                                        label=""
+                                        style={{ margin: 0 }}
+                                    />
+                                </div>
+                            ))}
+                        </div>
+                    )}
+                    {/* 
+                    {newTaskData.repeatInterval === 'monthly' && (
+                        <FormControl variant="outlined" style={{ marginTop: '10px', minWidth: '150px' }} size='small'>
+                            <InputLabel id="repeat-monthly-option-label">Monthly Option</InputLabel>
+                            <Select
+                                name="repeatMonthlyOption"
+                                labelId="repeat-monthly-option-label"
+                                id="repeat-monthly-option"
+                                value={newTaskData.repeatMonthlyOption || ''}
+                                onChange={handleToggleChange}
+                                label="Monthly Option"
+                            >
+                                <MenuItem value="start">Start of the Month</MenuItem>
+                                <MenuItem value="end">End of the Month</MenuItem>
+                            </Select>
+                        </FormControl>
+                    )}
+
+                    {newTaskData.repeatInterval === 'yearly' && (
+                        <FormControl variant="outlined" style={{ marginTop: '10px', minWidth: '150px' }} size='small'>
+                            <InputLabel id="repeat-yearly-option-label">Yearly Option</InputLabel>
+                            <Select
+                                name="repeatYearlyOption"
+                                labelId="repeat-yearly-option-label"
+                                id="repeat-yearly-option"
+                                value={newTaskData.repeatYearlyOption || ''}
+                                onChange={handleToggleChange}
+                                label="Yearly Option"
+                            >
+                                <MenuItem value="start">Start of the Year</MenuItem>
+                                <MenuItem value="end">End of the Year</MenuItem>
+                            </Select>
+                        </FormControl>
+                    )} */}
+
+
                     <Button onClick={handleToggleAdvancedOptions} style={{ margin: `10px 0 ${showAdvancedOptions ? '10px' : '0'} 0` }}>
                         {showAdvancedOptions ? 'Hide Advanced Options' : 'Show Advanced Options'}
                     </Button>
@@ -265,177 +413,178 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
                             inputProps={{ maxLength: 500 }}
                             name="description"
                         />
-                    
 
 
 
-                    <div className="input-container" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%', gap: '20px' }}>
-                        <FormControl style={{ width: '200px' }}>
+
+                        <div className="input-container" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%', gap: '20px' }}>
+                            <FormControl style={{ width: '200px' }}>
+                                <TextField
+                                    id="dueDate"
+                                    type="datetime-local"
+                                    label="Deadline"
+                                    className='modal-input-date'
+                                    onChange={handleInputChange}
+                                    name='dueDate'
+                                    InputLabelProps={{
+                                        shrink: true,
+                                    }}
+                                />
+                            </FormControl>
+
+                            <FormControl variant="outlined" size="small" style={{ width: '140px', marginRight: '20px' }}>
+                                <InputLabel id="priority-label">Priority</InputLabel>
+                                <Select
+                                    labelId="priority-label"
+                                    name="priority"
+                                    defaultValue=""
+                                    onChange={handleSelectChange}
+                                    label="Priority"
+                                >
+                                    {options.map((option) => (
+                                        <MenuItem key={option.value} value={option.value}>
+                                            {option.label}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </div>
+
+                        <div className="input-container" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%', gap: '20px' }}>
                             <TextField
-                                id="dueDate"
-                                type="datetime-local"
-                                label="Deadline"
+                                type='number'
                                 className='modal-input-date'
                                 onChange={handleInputChange}
-                                name='dueDate'
-                                InputLabelProps={{
-                                    shrink: true,
+                                name='estimatedTime'
+                                label="Est. Time(min)"
+                                size="small" // Set size to small
+                                style={{ width: '100px', textAlign: 'center' }} // Set width to 60px
+                                placeholder='Minutes'
+                                inputProps={{
+                                    min: '0', // Set the minimum value
+                                    step: '5' // 5 min increments
+                                }}
+                                InputProps={{
+                                    endAdornment: <InputAdornment position="end"></InputAdornment>,
                                 }}
                             />
-                        </FormControl>
 
-                        <FormControl variant="outlined" size="small" style={{ width: '140px', marginRight: '20px' }}>
-                            <InputLabel id="priority-label">Priority</InputLabel>
-                            <Select
-                                labelId="priority-label"
-                                defaultValue=""
-                                onChange={handleSelectChange}
-                                label="Priority"
-                            >
-                                {options.map((option) => (
-                                    <MenuItem key={option.value} value={option.value}>
-                                        {option.label}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-                    </div>
-                                
-                    <div className="input-container" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%', gap: '20px' }}>
-                        <TextField
-                            type='number'
-                            className='modal-input-date'
-                            onChange={handleInputChange}
-                            name='estimatedTime'
-                            label="Est. Time(min)"
-                            size="small" // Set size to small
-                            style={{ width: '100px', textAlign: 'center' }} // Set width to 60px
-                            placeholder='Minutes'
-                            inputProps={{
-                                min: '0', // Set the minimum value
-                                step: '5' // 5 min increments
-                            }}
-                            InputProps={{
-                                endAdornment: <InputAdornment position="end"></InputAdornment>,
-                            }}
-                        />
-
-                        {newTaskData.estimatedTime >= 60 && (
-                            <div style={{ width: '80px', textAlign: 'center' }}>
-                                <strong>{formatTime(newTaskData.estimatedTime)}</strong>
-                            </div>
-                        )}
-
-
-                        <FormControl variant="outlined" size="small" style={{ width: '140px' }}>
-                            <InputLabel id="difficulty-label">Difficulty</InputLabel>
-                            <Select
-                                labelId="difficulty-label"
-                                id="difficulty"
-                                defaultValue=""
-                                onChange={handleDiffChange}
-                                label="Difficulty"
-                            >
-                                {optionsDiff.map((option) => (
-                                    <MenuItem key={option.value} value={option.value}>
-                                        {option.label}
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-
-
-
-                    </div>
-                    <div className="tags-container-create" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%', gap: '20px', flexWrap: 'wrap', marginTop: '10px' }}>
-                        <FormControl variant="outlined" style={{ minWidth: '100px', width: 'auto', height: 'auto' }} size='small'>
-                            <InputLabel id="tags-label">Tags</InputLabel>
-                            <Select
-
-                                label="Tags"
-                                multiple
-                                size="small"
-                                value={newTaskData.tags}
-                                onChange={handleTagChange}
-                                name='tags'
-                                renderValue={(selected) => (
-
-                                    <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-                                        {selected.map((tag) => (
-                                            <Chip
-                                                key={tag.label}
-                                                label={tag.label}
-                                                style={{ backgroundColor: tag.color, color: tag.textColor, margin: '2px', flexBasis: '20%' }}
-                                            />
-                                        ))}
-                                    </div>
-                                )}
-                            >
-                                {loggedInUser && loggedInUser.myLists && loggedInUser.myLists.filter(list => list.listName === loggedInUser.activeList).map((list) => (
-                                    list.tags.map((tag) => (
-                                        <MenuItem key={tag.label} value={tag}>
-                                            <Chip
-                                                key={tag.label}
-                                                label={tag.label}
-                                                clickable
-                                                onClick={() => handleAddChip(tag)}
-                                                style={{ backgroundColor: tag.color, color: tag.textColor }}
-                                            />
-                                        </MenuItem>
-                                    ))
-                                ))}
-                            </Select>
-                        </FormControl>
-                        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginTop: '14px' }}>
-                            <FormControlLabel
-                                control={
-                                    <Checkbox
-                                        id='isUrgent'
-                                        name='isUrgent'
-                                        onChange={handleCheckboxChange}
-                                    />
-                                }
-                                label="Urgent?"
-                            />
-                        </div>
-                    </div>
-
-
-
-
-                    <hr style={{ width: '80%', margin: '10px auto' }} />
-
-                    <DragDropContext onDragEnd={handleOnDragEnd}>
-                        <Droppable droppableId="newTaskSteps">
-                            {(provided) => (
-                                <div className='steps' style={{ width: '100%', justifyContent: 'left' }} {...provided.droppableProps} ref={provided.innerRef}>
-                                    {newTaskData.steps.map((step, index) => (
-                                        <Draggable key={step.id} draggableId={String(step.id)} index={index}>
-                                            {(provided) => (
-                                                <div className="drag" ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} style={{ transform: 'none', display: 'flex', flexDirection: 'row', alignItems: 'center', ...provided.draggableProps.style }}>
-                                                    <label style={{ display: 'flex', alignItems: 'center' }}>{`Step${index + 1}`}</label>
-                                                    <input className='create-modal-input' type='text' placeholder={`Enter step title`}
-                                                        onChange={event => handleInputChangeStep(step.id, event)} value={newTaskData.steps[step.id - 1].value} maxLength='50' />
-                                                    <div onMouseEnter={() => setHoveredStepId(step.id)} onMouseLeave={() => setHoveredStepId(null)}>
-                                                        <Icon
-                                                            path={hoveredStepId === step.id ? mdiDeleteEmpty : mdiDelete}
-                                                            size={1.2}
-                                                            color={hoveredStepId === step.id ? "red" : "gray"}
-                                                            onClick={() => handleDeleteStep(step.id)}
-                                                        />
-                                                    </div>
-                                                </div>
-                                            )}
-                                        </Draggable>
-                                    ))}
-                                    {provided.placeholder}
-                                    <div style={{ display: 'flex', justifyContent: 'center' }}>
-                                        <p className='add-step' onClick={handleAddStep} style={{}}> <strong> add step </strong> </p>
-                                    </div>
+                            {newTaskData.estimatedTime >= 60 && (
+                                <div style={{ width: '80px', textAlign: 'center' }}>
+                                    <strong>{formatTime(newTaskData.estimatedTime)}</strong>
                                 </div>
                             )}
-                        </Droppable>
-                    </DragDropContext>
+
+
+                            <FormControl variant="outlined" size="small" style={{ width: '140px' }}>
+                                <InputLabel id="difficulty-label">Difficulty</InputLabel>
+                                <Select
+                                    labelId="difficulty-label"
+                                    id="difficulty"
+                                    defaultValue=""
+                                    onChange={handleDiffChange}
+                                    label="Difficulty"
+                                >
+                                    {optionsDiff.map((option) => (
+                                        <MenuItem key={option.value} value={option.value}>
+                                            {option.label}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+
+
+
+                        </div>
+                        <div className="tags-container-create" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%', gap: '20px', flexWrap: 'wrap', marginTop: '10px' }}>
+                            <FormControl variant="outlined" style={{ minWidth: '100px', width: 'auto', height: 'auto' }} size='small'>
+                                <InputLabel id="tags-label">Tags</InputLabel>
+                                <Select
+
+                                    label="Tags"
+                                    multiple
+                                    size="small"
+                                    value={newTaskData.tags}
+                                    onChange={handleTagChange}
+                                    name='tags'
+                                    renderValue={(selected) => (
+
+                                        <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+                                            {selected.map((tag) => (
+                                                <Chip
+                                                    key={tag.label}
+                                                    label={tag.label}
+                                                    style={{ backgroundColor: tag.color, color: tag.textColor, margin: '2px', flexBasis: '20%' }}
+                                                />
+                                            ))}
+                                        </div>
+                                    )}
+                                >
+                                    {loggedInUser && loggedInUser.myLists && loggedInUser.myLists.filter(list => list.listName === loggedInUser.activeList).map((list) => (
+                                        list.tags.map((tag) => (
+                                            <MenuItem key={tag.label} value={tag}>
+                                                <Chip
+                                                    key={tag.label}
+                                                    label={tag.label}
+                                                    clickable
+                                                    onClick={() => handleAddChip(tag)}
+                                                    style={{ backgroundColor: tag.color, color: tag.textColor }}
+                                                />
+                                            </MenuItem>
+                                        ))
+                                    ))}
+                                </Select>
+                            </FormControl>
+                            <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginTop: '14px' }}>
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            id='isUrgent'
+                                            name='isUrgent'
+                                            onChange={handleCheckboxChange}
+                                        />
+                                    }
+                                    label="Urgent?"
+                                />
+                            </div>
+                        </div>
+
+
+
+
+                        <hr style={{ width: '80%', margin: '10px auto' }} />
+
+                        <DragDropContext onDragEnd={handleOnDragEnd}>
+                            <Droppable droppableId="newTaskSteps">
+                                {(provided) => (
+                                    <div className='steps' style={{ width: '100%', justifyContent: 'left' }} {...provided.droppableProps} ref={provided.innerRef}>
+                                        {newTaskData.steps.map((step, index) => (
+                                            <Draggable key={step.id} draggableId={String(step.id)} index={index}>
+                                                {(provided) => (
+                                                    <div className="drag" ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} style={{ transform: 'none', display: 'flex', flexDirection: 'row', alignItems: 'center', ...provided.draggableProps.style }}>
+                                                        <label style={{ display: 'flex', alignItems: 'center' }}>{`Step${index + 1}`}</label>
+                                                        <input className='create-modal-input' type='text' placeholder={`Enter step title`}
+                                                            onChange={event => handleInputChangeStep(step.id, event)} value={newTaskData.steps[step.id - 1].value} maxLength='50' />
+                                                        <div onMouseEnter={() => setHoveredStepId(step.id)} onMouseLeave={() => setHoveredStepId(null)}>
+                                                            <Icon
+                                                                path={hoveredStepId === step.id ? mdiDeleteEmpty : mdiDelete}
+                                                                size={1.2}
+                                                                color={hoveredStepId === step.id ? "red" : "gray"}
+                                                                onClick={() => handleDeleteStep(step.id)}
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </Draggable>
+                                        ))}
+                                        {provided.placeholder}
+                                        <div style={{ display: 'flex', justifyContent: 'center' }}>
+                                            <p className='add-step' onClick={handleAddStep} style={{}}> <strong> add step </strong> </p>
+                                        </div>
+                                    </div>
+                                )}
+                            </Droppable>
+                        </DragDropContext>
                     </div>
 
                     {errorMessage && <p className="error">{errorMessage}</p>}

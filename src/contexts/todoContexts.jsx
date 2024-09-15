@@ -146,6 +146,15 @@ const TodoProvider = ({ children }) => {
       };
       // console.log("DEBUG -- NewTodo", newTodo);
       // console.log("addTodo: newTodo", newTodo);
+      if(newTaskData.repeatable){
+        Object.assign(newTodo, {
+          repeatable: newTaskData.repeatable,
+          repeatInterval: newTaskData.repeatInterval,
+          repeatUntil: newTaskData.repeatUntil,
+          repeatDays: newTaskData.repeatDays
+        })
+      }
+
 
       const response = await axios.post(`${BASE_URL}/api/`, newTodo);
       if (response.status === 201) {
