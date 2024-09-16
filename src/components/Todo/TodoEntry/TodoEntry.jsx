@@ -355,7 +355,7 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
         const remainingDays = Math.floor((seconds / 3600 / 24));
 
         return (
-            <div className="todo-columns">
+            <div className={`todo-columns ${todoData.repeatable ? 'repeatable' : ''}`}>
                 <div className="todo-entry">
                     {isLoggedIn && (
                         <div className="information-container">
@@ -457,7 +457,7 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
 
     } else if (type === 'doing' && isStarted && !isDone) {
         return (
-            <div className="todo-columns">
+            <div className={`todo-columns ${todoData.repeatable ? 'repeatable' : ''}`}>
                 <div className="todo-entry">
                     {isLoggedIn && (
                         <div className="information-container">
