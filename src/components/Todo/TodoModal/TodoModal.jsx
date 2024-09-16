@@ -106,7 +106,7 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
 
     const handleInputChange = (event) => {
         let value = event.target.value;
-        
+
         // Special case for estimatedTime input
         if (event.target.name === 'estimatedTime') {
             value = parseInt(value, 10);
@@ -357,14 +357,28 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
                                                 onChange={handleSelectChange}
                                                 label="Select Emoji"
                                             >
-                                                <MenuItem value="😊">😊</MenuItem>
-                                                <MenuItem value="📅">📅</MenuItem>
-                                                <MenuItem value="🔔">🔔</MenuItem>
-                                                <MenuItem value="✅">✅</MenuItem>
-                                                <MenuItem value="🏃">🏃</MenuItem>
+
+                                                <MenuItem value="🏋️‍♀️">🏋️‍♀️</MenuItem>
+                                                <MenuItem value="🏃‍♂️">🏃‍♂️</MenuItem>
+                                                <MenuItem value="🚴">🚴</MenuItem>
                                                 <MenuItem value="💼">💼</MenuItem>
+                                                <MenuItem value="🔧">🔧</MenuItem>
+                                                <MenuItem value="🎨">🎨</MenuItem>
+                                                <MenuItem value="💵">💵</MenuItem>
+                                                <MenuItem value="📅">📅</MenuItem>
+                                                <MenuItem value="👫">👫</MenuItem>
+                                                <MenuItem value="🐕">🐕</MenuItem>
+                                                <MenuItem value="🍹">🍹</MenuItem>
+                                                <MenuItem value="🍽️">🍽️</MenuItem>
                                                 <MenuItem value="📚">📚</MenuItem>
-                                                <MenuItem value="🛠️">🛠️</MenuItem>
+                                                <MenuItem value="🛏️">🛏️</MenuItem>
+                                                <MenuItem value="🧹">🧹</MenuItem>
+                                                <MenuItem value="🛒">🛒</MenuItem>
+                                                <MenuItem value="🧘">🧘</MenuItem>
+                                                <MenuItem value="📞">📞</MenuItem>
+                                                <MenuItem value="✉️">✉️</MenuItem>
+                                                <MenuItem value="🚗">🚗</MenuItem>
+                                                <MenuItem value="🏠">🏠</MenuItem>
                                             </Select>
                                         </FormControl>
 
