@@ -27,6 +27,7 @@ import Icon from '@mdi/react';
 import { toast } from 'react-toastify';
 
 const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should use state. Maybe fix?
+    
 
     const { id,
         task,
@@ -48,6 +49,7 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
         steps,
         estimatedTime,
         totalTimeSpent } = todoData;
+
     const [isMoreChecked, setIsMoreChecked] = useState(false);
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isConfirmDeleteModalOpen, setIsConfirmDeleteModalOpen] = useState(false);
@@ -225,7 +227,7 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
     if (type === 'todo' && !isDone && !isStarted) {
         // console.log(todoData);
         return (
-            <div className="todo-columns">
+            <div className={`todo-columns ${todoData.repeatable ? 'repeatable' : ''}`}>
                 <div className="todo-entry">
                     {isLoggedIn && (
                         <div className="information-container">

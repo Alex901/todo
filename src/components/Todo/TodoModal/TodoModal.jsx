@@ -5,12 +5,13 @@ import { useTodoContext } from '../../../contexts/todoContexts';
 import { useUserContext } from '../../../contexts/UserContext';
 //import Select from 'react-select';
 import { toast } from 'react-toastify';
-import { TextField, Button, InputAdornment, IconButton, FormControl, InputLabel, Select, MenuItem, Checkbox, FormControlLabel, Chip, Collapse } from '@mui/material';
+import { Switch, TextField, Button, InputAdornment, IconButton, FormControl, InputLabel, Select, MenuItem, Checkbox, FormControlLabel, Chip, Collapse } from '@mui/material';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import Icon from '@mdi/react';
 import { mdiDelete, mdiDeleteEmpty } from '@mdi/js';
 import { useTranslation } from "react-i18next";
 import BaseModal from './BaseModal/BaseModal';
+import { CSSTransition } from 'react-transition-group';
 
 ReactModal.setAppElement('#root');
 
@@ -50,7 +51,7 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
                 repeatYearlyOption: '',
                 repeatUntill: null,
                 repeatTimes: null,
-                repeatableEmoji: '',
+                repeatableEmoji: '😊',
                 repeatNotify: false
             } : {
                 repeatable: undefined,
@@ -65,6 +66,20 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
             })
         }));
     }, [repeatable]);
+
+    useEffect(() => {
+        if (newTaskData.repeatInterval === 'monthly' && newTaskData.repeatMonthlyOption === '') {
+            setNewTaskData((prevData) => ({
+                ...prevData,
+                repeatMonthlyOption: 'start',
+            }));
+        } else if (newTaskData.repeatInterval === 'yearly' && newTaskData.repeatYearlyOption === '') {
+            setNewTaskData((prevData) => ({
+                ...prevData,
+                repeatYearlyOption: 'start',
+            }));
+        }
+    }, [newTaskData.repeatInterval]);
 
     const { t, i18n } = useTranslation();
 
@@ -91,7 +106,7 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
 
     const handleInputChange = (event) => {
         let value = event.target.value;
-
+        
         // Special case for estimatedTime input
         if (event.target.name === 'estimatedTime') {
             value = parseInt(value, 10);
@@ -102,6 +117,14 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
             [event.target.name]: value,
         });
         setErrorMessage('');
+    };
+
+    const handleToggleChange = (event) => {
+        const { name, checked } = event.target;
+        setNewTaskData((prevData) => ({
+            ...prevData,
+            [name]: checked,
+        }));
     };
 
     const handleRepeatDaysChange = (event) => {
@@ -143,7 +166,6 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
         console.log(newTaskData);
     };
 
-
     const handleSubmit = () => {
         event.preventDefault();
         if (!newTaskData.taskName.trim()) {
@@ -155,6 +177,11 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
 
         if (!allStepsHaveName) {
             setErrorMessage('You need to enter all step names');
+            return;
+        }
+
+        if (repeatable && !newTaskData.repeatInterval) {
+            setErrorMessage('Please select a repeat interval');
             return;
         }
 
@@ -295,107 +322,184 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
                         inputProps={{ maxLength: 70 }}
                         name='taskName'
                     />
-
-                    <FormControlLabel
-                        control={
-                            <Checkbox
-                                checked={repeatable}
-                                onChange={handleRepeatableChange}
-                                name="repeatable"
-                                color="primary"
-                            />
-                        }
-                        label="Repeatable"
-                    />
-
-                    {repeatable && (
-                        <FormControl variant="outlined" style={{ marginTop: '10px', minWidth: '150px' }} size='small'>
-                            <InputLabel id="repeat-interval-label">Repeat Interval</InputLabel>
-                            <Select
-                                name="repeatInterval"
-                                labelId="repeat-interval-label"
-                                id="repeat-interval"
-                                value={newTaskData.repeatInterval || ''}
-                                onChange={handleSelectChange}
-                                label="Repeat Interval"
-                            >
-                                <MenuItem value="daily">Daily</MenuItem>
-                                <MenuItem value="weekly">Weekly</MenuItem>
-                                <MenuItem value="monthly">Monthly</MenuItem>
-                                <MenuItem value="yearly">Yearly</MenuItem>
-                            </Select>
-                        </FormControl>
-                    )}
-
-                    {newTaskData.repeatInterval === 'daily' && (
-                        <FormControl variant="outlined" style={{ marginTop: '10px', minWidth: '150px' }} size='small'>
-                            <TextField
-                                label="Repeat Until"
-                                type="date"
-                                name="repeatUntil"
-                                onChange={handleInputChange}
-                                InputLabelProps={{
-                                    shrink: true,
-                                }}
-                            />
-                        </FormControl>
-                    )}
-
-                    {newTaskData.repeatInterval === 'weekly' && (
-                        <div style={{ marginTop: '10px', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                            {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].map((day) => (
-                                <div key={day} style={{ textAlign: 'center', margin: '0 5px' }}>
-                                    <div style={{ marginBottom: '5px' }}>{day.charAt(0)}</div>
-                                    <FormControlLabel
-                                        control={
-                                            <Checkbox
-                                                checked={newTaskData.repeatDays.includes(day)}
-                                                onChange={handleRepeatDaysChange}
-                                                name={day}
-                                                color="primary"
-                                            />
-                                        }
-                                        label=""
-                                        style={{ margin: 0 }}
+                    <div className="repeatable-coutaniner">
+                        <div className="repeatable-header">
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        checked={repeatable}
+                                        onChange={handleRepeatableChange}
+                                        name="repeatable"
+                                        color="primary"
                                     />
-                                </div>
-                            ))}
+                                }
+                                label="Repeatable"
+                            />
                         </div>
-                    )}
-                    {/* 
-                    {newTaskData.repeatInterval === 'monthly' && (
-                        <FormControl variant="outlined" style={{ marginTop: '10px', minWidth: '150px' }} size='small'>
-                            <InputLabel id="repeat-monthly-option-label">Monthly Option</InputLabel>
-                            <Select
-                                name="repeatMonthlyOption"
-                                labelId="repeat-monthly-option-label"
-                                id="repeat-monthly-option"
-                                value={newTaskData.repeatMonthlyOption || ''}
-                                onChange={handleToggleChange}
-                                label="Monthly Option"
-                            >
-                                <MenuItem value="start">Start of the Month</MenuItem>
-                                <MenuItem value="end">End of the Month</MenuItem>
-                            </Select>
-                        </FormControl>
-                    )}
 
-                    {newTaskData.repeatInterval === 'yearly' && (
-                        <FormControl variant="outlined" style={{ marginTop: '10px', minWidth: '150px' }} size='small'>
-                            <InputLabel id="repeat-yearly-option-label">Yearly Option</InputLabel>
-                            <Select
-                                name="repeatYearlyOption"
-                                labelId="repeat-yearly-option-label"
-                                id="repeat-yearly-option"
-                                value={newTaskData.repeatYearlyOption || ''}
-                                onChange={handleToggleChange}
-                                label="Yearly Option"
+                        <CSSTransition
+                            in={repeatable}
+                            timeout={300}
+                            classNames="fade"
+                            unmountOnExit
+                        >
+
+                            <div className="repeatable-main-options">
+                                {repeatable && (
+                                    <>
+                                        <FormControl variant="outlined" style={{ minWidth: '50px' }} size='small'>
+                                            <InputLabel id="emoji-select-label">Emoji</InputLabel>
+                                            <Select
+                                                name="repeatableEmoji"
+                                                labelId="emoji-select-label"
+                                                id="emoji-select"
+                                                value={newTaskData.repeatableEmoji || ''}
+                                                onChange={handleSelectChange}
+                                                label="Select Emoji"
+                                            >
+                                                <MenuItem value="😊">😊</MenuItem>
+                                                <MenuItem value="📅">📅</MenuItem>
+                                                <MenuItem value="🔔">🔔</MenuItem>
+                                                <MenuItem value="✅">✅</MenuItem>
+                                                <MenuItem value="🏃">🏃</MenuItem>
+                                                <MenuItem value="💼">💼</MenuItem>
+                                                <MenuItem value="📚">📚</MenuItem>
+                                                <MenuItem value="🛠️">🛠️</MenuItem>
+                                            </Select>
+                                        </FormControl>
+
+                                        <FormControlLabel
+                                            control={
+                                                <Checkbox
+                                                    checked={newTaskData.repeatNotify || false}
+                                                    onChange={handleToggleChange}
+                                                    name="repeatNotify"
+                                                    color="primary"
+                                                />
+                                            }
+                                            label="Enable Notifications"
+                                            style={{ display: 'flex', alignItems: 'center' }}
+                                        />
+
+                                        <FormControl variant="outlined" style={{ minWidth: '146px', justifyContent: 'center' }} size='small'>
+                                            <InputLabel id="repeat-interval-label">Repeat Interval</InputLabel>
+                                            <Select
+                                                name="repeatInterval"
+                                                labelId="repeat-interval-label"
+                                                id="repeat-interval"
+                                                value={newTaskData.repeatInterval || ''}
+                                                onChange={handleSelectChange}
+                                                label="Repeat Interval"
+                                            >
+                                                <MenuItem value="daily">Daily</MenuItem>
+                                                <MenuItem value="weekly">Weekly</MenuItem>
+                                                <MenuItem value="monthly">Monthly</MenuItem>
+                                                <MenuItem value="yearly">Yearly</MenuItem>
+                                            </Select>
+                                        </FormControl>
+                                    </>
+                                )}
+                            </div>
+                        </CSSTransition>
+
+                        <>
+                            <CSSTransition
+                                in={newTaskData.repeatInterval !== ''}
+                                timeout={300}
+                                classNames="fade"
+                                unmountOnExit
                             >
-                                <MenuItem value="start">Start of the Year</MenuItem>
-                                <MenuItem value="end">End of the Year</MenuItem>
-                            </Select>
-                        </FormControl>
-                    )} */}
+
+                                <div className="repeatable-interval-options">
+                                    {newTaskData.repeatInterval === 'daily' && (
+                                        <FormControl variant="outlined" style={{ minWidth: '150px' }} size='small'>
+                                            <TextField
+                                                label="Repeat Until"
+                                                type="date"
+                                                name="repeatUntil"
+                                                onChange={handleInputChange}
+                                                InputLabelProps={{
+                                                    shrink: true,
+                                                }}
+                                            />
+                                        </FormControl>
+                                    )}
+
+                                    {newTaskData.repeatInterval === 'weekly' && (
+                                        <div style={{ display: 'flex', alignItems: 'center', marginBottom: '8px' }}>
+                                            {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].map((day) => (
+                                                <div key={day} style={{ textAlign: 'center', margin: '0 0x' }}>
+                                                    <div style={{ marginBottom: '-5px' }}>{day.charAt(0)}</div>
+                                                    <Checkbox
+                                                        checked={newTaskData.repeatDays.includes(day)}
+                                                        onChange={handleRepeatDaysChange}
+                                                        name={day}
+                                                        color="primary"
+                                                        style={{ padding: '0 0px' }}
+                                                    />
+                                                </div>
+                                            ))}
+                                        </div>
+                                    )}
+
+                                    {newTaskData.repeatInterval === 'monthly' && (
+
+
+                                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                                            <span>Start</span>
+                                            <Switch
+                                                checked={newTaskData.repeatMonthlyOption === 'end'}
+                                                onChange={(event) => setNewTaskData((prevData) => ({
+                                                    ...prevData,
+                                                    repeatMonthlyOption: event.target.checked ? 'end' : 'start',
+                                                }))}
+                                                color="primary"
+                                                name="repeatMonthlyOption"
+                                                inputProps={{ 'aria-label': 'Monthly Option' }}
+                                            />
+                                            <span>End</span>
+                                        </div>
+
+                                    )}
+
+                                    {newTaskData.repeatInterval === 'yearly' && (
+                                        <div style={{ display: 'flex', alignItems: 'center' }}>
+                                            <span>Start</span>
+                                            <Switch
+                                                checked={newTaskData.repeatYearlyOption === 'end'}
+                                                onChange={(event) => setNewTaskData((prevData) => ({
+                                                    ...prevData,
+                                                    repeatYearlyOption: event.target.checked ? 'end' : 'start',
+                                                }))}
+                                                color="primary"
+                                                name="repeatYearlyOption"
+                                                inputProps={{ 'aria-label': 'Yearly Option' }}
+                                            />
+                                            <span>End</span>
+                                        </div>
+                                    )}
+
+
+
+
+                                    {['weekly', 'monthly', 'yearly'].includes(newTaskData.repeatInterval) && (
+                                        <FormControl variant="outlined" style={{ minWidth: '150px' }} size='small'>
+                                            <TextField
+                                                label="Repeat Until"
+                                                type="date"
+                                                name="repeatUntil"
+                                                onChange={handleInputChange}
+                                                InputLabelProps={{
+                                                    shrink: true,
+                                                }}
+                                            />
+                                        </FormControl>
+                                    )}
+                                </div>
+                            </CSSTransition>
+                        </>
+                    </div>
+
 
 
                     <Button onClick={handleToggleAdvancedOptions} style={{ margin: `10px 0 ${showAdvancedOptions ? '10px' : '0'} 0` }}>

@@ -150,8 +150,12 @@ const TodoProvider = ({ children }) => {
         Object.assign(newTodo, {
           repeatable: newTaskData.repeatable,
           repeatInterval: newTaskData.repeatInterval,
-          repeatUntil: newTaskData.repeatUntil,
-          repeatDays: newTaskData.repeatDays
+          repeatableEmoji: newTaskData.repeatableEmoji,
+          repeatNotify: newTaskData.repeatNotify,
+          ...(newTaskData.repeatDays && newTaskData.repeatDays.length > 1 ? { repeatDays: newTaskData.repeatDays } : {}),
+          ...(newTaskData.repeatMonthlyOption ? { repeatMonthlyOption: newTaskData.repeatMonthlyOption } : {}),
+          ...(newTaskData.repeatYearlyOption ? { repeatYearlyOption: newTaskData.repeatYearlyOption } : {}),
+          ...(newTaskData.repeatUntil ? { repeatUntil: newTaskData.repeatUntil } : {}),
         })
       }
 
