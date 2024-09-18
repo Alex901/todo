@@ -536,19 +536,23 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
 
 
                         <div className="input-container" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%', gap: '20px' }}>
-                            <FormControl style={{ width: '200px' }}>
-                                <TextField
-                                    id="dueDate"
-                                    type="datetime-local"
-                                    label="Deadline"
-                                    className='modal-input-date'
-                                    onChange={handleInputChange}
-                                    name='dueDate'
-                                    InputLabelProps={{
-                                        shrink: true,
-                                    }}
-                                />
-                            </FormControl>
+                            {!repeatable && (
+                                <div className="input-container" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%', gap: '20px' }}>
+                                    <FormControl style={{ width: '200px' }}>
+                                        <TextField
+                                            id="dueDate"
+                                            type="datetime-local"
+                                            label="Deadline"
+                                            className='modal-input-date'
+                                            onChange={handleInputChange}
+                                            name='dueDate'
+                                            InputLabelProps={{
+                                                shrink: true,
+                                            }}
+                                        />
+                                    </FormControl>
+                                </div>
+                            )}
 
                             <FormControl variant="outlined" size="small" style={{ width: '140px', marginRight: '20px' }}>
                                 <InputLabel id="priority-label">Priority</InputLabel>
