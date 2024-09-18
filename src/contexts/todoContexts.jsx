@@ -111,10 +111,10 @@ const TodoProvider = ({ children }) => {
         if (activeListId) {
           if (activeListId.type === 'groupList') {
             groupOwner = activeListId.owner; //lists can be owned by groups, so in case of group the group owns the todo
-            
+
             const index = inListNewTmp.indexOf(allListId);
             if (index !== -1) {
-                inListNewTmp.splice(index, 1);
+              inListNewTmp.splice(index, 1);
             }
           }
           inListNewTmp.push(activeListId._id);
@@ -146,7 +146,7 @@ const TodoProvider = ({ children }) => {
       };
       // console.log("DEBUG -- NewTodo", newTodo);
       // console.log("addTodo: newTodo", newTodo);
-      if(newTaskData.repeatable){
+      if (newTaskData.repeatable) {
         Object.assign(newTodo, {
           repeatable: newTaskData.repeatable,
           repeatInterval: newTaskData.repeatInterval,
@@ -159,6 +159,11 @@ const TodoProvider = ({ children }) => {
         })
       }
 
+      if (loggedInUser.activeList === 'today') {
+        Object.assign(newTodo, {
+          isToday: true
+        })
+      }
 
       const response = await axios.post(`${BASE_URL}/api/`, newTodo);
       if (response.status === 201) {
