@@ -357,7 +357,7 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
                                                 onChange={handleSelectChange}
                                                 label="Select Emoji"
                                             >
-
+                                                <MenuItem value="😊">😊</MenuItem>
                                                 <MenuItem value="🏋️‍♀️">🏋️‍♀️</MenuItem>
                                                 <MenuItem value="🏃‍♂️">🏃‍♂️</MenuItem>
                                                 <MenuItem value="🚴">🚴</MenuItem>

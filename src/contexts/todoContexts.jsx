@@ -96,7 +96,7 @@ const TodoProvider = ({ children }) => {
   };
 
   const addTodo = async (newTaskData) => {
-    // console.log("addTodo: newTaskData", newTaskData);
+    console.log("addTodo: newTaskData", newTaskData);
     try {
       let groupOwner = loggedInUser ? loggedInUser._id : null;
 
@@ -152,7 +152,7 @@ const TodoProvider = ({ children }) => {
           repeatInterval: newTaskData.repeatInterval,
           repeatableEmoji: newTaskData.repeatableEmoji,
           repeatNotify: newTaskData.repeatNotify,
-          ...(newTaskData.repeatDays && newTaskData.repeatDays.length > 1 ? { repeatDays: newTaskData.repeatDays } : {}),
+          ...(newTaskData.repeatDays && newTaskData.repeatDays.length > 0 ? { repeatDays: newTaskData.repeatDays } : {}),
           ...(newTaskData.repeatMonthlyOption ? { repeatMonthlyOption: newTaskData.repeatMonthlyOption } : {}),
           ...(newTaskData.repeatYearlyOption ? { repeatYearlyOption: newTaskData.repeatYearlyOption } : {}),
           ...(newTaskData.repeatUntil ? { repeatUntil: newTaskData.repeatUntil } : {}),
