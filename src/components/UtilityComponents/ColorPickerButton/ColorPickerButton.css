@@ -9,7 +9,11 @@
     height: auto;
     border-radius: 10px;
     background-color: #ffffff;
-    z-index: 1000;
+    z-index: 1;
+  }
+
+  .color-picker-popper-root {
+    z-index: 2000;
   }
   
   .color-swatch {

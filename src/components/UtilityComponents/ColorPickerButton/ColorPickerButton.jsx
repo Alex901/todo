@@ -36,7 +36,7 @@ const ColorPickerButton = ({ webSafeColors, selectedColor, handleColorSelect }) 
         onClick={handleClick}
       >
       </Button>
-      <Popper id={id} open={isColorPopperOpen} anchorEl={anchorEl} placement="top">
+      <Popper id={id} open={isColorPopperOpen} anchorEl={anchorEl} placement="top" className="color-picker-popper-root">
         <div className="color-picker">
           {webSafeColors.map(color => (
             <div

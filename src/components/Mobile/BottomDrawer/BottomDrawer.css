@@ -1,5 +1,7 @@
 .drawer-content {
 z-index: auto;
+display: flex;
+flex-direction: column;
 
 }
 
