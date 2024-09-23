@@ -1,11 +1,11 @@
 import React, { useState, useMemo } from 'react';
-import './ProgressArea.css';
 import ToggleButton from '@mui/material/ToggleButton';
 import ToggleButtonGroup from '@mui/material/ToggleButtonGroup';
 import LinearProgress, { linearProgressClasses } from '@mui/material/LinearProgress';
 import Switch from '@mui/material/Switch';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import { styled } from '@mui/material/styles';
+import './ProgressArea.css';
 
 const BorderLinearProgress = styled(LinearProgress)(({ theme }) => ({
     height: 30,

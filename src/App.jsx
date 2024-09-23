@@ -39,6 +39,7 @@ import VoteModal from './components/Todo/TodoModal/VoteModal/VoteModal'
 import FirstTimeLoginModal from './components/Todo/TodoModal/FirstTimeLoginModal/FirstTimeLoginModal'
 import BottomDrawer from './components/Mobile/BottomDrawer/BottomDrawer'
 import BottomDrawerButton from './components/Mobile/BottomDrawerButton/BottomDrawerButton'
+import RepeatableDisplay from './components/UtilityComponents/repeatableDisplay/RepeatableDisplay'
 
 function App() {
   const [activeView, setActiveView] = useState('todo');
@@ -505,7 +506,12 @@ function App() {
 
       {isLoggedIn && (
 
-        <div className="content" style={{ display: 'flex', flexDirection: 'column' }}>
+        <div className="content" style={{ display: 'flex', flexDirection: 'column', gap:'3px' }}>
+          {loggedInUser?.activeList === 'today' && (  
+            
+            <RepeatableDisplay></RepeatableDisplay>
+           
+          )}
           <Card>
             <div className='nav' style={{ display: 'flex', flexDirection: 'column' }}>
 

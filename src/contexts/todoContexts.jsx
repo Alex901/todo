@@ -18,6 +18,7 @@ if (process.env.NODE_ENV === 'test') {
 // TODO: Get rid of this mess
 const TodoContext = createContext({
   todoList: [],
+  listToday: [],
   addTodo: () => { },
   editTodo: () => { },
   removeTodo: () => { },
@@ -43,6 +44,7 @@ const TodoContext = createContext({
 
 const TodoProvider = ({ children }) => {
   const [todoList, setTodoList] = useState([]);
+  const [listToday, setListToday] = useState([]); //List of repeatable tasks for today
   const [dataFetched, setDataFetched] = useState(false);
   const { loggedInUser, userList } = useUserContext(); //Logged in username&&list
   const { userGroupList } = useGroupContext();
@@ -61,6 +63,21 @@ const TodoProvider = ({ children }) => {
   const refreshTodoList = () => {
 
   };
+
+  useEffect(() => {
+    if (loggedInUser && todoList.length > 0) {
+      const filteredTasks = todoList.filter(task => task.isToday);
+
+      setListToday(filteredTasks);
+    }
+  }, [todoList, loggedInUser]);
+
+  useEffect(() => {
+    if (loggedInUser && listToday.length > 0) {
+      console.log("DEBUG -- listToday -- todoContext", listToday);
+      
+    }
+  }, [listToday]);
 
   //API interactions
 
@@ -89,6 +106,7 @@ const TodoProvider = ({ children }) => {
 
       //console.log("\x1b[31mDEBUG\x1b[0m - parsedData.length", parsedData.length);
       setTodoList(parsedData);
+
 
     } catch (error) {
       console.error('Error fetching data', error);
@@ -476,10 +494,10 @@ const TodoProvider = ({ children }) => {
 
   return (
     <TodoContext.Provider value={{
-      todoList, addTodo, cancelTodo, removeTodo, toggleTodoComplete,
+      todoList, listToday: listToday, addTodo, cancelTodo, removeTodo, toggleTodoComplete,
       getTodoCount, getDoneCount, getDoingCount, editTodo, toggleTodoStart, refreshTodoList,
       getActiveListDoingCount, getActiveListTodoCount, getActiveListDoneCount, getListDoingCount,
-      getListDoneCount, getListTodoCount, setStepCompleted, setStepUncomplete
+      getListDoneCount, getListTodoCount, setStepCompleted, setStepUncomplete, 
     }}>
       {children}
     </TodoContext.Provider>
