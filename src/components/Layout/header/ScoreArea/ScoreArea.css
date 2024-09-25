@@ -1,0 +1,18 @@
+.score-area {
+    display: flex;
+    align-items: center;
+    border-radius: 20px;
+    padding: 5px 10px;
+}
+
+.score {
+    margin-left: 12px; /* Mirrored margin */
+    font-size: 18px;
+    color: white; /* White text color */
+}
+
+.score-icon {
+    width: 20px;
+    height: 20px;
+    color: white; /* White icon color */
+}

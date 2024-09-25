@@ -17,8 +17,8 @@ import ukFlag from "../../../assets/language_icons/uk-flag.png";
 import sweFlag from "../../../assets/language_icons/flag-sweden.png";
 import NotificationsButton from "./HeaderButtons/NotificationButton/NotificationsButton";
 import SelectLanguageButton from "./HeaderButtons/SelectLanguageButton/SelectLanguageButton";
-
-
+import CurrencyArea from "./CurrencyArea/CurrencyArea";
+import ScoreArea from "./ScoreArea/ScoreArea";
 const Header = () => {
   const [time, setTime] = useState(new Date());
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
@@ -71,20 +71,28 @@ const Header = () => {
       <header className="mdl-layout__header header_layout" style={{ backgroundColor: theme.palette.primary.main }}>
         <div className="mdl-layout__header-row nav-row" style={{ justifyContent: 'space-between' }}>
           {/* Left section */}
-          <div style={{ display: 'flex', alignItems: 'center' }}>
-            <img src={logo} alt="Logo" style={{ marginRight: '20px', width: '5%', position: 'relative', top: '-3px' }} />
+          <div style={{ display: 'flex', alignItems: 'flex-start', width: 'auto' }}>
+            <img src={logo} alt="Logo" style={{ marginRight: '20px', width: '32px', position: 'relative' }} />
             <span className="mdl-layout-title" style={{ fontSize: '32px', color: "white" }}>HabitForge</span>
 
           </div>
 
           {/* Middle section */}
-          <nav className="mdl-navigation">
+          <div className="center-nav-container">
+            <nav className="mdl-navigation">
+              {isLoggedIn ? (
+                <>
+                  <ScoreArea />
+                  <CurrencyArea />
 
-          </nav>
+                </>
+              ) : null}
+            </nav>
+          </div>
 
           {/* Right section */}
           <div style={{ display: 'flex', alignItems: 'center', position: 'relative', justifyContent: 'space-between', gap: isLoggedIn ? '12px' : '25px' }}>
-          <SelectLanguageButton isLoggedIn={isLoggedIn} />
+            <SelectLanguageButton isLoggedIn={isLoggedIn} />
             {isLoggedIn ? (
               <>
                 <NotificationsButton

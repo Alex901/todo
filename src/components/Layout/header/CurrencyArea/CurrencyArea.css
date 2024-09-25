@@ -1,0 +1,19 @@
+.currency-area {
+    display: flex;
+    align-items: center;
+    border: 2px solid var(--secondary-color); /* Use secondary color */
+    border-radius: 20px;
+    padding: 5px 10px;
+    background-color: #f5f5f5; /* Optional: match the general aesthetic */
+  }
+  
+  .currency {
+    margin-right: 12px;
+    font-size: 18px;
+    color: black
+  }
+  
+  .currency-image {
+    width: 20px;
+    height: 20px;
+  }

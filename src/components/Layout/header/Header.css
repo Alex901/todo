@@ -50,7 +50,12 @@
   }
 }
 
-
+.center-nav-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-grow: 1;
+}
 
 
 .mdl-navigation__link {
