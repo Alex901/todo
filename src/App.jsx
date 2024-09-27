@@ -17,11 +17,10 @@ import {
   mdiDelete, mdiPlus, mdiMinus, mdiFileExport, mdiAccountGroup, mdiTextBoxEditOutline,
   mdiPlaylistEdit, mdiDeleteEmpty, mdiPencil, mdiArchiveArrowDownOutline, mdiArchiveArrowUpOutline, mdiCloseCircle,
   mdiTimerCheckOutline, mdiTimelineClockOutline, mdiEyeOutline, mdiWrenchClock, mdiFolderPlusOutline, mdiFormatListBulletedType, mdiBadgeAccountOutline,
-  mdiSelectGroup, mdiVoteOutline
+  mdiSelectGroup, mdiVoteOutline, mdiCalendarCheck
 } from '@mdi/js';
 import Chip from '@mui/material/Chip';
 import Popper from '@mui/material/Popper';
-import { SketchPicker } from 'react-color';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import { Select, MenuItem, ListItemText, FormControl, InputLabel, Typography, IconButton, Tooltip, Checkbox, FormControlLabel } from '@mui/material';
@@ -40,6 +39,7 @@ import FirstTimeLoginModal from './components/Todo/TodoModal/FirstTimeLoginModal
 import BottomDrawer from './components/Mobile/BottomDrawer/BottomDrawer'
 import BottomDrawerButton from './components/Mobile/BottomDrawerButton/BottomDrawerButton'
 import RepeatableDisplay from './components/UtilityComponents/repeatableDisplay/RepeatableDisplay'
+import CalendarModal from './components/Todo/TodoModal/CalendarModal/CalendarModal'
 
 function App() {
   const [activeView, setActiveView] = useState('todo');
@@ -74,6 +74,7 @@ function App() {
   const [isVoteModalOpen, setIsVoteModalOpen] = useState(false);
   const [isFirstTimeLoginModalOpen, setIsFirstTimeLoginModalOpen] = useState(false);
   const [isDrawerOpen, setDrawerOpen] = useState(false);
+  const [isCalendarModalOpen, setIsCalendarModalOpen] = useState(false);
   const isMobile = useMediaQuery('(max-width:800px)');
 
   const handleOpenDrawer = () => setDrawerOpen(true);
@@ -427,6 +428,16 @@ function App() {
       setIsVoteModalOpen(true);
     }
   };
+
+  const openCalendarModal = () => {
+    if (!isCalendarModalOpen) {
+      setIsCalendarModalOpen(true);
+    }
+  };
+
+  const closeCalendarModal = () => {
+    setIsCalendarModalOpen(false);
+  }
 
   const closeVoteModal = () => {
     setIsVoteModalOpen(false);
@@ -944,10 +955,8 @@ function App() {
 
 
                   {isLoggedIn && (
-                    <div className="functions-container" ref={containerRef} style={{
-
-                    }}>
-                      <div className="progress-bar-container" style={{ width: `${progressBarWidth + 20}%` }}>
+                    <div className="functions-container" ref={containerRef} >
+                      <div className="progress-bar-container" >
                         <>
                           <ProgressArea tasksInActiveList={entriesInActiveList}>
                             {/* Children components or elements go here */}
@@ -955,7 +964,7 @@ function App() {
                         </>
                       </div>
 
-                      <div className="icons-container" style={{ display: 'flex', gap: '5px', width: `${100 - progressBarWidth}%` }}>
+                      <div className="icons-container" style={{ display: 'flex', gap: '5px' }}>
                         <IconButton className="icon-button" onClick={openGroupModal}>
                           <Icon path={mdiAccountGroup} size={1.2} />
                         </IconButton>
@@ -965,6 +974,9 @@ function App() {
                         <IconButton className="icon-button" onClick={openExportModal}>
                           <Icon path={mdiFileExport} size={1.2} />
                         </IconButton>
+                        <IconButton className="icon-button" onClick={openCalendarModal}>
+                          <Icon path={mdiCalendarCheck} size={1.2} />
+                        </IconButton>
                       </div>
                     </div>
                   )}
@@ -972,6 +984,7 @@ function App() {
 
                   <GroupModal isOpen={isGroupModalOpen} onClose={closeGroupModal} />
                   <VoteModal isOpen={isVoteModalOpen} onClose={closeVoteModal} />
+                  <CalendarModal isOpen={isCalendarModalOpen} onClose={closeCalendarModal} />
 
 
 

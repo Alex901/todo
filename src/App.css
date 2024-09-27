@@ -180,17 +180,19 @@ body {
 
 .icons-container {
   display: inline-flex;
-  justify-content: flex-end; 
+  justify-content: center; 
+  flex-direction: row;
   gap: 5px;
   position: relative;
-  max-width: fit-content;
-  background-color: rgb(213, 220, 213);
+  border: 1px solid #cdc3c3;
   border-radius: 10px;
   padding: 0 10px 0 10px;
+  width: 100%;
 }
 
 .progress-bar-container {
-  
+  justify-content: center;
+  width: 100%;
 }
 
 .icons-container::after {
@@ -213,6 +215,8 @@ body {
 
 /* Functions container and icon buttons */
 .functions-container .icon-button {
+  display: flex;
+  flex-direction: row;
   margin: 3px 0;
   border: none;
   cursor: pointer;
