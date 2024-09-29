@@ -72,12 +72,12 @@ const TodoProvider = ({ children }) => {
     }
   }, [todoList, loggedInUser]);
 
-  useEffect(() => {
-    if (loggedInUser && listToday.length > 0) {
-      console.log("DEBUG -- listToday -- todoContext", listToday);
+  // useEffect(() => {
+  //   if (loggedInUser && listToday.length > 0) {
+  //     console.log("DEBUG -- listToday -- todoContext", listToday);
       
-    }
-  }, [listToday]);
+  //   }
+  // }, [listToday]);
 
   //API interactions
 

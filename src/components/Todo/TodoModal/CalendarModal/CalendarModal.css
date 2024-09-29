@@ -1,0 +1,35 @@
+.modal-title {
+    display: flex;
+    align-items: center;
+    gap: 10px; /* Adjust the gap between the icon and the title text */
+}
+
+.modal-content {
+    
+}
+
+.calendar-modal {
+    padding: 20px;
+}
+
+.interval-selector {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px; /* Adjust the gap between elements as needed */
+}
+
+.selectors {
+    display: flex; 
+    flex-direction: row;
+    justify-content: center;
+    gap: 10px; 
+}
+
+.calendar-navigation {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    padding: 10px;
+}

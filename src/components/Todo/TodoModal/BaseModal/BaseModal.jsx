@@ -44,7 +44,7 @@ const BaseModal = ({ isTabs, isOpen, onRequestClose, title, children, ...props }
     <ReactModal
       isOpen={isOpen}
       onRequestClose={onRequestClose}
-      contentLabel={title}
+      contentLabel={typeof title === 'string' ? title : 'Modal'}
       className="modal-content"
       overlayClassName="modal-overlay"
       shouldCloseOnOverlayClick={true}

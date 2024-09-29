@@ -16,9 +16,10 @@ import SelectLanguageButton from '../header/HeaderButtons/SelectLanguageButton/S
 import Badge from '@mui/material/Badge';
 import { styled } from '@mui/material/styles';
 import Icon from '@mdi/react';
-import { mdiLogout, mdiLogin, mdiAccountPlus, mdiHelpCircle, mdiCommentQuote, mdiCog, mdiVote, mdiAccountGroup   } from '@mdi/js';
+import { mdiLogout, mdiLogin, mdiAccountPlus, mdiHelpCircle, mdiCommentQuote, mdiCog, mdiVote, mdiAccountGroup, mdiCalendarCheck } from '@mdi/js';
 import VoteModal from '../../Todo/TodoModal/VoteModal/VoteModal';
 import GroupModal from '../../Todo/TodoModal/GroupModal/GroupModal';
+import CalendarModal from '../../Todo/TodoModal/CalendarModal/CalendarModal';
 
 import './TodoDrawer.css';
 const TodoDrawer = () => {
@@ -34,6 +35,7 @@ const TodoDrawer = () => {
     const [isTodoModalOpen, setIsTodoModalOpen] = useState(false);
     const [isGroupModalOpen, setIsGroupModalOpen] = useState(false);
     const [isVoteModalOpen, setIsVoteModalOpen] = useState(false);
+    const [isCalendarModalOpen, setIsCalendarModalOpen] = useState(false);
     const iconContainerRef = useRef(null);
     const drawerRef = useRef(null);
     const buttonRef = useRef(null);
@@ -49,15 +51,15 @@ const TodoDrawer = () => {
             console.log("columns", columns);
             iconContainer.style.gridTemplateColumns = `repeat(${columns}, 1fr)`;
         }
-    }, [loggedInUser]);
+    }, []);
 
     useEffect(() => {
         if (drawerRef.current && buttonRef.current) {
-          const drawerHeight = drawerRef.current.getBoundingClientRect().height;
-          console.log(drawerHeight);   
-          buttonRef.current.style.height = `${drawerHeight}px`;
+            const drawerHeight = drawerRef.current.getBoundingClientRect().height;
+            console.log(drawerHeight);
+            buttonRef.current.style.height = `${drawerHeight}px`;
         }
-      }, [loggedInUser, isOpen]);
+    }, [loggedInUser, isOpen]);
 
     const StyledBadge = styled(Badge)(({ theme }) => ({
         '& .MuiBadge-badge': {
@@ -108,6 +110,7 @@ const TodoDrawer = () => {
         setIsTodoModalOpen(false);
         setIsVoteModalOpen(false);
         setIsGroupModalOpen(false);
+        setIsCalendarModalOpen(false);
     };
 
     const handleSettingsClick = (event) => {
@@ -121,6 +124,14 @@ const TodoDrawer = () => {
         setIsFeedbackModalOpen(true);
         toggleDrawer(false)();
     }
+
+    const handleCalendarClick = (event) => {
+        console.log("calendar click");
+        event.preventDefault();
+        setIsCalendarModalOpen(true);
+        toggleDrawer(false)();
+    }
+
 
     const handleTodoClick = (event) => {
         event.preventDefault();
@@ -139,31 +150,40 @@ const TodoDrawer = () => {
             <React.Fragment>
 
                 {/* <StyledBadge className='badge' badgeContent={userNotifications.length} color="secondary"> */}
-                <button 
-                ref={buttonRef} 
-                className={`mobile-nav-button ${hasNotifications && !isOpen ? 'has-notifications' : ''} ${isOpen ? 'drawer-open' : ''}`}
-                onClick={handleClick}>
+                <button
+                    ref={buttonRef}
+                    className={`mobile-nav-button ${hasNotifications && !isOpen ? 'has-notifications' : ''} ${isOpen ? 'drawer-open' : ''}`}
+                    onClick={handleClick}>
 
                 </button>
                 {/* </StyledBadge> */}
 
-                <Drawer anchor='right' 
-                open={isOpen} 
-                onClose={toggleDrawer(false)} 
-                className="custom-drawer">
+                <Drawer anchor='right'
+                    open={isOpen}
+                    onClose={toggleDrawer(false)}
+                    className="custom-drawer">
                     <div ref={drawerRef} className="drawer-content">
-                        
+
                         <div className="icon-container" ref={iconContainerRef}>
 
                             {loggedInUser ? (
                                 <>
-                                    
+
                                     <NotificationsButton
                                         isLoggedIn={true}
                                         userNotifications={userNotifications}
                                         isMobile={true}
                                         className={`drawer-icon ${hasNotifications ? 'has-notifications' : ''}`}
                                     />
+
+                                    <IconButton onClick={handleCalendarClick} className="drawer-icon">
+                                        <Icon path={mdiCalendarCheck} size={1.2} color="black" />
+                                    </IconButton>
+
+                                    <IconButton onClick={handleGroupClick} className="drawer-icon">
+                                        <Icon path={mdiAccountGroup} size={1.2} color="black" />
+                                    </IconButton>
+
                                     <IconButton onClick={handleFeedbackClick} className="drawer-icon">
                                         <Icon path={mdiCommentQuote} size={1.2} color="black" />
                                     </IconButton>
@@ -172,14 +192,10 @@ const TodoDrawer = () => {
                                         <Icon path={mdiVote} size={1.2} color="black" />
                                     </IconButton>
 
-                                    <IconButton onClick={handleGroupClick} className="drawer-icon">
-                                        <Icon path={mdiAccountGroup} size={1.2} color="black" />
-                                    </IconButton>
-
                                     <IconButton onClick={handleSettingsClick} className="drawer-icon">
                                         <Icon path={mdiCog} size={1.2} color="black" />
                                     </IconButton>
-                                    
+
                                 </>
                             ) : (
                                 <>
@@ -192,7 +208,7 @@ const TodoDrawer = () => {
                                 </>
                             )}
                             <SelectLanguageButton
-                            className="drawer-icon" />
+                                className="drawer-icon" />
                         </div>
                         <hr className='separator-drawer' />
                         <div className="login-logout-container">
@@ -209,7 +225,8 @@ const TodoDrawer = () => {
                 <SettingsModal isOpen={isSettingsModalOpen} onClose={handleCloseModal} />
                 <FeedbackModal isOpen={isFeedbackModalOpen} onClose={handleCloseModal} />
                 <VoteModal isOpen={isVoteModalOpen} onClose={handleCloseModal} />
-                <GroupModal isOpen={isGroupModalOpen} onClose={handleCloseModal} />  
+                <GroupModal isOpen={isGroupModalOpen} onClose={handleCloseModal} />
+                <CalendarModal isOpen={isCalendarModalOpen} onClose={handleCloseModal} />
             </React.Fragment>
 
         </div>

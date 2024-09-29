@@ -12,7 +12,7 @@ const RepeatableDisplay = () => {
 
 
     useEffect(() => {
-        console.log('DEBUG -- listToday -- repeatableDisplay', listToday);
+      //  console.log('DEBUG -- listToday -- repeatableDisplay', listToday);
     }, [listToday]);
 
     const handleTooltipOpen = (id) => {
