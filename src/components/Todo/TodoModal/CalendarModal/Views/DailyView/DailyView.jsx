@@ -1,8 +1,11 @@
 import React from 'react';
 
-const DailyView = ({ tasks }) => {
-    const repeatableTasks = tasks.filter(task => task.isRepeatable);
-    const nonRepeatableTasks = tasks.filter(task => !task.isRepeatable);
+const DailyView = ({ tasks, today, selectedDate }) => {
+    const repeatableTasks = tasks.filter(task => task.repeatable);
+    const nonRepeatableTasks = tasks.filter(task => !task.repeatable);
+
+    console.log('DEBUG -- DailyView -- selectedDate:', selectedDate);
+    console.log('DEBUG -- DailyView -- today:', today);
 
     return (
         <div>

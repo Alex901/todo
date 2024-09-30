@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import BaseModal from '../BaseModal/BaseModal';
 import { useTodoContext } from '../../../../contexts/todoContexts';
 import { useUserContext } from '../../../../contexts/UserContext';
@@ -10,6 +10,7 @@ import DailyView from './Views/DailyView/DailyView';
 import WeeklyView from './Views/WeeklyView/WeeklyView';
 import MonthlyView from './Views/MonthlyView/MonthlyView';
 import generateCalendarOptions from '../../../../utils/generateOptions/generateOptions';
+import { generateMimicTask } from '../../../../utils/generateMimicTask';
 
 
 const CalendarModal = ({ isOpen, onClose }) => {
@@ -22,8 +23,10 @@ const CalendarModal = ({ isOpen, onClose }) => {
     const [filteredList, setFilteredList] = useState(todoList);
     const tasksWithDueDate = todoList.filter(task => task.dueDate);
     const repeatableTasks = todoList.filter(task => task.repeatable);
+    const [mimicTasks, setMimicTasks] = useState(repeatableTasks);
 
-    console.log("DEBUG -- repeatableTasks -- CalendarModal", repeatableTasks);
+
+
 
     // Find the earliest and latest task dates
     const earliest = tasksWithDueDate.reduce((earliest, task) => {
@@ -42,7 +45,7 @@ const CalendarModal = ({ isOpen, onClose }) => {
         const taskDate = new Date(task.dueDate);
         return taskDate > latest ? taskDate : latest;
     }, new Date());
-    // console.log("DEBUG -- latest -- CalendarModal", latest);
+    console.log("DEBUG -- latest -- CalendarModal", latest);
     //console.log("DEBUG -- noDueDate -- CalendarModal", filteredListNoDueDate)
 
     const options = generateCalendarOptions(interval, today, earliest, latest);
@@ -66,9 +69,20 @@ const CalendarModal = ({ isOpen, onClose }) => {
 
     const [selectedOption, setSelectedOption] = useState(getDefaultOption(interval));
 
+    const allMimicTasks = useMemo(() => {
+        return repeatableTasks.flatMap(task => generateMimicTask(task, earliest, latest));
+    }, [todoList]);
+
+    
+    useEffect(() => {
+        setMimicTasks(allMimicTasks);
+    }, [allMimicTasks]);
+
+    console.log("DEBUG -- mimicTasks -- CalendarModal", mimicTasks);
+
     useEffect(() => {
         setSelectedOption(getDefaultOption(interval));
-        // console.log("DEBUG -- selectedOption -- CalendarModal", selectedOption);
+        //console.log("DEBUG -- selectedOption -- CalendarModal", selectedOption);
     }, [interval]);
    
     // console.log("DEBUG -- selectedOption -- CalendarModal", selectedOption);
@@ -79,12 +93,18 @@ const CalendarModal = ({ isOpen, onClose }) => {
             task.inListNew.some(list => list.listName === selectedList) &&
             (
                 (task.dueDate && new Date(task.dueDate) >= new Date(selectedOption.value.start) && new Date(task.dueDate) <= new Date(selectedOption.value.end)) ||
-                (task.completed && new Date(task.completed) >= new Date(selectedOption.value.start) && new Date(task.completed) <= new Date(selectedOption.value.end))
+                (task.completed && new Date(task.completed) >= new Date(selectedOption.value.start) && new Date(task.completed) <= new Date(selectedOption.value.end)) 
             )
         );
+
+        const filteredMimicTasks = mimicTasks.filter(task => 
+            new Date(task.repeatDay) >= new Date(selectedOption.value.start) && new Date(task.repeatDay) <= new Date(selectedOption.value.end)
+        );
     
-        setFilteredList(filtered);
+        setFilteredList([...filtered, ...filteredMimicTasks]);
     }, [todoList, selectedList, selectedOption]);
+
+
 
     useEffect(() => {
         console.log("DEBUG -- filteredList -- CalendarModal", filteredList);
@@ -221,7 +241,7 @@ const handleOptionChange = (event) => {
                             <Icon path={mdiChevronDoubleRight} size={1} />
                         </IconButton>
                     </div>
-                    {interval === 'day' && <DailyView tasks={filteredList} today={today} />}
+                    {interval === 'day' && <DailyView tasks={filteredList} today={today} selectedDate={selectedOption}/>}
                     {interval === 'week' && <WeeklyView tasks={filteredList} today={today} />}
                     {interval === 'month' && <MonthlyView tasks={filteredList} today={today} />}
                 </div>
