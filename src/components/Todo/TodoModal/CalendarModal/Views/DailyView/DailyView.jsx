@@ -49,27 +49,33 @@ const DailyView = ({ tasks, today }) => {
                 ))}
             </div>
             <div className="daily-view-calendar">
-                <div className="calendar-tasks">
-                    {nonRepeatableTasks.map(task => {
-                        const estimatedTime = normalizeTime(task.estimatedTime || 0);
-                        const totalTimeSpent = task.completed ? `(${normalizeTime(task.totalTimeSpent / 60000 || 0)})` : '';
-                        const timeClass = task.completed ? getTimeClass(task.estimatedTime, task.totalTimeSpent) : '';
+            <div className="calendar-tasks">
+                    {nonRepeatableTasks.length === 0 ? (
+                        <div className="no-tasks-message">
+                            No tasks on record.
+                        </div>
+                    ) : (
+                        nonRepeatableTasks.map(task => {
+                            const estimatedTime = normalizeTime(task.estimatedTime || 0);
+                            const totalTimeSpent = task.completed ? `(${normalizeTime(task.totalTimeSpent / 60000 || 0)})` : '';
+                            const timeClass = task.completed ? getTimeClass(task.estimatedTime, task.totalTimeSpent) : '';
 
-                        return (
-                            <div key={task._id} className="task-block">
-                                <div className="task-block-time">
-                                    <span>{estimatedTime}</span>
-                                    {task.completed && <span className={`bold ${timeClass}`}>{totalTimeSpent}</span>}
+                            return (
+                                <div key={task._id} className="task-block">
+                                    <div className="task-block-time">
+                                        <span>{estimatedTime}</span>
+                                        {task.completed && <span className={`bold ${timeClass}`}>{totalTimeSpent}</span>}
+                                    </div>
+                                    <div className="task-block-content">
+                                        <span>{task.task}</span>
+                                    </div>
+                                    <div className="task-block-checkbox">
+                                        <Checkbox checked={task.completed} />
+                                    </div>
                                 </div>
-                                <div className="task-block-content">
-                                    <span>{task.task}</span>
-                                </div>
-                                <div className="task-block-checkbox">
-                                    <Checkbox checked={task.completed} />
-                                </div>
-                            </div>
-                        );
-                    })}
+                            );
+                        })
+                    )}
                 </div>
             </div>
         </div>
