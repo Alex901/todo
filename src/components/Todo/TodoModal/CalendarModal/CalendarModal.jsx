@@ -46,7 +46,7 @@ const CalendarModal = ({ isOpen, onClose }) => {
         const taskDate = new Date(task.dueDate);
         return taskDate > latest ? taskDate : latest;
     }, new Date());
-    console.log("DEBUG -- latest -- CalendarModal", latest);
+    // console.log("DEBUG -- latest -- CalendarModal", latest);
     //console.log("DEBUG -- noDueDate -- CalendarModal", filteredListNoDueDate)
 
     const options = generateCalendarOptions(interval, today, earliest, latest);

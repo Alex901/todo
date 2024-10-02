@@ -102,3 +102,15 @@
     background-color: var(--success-color);
     color: white;
 }
+
+.green {
+    color: green;
+}
+
+.yellow {
+    color: orange;
+}
+
+.red {
+    color: red;
+}

@@ -18,6 +18,23 @@ const DailyView = ({ tasks, today }) => {
         }
     };
 
+    const getTimeClass = (estimatedTime, totalTimeSpent) => {
+        const estimatedMinutes = estimatedTime; // Convert hours to minutes if needed
+        const totalMinutes = totalTimeSpent / 60000; // Convert milliseconds to minutes
+        const difference = totalMinutes - estimatedMinutes;
+        const percentageDifference = (difference / estimatedMinutes) * 100;
+
+        console.log("DEBUG -- color finder: ", percentageDifference);
+
+        if (percentageDifference <= 0) {
+            return 'green';
+        } else if (percentageDifference <= 50) {
+            return 'yellow';
+        } else {
+            return 'red';
+        }
+    };
+
     return (
         <div className="daily-view">
             <div className="daily-view-emoji-area">
@@ -36,12 +53,13 @@ const DailyView = ({ tasks, today }) => {
                     {nonRepeatableTasks.map(task => {
                         const estimatedTime = normalizeTime(task.estimatedTime || 0);
                         const totalTimeSpent = task.completed ? `(${normalizeTime(task.totalTimeSpent / 60000 || 0)})` : '';
+                        const timeClass = task.completed ? getTimeClass(task.estimatedTime, task.totalTimeSpent) : '';
 
                         return (
                             <div key={task._id} className="task-block">
-                                    <div className="task-block-time">
+                                <div className="task-block-time">
                                     <span>{estimatedTime}</span>
-                                    {task.completed && <span className="bold">{totalTimeSpent}</span>}
+                                    {task.completed && <span className={`bold ${timeClass}`}>{totalTimeSpent}</span>}
                                 </div>
                                 <div className="task-block-content">
                                     <span>{task.task}</span>
