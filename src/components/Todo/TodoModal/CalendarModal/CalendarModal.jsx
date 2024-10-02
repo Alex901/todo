@@ -21,7 +21,8 @@ const CalendarModal = ({ isOpen, onClose }) => {
     const today = new Date();
     const [currentDate, setCurrentDate] = useState(today);
     const [filteredList, setFilteredList] = useState(todoList);
-    const tasksWithDueDate = todoList.filter(task => task.dueDate);
+    const tasksWithDueDate = todoList.filter(task => task.dueDate !== null);
+    const tasksNoDueDate = todoList.filter(task => !task.dueDate);
     const repeatableTasks = todoList.filter(task => task.repeatable);
     const [mimicTasks, setMimicTasks] = useState(repeatableTasks);
 

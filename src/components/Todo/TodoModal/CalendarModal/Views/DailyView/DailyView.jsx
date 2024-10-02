@@ -1,27 +1,59 @@
 import React from 'react';
+import { Tooltip, Checkbox } from '@mui/material';
+import './DailyView.css';
 
-const DailyView = ({ tasks, today, selectedDate }) => {
+const DailyView = ({ tasks, today }) => {
     const repeatableTasks = tasks.filter(task => task.repeatable);
     const nonRepeatableTasks = tasks.filter(task => !task.repeatable);
 
-    console.log('DEBUG -- DailyView -- selectedDate:', selectedDate);
-    console.log('DEBUG -- DailyView -- today:', today);
+    const normalizeTime = (minutes) => {
+        if (minutes >= 1440) {
+            const days = Math.round(minutes / 1440);
+            return `${days}d`;
+        } else if (minutes >= 60) {
+            const hours = Math.round(minutes / 60);
+            return `${hours}h`;
+        } else {
+            return `${Math.round(minutes)}m`;
+        }
+    };
 
     return (
-        <div>
-            <h4>Non-Repeatable Tasks</h4>
-            {nonRepeatableTasks.map(task => (
-                <div key={task._id}>
-                    {task.task} {task.completed && <span>(completed)</span>}
-                </div>
-            ))}
+        <div className="daily-view">
+            <div className="daily-view-emoji-area">
+                {repeatableTasks.map(task => (
+                    <Tooltip key={task._id} title={task.task} arrow>
+                        <div className="repeatable-task-item">
+                            <span className={`emoji ${!task.completed ? 'faded' : ''}`}>
+                                {task.repeatableEmoji}
+                            </span>
+                        </div>
+                    </Tooltip>
+                ))}
+            </div>
+            <div className="daily-view-calendar">
+                <div className="calendar-tasks">
+                    {nonRepeatableTasks.map(task => {
+                        const estimatedTime = normalizeTime(task.estimatedTime || 0);
+                        const totalTimeSpent = task.completed ? `(${normalizeTime(task.totalTimeSpent / 60000 || 0)})` : '';
 
-            <h4>Repeatable Tasks</h4>
-            {repeatableTasks.map(task => (
-                   <div key={task._id}>
-                    {task.task} {task.completed && <span>(completed)</span>}
+                        return (
+                            <div key={task._id} className="task-block">
+                                    <div className="task-block-time">
+                                    <span>{estimatedTime}</span>
+                                    {task.completed && <span className="bold">{totalTimeSpent}</span>}
+                                </div>
+                                <div className="task-block-content">
+                                    <span>{task.task}</span>
+                                </div>
+                                <div className="task-block-checkbox">
+                                    <Checkbox checked={task.completed} />
+                                </div>
+                            </div>
+                        );
+                    })}
                 </div>
-            ))}
+            </div>
         </div>
     );
 };
