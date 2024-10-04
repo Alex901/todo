@@ -6,6 +6,14 @@
     padding: 5px;
 }
 
+.no-repeatable-tasks {
+ 
+   
+    margin-bottom: 10px;
+    font-size: .9em; /* Adjust as needed */
+    color: #555; /* Adjust as needed */
+}
+
 .daily-view-emoji-area {
     display: flex;
     flex-wrap: wrap;
@@ -26,19 +34,25 @@
 }
 
 .emoji {
+    position: relative;
     font-size: 2em;
     /* Increase emoji size */
     margin-right: 8px;
     /* Space between emoji and text */
 }
 
+.status-icon {
+    position: absolute;
+    bottom: -50%;
+    right: -20%;
+    font-size: 0.5em; /* Adjust as needed */
+    color: green;
+}
+
 .faded {
     opacity: 0.2;
     /* Adjust opacity as needed */
 }
-
-
-
 
 .daily-view-calendar {
     width: 100%;
@@ -100,8 +114,7 @@
 }
 
 .completed {
-    background-color: var(--success-color);
-    color: white;
+   
 }
 
 .green {

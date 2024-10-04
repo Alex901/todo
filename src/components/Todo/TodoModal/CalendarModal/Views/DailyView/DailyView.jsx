@@ -1,5 +1,5 @@
 import React from 'react';
-import { Tooltip, Checkbox } from '@mui/material';
+import { Tooltip, Checkbox, Badge } from '@mui/material';
 import './DailyView.css';
 
 const DailyView = ({ tasks, today }) => {
@@ -38,18 +38,25 @@ const DailyView = ({ tasks, today }) => {
     return (
         <div className="daily-view">
             <div className="daily-view-emoji-area">
-                {repeatableTasks.map(task => (
-                    <Tooltip key={task._id} title={task.task} arrow>
-                        <div className="repeatable-task-item">
-                            <span className={`emoji ${!task.completed ? 'faded' : ''}`}>
-                                {task.repeatableEmoji}
-                            </span>
-                        </div>
-                    </Tooltip>
-                ))}
+            {repeatableTasks.length === 0 ? (
+                     <div className="no-repeatable-tasks">No repeatable tasks today</div>
+                ) : (
+                    repeatableTasks.map(task => (
+                        <Tooltip key={task._id} title={task.task} arrow>
+                            <div className="repeatable-task-item">
+                                <span className={`emoji ${!task.completed ? 'faded' : ''}`}>
+                                    {task.repeatableEmoji}
+                                    <span className={`status-icon ${task.completed ? 'completed' : 'not-completed'}`}>
+                                        {task.completed ? '✔️' : '❌'}
+                                    </span>
+                                </span>
+                            </div>
+                        </Tooltip>
+                    ))
+                )}
             </div>
             <div className="daily-view-calendar">
-            <div className="calendar-tasks">
+                <div className="calendar-tasks">
                     {nonRepeatableTasks.length === 0 ? (
                         <div className="no-tasks-message">
                             No tasks on record.
