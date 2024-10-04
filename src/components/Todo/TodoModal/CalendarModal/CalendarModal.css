@@ -6,11 +6,20 @@
 
 .modal-content {
     
+    transition: width 0.5s ease;
 }
 
 .calendar-modal {
     padding: 20px;
     width: 100%;
+}
+
+.calendar-modal.week {
+    width: 50%;
+}
+
+.calendar-modal.month {
+    width: 90%;
 }
 
 .interval-selector {

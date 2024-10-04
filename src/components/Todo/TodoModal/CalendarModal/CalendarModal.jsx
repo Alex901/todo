@@ -3,6 +3,7 @@ import BaseModal from '../BaseModal/BaseModal';
 import { useTodoContext } from '../../../../contexts/todoContexts';
 import { useUserContext } from '../../../../contexts/UserContext';
 import { Select, MenuItem, FormControl, InputLabel, Typography, IconButton } from '@mui/material';
+import { useMediaQuery } from '@mui/material';
 import Icon from '@mdi/react';
 import { mdiCalendarCheck, mdiChevronDoubleLeft, mdiChevronDoubleRight } from '@mdi/js';
 import './CalendarModal.css';
@@ -25,7 +26,7 @@ const CalendarModal = ({ isOpen, onClose }) => {
     const tasksNoDueDate = todoList.filter(task => !task.dueDate);
     const repeatableTasks = todoList.filter(task => task.repeatable);
     const [mimicTasks, setMimicTasks] = useState(repeatableTasks);
-
+    const isMobile = useMediaQuery('(max-width: 800px)');
 
 
 
@@ -110,9 +111,22 @@ const CalendarModal = ({ isOpen, onClose }) => {
     }, [filteredList]);
 
     const handleIntervalChange = (event) => {
-        setInterval(event.target.value);
+        const newInterval = event.target.value;
+        setInterval(newInterval);
+
+        const modalContent = document.querySelector('.modal-content');
+        if (!isMobile) {
+            if (newInterval === 'week') {
+                modalContent.style.width = '80%';
+            } else if (newInterval === 'month') {
+                modalContent.style.width = '90%';
+            } else {
+                modalContent.style.width = ''; // Reset to default
+            }
+        }
     };
 
+   
     const handleListChange = (event) => {
         setSelectedList(event.target.value);
     };
@@ -177,7 +191,8 @@ const handleOptionChange = (event) => {
                 <Icon path={mdiCalendarCheck} size={1.2} color="black" />
             </div>
         }>
-            <div className="calendar-modal">
+            <div className={`calendar-modal`}>
+                
                 <div className="selectors">
                     <div className="interval-selector">
                         <FormControl variant="outlined" size="small">
