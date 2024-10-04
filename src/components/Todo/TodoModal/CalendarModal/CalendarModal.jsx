@@ -97,13 +97,11 @@ const CalendarModal = ({ isOpen, onClose }) => {
                 (task.completed && new Date(task.completed) >= new Date(selectedOption.value.start) && new Date(task.completed) <= new Date(selectedOption.value.end)) 
             )
         );
-
         const filteredMimicTasks = mimicTasks.filter(task => 
             new Date(task.repeatDay) >= new Date(selectedOption.value.start) && new Date(task.repeatDay) <= new Date(selectedOption.value.end)
         );
-    
         setFilteredList([...filtered, ...filteredMimicTasks]);
-    }, [todoList, selectedList, selectedOption]);
+    }, [todoList, selectedList, selectedOption, mimicTasks]);
 
 
 
