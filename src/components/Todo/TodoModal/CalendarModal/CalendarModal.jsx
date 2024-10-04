@@ -111,20 +111,22 @@ const CalendarModal = ({ isOpen, onClose }) => {
     }, [filteredList]);
 
     const handleIntervalChange = (event) => {
-        const newInterval = event.target.value;
-        setInterval(newInterval);
+        setInterval(event.target.value);
+    };
 
+
+    useEffect(() => {
         const modalContent = document.querySelector('.modal-content');
-        if (!isMobile) {
-            if (newInterval === 'week') {
+        if (modalContent && !isMobile) {
+            if (interval === 'week') {
                 modalContent.style.width = '80%';
-            } else if (newInterval === 'month') {
+            } else if (interval === 'month') {
                 modalContent.style.width = '90%';
             } else {
                 modalContent.style.width = ''; // Reset to default
             }
         }
-    };
+    }, [interval, isMobile]);
 
    
     const handleListChange = (event) => {
@@ -182,6 +184,17 @@ const handleOptionChange = (event) => {
     //         console.log("DEBUG -- loggedInUser lists -- CalendarModal", loggedInUser.myLists);
     //     }
     // }, [loggedInUser]);
+
+    const resetValues = () => {
+        setInterval('day');
+        setSelectedList('all');
+    };
+
+    useEffect(() => {
+        if(!isOpen) {
+            resetValues();
+        }
+    }, [isOpen]);
 
     return (
         <BaseModal isOpen={isOpen} onRequestClose={onClose} title={
