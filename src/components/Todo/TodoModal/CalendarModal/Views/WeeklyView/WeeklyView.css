@@ -1,0 +1,152 @@
+.weekly-view {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+    border-right: 1px solid #e0e0e0;
+    border-bottom: 1px solid #e0e0e0;
+    border-left: 1px solid #e0e0e0;
+    padding: 5px;
+}
+
+.weekly-day {
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 10px;
+    background-color: #f8f3f9;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.weekly-day h4 {
+    text-align: center;
+    margin-bottom: 15px;
+    margin-top: 0
+}
+
+
+
+.weekly-view-emoji-area {
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
+    justify-content: center;
+    padding: 10px;
+    gap: 10px;
+    background-color: #e9dbee;
+    border-radius: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+   
+}
+
+.no-repeatable-tasks {
+    margin: auto;
+}
+
+.repeatable-task-item {
+    display: flex;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.emoji {
+    position: relative;
+    font-size: 2em;
+    margin-right: 8px;
+}
+
+.status-icon {
+    position: absolute;
+    bottom: -50%;
+    right: -20%;
+    font-size: 0.5em;
+    color: green;
+}
+
+.faded {
+    opacity: 0.2;
+}
+
+.weekly-view-calendar {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    width: 100%;
+    min-height: 350px;
+}
+
+
+.calendar-tasks {
+    display: flex;
+    flex-direction: column;
+    margin-top: 5px;
+    gap: 5px;
+    min-height: 100px;
+    width: 100%;
+}
+
+.task-block {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px;
+    border-radius: 4px;
+    background-color: #f8f3f9;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.task-block span {
+    flex-grow: 1;
+    margin-right: 10px;
+}
+
+.task-block-time {
+    width: 20%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.task-block-content {
+    width: 60%;
+    text-align: center;
+    align-items: center;
+}
+
+.task-block-checkbox {
+    width: 20%;
+    display: flex;
+    justify-content: center;
+}
+
+.task-block-time .bold {
+    font-weight: bold;
+}
+
+.no-tasks-message-week {
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: 60%;
+    font-size: 1.2em;
+    color: #888;
+    text-align: center;
+}
+
+@media (max-width: 1400px) {
+    .weekly-view {
+        grid-template-columns: 1fr; /* Stack days on top of each other */
+    }
+
+    .weekly-day {
+        width: auto; /* Each day takes 100% width */
+        
+    }
+
+    .weekly-view-calendar {
+        min-height: 50px;
+    }
+
+    .no-tasks-message-week {
+
+        margin-top: 5%;
+    }
+}

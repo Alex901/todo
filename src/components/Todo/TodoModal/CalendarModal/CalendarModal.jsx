@@ -80,7 +80,7 @@ const CalendarModal = ({ isOpen, onClose }) => {
         setMimicTasks(allMimicTasks);
     }, [allMimicTasks]);
 
-    console.log("DEBUG -- mimicTasks -- CalendarModal", mimicTasks);
+    // console.log("DEBUG -- mimicTasks -- CalendarModal", mimicTasks);
 
     useEffect(() => {
         setSelectedOption(getDefaultOption(interval));
@@ -106,9 +106,9 @@ const CalendarModal = ({ isOpen, onClose }) => {
 
 
 
-    useEffect(() => {
-        console.log("DEBUG -- filteredList -- CalendarModal", filteredList);
-    }, [filteredList]);
+    // useEffect(() => {
+    //     console.log("DEBUG -- filteredList -- CalendarModal", filteredList);
+    // }, [filteredList]);
 
     const handleIntervalChange = (event) => {
         setInterval(event.target.value);

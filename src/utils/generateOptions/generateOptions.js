@@ -4,7 +4,7 @@ const generateOptions = (interval, todaysDate, earliestDate, latestDate) => {
     const earliest = new Date(earliestDate);
     const latest = new Date(latestDate);
 
-    console.log('earliest', earliest);
+    // console.log('earliest', earliest);
 
     const getWeekNumber = (date) => {
         const firstDayOfYear = new Date(date.getFullYear(), 0, 1);

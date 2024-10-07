@@ -24,7 +24,7 @@ const DailyView = ({ tasks, today }) => {
         const difference = totalMinutes - estimatedMinutes;
         const percentageDifference = (difference / estimatedMinutes) * 100;
 
-        console.log("DEBUG -- color finder: ", percentageDifference);
+        // console.log("DEBUG -- color finder: ", percentageDifference);
 
         if (percentageDifference <= 0) {
             return 'green';
@@ -38,8 +38,8 @@ const DailyView = ({ tasks, today }) => {
     return (
         <div className="daily-view">
             <div className="daily-view-emoji-area">
-            {repeatableTasks.length === 0 ? (
-                     <div className="no-repeatable-tasks">No repeatable tasks today</div>
+                {repeatableTasks.length === 0 ? (
+                    <div className="no-repeatable-tasks">No repeatable tasks today</div>
                 ) : (
                     repeatableTasks.map(task => (
                         <Tooltip key={task._id} title={task.task} arrow>
@@ -77,7 +77,7 @@ const DailyView = ({ tasks, today }) => {
                                         <span>{task.task}</span>
                                     </div>
                                     <div className="task-block-checkbox">
-                                        <Checkbox checked={task.completed} />
+                                        <Checkbox checked={!!task.completed} />
                                     </div>
                                 </div>
                             );

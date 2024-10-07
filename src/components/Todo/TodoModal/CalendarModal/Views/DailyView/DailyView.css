@@ -56,6 +56,7 @@
 
 .daily-view-calendar {
     width: 100%;
+    min-height: 400px;
 }
 
 .calendar-tasks {
@@ -63,7 +64,7 @@
     flex-direction: column;
     margin-top: 5px;
     gap: 5px;
-    min-height: 380px;
+
 }
 
 .task-block {
