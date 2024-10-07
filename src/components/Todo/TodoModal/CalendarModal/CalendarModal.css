@@ -14,11 +14,11 @@
     width: 100%;
 }
 
-.calendar-modal.week {
+.modal-content.week {
     width: 50%;
 }
 
-.calendar-modal.month {
+.modal-content.month {
     width: 90%;
 }
 

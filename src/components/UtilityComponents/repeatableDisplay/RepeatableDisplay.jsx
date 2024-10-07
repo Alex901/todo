@@ -17,6 +17,9 @@ const RepeatableDisplay = () => {
 
     const handleTooltipOpen = (id) => {
         setOpenTooltip(id);
+        setTimeout(() => {
+            setOpenTooltip(null); // Close tooltip after a short delay
+        }, 2000); // Adjust the delay as needed
     };
 
     const handleTooltipClose = () => {
@@ -33,7 +36,7 @@ const RepeatableDisplay = () => {
                 <div className="repeatable-display-content">
                     <div className="left-section">
                         <h5>
-                            <span className="error-color">#</span>Todo today: {totalTasks}(
+                            <span className="error-color">#</span>Tasks today: {totalTasks}(
                             <span className="secondary-color">{repeatableCount}</span>)
                         </h5>
                     </div>

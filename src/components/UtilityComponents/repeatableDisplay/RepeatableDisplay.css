@@ -1,85 +1,135 @@
 .repeatable-display-content {
-    display: grid;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 5px;
+  width: fit-content;
+  height: auto;
+  background-color: #f5f5f5;
+  /* Match the general aesthetic */
+  border: 2px solid rgb(146, 137, 137);
+  border-radius: 8px;
+  padding: 10px 20px 10px 20px;
+  box-shadow: 0px 0px 20px 14px rgba(0, 0, 0, 0.1);
+  margin: 1px auto 1px auto;
+
+}
+
+.left-section>h5 {
+  margin: 0;
+  padding: 10px 0px 5px 0px;
+}
+
+.left-section {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.right-section {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: wrap;
+  justify-content: center;
+  align-items: center;
+  gap: 15px;
+}
+
+.task-item {
+  display: flex;
+  align-items: center;
+}
+
+.task-emoji {
+  font-size: 24px;
+  margin-right: 5px;
+  cursor: pointer;
+  /* Change cursor to pointer */
+  border-radius: 50%;
+  animation: pulse 2s;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+  background: radial-gradient(circle, rgba(252, 240, 4, 0.726) 20%, rgba(49, 80, 175, 0.882) 80%);
+}
+
+.task-emoji:hover {
+  transform: scale(1.2);
+  background-color: rgba(0, 0, 0, 0.1);
+  border-radius: 50%;
+
+}
+
+.task-emoji:active {
+  transform: scale(1.1);
+  background-color: rgba(0, 0, 0, 0.2);
+}
+
+.task-emoji:focus {
+  outline: none;
+  
+}
+
+.task-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.task-completed {
+  font-size: 14px;
+  color: green;
+}
+
+.task-streak {
+  font-size: 16px;
+  font-weight: bold;
+  color: #555;
+}
+
+.error-color {
+  color: var(--error-color);
+  /* Use the error color from the theme */
+}
+
+.secondary-color {
+  color: var(--secondary-color);
+  /* Use the secondary color from the theme */
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(2);
+  }
+
+  50% {
+    transform: scale(2.2);
+  }
+
+  100% {
+    transform: scale(2);
+  }
+}
+
+@media (max-width: 768px) {
+  .repeatable-display-content {
     grid-template-columns: 1fr;
-    gap: 5px;
-    width: fit-content;
-    height: auto;
-    background-color: #f5f5f5; /* Match the general aesthetic */
-    border: 2px solid rgb(146, 137, 137);
-    border-radius: 8px;
-    padding: 10px 20px 10px 20px;
-    box-shadow: 0px 0px 20px 14px rgba(0, 0, 0, 0.1);
-    margin: 1px auto 1px auto;
- 
+
   }
 
-.left-section > h5 {
-    margin: 0;
-    padding: 10px 0px 5px 0px;
-  }
-  
-  .left-section {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  }
-  
+  .left-section,
   .right-section {
-    display: flex;
-    flex-direction: row;
-    flex-wrap: wrap;
-    justify-content: center;
     align-items: center;
-    gap: 15px;
   }
-  
+
   .task-item {
-    display: flex;
-    align-items: center;
+    flex-basis: calc(33% - 50px);
   }
-  
+
   .task-emoji {
-    font-size: 24px;
-    margin-right: 5px;
-  }
-  
-  .task-info {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  
-  .task-completed {
-    font-size: 14px;
-    color: green;
-  }
-  
-  .task-streak {
-    font-size: 16px;
-    font-weight: bold;
-    color: #555;
+    font-size: 28px;
   }
 
-  .error-color {
-    color: var(--error-color); /* Use the error color from the theme */
+  .task-emoji:active {
+    background-color: rgba(0, 0, 0, 0.2);
   }
-  
-  .secondary-color {
-    color: var(--secondary-color); /* Use the secondary color from the theme */
-  }
-  
-  @media (max-width: 768px) {
-    .repeatable-display-content {
-      grid-template-columns: 1fr;
-      
-    }
-  
-    .left-section, .right-section {
-        align-items: center;
-      }
+}
 
-      .task-item {
-        flex-basis: calc(33% - 50px); /* Adjust the percentage for mobile */
-      }
-  }
