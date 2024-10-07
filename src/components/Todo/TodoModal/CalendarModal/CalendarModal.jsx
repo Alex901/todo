@@ -169,7 +169,7 @@ const handleOptionChange = (event) => {
     // console.log("DEBUG -- handleOptionChange -- selected value", selected); 
     if (selected) {
         setSelectedOption(selected);
-        setCurrentDate(new Date(selected.value.start)); // Assuming start date for the interval
+        setCurrentDate(new Date(selected.value.start)); 
     } else {
         console.error("Selected option not found");
     }
@@ -269,8 +269,8 @@ const handleOptionChange = (event) => {
                         </IconButton>
                     </div>
                     {interval === 'day' && <DailyView tasks={filteredList} today={today} selectedDate={selectedOption}/>}
-                    {interval === 'week' && <WeeklyView tasks={filteredList} today={today} />}
-                    {interval === 'month' && <MonthlyView tasks={filteredList} today={today} />}
+                    {interval === 'week' && <WeeklyView tasks={filteredList} today={today} thisWeek={selectedOption}/>}
+                    {interval === 'month' && <MonthlyView tasks={filteredList}  />}
                 </div>
             </div>
         </BaseModal>
