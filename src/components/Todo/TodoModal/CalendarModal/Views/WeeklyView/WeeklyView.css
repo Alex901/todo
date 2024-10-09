@@ -16,6 +16,11 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
+.weekly-day:hover {
+    background-color: #f0e6f0;
+    transform: scale(1.05);
+}
+
 .weekly-day h4 {
     text-align: center;
     margin-bottom: 15px;

@@ -26,19 +26,18 @@ const CalendarModal = ({ isOpen, onClose }) => {
     const tasksNoDueDate = todoList.filter(task => !task.dueDate);
     const repeatableTasks = todoList.filter(task => task.repeatable);
     const [mimicTasks, setMimicTasks] = useState(repeatableTasks);
+    const [hasSwitched, setHasSwitched] = useState(false);
     const isMobile = useMediaQuery('(max-width: 800px)');
-
-
 
     // Find the earliest and latest task dates
     const earliest = tasksWithDueDate.reduce((earliest, task) => {
         const taskDates = [task.dueDate, task.completed, task.created]
             .filter(date => date) // Filter out undefined or null dates
             .map(date => new Date(date)); // Convert to Date objects
-    
-        const earliestTaskDate = taskDates.reduce((earliestDate, currentDate) => 
+
+        const earliestTaskDate = taskDates.reduce((earliestDate, currentDate) =>
             currentDate < earliestDate ? currentDate : earliestDate, new Date());
-    
+
         return earliestTaskDate < earliest ? earliestTaskDate : earliest;
     }, new Date());
     // console.log("DEBUG -- earliest -- CalendarModal", earliest);
@@ -50,9 +49,12 @@ const CalendarModal = ({ isOpen, onClose }) => {
     // console.log("DEBUG -- latest -- CalendarModal", latest);
     //console.log("DEBUG -- noDueDate -- CalendarModal", filteredListNoDueDate)
 
-    const options = generateCalendarOptions(interval, today, earliest, latest);
+    
+    let options = generateCalendarOptions(interval, today, earliest, latest);
     // console.log("DEBUG -- options -- CalendarModal", options);
     // console.log("DEBUG -- interval -- CalendarModal", interval);
+
+    
 
     const getDefaultOption = (interval) => {
         switch (interval) {
@@ -75,7 +77,7 @@ const CalendarModal = ({ isOpen, onClose }) => {
         return repeatableTasks.flatMap(task => generateMimicTask(task, earliest, latest));
     }, [todoList]);
 
-    
+
     useEffect(() => {
         setMimicTasks(allMimicTasks);
     }, [allMimicTasks]);
@@ -83,22 +85,24 @@ const CalendarModal = ({ isOpen, onClose }) => {
     // console.log("DEBUG -- mimicTasks -- CalendarModal", mimicTasks);
 
     useEffect(() => {
+        if(!hasSwitched) {
         setSelectedOption(getDefaultOption(interval));
+        }
         //console.log("DEBUG -- selectedOption -- CalendarModal", selectedOption);
     }, [interval]);
-   
+
     // console.log("DEBUG -- selectedOption -- CalendarModal", selectedOption);
 
     // Filters tasks based on selected list
     useEffect(() => {
-        const filtered = todoList.filter(task => 
+        const filtered = todoList.filter(task =>
             task.inListNew.some(list => list.listName === selectedList) &&
             (
                 (task.dueDate && new Date(task.dueDate) >= new Date(selectedOption.value.start) && new Date(task.dueDate) <= new Date(selectedOption.value.end)) ||
-                (task.completed && new Date(task.completed) >= new Date(selectedOption.value.start) && new Date(task.completed) <= new Date(selectedOption.value.end)) 
+                (task.completed && new Date(task.completed) >= new Date(selectedOption.value.start) && new Date(task.completed) <= new Date(selectedOption.value.end))
             )
         );
-        const filteredMimicTasks = mimicTasks.filter(task => 
+        const filteredMimicTasks = mimicTasks.filter(task =>
             new Date(task.repeatDay) >= new Date(selectedOption.value.start) && new Date(task.repeatDay) <= new Date(selectedOption.value.end)
         );
         setFilteredList([...filtered, ...filteredMimicTasks]);
@@ -111,6 +115,7 @@ const CalendarModal = ({ isOpen, onClose }) => {
     // }, [filteredList]);
 
     const handleIntervalChange = (event) => {
+        setHasSwitched(false);
         setInterval(event.target.value);
     };
 
@@ -128,7 +133,7 @@ const CalendarModal = ({ isOpen, onClose }) => {
         }
     }, [interval, isMobile]);
 
-   
+
     const handleListChange = (event) => {
         setSelectedList(event.target.value);
     };
@@ -140,7 +145,7 @@ const CalendarModal = ({ isOpen, onClose }) => {
             setSelectedOption(options[currentIndex - 1]);
         }
     };
-    
+
     const handleNextClick = () => {
         const currentIndex = options.findIndex(option => option.label === selectedOption.label);
         // console.log("DEBUG -- handleNextClick -- currentIndex", currentIndex);
@@ -163,27 +168,38 @@ const CalendarModal = ({ isOpen, onClose }) => {
     };
 
 
-const handleOptionChange = (event) => {
-    // console.log("DEBUG -- handleOptionChange -- event.target", event.target.value);
-    const selected = options.find(option => option.value.start === event.target.value);
-    // console.log("DEBUG -- handleOptionChange -- selected value", selected); 
-    if (selected) {
-        setSelectedOption(selected);
-        setCurrentDate(new Date(selected.value.start)); 
-    } else {
-        console.error("Selected option not found");
-    }
-};
+    const handleOptionChange = (event) => {
+        const selected = options.find(option => option.value.start === event.target.value);
+        if (selected) {
+            setSelectedOption(selected);
+            setCurrentDate(new Date(selected.value.start));
+        } else {
+            console.error("Selected option not found");
+        }
+    };
 
-    // useEffect(() => {
-    //     console.log('DEBUG -- todoList -- CalendarModal', filteredList);
-    // }, [filteredList]);
+    const handleDayClick = async (dayDate) => {
+        setHasSwitched(true);
+        setInterval('day'); // Change the interval to 'day'
+        options = generateCalendarOptions('day', today, earliest, latest);
+        console.log("Options on week -> day: ", options);
 
-    // useEffect(() => {
-    //     if (loggedInUser) {
-    //         console.log("DEBUG -- loggedInUser lists -- CalendarModal", loggedInUser.myLists);
-    //     }
-    // }, [loggedInUser]);
+    
+        const dateOptions = { month: 'short', day: 'numeric' };
+        const dayLabel = dayDate.toLocaleDateString('en-US', dateOptions);
+        const matchingOption = options.find(option => option.label === dayLabel);
+        console.log("Matching option: ", matchingOption);
+    
+        if (matchingOption) {
+            setSelectedOption(matchingOption);
+        } else {
+            console.error("Matching option not found for the selected day");
+        }
+    };
+
+    useEffect(() => {
+        console.log("DEBUG -- SelectedOption: ", selectedOption);
+    }, [selectedOption]);
 
     const resetValues = () => {
         setInterval('day');
@@ -191,10 +207,12 @@ const handleOptionChange = (event) => {
     };
 
     useEffect(() => {
-        if(!isOpen) {
+        if (!isOpen) {
             resetValues();
         }
     }, [isOpen]);
+
+
 
     return (
         <BaseModal isOpen={isOpen} onRequestClose={onClose} title={
@@ -205,7 +223,7 @@ const handleOptionChange = (event) => {
             </div>
         }>
             <div className={`calendar-modal`}>
-                
+
                 <div className="selectors">
                     <div className="interval-selector">
                         <FormControl variant="outlined" size="small">
@@ -258,9 +276,9 @@ const handleOptionChange = (event) => {
                             >
                                 {/* Populate with dates that have tasks */}
                                 {options.map(option => (
-                                     <MenuItem key={option.value.start} value={option.value.start}>
-                                     {option.label}
-                                 </MenuItem>
+                                    <MenuItem key={option.value.start} value={option.value.start}>
+                                        {option.label}
+                                    </MenuItem>
                                 ))}
                             </Select>
                         </FormControl>
@@ -268,9 +286,9 @@ const handleOptionChange = (event) => {
                             <Icon path={mdiChevronDoubleRight} size={1} />
                         </IconButton>
                     </div>
-                    {interval === 'day' && <DailyView tasks={filteredList} today={today} selectedDate={selectedOption}/>}
-                    {interval === 'week' && <WeeklyView tasks={filteredList} today={today} thisWeek={selectedOption}/>}
-                    {interval === 'month' && <MonthlyView tasks={filteredList}  />}
+                    {interval === 'day' && <DailyView tasks={filteredList} today={today} selectedDate={selectedOption} />}
+                    {interval === 'week' && <WeeklyView tasks={filteredList} today={today} thisWeek={selectedOption} onDayClick={handleDayClick} />}
+                    {interval === 'month' && <MonthlyView tasks={filteredList} />}
                 </div>
             </div>
         </BaseModal>

@@ -2,12 +2,12 @@ import React, { useEffect, useState, useRef } from 'react';
 import { Tooltip, Checkbox } from '@mui/material';
 import './WeeklyView.css';
 
-const WeeklyView = ({ tasks, today, thisWeek }) => {
+const WeeklyView = ({ tasks, today, thisWeek, onDayClick }) => {
     const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
     const [maxHeight, setMaxHeight] = useState("80px");
     const emojiAreaRefs = useRef([]);
 
-    console.log("DEBUG -- WeeklyView -- thisWeek: ", thisWeek);
+    // console.log("DEBUG -- WeeklyView -- thisWeek: ", thisWeek);
 
     useEffect(() => {
         // Clear the refs array
@@ -70,17 +70,17 @@ const WeeklyView = ({ tasks, today, thisWeek }) => {
 
     const isSameDate = (date1, date2) => {
         return date1.getDate() === date2.getDate() &&
-               date1.getMonth() === date2.getMonth() &&
-               date1.getFullYear() === date2.getFullYear();
+            date1.getMonth() === date2.getMonth() &&
+            date1.getFullYear() === date2.getFullYear();
     };
 
     const isTodayInThisWeek = (today, thisWeek) => {
         const todayTime = today.getTime();
         const startTime = thisWeek.start.getTime();
         const endTime = thisWeek.end.getTime();
-        console.log("DEBUG -- WeeklyView -- todayTime: ", todayTime);
-        console.log("DEBUG -- WeeklyView -- startTime: ", startTime);
-        console.log("DEBUG -- WeeklyView -- endTime: ", endTime);
+        // console.log("DEBUG -- WeeklyView -- todayTime: ", todayTime);
+        // console.log("DEBUG -- WeeklyView -- startTime: ", startTime);
+        // console.log("DEBUG -- WeeklyView -- endTime: ", endTime);
         return todayTime >= startTime && todayTime <= endTime;
     };
 
@@ -97,7 +97,7 @@ const WeeklyView = ({ tasks, today, thisWeek }) => {
     const isTodayInWeek = isTodayInThisWeek(todayDate, { start: startOfWeek, end: endOfWeek });
     const todayDayOfWeek = isTodayInWeek ? getDayOfWeek(todayDate, startOfWeek) : -1;
 
-    console.log("DEBUG -- WeeklyView -- todayDayOfWeek: ", isTodayInWeek);
+    // console.log("DEBUG -- WeeklyView -- todayDayOfWeek: ", isTodayInWeek);
 
 
     return (
@@ -107,10 +107,17 @@ const WeeklyView = ({ tasks, today, thisWeek }) => {
                 const repeatableTasks = dayTasks.filter(task => task.repeatable);
                 const nonRepeatableTasks = dayTasks.filter(task => !task.repeatable);
 
+                const dayDate = new Date(startOfWeek);
+                dayDate.setDate(startOfWeek.getDate() + index);
                 const isToday = index === todayDayOfWeek;
 
                 return (
-                    <div key={day} className="weekly-day" style={{ border: isToday ? '2px solid red' : '1px solid #e0e0e0' }}>
+                    <div
+                        key={day}
+                        className="weekly-day"
+                        onClick={() => onDayClick(dayDate) }
+                        style={{ border: isToday ? '2px solid red' : '1px solid #e0e0e0' }}
+                    >
                         <h4>{day}</h4>
                         <div className="weekly-view-emoji-area"
                             ref={el => emojiAreaRefs.current[index] = el}
