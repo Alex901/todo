@@ -2,6 +2,14 @@ export const generateMimicTask = (task, startDate, endDate) => {
     const dates = [];
     const currentDate = new Date(startDate);
     const repeatUntilDate = task.repeatUntil ? new Date(task.repeatUntil) : new Date(endDate);
+    endDate.setHours(23, 59, 59, 999);
+
+
+    const setEndOfMonth = (date) => {
+        const endDate = new Date(date.getFullYear(), date.getMonth() + 1, 0); // Last day of the current month
+        endDate.setHours(23, 59, 59, 999); // Set to 23:59:59.999
+        return endDate;
+    };
 
     while (currentDate <= endDate && currentDate <= repeatUntilDate) {
         if (task.repeatInterval === 'daily') {

@@ -42,15 +42,34 @@ const CalendarModal = ({ isOpen, onClose }) => {
     }, new Date());
     // console.log("DEBUG -- earliest -- CalendarModal", earliest);
 
-    const latest = tasksWithDueDate.reduce((latest, task) => {
+
+    const setEndOfMonth = (date) => {
+        const endDate = new Date(date.getFullYear(), date.getMonth() + 1, 0); // Last day of the current month
+        endDate.setHours(23, 59, 59, 999); // Set to 23:59:59.999
+        return endDate;
+    };
+    
+    const setEndOfWeek = (date) => {
+        const endDate = new Date(date);
+        const dayOfWeek = endDate.getDay();
+        const diffToSunday = 7 - dayOfWeek;
+        endDate.setDate(endDate.getDate() + diffToSunday);
+        endDate.setHours(23, 59, 59, 999); // Set to 23:59:59.999
+        return endDate;
+    };
+    
+    let latest = tasksWithDueDate.reduce((latest, task) => {
         const taskDate = new Date(task.dueDate);
         return taskDate > latest ? taskDate : latest;
     }, new Date());
-    // console.log("DEBUG -- latest -- CalendarModal", latest);
-    //console.log("DEBUG -- noDueDate -- CalendarModal", filteredListNoDueDate)
+    
+    // Adjust latest to the later of the end of the current week or the end of the current month
+    const endOfMonth = setEndOfMonth(latest);
+    const endOfWeek = setEndOfWeek(latest);
+    latest = endOfMonth > endOfWeek ? endOfMonth : endOfWeek;
 
     let options = generateCalendarOptions(interval, today, earliest, latest);
-    console.log("DEBUG -- options -- CalendarModal", options);
+    // console.log("DEBUG -- options -- CalendarModal", options);
     // console.log("DEBUG -- interval -- CalendarModal", interval);
 
     
@@ -63,7 +82,7 @@ const CalendarModal = ({ isOpen, onClose }) => {
                 return options.find(option => option.label === 'This Week');
             case 'month':
                 const currentMonthName = today.toLocaleString('default', { month: 'long' });
-                console.log("DEBUG -- currentMonthName -- CalendarModal", currentMonthName);
+                // console.log("DEBUG -- currentMonthName -- CalendarModal", currentMonthName);
                 return options.find(option => option.label === currentMonthName);
             default:
                 return options[options.length - 1];
@@ -196,9 +215,9 @@ const CalendarModal = ({ isOpen, onClose }) => {
         }
     };
 
-    useEffect(() => {
-        console.log("DEBUG -- SelectedOption: ", selectedOption);
-    }, [selectedOption]);
+    // useEffect(() => {
+    //     console.log("DEBUG -- SelectedOption: ", selectedOption);
+    // }, [selectedOption]);
 
     const resetValues = () => {
         setInterval('day');

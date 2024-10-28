@@ -1,0 +1,152 @@
+.monthly-view {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 5px;
+    padding: 10px;
+}
+
+.day-square {
+    position: relative;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    padding: 2px;
+    background-color: #f8f3f9;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.day-square:hover {
+    background-color: #f0e6f0;
+    scale: 1.05;
+    cursor: pointer;
+}
+
+.day-square.today {
+    border: 2px solid red;
+}
+
+.day-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.day-number {
+    font-size: 1.2em;
+    font-weight: bold;
+    background-color: white;
+    padding: 2px 5px;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    justify-content: flex-start;
+    margin-right: auto;
+    width: 18px;
+    text-align: center;
+}
+
+.repeatable-tasks {
+    display: flex;
+    justify-content: center;
+    flex-grow: 1;
+}
+
+.task-circle {
+    width: 12px;
+    height: 12px;
+    border: 2px solid #555;
+    border-radius: 50%;
+    margin: 0 2px;
+}
+
+.task-circle.completed {
+    background-color: var(--secondary-color);
+}
+
+.non-repeatable-tasks {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 5px;
+}
+
+.progress-bar-monthly-view {
+    width: 100%;
+    height: 25px;
+    /* Thicker progress bar */
+    background-color: #ed0b0b;
+    border-radius: 5px;
+    position: relative;
+    border: 1px solid #555;
+}
+
+.progress-monthly-view {
+    height: 100%;
+    background-color: var(--success-color);
+    border-radius: 5px;
+}
+
+.progress-text-monthly-view {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 0.8em;
+    font-weight: bold;
+    color: white;
+}
+
+.no-tasks {
+    text-align: center;
+    font-size: 0.8em;
+    color: #888;
+}
+
+.monthly-hr {
+    margin: 5px 0px;
+}
+
+@media (max-width: 800px) {
+    .monthly-view {
+        grid-template-columns: repeat(3, 1fr);
+    }
+}
+
+@media (max-width: 500px) {
+    .monthly-view {
+        grid-template-columns: repeat(2, 1fr);
+        padding: 10px 0px;
+    }
+
+    /* First week */
+    .monthly-view .day-square:nth-child(n+1):nth-child(-n+7) {
+        background-color: #f0f0f0;
+        /* Light gray for the first week */
+    }
+
+    /* Second week */
+    .monthly-view .day-square:nth-child(n+8):nth-child(-n+14) {
+        background-color: #dedcdc;
+        /* White for the second week */
+    }
+
+    /* Third week */
+    .monthly-view .day-square:nth-child(n+15):nth-child(-n+21) {
+        background-color: #f0f0f0;
+        /* Light gray for the third week */
+    }
+
+    /* Fourth week */
+    .monthly-view .day-square:nth-child(n+22):nth-child(-n+28) {
+        background-color: #dedcdc;
+        /* White for the fourth week */
+    }
+
+    /* Fifth week (if applicable) */
+    .monthly-view .day-square:nth-child(n+29) {
+        background-color: #f0f0f0;
+        /* Light gray for the fifth week */
+    }
+}
+}
