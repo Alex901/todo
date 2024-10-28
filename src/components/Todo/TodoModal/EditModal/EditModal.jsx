@@ -20,6 +20,10 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
     const [loading, setLoading] = useState(true);
     //console.log("DEBUG -- EditModal -> editData", editData);
 
+    if(editData.repeatable){
+        console.log("YEY! A repeatable task!");
+    }
+
     const options = [
         { value: 'VERY HIGH', label: 'VERY HIGH' },
         { value: 'HIGH', label: 'HIGH' },

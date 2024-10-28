@@ -75,7 +75,7 @@ const TodoProvider = ({ children }) => {
   // useEffect(() => {
   //   if (loggedInUser && listToday.length > 0) {
   //     console.log("DEBUG -- listToday -- todoContext", listToday);
-      
+
   //   }
   // }, [listToday]);
 
@@ -136,6 +136,24 @@ const TodoProvider = ({ children }) => {
             }
           }
           inListNewTmp.push(activeListId._id);
+        }
+      }
+
+      // Get today's date range
+      const todayStart = new Date();
+      todayStart.setHours(0, 0, 0, 0);
+
+      const todayEnd = new Date();
+      todayEnd.setHours(23, 59, 59, 999);
+
+      // Check if dueDate is within today's date range
+      if (newTaskData.dueDate) {
+        const dueDate = new Date(newTaskData.dueDate);
+        if (dueDate >= todayStart && dueDate <= todayEnd) {
+          const todayListId = loggedInUser.myLists.find(list => list.listName === 'today');
+          if (todayListId) {
+            inListNewTmp.push(todayListId._id);
+          }
         }
       }
 
@@ -320,7 +338,7 @@ const TodoProvider = ({ children }) => {
   };
 
   const editTodo = async (updatedTask) => {
-    //console.log("todoContext: editTodo: updatedTask", updatedTask);
+    console.log("todoContext: editTodo: updatedTask", updatedTask);
     try {
       const taskId = todoList.find(todo => todo.id === updatedTask.id)._id;
 
@@ -497,7 +515,7 @@ const TodoProvider = ({ children }) => {
       todoList, listToday: listToday, addTodo, cancelTodo, removeTodo, toggleTodoComplete,
       getTodoCount, getDoneCount, getDoingCount, editTodo, toggleTodoStart, refreshTodoList,
       getActiveListDoingCount, getActiveListTodoCount, getActiveListDoneCount, getListDoingCount,
-      getListDoneCount, getListTodoCount, setStepCompleted, setStepUncomplete, 
+      getListDoneCount, getListTodoCount, setStepCompleted, setStepUncomplete,
     }}>
       {children}
     </TodoContext.Provider>
