@@ -1,7 +1,7 @@
 import React from 'react';
 import './MonthlyView.css';
 
-const MonthlyView = ({ tasks, today }) => {
+const MonthlyView = ({ tasks, today, thisMonth, onDayClick }) => {
     const repeatableTasks = tasks.filter(task => task.isRepeatable);
     const nonRepeatableTasks = tasks.filter(task => !task.isRepeatable);
 

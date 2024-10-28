@@ -3,6 +3,10 @@ const generateOptions = (interval, todaysDate, earliestDate, latestDate) => {
     const today = new Date(todaysDate);
     const earliest = new Date(earliestDate);
     const latest = new Date(latestDate);
+    latest.setHours(23, 59, 59, 999);
+
+    // console.log('DEBUG-- generate options: today', today);  
+    // console.log('DEBUG-- generate options: latest', latest);
 
     // console.log('earliest', earliest);
 
@@ -12,6 +16,17 @@ const generateOptions = (interval, todaysDate, earliestDate, latestDate) => {
         return Math.ceil((pastDaysOfYear + firstDayOfYear.getDay() + 1) / 7);
     };
 
+    const formatDateToISOString = (date) => {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        const seconds = String(date.getSeconds()).padStart(2, '0');
+        const milliseconds = String(date.getMilliseconds()).padStart(3, '0');
+        return `${year}-${month}-${day}T${hours}:${minutes}:${seconds}.${milliseconds}`;
+    };
+
     if (interval === 'day') {
         let currentDate = new Date(earliest);
         while (currentDate <= latest) {
@@ -19,6 +34,8 @@ const generateOptions = (interval, todaysDate, earliestDate, latestDate) => {
             startOfDay.setHours(0, 0, 0, 0);
             const endOfDay = new Date(currentDate);
             endOfDay.setHours(23, 59, 59, 999);
+            // console.log('DEBUG-- generate options: startOfDay', startOfDay);
+            // console.log('DEBUG-- generate options: endOfDay', endOfDay);
             options.push({
                 label: currentDate.toDateString() === today.toDateString() ? 'Today' : currentDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric' }),
                 value: {
@@ -29,7 +46,13 @@ const generateOptions = (interval, todaysDate, earliestDate, latestDate) => {
             currentDate.setDate(currentDate.getDate() + 1);
         }
     } else if (interval === 'week') {
+        const dayOfWeek = today.getDay();
+        const diffToSunday = 7 - dayOfWeek;
+        latest.setDate(today.getDate() + diffToSunday);
+        latest.setHours(23, 59, 59, 999);
+
         let currentDate = new Date(earliest);
+        // console.log('DEBUG -- latest', latest);
         while (currentDate <= latest) {
             const startOfWeek = new Date(currentDate);
             const dayOfWeek = startOfWeek.getDay();
@@ -39,6 +62,8 @@ const generateOptions = (interval, todaysDate, earliestDate, latestDate) => {
             const endOfWeek = new Date(startOfWeek);
             endOfWeek.setDate(startOfWeek.getDate() + 6);
             endOfWeek.setHours(23, 59, 59, 999);
+            // console.log('DEBUG-- generate options: startOfWeek', startOfWeek);
+            // console.log('DEBUG-- generate options: endOfWeek', endOfWeek);
             options.push({
                 label: startOfWeek <= today && today <= endOfWeek ? 'This Week' : `Week ${getWeekNumber(startOfWeek)}`,
                 value: {
@@ -58,11 +83,13 @@ const generateOptions = (interval, todaysDate, earliestDate, latestDate) => {
             startOfMonth.setHours(0, 0, 0, 0);
             const endOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 0);
             endOfMonth.setHours(23, 59, 59, 999);
+            // console.log('DEBUG-- generate options: startOfMonth', startOfMonth);
+            // console.log('DEBUG-- generate options: endOfMonth', endOfMonth);
             options.push({
                 label: startOfMonth.toLocaleString('default', { month: 'long' }),
                 value: {
-                    start: startOfMonth.toISOString(),
-                    end: endOfMonth.toISOString(),
+                    start: formatDateToISOString(startOfMonth),
+                    end: formatDateToISOString(endOfMonth),
                 },
             });
             if (startOfMonth.getMonth() === today.getMonth() && startOfMonth.getFullYear() === today.getFullYear()) {
@@ -79,13 +106,14 @@ const generateOptions = (interval, todaysDate, earliestDate, latestDate) => {
             options.push({
                 label: startOfCurrentMonth.toLocaleString('default', { month: 'long' }),
                 value: {
-                    start: startOfCurrentMonth.toISOString(),
-                    end: endOfCurrentMonth.toISOString(),
+                    start: formatDateToISOString(startOfCurrentMonth),
+                    end: formatDateToISOString(endOfCurrentMonth),
                 },
             });
         }
+        options.reverse();
     }
-
+    
     return options;
 };
 

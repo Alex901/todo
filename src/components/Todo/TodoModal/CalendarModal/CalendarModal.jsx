@@ -49,9 +49,8 @@ const CalendarModal = ({ isOpen, onClose }) => {
     // console.log("DEBUG -- latest -- CalendarModal", latest);
     //console.log("DEBUG -- noDueDate -- CalendarModal", filteredListNoDueDate)
 
-    
     let options = generateCalendarOptions(interval, today, earliest, latest);
-    // console.log("DEBUG -- options -- CalendarModal", options);
+    console.log("DEBUG -- options -- CalendarModal", options);
     // console.log("DEBUG -- interval -- CalendarModal", interval);
 
     
@@ -67,7 +66,7 @@ const CalendarModal = ({ isOpen, onClose }) => {
                 console.log("DEBUG -- currentMonthName -- CalendarModal", currentMonthName);
                 return options.find(option => option.label === currentMonthName);
             default:
-                return options[1];
+                return options[options.length - 1];
         }
     }
 
@@ -288,7 +287,7 @@ const CalendarModal = ({ isOpen, onClose }) => {
                     </div>
                     {interval === 'day' && <DailyView tasks={filteredList} today={today} selectedDate={selectedOption} />}
                     {interval === 'week' && <WeeklyView tasks={filteredList} today={today} thisWeek={selectedOption} onDayClick={handleDayClick} />}
-                    {interval === 'month' && <MonthlyView tasks={filteredList} />}
+                    {interval === 'month' && <MonthlyView tasks={filteredList}  today={today} thisMonth={selectedOption} onDayClick={handleDayClick}/>}
                 </div>
             </div>
         </BaseModal>
