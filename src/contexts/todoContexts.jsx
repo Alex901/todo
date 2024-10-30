@@ -66,8 +66,18 @@ const TodoProvider = ({ children }) => {
 
   useEffect(() => {
     if (loggedInUser && todoList.length > 0) {
-      const filteredTasks = todoList.filter(task => task.isToday);
-
+      console.log("DEBUG -- todoList -- todoContext", todoList);
+  
+      const tasksIsToday = todoList.filter(task => task.isToday);
+      const tasksInTodayList = todoList.filter(task => task.inListNew.some(list => list.listName === 'today'));
+  
+      console.log("Tasks with isToday:", tasksIsToday);
+      console.log("Tasks in 'today' list:", tasksInTodayList);
+  
+      const filteredTasks = todoList.filter(task =>
+          task.isToday || task.inListNew.some(list => list.listName === 'today')
+      );
+  
       setListToday(filteredTasks);
     }
   }, [todoList, loggedInUser]);

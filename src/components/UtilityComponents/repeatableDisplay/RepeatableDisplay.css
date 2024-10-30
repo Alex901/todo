@@ -21,18 +21,19 @@
 
 .left-section {
   display: flex;
-  flex-direction: column;
-  justify-content: center;
   align-items: center;
+  justify-content: center;
+  width: 100%;
 }
 
-.right-section {
+.bottom-section {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
   gap: 15px;
+  margin-top: 10px;
 }
 
 .task-item {
@@ -109,13 +110,37 @@
   }
 }
 
+.progress-bar-repeatable-display {
+  width: 100%;
+  height: 28px; /* Adjust the height as needed */
+  background-color: var(--error-color);
+  border-radius: 5px;
+  position: relative;
+}
+
+.progress-repeatable-display {
+  height: 100%;
+  background-color: var(--success-color);
+  border-radius: 5px;
+}
+
+.progress-text-repeatable-display {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  font-size: 0.8em;
+  font-weight: bold;
+  color: #fff;
+}
+
 @media (max-width: 768px) {
   .repeatable-display-content {
     grid-template-columns: 1fr;
 
   }
 
-  .left-section,
+  .top-section,
   .right-section {
     align-items: center;
   }

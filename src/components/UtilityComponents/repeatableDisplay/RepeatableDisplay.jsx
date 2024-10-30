@@ -12,7 +12,7 @@ const RepeatableDisplay = () => {
 
 
     useEffect(() => {
-      //  console.log('DEBUG -- listToday -- repeatableDisplay', listToday);
+        //  console.log('DEBUG -- listToday -- repeatableDisplay', listToday);
     }, [listToday]);
 
     const handleTooltipOpen = (id) => {
@@ -27,20 +27,24 @@ const RepeatableDisplay = () => {
     };
 
     const repeatableTasks = listToday.filter(task => task.repeatable);
-    const totalTasks = listToday.filter(task => !task.isDone).length;
     const repeatableCount = repeatableTasks.filter(task => !task.isDone).length;
+
+    const totalTasks = listToday.length;
+    const completedTasks = listToday.filter(task => task.completed !== null).length;
 
     return (
         <>
             {listToday.length > 0 && (
                 <div className="repeatable-display-content">
-                    <div className="left-section">
-                        <h5>
-                            <span className="error-color">#</span>Tasks today: {totalTasks}(
-                            <span className="secondary-color">{repeatableCount}</span>)
-                        </h5>
+                    <div className="top-section">
+                        <div className="progress-bar-repeatable-display">
+                            <div className="progress-repeatable-display" style={{ width: `${(completedTasks / totalTasks) * 100}%` }}></div>
+                            <div className="progress-text-repeatable-display">
+                                {completedTasks}/{totalTasks}
+                            </div>
+                        </div>
                     </div>
-                    <div className="right-section">
+                    <div className="bottom-section">
                         {repeatableTasks.map(task => (
                             <div key={task.id} className="task-item">
                                 <Tooltip
@@ -48,7 +52,7 @@ const RepeatableDisplay = () => {
                                     arrow
                                     open={openTooltip === task.id}
                                     onClose={handleTooltipClose}
-                                   
+
                                 >
                                     <span
                                         className="task-emoji"
