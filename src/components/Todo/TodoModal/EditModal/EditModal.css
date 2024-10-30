@@ -26,6 +26,36 @@
 }
 
 .modal-content {
-   
     max-height: 80vh;
 }
+
+.edit-repeatable-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    padding: 0;
+}
+
+.edit-repeatable-header {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+}
+
+.edit-repeatable-main-options,
+.edit-repeatable-interval-options {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    column-gap: 30px;
+    width: 100%;
+    margin-top: 10px;
+    align-items: center;
+}
+
+.edit-repeatable-interval-options {
+    margin-top: 20px;
+}
+

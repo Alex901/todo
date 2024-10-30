@@ -7,7 +7,7 @@ const CurrencyArea = () => {
     const { loggedInUser } = useUserContext();
 
     useEffect(() => {
-        console.log('DEBUG -- user -- currencyArea', loggedInUser);
+        // console.log('DEBUG -- user -- currencyArea', loggedInUser);
     }, [loggedInUser]);
 
     return (

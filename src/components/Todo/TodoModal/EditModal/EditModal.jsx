@@ -4,10 +4,11 @@ import './EditModal.css'
 import { useTodoContext } from '../../../../contexts/todoContexts';
 import { useUserContext } from '../../../../contexts/UserContext';
 import { mdiDelete, mdiDeleteEmpty } from '@mdi/js';
-import { TextField, Button, InputAdornment, IconButton, FormControl, InputLabel, Select, MenuItem, Checkbox, FormControlLabel, Chip } from '@mui/material';
+import { TextField, Button, InputAdornment, IconButton, FormControl, InputLabel, Select, MenuItem, Checkbox, FormControlLabel, Chip, Switch } from '@mui/material';
 import Icon from '@mdi/react';
 import { toast } from 'react-toastify';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import { CSSTransition } from 'react-transition-group';
 
 ReactModal.setAppElement('#root');
 
@@ -20,7 +21,7 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
     const [loading, setLoading] = useState(true);
     //console.log("DEBUG -- EditModal -> editData", editData);
 
-    if(editData.repeatable){
+    if (editData.repeatable) {
         console.log("YEY! A repeatable task!");
     }
 
@@ -53,6 +54,16 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
         inList: editData.inList,
         inListNew: editData.inListNew,
         tags: editData.tags,
+        repeatable: editData.repeatable || false,
+        ...(editData.repeatable ? {
+            repeatNotify: editData.repeatNotify || false,
+            repeatInterval: editData.repeatInterval || 'daily',
+            ...(editData.repeatInterval === 'weekly' ? { repeatDays: editData.repeatDays || [] } : {}),
+            ...(editData.repeatInterval === 'monthly' ? { repeatMonthlyOption: editData.repeatMonthlyOption || 'start' } : {}),
+            ...(editData.repeatInterval === 'yearly' ? { repeatYearlyOption: editData.repeatYearlyOption || 'start' } : {}),
+            repeatUntil: editData.repeatUntil || '',
+            repeatableEmoji: editData.repeatableEmoji || '',
+        } : {})
     });
 
     const optionsListNames = isLoggedIn && loggedInUser.myLists
@@ -105,6 +116,73 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
         console.log("Task data", taskData);
     };
 
+    //Helper methods for handleSubmit
+    const cleanRepeatableAttributes = (taskData) => {
+        let cleanedTaskData = { ...taskData };
+
+        if (!taskData.repeatable) {
+            delete cleanedTaskData.repeatNotify;
+            delete cleanedTaskData.repeatInterval;
+            delete cleanedTaskData.repeatDays;
+            delete cleanedTaskData.repeatMonthlyOption;
+            delete cleanedTaskData.repeatYearlyOption;
+            delete cleanedTaskData.repeatUntil;
+            delete cleanedTaskData.repeatableEmoji;
+        } else {
+            switch (taskData.repeatInterval) {
+                case 'weekly':
+                    delete cleanedTaskData.repeatMonthlyOption;
+                    delete cleanedTaskData.repeatYearlyOption;
+                    break;
+                case 'monthly':
+                    delete cleanedTaskData.repeatDays;
+                    delete cleanedTaskData.repeatYearlyOption;
+                    break;
+                case 'yearly':
+                    delete cleanedTaskData.repeatDays;
+                    delete cleanedTaskData.repeatMonthlyOption;
+                    break;
+                default:
+                    delete cleanedTaskData.repeatDays;
+                    delete cleanedTaskData.repeatMonthlyOption;
+                    delete cleanedTaskData.repeatYearlyOption;
+                    break;
+            }
+        }
+
+        return cleanedTaskData;
+    };
+
+    const updateTodayList = (taskData) => {
+        let updatedTaskData = { ...taskData };
+
+        const now = new Date();
+        const startOfToday = new Date(now.setHours(0, 0, 0, 0));
+        const endOfToday = new Date(now.setHours(23, 59, 59, 999));
+        const dueDate = new Date(taskData.dueDate);
+
+        const todayListId = loggedInUser.myLists.find(list => list.listName === 'today')?._id;
+
+        // console.log("DEBUG - todayListId", todayListId);
+        // console.log("DEBUG - inListNew before update", updatedTaskData.inListNew);
+
+        if (todayListId) {
+            if (dueDate >= startOfToday && dueDate <= endOfToday) {
+                console.log("DueDate changed to today, adding to today");
+                if (!updatedTaskData.inListNew.includes(todayListId)) {
+                    updatedTaskData.inListNew.push(todayListId);
+                }
+            } else {
+                console.log("DueDate changed from today, removing from today list");
+                updatedTaskData.inListNew = updatedTaskData.inListNew.filter(list => list._id !== todayListId);
+            }
+        }
+
+        // console.log("DEBUG - inListNew after update", updatedTaskData.inListNew);
+
+        return updatedTaskData;
+    };
+
     const handleSubmit = () => {
         event.preventDefault();
         console.log("TodoModal -> newTaskData", taskData);
@@ -119,7 +197,17 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
             setErrorMessage('You need to enter all step names');
             return;
         }
-        editTodo(taskData);
+
+        // Clean up repeatable attributes
+        let cleanedTaskData = cleanRepeatableAttributes(taskData);
+        cleanedTaskData = updateTodayList(cleanedTaskData);
+
+        // Remove or set dueDate to empty if the task is repeatable
+        if (cleanedTaskData.repeatable) {
+            cleanedTaskData.dueDate = null;
+        }
+
+        editTodo(cleanedTaskData);
         toast.success('Changes saved');
 
         onRequestClose();
@@ -138,12 +226,13 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
         });
     }
 
-    const handleCheckboxChange = (event) => {
-        setTaskData({
-            ...taskData,
-            isUrgent: event.target.checked
-        });
-    }
+    const handleCheckboxChange = (e) => {
+        const { name, checked } = e.target;
+        setTaskData(prevState => ({
+            ...prevState,
+            [name]: checked
+        }));
+    };
 
     const handleDiffChange = (selectedOption) => {
         console.log("Selected option", selectedOption.target.value);
@@ -262,6 +351,16 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
         setTaskData({ ...taskData, steps: items });
     };
 
+    const handleRepeatDaysChange = (event) => {
+        const { name, checked } = event.target;
+        setTaskData((prevData) => ({
+            ...prevData,
+            repeatDays: checked
+                ? [...(prevData.repeatDays || []), name]
+                : (prevData.repeatDays || []).filter((day) => day !== name),
+        }));
+    };
+
     //I steal the ccs classes from my create modal -- don't judge me, haha
     return (
 
@@ -313,21 +412,206 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
                     />
                     <hr style={{ width: '80%', margin: '10px auto' }} />
 
-                    <div className="input-container" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%', gap: '20px' }}>
-                        <FormControl style={{ width: '200px' }}>
-                            <TextField
-                                id="dueDate"
-                                type="datetime-local"
-                                label="Deadline"
-                                className='modal-input-date'
-                                onChange={handleInputChange}
-                                name='dueDate'
-                                value={taskData.dueDate ? new Date(taskData.dueDate).toISOString().substring(0, 16) : ""}
-                                InputLabelProps={{
-                                    shrink: true,
-                                }}
+                    <div className="edit-repeatable-container">
+                        <div className="edit-repeatable-header">
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        checked={taskData.repeatable}
+                                        onChange={handleCheckboxChange}
+                                        name="repeatable"
+                                        color="primary"
+                                    />
+                                }
+                                label="Repeatable"
                             />
-                        </FormControl>
+                        </div>
+
+                        <CSSTransition
+                            in={taskData.repeatable}
+                            timeout={300}
+                            classNames="fade"
+                            unmountOnExit
+                        >
+                            <div className="edit-repeatable-main-options">
+                                <FormControl variant="outlined" style={{ minWidth: '50px' }} size='small'>
+                                    <InputLabel id="emoji-select-label">Emoji</InputLabel>
+                                    <Select
+                                        name="repeatableEmoji"
+                                        labelId="emoji-select-label"
+                                        id="emoji-select"
+                                        value={taskData.repeatableEmoji || ''}
+                                        onChange={handleInputChange}
+                                        label="Select Emoji"
+                                    >
+                                        <MenuItem value="😊">😊</MenuItem>
+                                        <MenuItem value="🏋️‍♀️">🏋️‍♀️</MenuItem>
+                                        <MenuItem value="🏃‍♂️">🏃‍♂️</MenuItem>
+                                        <MenuItem value="🚴">🚴</MenuItem>
+                                        <MenuItem value="💼">💼</MenuItem>
+                                        <MenuItem value="🔧">🔧</MenuItem>
+                                        <MenuItem value="🎨">🎨</MenuItem>
+                                        <MenuItem value="💵">💵</MenuItem>
+                                        <MenuItem value="📅">📅</MenuItem>
+                                        <MenuItem value="👫">👫</MenuItem>
+                                        <MenuItem value="🐕">🐕</MenuItem>
+                                        <MenuItem value="🍹">🍹</MenuItem>
+                                        <MenuItem value="🍽️">🍽️</MenuItem>
+                                        <MenuItem value="📚">📚</MenuItem>
+                                        <MenuItem value="🛏️">🛏️</MenuItem>
+                                        <MenuItem value="🧹">🧹</MenuItem>
+                                        <MenuItem value="🛒">🛒</MenuItem>
+                                        <MenuItem value="🧘">🧘</MenuItem>
+                                        <MenuItem value="📞">📞</MenuItem>
+                                        <MenuItem value="✉️">✉️</MenuItem>
+                                        <MenuItem value="🚗">🚗</MenuItem>
+                                        <MenuItem value="🏠">🏠</MenuItem>
+                                    </Select>
+                                </FormControl>
+
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            checked={taskData.repeatNotify || false}
+                                            onChange={handleCheckboxChange}
+                                            name="repeatNotify"
+                                            color="primary"
+                                        />
+                                    }
+                                    label="Enable Notifications"
+                                    style={{ display: 'flex', alignItems: 'center' }}
+                                />
+
+                                <FormControl variant="outlined" style={{ minWidth: '146px', justifyContent: 'center' }} size='small'>
+                                    <InputLabel id="repeat-interval-label">Repeat Interval</InputLabel>
+                                    <Select
+                                        name="repeatInterval"
+                                        labelId="repeat-interval-label"
+                                        id="repeat-interval"
+                                        value={taskData.repeatInterval || ''}
+                                        onChange={handleInputChange}
+                                        label="Repeat Interval"
+                                    >
+                                        <MenuItem value="daily">Daily</MenuItem>
+                                        <MenuItem value="weekly">Weekly</MenuItem>
+                                        <MenuItem value="monthly">Monthly</MenuItem>
+                                        <MenuItem value="yearly">Yearly</MenuItem>
+                                    </Select>
+                                </FormControl>
+                            </div>
+                        </CSSTransition>
+
+                        <CSSTransition
+                            in={taskData.repeatInterval !== ''}
+                            timeout={300}
+                            classNames="fade"
+                            unmountOnExit
+                        >
+                            <div className="edit-repeatable-interval-options">
+                                {taskData.repeatable && taskData.repeatInterval === 'daily' && (
+                                    <FormControl variant="outlined" style={{ minWidth: '150px' }} size='small'>
+                                        <TextField
+                                            label="Repeat Until"
+                                            type="date"
+                                            name="repeatUntil"
+                                            onChange={handleInputChange}
+                                            InputLabelProps={{
+                                                shrink: true,
+                                            }}
+                                        />
+                                    </FormControl>
+                                )}
+
+                                {taskData.repeatable && taskData.repeatInterval === 'weekly' && (
+                                    <div style={{ display: 'flex', alignItems: 'center', marginBottom: '8px' }}>
+                                        {['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'].map((day) => (
+                                            <div key={day} style={{ textAlign: 'center', margin: '0 0x' }}>
+                                                <div style={{ marginBottom: '-5px' }}>{day.charAt(0)}</div>
+                                                <Checkbox
+                                                    checked={(taskData.repeatDays || []).includes(day)}
+                                                    onChange={handleRepeatDaysChange}
+                                                    name={day}
+                                                    color="primary"
+                                                    style={{ padding: '0 0px' }}
+                                                />
+                                            </div>
+                                        ))}
+                                    </div>
+                                )}
+
+                                {taskData.repeatable && taskData.repeatInterval === 'monthly' && (
+                                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                                        <span>Start</span>
+                                        <Switch
+                                            checked={taskData.repeatMonthlyOption === 'end'}
+                                            onChange={(event) => setTaskData((prevData) => ({
+                                                ...prevData,
+                                                repeatMonthlyOption: event.target.checked ? 'end' : 'start',
+                                            }))}
+                                            color="primary"
+                                            name="repeatMonthlyOption"
+                                            inputProps={{ 'aria-label': 'Monthly Option' }}
+                                        />
+                                        <span>End</span>
+                                    </div>
+                                )}
+
+                                {taskData.repeatable && taskData.repeatInterval === 'yearly' && (
+                                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                                        <span>Start</span>
+                                        <Switch
+                                            checked={taskData.repeatYearlyOption === 'end'}
+                                            onChange={(event) => setTaskData((prevData) => ({
+                                                ...prevData,
+                                                repeatYearlyOption: event.target.checked ? 'end' : 'start',
+                                            }))}
+                                            color="primary"
+                                            name="repeatYearlyOption"
+                                            inputProps={{ 'aria-label': 'Yearly Option' }}
+                                        />
+                                        <span>End</span>
+                                    </div>
+                                )}
+
+                                {taskData.repeatable && ['weekly', 'monthly', 'yearly'].includes(taskData.repeatInterval) && (
+                                    <FormControl variant="outlined" style={{ minWidth: '150px' }} size='small'>
+                                        <TextField
+                                            label="Repeat Until"
+                                            type="date"
+                                            name="repeatUntil"
+                                            onChange={handleInputChange}
+                                            InputLabelProps={{
+                                                shrink: true,
+                                            }}
+                                        />
+                                    </FormControl>
+                                )}
+                            </div>
+                        </CSSTransition>
+                    </div>
+
+                    <hr style={{ width: '80%', margin: '10px auto' }} />
+
+
+                    <div className="input-container" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%', gap: '20px' }}>
+                        {!taskData.repeatable && (
+                            <div className="input-container" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%', gap: '20px' }}>
+                                <FormControl style={{ width: '200px' }}>
+                                    <TextField
+                                        id="dueDate"
+                                        type="datetime-local"
+                                        label="Deadline"
+                                        className='modal-input-date'
+                                        onChange={handleInputChange}
+                                        name='dueDate'
+                                        value={taskData.dueDate ? new Date(taskData.dueDate).toISOString().substring(0, 16) : ""}
+                                        InputLabelProps={{
+                                            shrink: true,
+                                        }}
+                                    />
+                                </FormControl>
+                            </div>
+                        )}
 
                         <FormControl variant="outlined" size="small" style={{ width: '140px', marginRight: '20px' }}>
                             <InputLabel id="priority-label">Priority</InputLabel>
@@ -551,7 +835,9 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
                         fullWidth
                         sx={{ '.MuiOutlinedInput-root': { marginTop: '0px', marginBottom: '15px' } }}
                     />
-                    <hr style={{ width: '80%', margin: '10px auto' }} />
+
+
+
                     {errorMessage && <p className="error">{errorMessage}</p>}
                     <button className='modal-button'> Save </button>
                 </form>

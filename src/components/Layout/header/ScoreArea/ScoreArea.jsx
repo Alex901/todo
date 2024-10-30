@@ -9,7 +9,7 @@ const ScoreArea = () => {
     const { loggedInUser } = useUserContext();
 
     useEffect(() => {
-        console.log('DEBUG -- user -- scoreArea', loggedInUser);
+        // console.log('DEBUG -- user -- scoreArea', loggedInUser);
     }, [loggedInUser]);
 
     return (

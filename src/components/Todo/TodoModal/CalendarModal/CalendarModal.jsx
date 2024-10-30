@@ -48,7 +48,7 @@ const CalendarModal = ({ isOpen, onClose }) => {
         endDate.setHours(23, 59, 59, 999); // Set to 23:59:59.999
         return endDate;
     };
-    
+
     const setEndOfWeek = (date) => {
         const endDate = new Date(date);
         const dayOfWeek = endDate.getDay();
@@ -57,12 +57,12 @@ const CalendarModal = ({ isOpen, onClose }) => {
         endDate.setHours(23, 59, 59, 999); // Set to 23:59:59.999
         return endDate;
     };
-    
+
     let latest = tasksWithDueDate.reduce((latest, task) => {
         const taskDate = new Date(task.dueDate);
         return taskDate > latest ? taskDate : latest;
     }, new Date());
-    
+
     // Adjust latest to the later of the end of the current week or the end of the current month
     const endOfMonth = setEndOfMonth(latest);
     const endOfWeek = setEndOfWeek(latest);
@@ -72,7 +72,7 @@ const CalendarModal = ({ isOpen, onClose }) => {
     // console.log("DEBUG -- options -- CalendarModal", options);
     // console.log("DEBUG -- interval -- CalendarModal", interval);
 
-    
+
 
     const getDefaultOption = (interval) => {
         switch (interval) {
@@ -98,13 +98,14 @@ const CalendarModal = ({ isOpen, onClose }) => {
 
     useEffect(() => {
         setMimicTasks(allMimicTasks);
+        console.log("DEBUG -- allMimicTasks -- CalendarModal", allMimicTasks);
     }, [allMimicTasks]);
 
     // console.log("DEBUG -- mimicTasks -- CalendarModal", mimicTasks);
 
     useEffect(() => {
-        if(!hasSwitched) {
-        setSelectedOption(getDefaultOption(interval));
+        if (!hasSwitched) {
+            setSelectedOption(getDefaultOption(interval));
         }
         //console.log("DEBUG -- selectedOption -- CalendarModal", selectedOption);
     }, [interval]);
@@ -202,12 +203,23 @@ const CalendarModal = ({ isOpen, onClose }) => {
         options = generateCalendarOptions('day', today, earliest, latest);
         console.log("Options on week -> day: ", options);
 
-    
         const dateOptions = { month: 'short', day: 'numeric' };
-        const dayLabel = dayDate.toLocaleDateString('en-US', dateOptions);
+        let dayLabel = dayDate.toLocaleDateString('en-US', dateOptions);
+
+        const todayDate = new Date();
+        todayDate.setHours(0, 0, 0, 0);
+        dayDate.setHours(0, 0, 0, 0);
+    
+        if (dayDate.getTime() === todayDate.getTime()) {
+            dayLabel = 'Today';
+        }
+
         const matchingOption = options.find(option => option.label === dayLabel);
         console.log("Matching option: ", matchingOption);
-    
+        console.log("DEBUG: options: ", options);
+
+        
+
         if (matchingOption) {
             setSelectedOption(matchingOption);
         } else {
@@ -269,11 +281,13 @@ const CalendarModal = ({ isOpen, onClose }) => {
                                 label="List"
                                 sx={{ minWidth: '100px' }}
                             >
-                                {loggedInUser?.myLists.map((list) => (
-                                    <MenuItem key={list.listName} value={list.listName}>
-                                        {list.listName}
-                                    </MenuItem>
-                                ))}
+                                {loggedInUser?.myLists
+                                    .filter(list => !(interval === 'month' || interval === 'week') || list.listName !== 'today')
+                                    .map((list) => (
+                                        <MenuItem key={list.listName} value={list.listName}>
+                                            {list.listName}
+                                        </MenuItem>
+                                    ))}
                             </Select>
                         </FormControl>
                     </div>
@@ -306,7 +320,7 @@ const CalendarModal = ({ isOpen, onClose }) => {
                     </div>
                     {interval === 'day' && <DailyView tasks={filteredList} today={today} selectedDate={selectedOption} />}
                     {interval === 'week' && <WeeklyView tasks={filteredList} today={today} thisWeek={selectedOption} onDayClick={handleDayClick} />}
-                    {interval === 'month' && <MonthlyView tasks={filteredList}  today={today} thisMonth={selectedOption} onDayClick={handleDayClick}/>}
+                    {interval === 'month' && <MonthlyView tasks={filteredList} today={today} thisMonth={selectedOption} onDayClick={handleDayClick} />}
                 </div>
             </div>
         </BaseModal>

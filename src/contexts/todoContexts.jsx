@@ -46,7 +46,7 @@ const TodoProvider = ({ children }) => {
   const [todoList, setTodoList] = useState([]);
   const [listToday, setListToday] = useState([]); //List of repeatable tasks for today
   const [dataFetched, setDataFetched] = useState(false);
-  const { loggedInUser, userList } = useUserContext(); //Logged in username&&list
+  const { loggedInUser, userList, checkLogin } = useUserContext(); //Logged in username&&list
   const { userGroupList } = useGroupContext();
 
   function isMobileDevice() {
@@ -66,13 +66,13 @@ const TodoProvider = ({ children }) => {
 
   useEffect(() => {
     if (loggedInUser && todoList.length > 0) {
-      console.log("DEBUG -- todoList -- todoContext", todoList);
+      // console.log("DEBUG -- todoList -- todoContext", todoList);
   
       const tasksIsToday = todoList.filter(task => task.isToday);
       const tasksInTodayList = todoList.filter(task => task.inListNew.some(list => list.listName === 'today'));
   
-      console.log("Tasks with isToday:", tasksIsToday);
-      console.log("Tasks in 'today' list:", tasksInTodayList);
+      // console.log("Tasks with isToday:", tasksIsToday);
+      // console.log("Tasks in 'today' list:", tasksInTodayList);
   
       const filteredTasks = todoList.filter(task =>
           task.isToday || task.inListNew.some(list => list.listName === 'today')
@@ -362,8 +362,10 @@ const TodoProvider = ({ children }) => {
           if (todo._id === taskId) {
             return { ...todo, ...updatedTask }
           }
+
           return todo;
         }));
+        checkLogin();
       } else {
         console.error("Error updating task: ", response.statusText);
       }

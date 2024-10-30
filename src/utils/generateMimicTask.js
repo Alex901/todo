@@ -4,12 +4,8 @@ export const generateMimicTask = (task, startDate, endDate) => {
     const repeatUntilDate = task.repeatUntil ? new Date(task.repeatUntil) : new Date(endDate);
     endDate.setHours(23, 59, 59, 999);
 
+    console.log('DEBUG -- generateMimicTask -- task', task);
 
-    const setEndOfMonth = (date) => {
-        const endDate = new Date(date.getFullYear(), date.getMonth() + 1, 0); // Last day of the current month
-        endDate.setHours(23, 59, 59, 999); // Set to 23:59:59.999
-        return endDate;
-    };
 
     while (currentDate <= endDate && currentDate <= repeatUntilDate) {
         if (task.repeatInterval === 'daily') {
@@ -41,6 +37,7 @@ export const generateMimicTask = (task, startDate, endDate) => {
         repeatable: true,
         repeatDay: date,
         completed: task.repeatableCompleted.find(completion => new Date(completion.completionTime).toDateString() === date.toDateString())?.completionTime,
-        repeatableEmoji: task.repeatableEmoji
+        repeatableEmoji: task.repeatableEmoji,
+        inListNew: task.inListNew,
     }));
 };
