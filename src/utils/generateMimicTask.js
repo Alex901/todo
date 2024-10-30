@@ -4,7 +4,7 @@ export const generateMimicTask = (task, startDate, endDate) => {
     const repeatUntilDate = task.repeatUntil ? new Date(task.repeatUntil) : new Date(endDate);
     endDate.setHours(23, 59, 59, 999);
 
-    console.log('DEBUG -- generateMimicTask -- task', task);
+    // console.log('DEBUG -- generateMimicTask -- task', task);
 
 
     while (currentDate <= endDate && currentDate <= repeatUntilDate) {
