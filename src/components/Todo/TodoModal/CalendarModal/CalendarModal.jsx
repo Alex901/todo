@@ -98,7 +98,7 @@ const CalendarModal = ({ isOpen, onClose }) => {
 
     useEffect(() => {
         setMimicTasks(allMimicTasks);
-        console.log("DEBUG -- allMimicTasks -- CalendarModal", allMimicTasks);
+        // console.log("DEBUG -- allMimicTasks -- CalendarModal", allMimicTasks);
     }, [allMimicTasks]);
 
     // console.log("DEBUG -- mimicTasks -- CalendarModal", mimicTasks);
@@ -122,6 +122,7 @@ const CalendarModal = ({ isOpen, onClose }) => {
             )
         );
         const filteredMimicTasks = mimicTasks.filter(task =>
+            task.inListNew.some(list => list.listName === selectedList) &&
             new Date(task.repeatDay) >= new Date(selectedOption.value.start) && new Date(task.repeatDay) <= new Date(selectedOption.value.end)
         );
         setFilteredList([...filtered, ...filteredMimicTasks]);
@@ -215,8 +216,8 @@ const CalendarModal = ({ isOpen, onClose }) => {
         }
 
         const matchingOption = options.find(option => option.label === dayLabel);
-        console.log("Matching option: ", matchingOption);
-        console.log("DEBUG: options: ", options);
+        // console.log("Matching option: ", matchingOption);
+        // console.log("DEBUG: options: ", options);
 
         
 

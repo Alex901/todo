@@ -7,7 +7,7 @@ const WeeklyView = ({ tasks, today, thisWeek, onDayClick }) => {
     const [maxHeight, setMaxHeight] = useState("80px");
     const emojiAreaRefs = useRef([]);
 
-    // console.log("DEBUG -- WeeklyView -- thisWeek: ", thisWeek);
+    console.log("DEBUG -- WeeklyView -- thisWeeks tasks: ", tasks);
 
     useEffect(() => {
         // Clear the refs array
