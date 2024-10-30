@@ -468,57 +468,46 @@ const TodoProvider = ({ children }) => {
 
   //TODO: Clean up this mess and make it into a single function
 
-  const getTodoCount = (isUrgent = false) => {
-    return todoList.filter(todo => !todo.isDone && !todo.isStarted && (!isUrgent || todo.isUrgent)).length;
-  }
+  const getCount = (filterFn) => {
+    return todoList.filter(filterFn).length;
+};
 
-  const getDoneCount = (isUrgent = false) => {
-    return todoList.filter(todo => todo.isDone && (!isUrgent || todo.isUrgent)).length;
-  }
+const getTodoCount = (isUrgent = false) => {
+    return getCount(todo => !todo.isDone && !todo.isStarted && (!isUrgent || todo.isUrgent));
+};
 
-  const getDoingCount = (isUrgent = false) => {
-    return todoList.filter(todo => todo.isStarted && !todo.isDone && (!isUrgent || todo.isUrgent)).length;
-  }
+const getDoneCount = (isUrgent = false) => {
+    return getCount(todo => todo.isDone && (!isUrgent || todo.isUrgent));
+};
 
-  const getActiveListTodoCount = () => {
-    return todoList.filter(todo => todo.inList.includes(loggedInUser.activeList) && !todo.isDone && !todo.isStarted).length;
-  }
+const getDoingCount = (isUrgent = false) => {
+    return getCount(todo => todo.isStarted && !todo.isDone && (!isUrgent || todo.isUrgent));
+};
 
-  const getActiveListDoneCount = () => {
-    return todoList.filter(todo => todo.inList.includes(loggedInUser.activeList) && todo.isDone).length;
-  }
+const getActiveListTodoCount = () => {
+    return getCount(todo => todo.inListNew.some(list => list.listName === loggedInUser.activeList) && !todo.isDone && !todo.isStarted);
+};
 
-  const getActiveListDoingCount = () => {
-    return todoList.filter(todo => todo.inList.includes(loggedInUser.activeList) && todo.isStarted && !todo.isDone).length;
-  }
+const getActiveListDoneCount = () => {
+    return getCount(todo => todo.inListNew.some(list => list.listName === loggedInUser.activeList) && todo.isDone);
+};
 
-  const getListTodoCount = (listName) => {
-    return todoList.filter(todo => todo.inList.includes(listName) && !todo.isDone && !todo.isStarted).length;
-  }
+const getActiveListDoingCount = () => {
+    return getCount(todo => todo.inListNew.some(list => list.listName === loggedInUser.activeList) && todo.isStarted && !todo.isDone);
+};
 
-  const getListDoneCount = (listName) => {
-    return todoList.filter(todo => todo.inList.includes(listName) && todo.isDone).length;
-  }
+const getListTodoCount = (listName) => {
+    return getCount(todo => todo.inListNew.some(list => list.listName === listName) && !todo.isDone && !todo.isStarted);
+};
 
-  const getListDoingCount = (listName) => {
-    return todoList.filter(todo => todo.inList.includes(listName) && todo.isStarted && !todo.isDone).length;
-  }
+const getListDoneCount = (listName) => {
+    return getCount(todo => todo.inListNew.some(list => list.listName === listName) && todo.isDone);
+};
 
+const getListDoingCount = (listName) => {
+    return getCount(todo => todo.inListNew.some(list => list.listName === listName) && todo.isStarted && !todo.isDone);
+};
 
-
-  // Adding some dummy-data
-  /*   useEffect(() => {
-      setTodoList([
-        { id: 1, task: 'Entry button: finnish look', isDone: true, created: new Date(), completed: new Date() },
-        { id: 2, task: 'toggle arrow', isDone: true, created: new Date(), completed: new Date() },
-        { id: 3, task: 'editEntry (modal)', isDone: true, created: new Date(), completed: new Date() },
-        { id: 4, task: 'Sub tasks', isDone: false, created: new Date(), completed: null },
-        { id: 5, task: 'Count todo/done', isDone: true, created: new Date(), completed: new Date() },
-        { id: 6, task: 'Connect database', isDone: false, created: new Date(), completed: null },
-        { id: 7, task: 'save/load lists from db', isDone: false, created: new Date(), completed: null },
-      ]);
-    }, []);
-   */
 
   return (
     <TodoContext.Provider value={{
