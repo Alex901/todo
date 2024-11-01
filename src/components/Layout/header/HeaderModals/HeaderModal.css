@@ -135,6 +135,15 @@ p.error {
     gap: 10px;
     margin: 10px 0;
 }
+
+.socore-area-settings {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
 @media (max-width: 768px) {
     .register-modal-content {
         width: 90%;

@@ -16,3 +16,13 @@
     height: 20px;
     color: white; /* White icon color */
 }
+
+@media (max-width: 600px) {
+    .score {
+        color: black; /* Black text color for smaller screens */
+    }
+
+    .score-icon {
+        color: black; /* Black icon color for smaller screens */
+    }
+}

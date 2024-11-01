@@ -17,3 +17,9 @@
     width: 20px;
     height: 20px;
   }
+
+  @media (max-width: 600px) {
+    .currency-area {
+      border: 2px solid var(--primary-color) /* Black border for smaller screens */
+    }
+}

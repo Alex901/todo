@@ -9,13 +9,16 @@ import SettingsList from '../SettingsList/SettingsList';
 import UserListEntry from '../UserListEntry/UserListEntry';
 import FeedbackListEntry from './FeedbackListEntry/FeedbackListEntry';
 import AdminPopper from './AdminPopper/AdminPopper';
+import ScoreArea from '../ScoreArea/ScoreArea';
+import CurrencyArea from '../CurrencyArea/CurrencyArea';
+import { useMediaQuery } from '@mui/material';
 import imageCompression from 'browser-image-compression';
 
 const SettingsModal = ({ isOpen, onClose }) => {
     const [selectedTab, setSelectedTab] = useState(0);
     const { loggedInUser, updateProfilePicture, editUser, userList, deleteUser } = useUserContext();
     const [hasChanges, setHasChanges] = useState(false);
-    const [formData, setFormData] = useState({ });
+    const [formData, setFormData] = useState({});
     const { feedbackList } = useFeedbackContext();
     const [imageSizeError, setImageSizeError] = useState('');
     const [newPassword, setNewPassword] = useState('');
@@ -24,12 +27,13 @@ const SettingsModal = ({ isOpen, onClose }) => {
     const [anchorEl, setAnchorEl] = useState(null);
     const [popperOpen, setPopperOpen] = useState(false);
     const [popperMode, setPopperMode] = useState('');
+    const isMobile = useMediaQuery('(max-width: 800px)');
 
     useEffect(() => {
         if (loggedInUser) {
-          setFormData({ ...loggedInUser });
+            setFormData({ ...loggedInUser });
         }
-      }, [loggedInUser]);
+    }, [loggedInUser]);
 
     const types = [...new Set(feedbackList.map(feedback => feedback.type))];
 
@@ -129,6 +133,14 @@ const SettingsModal = ({ isOpen, onClose }) => {
                         <Avatar src={loggedInUser?.profilePicture || ''} name="profilePicture" className="modal-input" style={{ width: '100px', height: '100px', cursor: 'pointer' }} />
                     </label>
                     <p className='error'>{imageSizeError}</p>
+
+                    {isMobile && (
+                        <div className="socore-area-settings">
+                            <ScoreArea />
+                            <CurrencyArea />
+                        </div>
+                    )}
+                    <hr />
                     <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', gap: '10px' }}>
                         <TextField label="Email" name="email" value={formData.email} className="modal-input" disabled={true} onChange={handleInputChange} />
                         <TextField label="Username" name="username" value={formData.username} className="modal-input" onChange={handleInputChange} />
