@@ -40,8 +40,10 @@ const RepeatableDisplay = () => {
                     <div className="top-section">
                         <div className="progress-bar-repeatable-display">
                             <div className="progress-repeatable-display" style={{ width: `${(completedTasks / totalTasks) * 100}%` }}></div>
+                            <div className="progress-ongoing-display" style={{ width: `${((completedTasks + ongoingTasks) / totalTasks) * 100}%` }}></div>
+                            <div className="progress-total-display"></div>
                             <div className="progress-text-repeatable-display">
-                                {completedTasks}/{totalTasks}
+                                {completedTasks}(+{ongoingTasks})/{totalTasks}
                             </div>
                         </div>
                     </div>

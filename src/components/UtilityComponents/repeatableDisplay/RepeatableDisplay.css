@@ -96,32 +96,41 @@
   /* Use the secondary color from the theme */
 }
 
-@keyframes pulse {
-  0% {
-    transform: scale(2);
-  }
 
-  50% {
-    transform: scale(2.2);
-  }
-
-  100% {
-    transform: scale(2);
-  }
-}
 
 .progress-bar-repeatable-display {
   width: 100%;
-  height: 28px; /* Adjust the height as needed */
+  height: 32px; /* Adjust the height as needed */
   background-color: var(--error-color);
   border-radius: 5px;
   position: relative;
+  z-index: 0;
+}
+
+.progress-total-display {
+  position: absolute;
+  height: 100%;
+  width: 100%;
+  background-color: var(--error-color);
+  border-radius: 5px;
+  z-index: 0;
+}
+
+.progress-ongoing-display {
+  position: absolute;
+  height: 100%;
+  background-color: var(--secondary-color);
+  border-radius: 5px;
+  z-index: 1;
+  animation: blink 3s infinite;
 }
 
 .progress-repeatable-display {
+  position: absolute;
   height: 100%;
-  background-color: var(--success-color);
+  background-color: green;
   border-radius: 5px;
+  z-index: 2;
 }
 
 .progress-text-repeatable-display {
@@ -132,6 +141,7 @@
   font-size: 0.8em;
   font-weight: bold;
   color: #fff;
+  z-index: 5;
 }
 
 @media (max-width: 768px) {
@@ -155,6 +165,32 @@
 
   .task-emoji:active {
     background-color: rgba(0, 0, 0, 0.2);
+  }
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(2);
+  }
+
+  50% {
+    transform: scale(2.2);
+  }
+
+  100% {
+    transform: scale(2);
+  }
+}
+
+@keyframes blink {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+  100% {
+    opacity: 1;
   }
 }
 

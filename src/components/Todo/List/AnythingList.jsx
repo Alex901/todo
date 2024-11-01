@@ -365,6 +365,7 @@ const AnythingList = ({ type }) => {
                                         label="Deadline this week"
                                     />
                                 </div>
+                        
                                 <div className="checkbox-container" style={{}}>
                                     <FormControlLabel
                                         control={
