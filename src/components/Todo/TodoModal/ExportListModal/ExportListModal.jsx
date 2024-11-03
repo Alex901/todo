@@ -172,7 +172,9 @@ const ExportListModal = ({ isOpen, onClose }) => {
                     startY = doc.autoTable.previous.finalY + 10; // Update startY to the end of the previous table
                 }
             }
+            
         });
+
     
         // Handle uncompleted tasks if "Include Completed tasks only" is false
         if (!selectedOptions["Include Completed tasks only"]) {
@@ -215,6 +217,7 @@ const ExportListModal = ({ isOpen, onClose }) => {
                             columnStyles: { 0: { halign: 'left' } } // Left align the first column (Task Name)
                         });
                         startY = doc.autoTable.previous.finalY + 10; // Update startY to the end of the previous table
+                        checkNewPage(doc, startY);  
                     }
                 }
             });
