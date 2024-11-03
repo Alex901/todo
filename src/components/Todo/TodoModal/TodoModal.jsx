@@ -11,7 +11,7 @@ import Icon from '@mdi/react';
 import { mdiDelete, mdiDeleteEmpty } from '@mdi/js';
 import { useTranslation } from "react-i18next";
 import BaseModal from './BaseModal/BaseModal';
-import { CSSTransition } from 'react-transition-group';
+import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
 ReactModal.setAppElement('#root');
 
