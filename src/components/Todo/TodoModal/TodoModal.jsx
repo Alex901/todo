@@ -680,25 +680,32 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
                             <Droppable droppableId="newTaskSteps">
                                 {(provided) => (
                                     <div className='steps' style={{ width: '100%', justifyContent: 'left' }} {...provided.droppableProps} ref={provided.innerRef}>
-                                        {newTaskData.steps.map((step, index) => (
-                                            <Draggable key={step.id} draggableId={String(step.id)} index={index}>
-                                                {(provided) => (
-                                                    <div className="drag" ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} style={{ transform: 'none', display: 'flex', flexDirection: 'row', alignItems: 'center', ...provided.draggableProps.style }}>
-                                                        <label style={{ display: 'flex', alignItems: 'center' }}>{`Step${index + 1}`}</label>
-                                                        <input className='create-modal-input' type='text' placeholder={`Enter step title`}
-                                                            onChange={event => handleInputChangeStep(step.id, event)} value={newTaskData.steps[step.id - 1].value} maxLength='50' />
-                                                        <div onMouseEnter={() => setHoveredStepId(step.id)} onMouseLeave={() => setHoveredStepId(null)}>
-                                                            <Icon
-                                                                path={hoveredStepId === step.id ? mdiDeleteEmpty : mdiDelete}
-                                                                size={1.2}
-                                                                color={hoveredStepId === step.id ? "red" : "gray"}
-                                                                onClick={() => handleDeleteStep(step.id)}
-                                                            />
-                                                        </div>
-                                                    </div>
-                                                )}
-                                            </Draggable>
-                                        ))}
+                                        <TransitionGroup>
+                                            {newTaskData.steps.map((step, index) => (
+                                                <CSSTransition
+                                                    key={step.id}
+                                                    timeout={300}
+                                                    classNames="step">
+                                                    <Draggable key={step.id} draggableId={String(step.id)} index={index}>
+                                                        {(provided) => (
+                                                            <div className="drag" ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} style={{ transform: 'none', display: 'flex', flexDirection: 'row', alignItems: 'center', ...provided.draggableProps.style }}>
+                                                                <label style={{ display: 'flex', alignItems: 'center' }}>{`Step${index + 1}`}</label>
+                                                                <input className='create-modal-input' type='text' placeholder={`Enter step title`}
+                                                                    onChange={event => handleInputChangeStep(step.id, event)} value={newTaskData.steps[step.id - 1].value} maxLength='50' />
+                                                                <div onMouseEnter={() => setHoveredStepId(step.id)} onMouseLeave={() => setHoveredStepId(null)}>
+                                                                    <Icon
+                                                                        path={hoveredStepId === step.id ? mdiDeleteEmpty : mdiDelete}
+                                                                        size={1.2}
+                                                                        color={hoveredStepId === step.id ? "red" : "gray"}
+                                                                        onClick={() => handleDeleteStep(step.id)}
+                                                                    />
+                                                                </div>
+                                                            </div>
+                                                        )}
+                                                    </Draggable>
+                                                </CSSTransition>
+                                            ))}
+                                        </TransitionGroup>
                                         {provided.placeholder}
                                         <div style={{ display: 'flex', justifyContent: 'center' }}>
                                             <p className='add-step' onClick={handleAddStep} style={{}}> <strong> add step </strong> </p>
