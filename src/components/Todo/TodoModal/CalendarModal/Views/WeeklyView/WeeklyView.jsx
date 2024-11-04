@@ -1,5 +1,6 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Tooltip, Checkbox } from '@mui/material';
+import { Droppable } from 'react-beautiful-dnd';
 import './WeeklyView.css';
 
 const WeeklyView = ({ tasks, today, thisWeek, onDayClick }) => {

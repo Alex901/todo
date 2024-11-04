@@ -18,8 +18,6 @@ const ExportListModal = ({ isOpen, onClose }) => {
     const [selectedList, setSelectedList] = React.useState(loggedInUser ? loggedInUser.activeList : '');
     const [customName, setCustomName] = React.useState('');
     const [selectedOptions, setSelectedOptions] = React.useState({
-
-
         "Include Completed tasks only": true,
         "Include only tasks with Deadline": true,
         "Include repeatable tasks": false,
@@ -34,7 +32,6 @@ const ExportListModal = ({ isOpen, onClose }) => {
         started: false,
         completed: false,
         duration: true,
-
     });
 
     const handleOptionChange = (event) => {
@@ -96,7 +93,7 @@ const ExportListModal = ({ isOpen, onClose }) => {
             if (isCompleted && selectedOptions.completed) rowData.push(task.completed ? new Date(task.completed).toLocaleDateString('default', { month: 'short', day: 'numeric' }) : '');
             if (selectedOptions.Priority) rowData.push(task.priority);
             if (selectedOptions.Difficulty) rowData.push(task.difficulty);
-            if (selectedOptions["Estimated Time"]) rowData.push(`${task.estimatedTime} minutes`);
+            if (selectedOptions["Estimated Time"]) rowData.push(task.estimatedTime ? `${task.estimatedTime} minutes` : 'no estimated time');
             if (isCompleted && selectedOptions.duration) rowData.push(task.completed ? normalizeDuration(new Date(task.completed) - new Date(task.started)) : '');
             return rowData;
         };
@@ -185,7 +182,7 @@ const ExportListModal = ({ isOpen, onClose }) => {
             doc.text(uncompletedTasksTitle, uncompletedTasksTextX, startY);
             startY += 10;
             bodyData = [];
-            listToExport.forEach((task, index) => {
+            listToExport.forEach((task) => {
                 if ((!task.repeatable || task.repeatable === false) && !task.isDone) {
                     console.log("Task:", task);
                     bodyData.push(generateBodyData(task, false));
@@ -208,19 +205,21 @@ const ExportListModal = ({ isOpen, onClose }) => {
                         ));
                         bodyData.push([`  Tags: ${tags.map(tag => tag.props.label).join(', ')}`]);
                     }
-                    if (index === listToExport.length - 1) {
-                        doc.autoTable({
-                            head: [generateHeaders(false)],
-                            body: bodyData,
-                            startY: startY,
-                            styles: { halign: 'center' },
-                            columnStyles: { 0: { halign: 'left' } } // Left align the first column (Task Name)
-                        });
-                        startY = doc.autoTable.previous.finalY + 10; // Update startY to the end of the previous table
-                        checkNewPage(doc, startY);  
-                    }
                 }
             });
+        
+            if (bodyData.length > 0) {
+                doc.autoTable({
+                    head: [generateHeaders(false)],
+                    body: bodyData,
+                    startY: startY,
+                    styles: { halign: 'center' },
+                    columnStyles: { 0: { halign: 'left' } } // Left align the first column (Task Name)
+                });
+                startY = doc.autoTable.previous.finalY + 10; // Update startY to the end of the previous table
+                checkNewPage(doc, startY);
+            }
+        
             console.log("Uncompleted tasks bodyData:", bodyData);
         }
     

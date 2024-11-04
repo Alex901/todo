@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import ReactModal from 'react-modal';
+import BaseModal from '../BaseModal/BaseModal';
 import './EditModal.css'
 import { useTodoContext } from '../../../../contexts/todoContexts';
 import { useUserContext } from '../../../../contexts/UserContext';
@@ -10,7 +10,6 @@ import { toast } from 'react-toastify';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 
-ReactModal.setAppElement('#root');
 
 const EditModal = ({ isOpen, onRequestClose, editData }) => {
     const { editTodo } = useTodoContext();
@@ -364,20 +363,17 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
     //I steal the ccs classes from my create modal -- don't judge me, haha
     return (
 
-        <ReactModal
+        <BaseModal
             isOpen={isOpen}
             contentLabel="Edit todo task"
-            className="modal-content"
             onRequestClose={() => {
                 toast.warn('Edit canceled -- changes not saved');
                 onRequestClose();
             }}
             overlayClassName="modal-overlay"
             shouldCloseOnOverlayClick={true}
+            title="Edit task"
         >
-            <div className="modal-title" style={{ textAlign: 'center' }}>
-                <h3 className='title' style={{ marginTop: '0', marginBottom: '15px' }}> Edit task</h3>
-            </div>
 
             {isLoggedIn ? (
                 <form className='edit-entry-form' onSubmit={handleSubmit} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '5px' }}>
@@ -847,7 +843,7 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
                     <button className='modal-button'> Save </button>
                 </form>
             )}
-        </ReactModal>
+        </BaseModal>
 
     )
 }
