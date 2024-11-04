@@ -28,8 +28,11 @@ const SelectLanguageButton = ({ isLoggedIn, isMobile, className }) => {
 
   return (
     <>
-      <IconButton onClick={handleLanguageMenuClick} color="inherit" className={`language-button ${className} ${!isLoggedIn ? 'logged-out' : ''}`}>
-        <Icon className={`notification-icon`} path={mdiTranslateVariant} size={1.2} />
+      <IconButton
+        onClick={handleLanguageMenuClick}
+        color="inherit"
+        className={`language-button ${className} ${!isLoggedIn ? 'logged-out' : ''}`}>
+        <Icon className={`language-icon`} path={mdiTranslateVariant} size={1.2} />
       </IconButton>
       <Menu
         anchorEl={anchorEl}

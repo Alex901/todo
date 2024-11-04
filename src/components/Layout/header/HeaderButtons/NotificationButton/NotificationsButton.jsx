@@ -28,7 +28,7 @@ const NotificationsButton = ({ isLoggedIn, userNotifications, isMobile, classNam
           <IconButton
             onClick={handleNotificationMenuClick}
             color="inherit"
-            className={`notification-button ${className}`}
+            className={`notification-button`}
           >
             <div className="icon-badge-container">
               <Icon path={mdiBellOutline} size={1.2} />

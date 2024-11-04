@@ -39,15 +39,17 @@
     font-size: small;
     padding: 0.25rem 0.5rem;
     font-weight: 500;
-    color: #1a202c;
+    color: inherit;
     background-color: var(--secondary-color);
     border-radius: 20px;
     cursor: pointer;
     border: none;
+    border: 1px solid transparent;
   }
   
   .avatar-button:hover {
     border: 1px solid white;
+    color: black;
   }
 
   .avatar {
