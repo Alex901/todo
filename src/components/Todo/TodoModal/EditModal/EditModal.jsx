@@ -478,7 +478,7 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
                                     style={{ display: 'flex', alignItems: 'center' }}
                                 />
 
-                                <FormControl variant="outlined" style={{ minWidth: '146px', justifyContent: 'center' }} size='small'>
+                                <FormControl variant="outlined" style={{ minWidth: '146px', justifyContent: 'center', marginBottom: '10px' }} size='small'>
                                     <InputLabel id="repeat-interval-label">Repeat Interval</InputLabel>
                                     <Select
                                         name="repeatInterval"
