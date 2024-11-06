@@ -17,16 +17,18 @@ const FeedbackVoteEntry = ({ feedback }) => {
     useEffect(() => {
         const entries = document.querySelectorAll('.feedback-message');
         let maxHeight = 0;
-
+    
+        // Calculate the maximum height
         entries.forEach(entry => {
             const height = entry.scrollHeight;
             if (height > maxHeight) {
                 maxHeight = height;
             }
         });
-
+    
+        // Apply the maximum height to all entries
         entries.forEach(entry => {
-            entry.style.minHeight = `${maxHeight}px`;
+            entry.style.height = `${maxHeight-20}px`;
         });
     }, []);
 

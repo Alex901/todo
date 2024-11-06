@@ -7,15 +7,16 @@
 }
 
 .feedback-from {
-    font-size: 0.9em;
+    display: flex;
+    font-size: 0.8em;
     color: #666;
+    justify-content: center;
 }
 
 .feedback-message {
-    display: flex;
-    flex-direction: column;
     background-color: rgb(254, 254, 254);
     padding: 10px;
+    min-width: 200px;
 }
 
 .feedback-bottom {
@@ -26,13 +27,13 @@
 
 .feedback-date-reward {
     display: flex;
-    justify-content: space-between;
+    justify-content: space-around;
     align-items: center;
     margin-bottom: 10px;
 }
 
 .feedback-date {
-    font-size: 0.9em;
+    font-size: 0.8em;
     color: #666;
 }
 
@@ -55,7 +56,6 @@
     justify-content: center;
     align-items: center;
     gap: 10px;
-    width: 100%;
 }
 
 .upvote-button, .downvote-button {
