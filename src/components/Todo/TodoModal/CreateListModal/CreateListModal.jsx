@@ -7,6 +7,7 @@ import { FormControl, TextField, InputLabel, InputAdornment, Checkbox, Select, M
 import { use } from 'i18next';
 import Icon from '@mdi/react';
 import { mdiInformation } from '@mdi/js';
+import BaseModal from '../BaseModal/BaseModal';
 
 ReactModal.setAppElement('#root');
 
@@ -126,7 +127,7 @@ const CreateListModal = ({ isOpen, onRequestClose }) => {
   };
 
   return (
-    <ReactModal
+    <BaseModal
       isOpen={isOpen}
       onRequestClose={handleModalClose}
       contentLabel="Add new list"
@@ -134,8 +135,9 @@ const CreateListModal = ({ isOpen, onRequestClose }) => {
       overlayClassName="modal-overlay"
       shouldCloseOnOverlayClick={true}
       onChange={handleInputChange}
+      title={'Create list'}
     >
-      <div className='modalTitle'> <h3 className="title"> Create list </h3></div>
+
 
       <form className="create-list-form" onSubmit={handleSubmit}>
         {groupsWhereModerator.length > 0 && (
@@ -209,7 +211,7 @@ const CreateListModal = ({ isOpen, onRequestClose }) => {
           <button type="submit" className='modal-button'> Create </button>
         </div>
       </form>
-    </ReactModal>
+    </BaseModal>
   )
 }
 

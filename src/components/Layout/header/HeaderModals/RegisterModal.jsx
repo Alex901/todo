@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import { TextField, Button, InputAdornment, IconButton } from '@mui/material';
 import Icon from '@mdi/react';
 import { mdiEye, mdiEyeOff } from '@mdi/js';
+import BaseModal from '../../../Todo/TodoModal/BaseModal/BaseModal';
 
 
 ReactModal.setAppElement('#root');
@@ -84,15 +85,15 @@ const LoginModal = ({ isOpen, onRequestClose }) => {
     }
 
     return (
-        <ReactModal
+        <BaseModal
             isOpen={isOpen}
             onRequestClose={() => { toast.warn("registration canceled"); onRequestClose(); }}
             contentLabel="Register Modal"
             className="register-modal-content"
             overlayClassName="modal-overlay"
             shouldCloseOnOverlayClick={true}
+            title={'Register'}
         >
-            <h3 className="title">Register</h3>
             <form className='modal-form' onSubmit={handleRegister}>
                 <TextField
                     id="email"
@@ -152,7 +153,7 @@ const LoginModal = ({ isOpen, onRequestClose }) => {
                 {passwordError && <p className="error">{passwordError}</p>}
                 <button className='modal-button register-button'>Continue</button>
             </form>
-        </ReactModal>
+        </BaseModal>
     );
 }
 

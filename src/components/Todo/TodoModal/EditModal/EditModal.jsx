@@ -589,7 +589,7 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
                     <hr style={{ width: '80%', margin: '10px auto' }} />
 
 
-                    <div className="input-container" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%', gap: '20px' }}>
+                    <div className="input-container" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%', gap: '10px' }}>
                         {!taskData.repeatable && (
                             <div className="input-container" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%', gap: '20px' }}>
                                 <FormControl style={{ width: '200px' }}>

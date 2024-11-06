@@ -8,6 +8,7 @@
     align-items: center;
     gap: 15px;
     max-height: 80vh;
+    width: 100%;
 }
 
 .error {

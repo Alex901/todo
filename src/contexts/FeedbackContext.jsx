@@ -19,7 +19,7 @@ if (process.env.NODE_ENV === 'test') {
 const FeedbackContext = createContext();
 
 const FeedbackProvider = ({ children }) => {
-    const { loggedInUser } = useUserContext();
+    const { loggedInUser, checkLogin } = useUserContext();
     const { setNotification, getNotifications } = useNotificationContext();
     const [feedbackList, setFeedbackList] = useState([]);
     const [approvedFeedbackList, setApprovedFeedbackList] = useState([]);
@@ -119,6 +119,7 @@ const FeedbackProvider = ({ children }) => {
             );
             console.log('Feature upvoted:', response.data);
             fetchOfflineFeedback();
+            checkLogin();
         } catch (error) {
             console.error('Error upvoting feature:', error);
         }
@@ -134,6 +135,7 @@ const FeedbackProvider = ({ children }) => {
             );
             console.log('Feature downvoted:', response.data);
             fetchOfflineFeedback();
+            checkLogin();
         } catch (error) {
             console.error('Error downvoting feature:', error);
         }

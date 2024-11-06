@@ -6,6 +6,7 @@ import { toast } from 'react-toastify';
 import { TextField, Button, InputAdornment, IconButton } from '@mui/material';
 import Icon from '@mdi/react';
 import { mdiEye, mdiEyeOff } from '@mdi/js';
+import BaseModal from '../../../Todo/TodoModal/BaseModal/BaseModal';
 
 ReactModal.setAppElement('#root');
 
@@ -65,15 +66,15 @@ const LoginModal = ({ isOpen, onRequestClose }) => {
     };
 
     return (
-        <ReactModal
+        <BaseModal
             isOpen={isOpen}
             onRequestClose={onRequestClose}
             contentLabel="Login Modal"
             className="register-modal-content"
             overlayClassName="modal-overlay"
             shouldCloseOnOverlayClick={true}
+            title={'Login'}
         >
-            <h3 className="title">Login</h3>
             <form className='modal-form' onSubmit={handleLogin}>
                 <TextField
                     id="username"
@@ -110,7 +111,7 @@ const LoginModal = ({ isOpen, onRequestClose }) => {
                 {passwordError && <p className='error'>{passwordError}</p>}
                 <button className='modal-button'>Login</button>
             </form>
-        </ReactModal>
+        </BaseModal>
     );
 }
 

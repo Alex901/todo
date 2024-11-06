@@ -1,67 +1,80 @@
 .feedback-entry {
-    border: 1px solid #58565697;
+    border: 1px solid #ddd;
     padding: 10px;
-    border-radius: 10px;
-    background-color: white;
-    box-shadow: 0 5px 10px rgba(255, 255, 255, 0.689), 0 3px 3px rgba(255, 255, 255, 0.664);
-    height: auto;
-    min-width: 300px;
-    box-sizing: border-box;
+    margin-bottom: 10px;
+    border-radius: 5px;
+    background-color: #ffffff;
 }
 
-.feedback-entry:hover {
-    transform: scale(1.1);
-}
-
-.feedback-from,
-.feedback-date {
+.feedback-from {
     font-size: 0.9em;
-    /* Make the text smaller */
-    color: #555;
+    color: #666;
 }
 
 .feedback-message {
     display: flex;
-    justify-content: center;
-    align-items: center;
+    flex-direction: column;
+    background-color: rgb(254, 254, 254);
     padding: 10px;
-    background-color: #f5f0f0;
-    border-radius: 5px;
-    margin: 10px 0;
-    box-sizing: border-box;
-    flex-grow: 1;
 }
 
 .feedback-bottom {
     display: flex;
-    flex-direction: column;
     justify-content: space-between;
-    /* Space out the date and buttons */
-    align-items: bottom;
+    align-items: center;
 }
+
+.feedback-date-reward {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+.feedback-date {
+    font-size: 0.9em;
+    color: #666;
+}
+
+.feedback-reward {
+    display: flex;
+    align-items: center;
+    font-size: 0.9em;
+    color: #666;
+}
+
+.reward-icon {
+    width: 16px;
+    height: 16px;
+    margin-left: 5px;
+}
+
 
 .feedback-votes {
     display: flex;
     justify-content: center;
-    /* Center the buttons horizontally */
+    align-items: center;
     gap: 10px;
-    /* Add a 10px gap between the buttons */
+    width: 100%;
 }
 
-.upvote-button,
-.downvote-button {
+.upvote-button, .downvote-button {
     display: flex;
     align-items: center;
-    gap: 5px;
-    /* Add a small gap between the icon and the number */
-    background: none;
-    border: none;
-    cursor: pointer;
+    padding: 10px 15px;
     font-size: 1em;
-    color: inherit;
+    border: none;
+    background-color: #f0f0f0;
+    border-radius: 5px;
+    cursor: pointer;
 }
 
-.upvote-button:hover,
-.downvote-button:hover {
-    opacity: 0.8;
+.upvote-button:disabled, .downvote-button:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+.voted-icon {
+    width: 36px;
+    height: 36px;
 }
