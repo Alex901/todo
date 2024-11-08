@@ -2,7 +2,7 @@ import React, { useEffect, useState, useMemo } from 'react';
 import BaseModal from '../BaseModal/BaseModal';
 import { useTodoContext } from '../../../../contexts/todoContexts';
 import { useUserContext } from '../../../../contexts/UserContext';
-import { Select, MenuItem, FormControl, InputLabel, Typography, IconButton } from '@mui/material';
+import { Select, MenuItem, FormControl, InputLabel, Typography, IconButton, Checkbox, FormControlLabel } from '@mui/material';
 import { useMediaQuery } from '@mui/material';
 import Icon from '@mdi/react';
 import { mdiCalendarCheck, mdiChevronDoubleLeft, mdiChevronDoubleRight } from '@mdi/js';
@@ -24,10 +24,12 @@ const CalendarModal = ({ isOpen, onClose }) => {
     const [filteredList, setFilteredList] = useState(todoList);
     const tasksWithDueDate = todoList.filter(task => task.dueDate !== null);
     const tasksNoDueDate = todoList.filter(task => !task.dueDate);
-    const repeatableTasks = todoList.filter(task => task.repeatable);
+    let repeatableTasks = todoList.filter(task => task.repeatable);
     const [mimicTasks, setMimicTasks] = useState(repeatableTasks);
     const [hasSwitched, setHasSwitched] = useState(false);
+    const [includeGroupTasks, setIncludeGroupTasks] = useState(true);
     const isMobile = useMediaQuery('(max-width: 800px)');
+    const allListObject = loggedInUser.myLists.find(list => list.listName === 'all');
 
     // Find the earliest and latest task dates
     const earliest = tasksWithDueDate.reduce((earliest, task) => {
@@ -92,8 +94,8 @@ const CalendarModal = ({ isOpen, onClose }) => {
     const [selectedOption, setSelectedOption] = useState(getDefaultOption(interval));
 
     const allMimicTasks = useMemo(() => {
-        return repeatableTasks.flatMap(task => generateMimicTask(task, earliest, latest));
-    }, [todoList]);
+        return repeatableTasks.flatMap(task => generateMimicTask(task, earliest, latest, allListObject, includeGroupTasks, loggedInUser._id));
+    }, [todoList, includeGroupTasks]);
 
 
     useEffect(() => {
@@ -114,7 +116,27 @@ const CalendarModal = ({ isOpen, onClose }) => {
 
     // Filters tasks based on selected list
     useEffect(() => {
-        const filtered = todoList.filter(task =>
+        if (!loggedInUser || !loggedInUser.myLists) {
+            return;
+        }
+
+        const updatedTodoList = todoList.map(task => {
+            if (includeGroupTasks && task.owner !== loggedInUser._id) {
+                // Check if "all" is already in inListNew before adding
+                const isAllListPresent = task.inListNew.some(list => list.listName === 'all');
+                if (!isAllListPresent) {
+                    return {
+                        ...task,
+                        inListNew: [...task.inListNew, allListObject]
+                    };
+                }
+            }
+            return task;
+        });
+
+        const nonUserTasks = updatedTodoList.filter(task => task.owner !== loggedInUser._id);
+
+        const filtered = updatedTodoList.filter(task =>
             task.inListNew.some(list => list.listName === selectedList) &&
             (
                 (task.dueDate && new Date(task.dueDate) >= new Date(selectedOption.value.start) && new Date(task.dueDate) <= new Date(selectedOption.value.end)) ||
@@ -126,9 +148,21 @@ const CalendarModal = ({ isOpen, onClose }) => {
             new Date(task.repeatDay) >= new Date(selectedOption.value.start) && new Date(task.repeatDay) <= new Date(selectedOption.value.end)
         );
         setFilteredList([...filtered, ...filteredMimicTasks]);
-    }, [todoList, selectedList, selectedOption, mimicTasks]);
+        // console.log("DEBUG -- filteredList -- CalendarModal", filteredList);
+    }, [todoList, selectedList, selectedOption, mimicTasks, includeGroupTasks]);
 
 
+
+    // useEffect(() => {
+    //     // Filter tasks based on the checkbox state
+    //     const filteredTasks = includeGroupTasks
+    //         ? todoList
+    //         : todoList.filter(task => task.owner === loggedInUser._id);
+    //     setFilteredList(filteredTasks);
+    // }, [includeGroupTasks, todoList, loggedInUser]);
+
+
+    console.log("DEBUG -- filteredList -- CalendarModal", filteredList);
 
     // useEffect(() => {
     //     console.log("DEBUG -- filteredList -- CalendarModal", filteredList);
@@ -210,7 +244,7 @@ const CalendarModal = ({ isOpen, onClose }) => {
         const todayDate = new Date();
         todayDate.setHours(0, 0, 0, 0);
         dayDate.setHours(0, 0, 0, 0);
-    
+
         if (dayDate.getTime() === todayDate.getTime()) {
             dayLabel = 'Today';
         }
@@ -219,7 +253,7 @@ const CalendarModal = ({ isOpen, onClose }) => {
         // console.log("Matching option: ", matchingOption);
         // console.log("DEBUG: options: ", options);
 
-        
+
 
         if (matchingOption) {
             setSelectedOption(matchingOption);
@@ -243,6 +277,16 @@ const CalendarModal = ({ isOpen, onClose }) => {
         }
     }, [isOpen]);
 
+    const handleGroupTasksChange = (event) => {
+        setIncludeGroupTasks(event.target.checked);
+        // If a group list is selected and the checkbox is unchecked, switch to "all"
+        if (!event.target.checked && selectedList !== 'all') {
+            const selectedListDetails = loggedInUser.myLists.find(list => list.listName === selectedList);
+            if (selectedListDetails && selectedListDetails.ownerModel === 'Group') {
+                setSelectedList('all');
+            }
+        }
+    };
 
 
     return (
@@ -256,6 +300,40 @@ const CalendarModal = ({ isOpen, onClose }) => {
             <div className={`calendar-modal`}>
 
                 <div className="selectors">
+                    <div className="group-selector">
+                        <FormControlLabel
+                            control={
+                                <Checkbox
+                                    checked={includeGroupTasks}
+                                    onChange={handleGroupTasksChange}
+                                    name="includeGroupTasks"
+                                    color="primary"
+                                />
+                            }
+                            label="Include Group(s)"
+                        />
+                    </div>
+                    <div className="list-selector">
+                        <FormControl variant="outlined" size="small">
+                            <InputLabel id="list-select-label">List</InputLabel>
+                            <Select
+                                labelId="list-select-label"
+                                value={selectedList}
+                                onChange={handleListChange}
+                                label="List"
+                                sx={{ minWidth: '100px', maxWidth: '150px' }}
+                            >
+                                {loggedInUser?.myLists
+                                    .filter(list => includeGroupTasks || list.ownerModel !== 'Group')
+                                    .filter(list => !(interval === 'month' || interval === 'week') || list.listName !== 'today')
+                                    .map((list) => (
+                                        <MenuItem key={list.listName} value={list.listName}>
+                                            {list.listName}
+                                        </MenuItem>
+                                    ))}
+                            </Select>
+                        </FormControl>
+                    </div>
                     <div className="interval-selector">
                         <FormControl variant="outlined" size="small">
                             <InputLabel id="interval-select-label">Interval</InputLabel>
@@ -272,26 +350,8 @@ const CalendarModal = ({ isOpen, onClose }) => {
                             </Select>
                         </FormControl>
                     </div>
-                    <div className="list-selector">
-                        <FormControl variant="outlined" size="small">
-                            <InputLabel id="list-select-label">List</InputLabel>
-                            <Select
-                                labelId="list-select-label"
-                                value={selectedList}
-                                onChange={handleListChange}
-                                label="List"
-                                sx={{ minWidth: '100px' }}
-                            >
-                                {loggedInUser?.myLists
-                                    .filter(list => !(interval === 'month' || interval === 'week') || list.listName !== 'today')
-                                    .map((list) => (
-                                        <MenuItem key={list.listName} value={list.listName}>
-                                            {list.listName}
-                                        </MenuItem>
-                                    ))}
-                            </Select>
-                        </FormControl>
-                    </div>
+
+
                 </div>
                 <div className="calendar-view" >
                     <div className="calendar-navigation">
