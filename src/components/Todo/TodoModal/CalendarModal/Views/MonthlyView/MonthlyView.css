@@ -74,6 +74,12 @@
     border: 2px solid var(--primary-color);
 }
 
+.day-square.empty {
+    background-color: transparent;
+    border: none;
+    box-shadow: none;
+}
+
 .non-repeatable-tasks {
     display: flex;
     flex-direction: column;

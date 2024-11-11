@@ -59,8 +59,15 @@ const MonthlyView = ({ tasks, today, thisMonth, onDayClick, loggedInUser }) => {
         );
     };
 
+       // Calculate the offset for the first day of the month (Monday as the first day of the week)
+       const firstDayOfMonth = (startOfMonth.getDay() + 6) % 7; // Adjust to make Monday the first day
+       const emptyCells = Array.from({ length: firstDayOfMonth }, (_, index) => (
+           <div key={`empty-${index}`} className="day-square empty"></div>
+       ));
+
     return (
         <div className="monthly-view">
+            {emptyCells}
             {daysInMonth.map(day => renderDay(day))}
         </div>
     );
