@@ -58,6 +58,13 @@
     margin-right: 8px;
 }
 
+.group-icon {
+    position: absolute;
+    top: -50%;
+    right: -12%;
+    color: #000000;
+}
+
 .status-icon {
     position: absolute;
     bottom: -50%;

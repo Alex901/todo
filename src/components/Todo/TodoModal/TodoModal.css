@@ -66,7 +66,7 @@
 
 .create-modal-name-input,
 .create-modal-input-description {
-    min-height: 36px; /* adjust this value as needed */
+    min-height: 36px; 
     flex-shrink: 0;
 }
 

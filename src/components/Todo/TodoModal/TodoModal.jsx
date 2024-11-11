@@ -522,7 +522,7 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
                     <div className={`advanced-options ${showAdvancedOptions ? 'show' : 'hide'}`}>
                         <TextField
                             id="description"
-                            label="Enter task description(optional)"
+                            label="Enter task description"
                             variant="outlined"
                             multiline
                             rows={4}

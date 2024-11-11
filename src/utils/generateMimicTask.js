@@ -48,5 +48,6 @@ export const generateMimicTask = (task, startDate, endDate, allList, includeGrou
         completed: task.repeatableCompleted.find(completion => new Date(completion.completionTime).toDateString() === date.toDateString())?.completionTime,
         repeatableEmoji: task.repeatableEmoji,
         inListNew: updatedInListNew,
+        owner: task.owner,
     }));
 };

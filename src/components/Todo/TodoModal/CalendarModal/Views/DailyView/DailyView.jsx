@@ -1,8 +1,10 @@
 import React from 'react';
 import { Tooltip, Checkbox, Badge } from '@mui/material';
+import Icon from '@mdi/react';
+import { mdiAccountGroup } from '@mdi/js';
 import './DailyView.css';
 
-const DailyView = ({ tasks, today }) => {
+const DailyView = ({ tasks, today, loggedInUser }) => {
     const repeatableTasks = tasks.filter(task => task.repeatable);
     const nonRepeatableTasks = tasks.filter(task => !task.repeatable);
 
@@ -35,6 +37,17 @@ const DailyView = ({ tasks, today }) => {
         }
     };
 
+    const getTaskStyle = (task) => {
+        if (task.owner !== loggedInUser._id) {
+            return {
+                backgroundColor: '#944545',
+                color: '#ffffff',
+                borderColor: '#ffffff'
+            };
+        }
+        return {};
+    };
+
     return (
         <div className="daily-view">
             <div className="daily-view-emoji-area">
@@ -46,6 +59,9 @@ const DailyView = ({ tasks, today }) => {
                             <div className="repeatable-task-item">
                                 <span className={`emoji ${!task.completed ? 'faded' : ''}`}>
                                     {task.repeatableEmoji}
+                                    {task.owner !== loggedInUser._id && (
+                                        <Icon path={mdiAccountGroup} size={0.75} className="group-icon-emoji" />
+                                    )}
                                     <span className={`status-icon ${task.completed ? 'completed' : 'not-completed'}`}>
                                         {task.completed ? '✔️' : '❌'}
                                     </span>
@@ -68,7 +84,7 @@ const DailyView = ({ tasks, today }) => {
                             const timeClass = task.completed ? getTimeClass(task.estimatedTime, task.totalTimeSpent) : '';
 
                             return (
-                                <div key={task._id} className="task-block">
+                                <div key={task._id} className="task-block" style={getTaskStyle(task)}>
                                     <div className="task-block-time">
                                         <span>{estimatedTime}</span>
                                         {task.completed && <span className={`bold ${timeClass}`}>{totalTimeSpent}</span>}
@@ -77,7 +93,9 @@ const DailyView = ({ tasks, today }) => {
                                         <span>{task.task}</span>
                                     </div>
                                     <div className="task-block-checkbox">
-                                        <Checkbox checked={!!task.completed} />
+                                        <Checkbox checked={!!task.completed}
+                                            color={task.owner !== loggedInUser._id ? 'secondary' : 'primary'}
+                                        />
                                     </div>
                                 </div>
                             );

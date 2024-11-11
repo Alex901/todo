@@ -29,7 +29,7 @@ const CalendarModal = ({ isOpen, onClose }) => {
     const [hasSwitched, setHasSwitched] = useState(false);
     const [includeGroupTasks, setIncludeGroupTasks] = useState(true);
     const isMobile = useMediaQuery('(max-width: 800px)');
-    const allListObject = loggedInUser.myLists.find(list => list.listName === 'all');
+    const allListObject = loggedInUser?.myLists.find(list => list.listName === 'all');
 
     // Find the earliest and latest task dates
     const earliest = tasksWithDueDate.reduce((earliest, task) => {
@@ -379,9 +379,9 @@ const CalendarModal = ({ isOpen, onClose }) => {
                             <Icon path={mdiChevronDoubleRight} size={1} />
                         </IconButton>
                     </div>
-                    {interval === 'day' && <DailyView tasks={filteredList} today={today} selectedDate={selectedOption} />}
-                    {interval === 'week' && <WeeklyView tasks={filteredList} today={today} thisWeek={selectedOption} onDayClick={handleDayClick} />}
-                    {interval === 'month' && <MonthlyView tasks={filteredList} today={today} thisMonth={selectedOption} onDayClick={handleDayClick} />}
+                    {interval === 'day' && <DailyView tasks={filteredList} today={today} selectedDate={selectedOption} loggedInUser={loggedInUser} />}
+                    {interval === 'week' && <WeeklyView tasks={filteredList} today={today} thisWeek={selectedOption} onDayClick={handleDayClick} loggedInUser={loggedInUser} />}
+                    {interval === 'month' && <MonthlyView tasks={filteredList} today={today} thisMonth={selectedOption} onDayClick={handleDayClick} loggedInUser={loggedInUser} />}
                 </div>
             </div>
         </BaseModal>

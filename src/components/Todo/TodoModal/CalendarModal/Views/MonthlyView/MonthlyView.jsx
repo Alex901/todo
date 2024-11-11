@@ -1,7 +1,7 @@
 import React from 'react';
 import './MonthlyView.css';
 
-const MonthlyView = ({ tasks, today, thisMonth, onDayClick }) => {
+const MonthlyView = ({ tasks, today, thisMonth, onDayClick, loggedInUser }) => {
     const startOfMonth = new Date(thisMonth.value.start);
     const endOfMonth = new Date(thisMonth.value.end);
 
@@ -41,7 +41,7 @@ const MonthlyView = ({ tasks, today, thisMonth, onDayClick }) => {
                     <div className="day-number">{day.getDate()}</div>
                     <div className="repeatable-tasks">
                         {repeatableTasks.map(task => (
-                            <div key={task._id} className={`task-circle ${task.completed ? 'completed' : ''}`}></div>
+                            <div key={task._id} className={`task-circle ${task.completed ? 'completed' : ''} ${task.owner !== loggedInUser._id ? 'task-circle-group' : ''}`}></div>
                         ))}
                     </div>
                 </div>
