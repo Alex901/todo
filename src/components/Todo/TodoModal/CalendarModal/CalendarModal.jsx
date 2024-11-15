@@ -2,7 +2,7 @@ import React, { useEffect, useState, useMemo } from 'react';
 import BaseModal from '../BaseModal/BaseModal';
 import { useTodoContext } from '../../../../contexts/todoContexts';
 import { useUserContext } from '../../../../contexts/UserContext';
-import { Select, MenuItem, FormControl, InputLabel, Typography, IconButton, Checkbox, FormControlLabel } from '@mui/material';
+import { Select, MenuItem, FormControl, InputLabel, Typography, IconButton, Checkbox, FormControlLabel, Drawer, Button } from '@mui/material';
 import { useMediaQuery } from '@mui/material';
 import Icon from '@mdi/react';
 import { mdiCalendarCheck, mdiChevronDoubleLeft, mdiChevronDoubleRight } from '@mdi/js';
@@ -12,10 +12,11 @@ import WeeklyView from './Views/WeeklyView/WeeklyView';
 import MonthlyView from './Views/MonthlyView/MonthlyView';
 import generateCalendarOptions from '../../../../utils/generateOptions/generateOptions';
 import { generateMimicTask } from '../../../../utils/generateMimicTask';
-
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
+import CalendarDrawer from './CalendarDrawer/CalendarDrawer';
 
 const CalendarModal = ({ isOpen, onClose }) => {
-    const { todoList } = useTodoContext();
+    const { todoList, editTodo } = useTodoContext();
     const { loggedInUser } = useUserContext();
     const [interval, setInterval] = useState('day');
     const [selectedList, setSelectedList] = useState('all');
@@ -23,13 +24,15 @@ const CalendarModal = ({ isOpen, onClose }) => {
     const [currentDate, setCurrentDate] = useState(today);
     const [filteredList, setFilteredList] = useState(todoList);
     const tasksWithDueDate = todoList.filter(task => task.dueDate !== null);
-    const tasksNoDueDate = todoList.filter(task => !task.dueDate);
+    const tasksNoDueDate = todoList.filter(task => !task.dueDate && !task.repeatable);
     let repeatableTasks = todoList.filter(task => task.repeatable);
     const [mimicTasks, setMimicTasks] = useState(repeatableTasks);
     const [hasSwitched, setHasSwitched] = useState(false);
     const [includeGroupTasks, setIncludeGroupTasks] = useState(true);
     const isMobile = useMediaQuery('(max-width: 800px)');
     const allListObject = loggedInUser?.myLists.find(list => list.listName === 'all');
+    const [optimizeOption, setOptimizeOption] = useState('time');
+    const [isDrawerOpen, setIsDrawerOpen] = useState(true);
 
     // Find the earliest and latest task dates
     const earliest = tasksWithDueDate.reduce((earliest, task) => {
@@ -288,6 +291,39 @@ const CalendarModal = ({ isOpen, onClose }) => {
         }
     };
 
+    const handleDragEnd = (result) => {
+        if (!result.destination) return;
+
+        const { source, destination } = result;
+
+        // Handle task drop logic here
+        if (destination.droppableId.startsWith('calendar-day-')) {
+            const taskId = result.draggableId;
+            const newDueDate = new Date(destination.droppableId.replace('calendar-day-', ''));
+
+            const updatedTask = todoList.find(task => task.id === taskId);
+            updatedTask.dueDate = newDueDate;
+
+            console.log("Task dropped on: ", newDueDate);
+            // editTodo(updatedTask);
+        }
+    };
+
+    const handleOptimizeOptionChange = (event) => {
+        setOptimizeOption(event.target.value);
+    };
+
+    const handleOptimizeTasks = () => {
+        // Implement the logic to optimize tasks based on the selected option
+        console.log("Optimizing tasks based on:", optimizeOption);
+    };
+
+    const drawerWidth = interval === 'day' ? '100%' : '80%';
+
+    const toggleDrawer = (open) => {
+        setIsDrawerOpen(open);
+    }
+
 
     return (
         <BaseModal isOpen={isOpen} onRequestClose={onClose} title={
@@ -379,9 +415,20 @@ const CalendarModal = ({ isOpen, onClose }) => {
                             <Icon path={mdiChevronDoubleRight} size={1} />
                         </IconButton>
                     </div>
-                    {interval === 'day' && <DailyView tasks={filteredList} today={today} selectedDate={selectedOption} loggedInUser={loggedInUser} />}
-                    {interval === 'week' && <WeeklyView tasks={filteredList} today={today} thisWeek={selectedOption} onDayClick={handleDayClick} loggedInUser={loggedInUser} />}
-                    {interval === 'month' && <MonthlyView tasks={filteredList} today={today} thisMonth={selectedOption} onDayClick={handleDayClick} loggedInUser={loggedInUser} />}
+                    <DragDropContext onDragEnd={handleDragEnd}>
+                        {interval === 'day' && <DailyView tasks={filteredList} today={today} selectedDate={selectedOption} loggedInUser={loggedInUser} />}
+                        {interval === 'week' && <WeeklyView tasks={filteredList} today={today} thisWeek={selectedOption} onDayClick={handleDayClick} loggedInUser={loggedInUser} />}
+                        {interval === 'month' && <MonthlyView tasks={filteredList} today={today} thisMonth={selectedOption} onDayClick={handleDayClick} loggedInUser={loggedInUser} />}
+                        <CalendarDrawer
+                            tasksNoDueDate={tasksNoDueDate}
+                            optimizeOption={optimizeOption}
+                            handleOptimizeOptionChange={handleOptimizeOptionChange}
+                            handleOptimizeTasks={handleOptimizeTasks}
+                            drawerWidth={drawerWidth}
+                            isDrawerOpen={isDrawerOpen}
+                            toggleDrawer={toggleDrawer}
+                        />
+                    </DragDropContext>
                 </div>
             </div>
         </BaseModal>

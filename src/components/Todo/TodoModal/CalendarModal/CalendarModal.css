@@ -57,3 +57,18 @@
     margin-top: 10px;
 }
 
+.bottom-drawer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    border-top: 1px solid #ddd;
+}
+
+.drawer-header {
+    padding: 10px;
+    background-color: #f0f0f0;
+    cursor: pointer;
+    text-align: center;
+}

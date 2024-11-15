@@ -1,0 +1,48 @@
+.bottom-drawer {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    border-top: 1px solid #ddd;
+    z-index: 1000; /* Ensure the drawer is above other elements */
+    overflow-x: hidden;
+}
+
+.drawer-header {
+    padding: 10px;
+    background-color: #f0f0f0;
+    cursor: pointer;
+    text-align: center;
+    border-top-left-radius: 10px;
+    border-top-right-radius: 10px;
+}
+
+.drawer-content {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+}
+
+.drawer-left, .drawer-right {
+    flex: 1;
+    padding: 10px;
+}
+
+.no-deadline-tasks {
+    max-height: 200px;
+    overflow-y: auto;
+}
+
+.task-item {
+    padding: 5px;
+    margin-bottom: 5px;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    background-color: #ffffff;
+    cursor: grab;
+}
+
+.task-item:active {
+    cursor: grabbing;
+}
