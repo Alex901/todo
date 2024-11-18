@@ -32,7 +32,7 @@ const CalendarModal = ({ isOpen, onClose }) => {
     const isMobile = useMediaQuery('(max-width: 800px)');
     const allListObject = loggedInUser?.myLists.find(list => list.listName === 'all');
     const [optimizeOption, setOptimizeOption] = useState('time');
-    const [isDrawerOpen, setIsDrawerOpen] = useState(true);
+    const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
     // Find the earliest and latest task dates
     const earliest = tasksWithDueDate.reduce((earliest, task) => {
@@ -318,7 +318,7 @@ const CalendarModal = ({ isOpen, onClose }) => {
         console.log("Optimizing tasks based on:", optimizeOption);
     };
 
-    const drawerWidth = interval === 'day' ? '100%' : '80%';
+    const drawerWidth = isMobile || interval === 'day' ? '100%' : '80%';
 
     const toggleDrawer = (open) => {
         setIsDrawerOpen(open);

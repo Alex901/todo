@@ -3,6 +3,9 @@
     grid-template-columns: repeat(7, 1fr);
     gap: 5px;
     padding: 10px;
+    border-right: 1px solid #e0e0e0;
+    border-bottom: 1px solid #e0e0e0;
+    border-left: 1px solid #e0e0e0;
 }
 
 .day-square {

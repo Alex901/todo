@@ -1,40 +1,51 @@
-.bottom-drawer {
-    position: absolute;
-    bottom: 0;
+.drawer-container-calendar-drawer {
+   
     width: 100%;
-    max-width: 100%;
-    height: auto;
-    border-top: 1px solid #ddd;
-    z-index: 1000; /* Ensure the drawer is above other elements */
-    overflow-x: hidden;
 }
 
-.drawer-header {
-    padding: 10px;
-    background-color: #f0f0f0;
-    cursor: pointer;
-    text-align: center;
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-}
-
-.drawer-content {
+.drawer-content-calendar-drawer {
     display: flex;
     justify-content: space-between;
     padding: 10px;
+    margin-top: 50px;
+   
 }
 
-.drawer-left, .drawer-right {
+.bottom-drawer-calendar-drawer {
+    z-index: 1000; 
+    overflow-y: hidden;
+}
+
+.drawer-header-calendar-drawer {
+    display: flex;
+    justify-content: center;
+    padding: 15px;
+    background-color: var(--primary-color);
+    color: white;
+    cursor: pointer;
+    border: 1px solid #e0e0e0;
+    border-radius: 0px 0px 10px 10px;
+    box-sizing: border-box;
+    width: 100%;
+    z-index: 1201; 
+}
+
+
+.drawer-content-vertical {
+    flex-direction: column;
+}
+
+.drawer-left-calendar-drawer, .drawer-right-calendar-drawer {
     flex: 1;
     padding: 10px;
 }
 
-.no-deadline-tasks {
+.no-deadline-tasks-calendar-drawer {
     max-height: 200px;
     overflow-y: auto;
 }
 
-.task-item {
+.task-item-calendar-drawer {
     padding: 5px;
     margin-bottom: 5px;
     border: 1px solid #ddd;
@@ -43,6 +54,6 @@
     cursor: grab;
 }
 
-.task-item:active {
+.task-item-calendar-drawer:active {
     cursor: grabbing;
 }
