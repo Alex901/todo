@@ -24,7 +24,7 @@ const CalendarModal = ({ isOpen, onClose }) => {
     const [currentDate, setCurrentDate] = useState(today);
     const [filteredList, setFilteredList] = useState(todoList);
     const tasksWithDueDate = todoList.filter(task => task.dueDate !== null);
-    const tasksNoDueDate = todoList.filter(task => !task.dueDate && !task.repeatable);
+    const tasksNoDueDate = todoList.filter(task => !task.dueDate && !task.repeatable && !task.completed);
     let repeatableTasks = todoList.filter(task => task.repeatable);
     const [mimicTasks, setMimicTasks] = useState(repeatableTasks);
     const [hasSwitched, setHasSwitched] = useState(false);
@@ -318,7 +318,7 @@ const CalendarModal = ({ isOpen, onClose }) => {
         console.log("Optimizing tasks based on:", optimizeOption);
     };
 
-    const drawerWidth = isMobile || interval === 'day' ? '100%' : '80%';
+    const drawerWidth = isMobile ? '100%' : (interval === 'day' ? '60%' : (interval === 'week' ? '80%' : '100%'));
 
     const toggleDrawer = (open) => {
         setIsDrawerOpen(open);
@@ -427,6 +427,8 @@ const CalendarModal = ({ isOpen, onClose }) => {
                             drawerWidth={drawerWidth}
                             isDrawerOpen={isDrawerOpen}
                             toggleDrawer={toggleDrawer}
+                            isMobile={isMobile}
+                            interval={interval}
                         />
                     </DragDropContext>
                 </div>

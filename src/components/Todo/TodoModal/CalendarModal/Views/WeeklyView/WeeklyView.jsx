@@ -129,7 +129,7 @@ const WeeklyView = ({ tasks, today, thisWeek, onDayClick, loggedInUser }) => {
                     <div
                         key={day}
                         className="weekly-day"
-                        onClick={() => onDayClick(dayDate) }
+                        onClick={() => onDayClick(dayDate)}
                         style={{ border: isToday ? '2px solid red' : '1px solid #e0e0e0' }}
                     >
                         <h4>{day}</h4>
@@ -144,7 +144,7 @@ const WeeklyView = ({ tasks, today, thisWeek, onDayClick, loggedInUser }) => {
                                     <Tooltip key={task._id} title={task.task} arrow>
                                         <div className="repeatable-task-item">
                                             <span className={`emoji ${!task.completed ? 'faded' : ''}`}>
-                                            {task.repeatable && task.owner !== loggedInUser._id && (
+                                                {task.repeatable && task.owner !== loggedInUser._id && (
                                                     <Icon path={mdiAccountGroup} size={0.8} className="group-icon" />
                                                 )}
                                                 {task.repeatableEmoji}
@@ -179,8 +179,8 @@ const WeeklyView = ({ tasks, today, thisWeek, onDayClick, loggedInUser }) => {
                                                     <span>{task.task}</span>
                                                 </div>
                                                 <div className="task-block-checkbox">
-                                                    <Checkbox checked={!!task.completed} 
-                                                    color={task.owner !== loggedInUser._id ? 'secondary' : 'primary'}
+                                                    <Checkbox checked={!!task.completed}
+                                                        color={task.owner !== loggedInUser._id ? 'secondary' : 'primary'}
                                                     />
                                                 </div>
                                             </div>
