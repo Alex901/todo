@@ -3,6 +3,11 @@
     width: 100%;
 }
 
+.information-icon {
+    color: var(--secondary-color);
+    transition: transform 0.2s ease-in-out;
+}
+
 .drawer-content-calendar-drawer {
     display: flex;
     justify-content: space-between;
@@ -13,8 +18,10 @@
 
 .bottom-drawer-calendar-drawer {
     z-index: 1000; 
-    overflow-y: hidden;
+    overflow-y: auto;
+    overflow-x: hidden;
 }
+
 
 .drawer-header-calendar-drawer {
     display: flex;
@@ -53,8 +60,6 @@
 
 .drawer-left-calendar-drawer, .drawer-right-calendar-drawer {
     flex: 1;
-    
-
     padding: 10px;
 }
 
@@ -62,31 +67,64 @@
     display: flex;
     align-items: center;
     flex-direction: column;
-    gap: 5px;
+    gap: 10px;
     margin-bottom: auto;
     margin-top: auto
 }
 
 .no-deadline-tasks-calendar-drawer {
     max-height: 250px;
-    overflow-y: auto;
+    overflow-y: scroll;
+    padding: 5px;
 }
 
 .drawer-right-title-calendar-drawer {
-   margin-bottom: 40px;
+    margin-right: 5px;
+}
+
+.drawer-right-title-container {
+    display: flex;
+    align-items: center;
+    margin-top: 10px;
+    margin-bottom: 10px;
 }
 
 .task-item-calendar-drawer {
-    padding: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 10px;
     margin-bottom: 5px;
     border: 1px solid #ddd;
     border-radius: 5px;
-    background-color: #ffffff;
-    cursor: grab;
+    background-color: #f8f3f9;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    overflow: hidden;
+}
+
+.task-block-time {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-right: 10px;
+}
+
+
+
+.task-block-content {
+    flex-grow: 1;
+}
+
+.task-block-checkbox {
+    margin-left: 10px;
 }
 
 .task-item-calendar-drawer:active {
     cursor: grabbing;
+}
+
+.button-calendar-drawer {
+    margin-bottom: 10px;
 }
 
 .currency-icon {
@@ -94,4 +132,10 @@
     height: 16px;
     margin-left: 5px;
     vertical-align: middle;
+}
+
+@media (max-width: 768px) {
+    .drawer-right-calendar-drawer, .drawer-right-calendar-drawer {
+        border-top: 1px solid #e0e0e0;
+    }
 }
