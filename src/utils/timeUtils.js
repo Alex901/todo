@@ -26,3 +26,15 @@ export const normalizeDuration = (durationMs) => {
 
     return result.trim();
 };
+
+const normalizeTime = (minutes) => {
+    if (minutes >= 1440) {
+        const days = Math.round(minutes / 1440);
+        return `${days}d`;
+    } else if (minutes >= 60) {
+        const hours = Math.round(minutes / 60);
+        return `${hours}h`;
+    } else {
+        return `${Math.round(minutes)}m`;
+    }
+};

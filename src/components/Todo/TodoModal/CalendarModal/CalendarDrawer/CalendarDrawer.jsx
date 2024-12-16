@@ -1,21 +1,61 @@
 import React from 'react';
-import { SwipeableDrawer, Typography, FormControl, InputLabel, Select, MenuItem, Button, Tooltip, IconButton, InputAdornment, Checkbox } from '@mui/material';
-import { Droppable, Draggable } from 'react-beautiful-dnd';
+import { SwipeableDrawer, Typography, FormControl, InputLabel, Select, MenuItem, Button, Checkbox, Tooltip, IconButton, InputAdornment } from '@mui/material';
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import Icon from '@mdi/react';
 import { mdiInformation } from '@mdi/js';
 import { useUserContext } from '../../../../../contexts/UserContext';
 import './CalendarDrawer.css';
 
 const CalendarDrawer = ({ tasksNoDueDate, optimizeOption, handleOptimizeOptionChange, handleOptimizeTasks, drawerWidth, isDrawerOpen, toggleDrawer, isMobile, interval }) => {
-    const { loggedInUser } = useUserContext();
-
     const pricePerTask = 0.2;
     const totalPrice = (tasksNoDueDate.length * pricePerTask).toFixed(1);
+    const { loggedInUser } = useUserContext();
 
     const getTaskStyle = (task) => {
-        // Define your task style logic here
+        if (task.owner !== loggedInUser._id) {
+            return {
+                backgroundColor: '#944545',
+                color: '#ffffff',
+                borderColor: '#ffffff'
+            };
+        }
         return {};
     };
+
+    const normalizeTime = (minutes) => {
+        if (minutes >= 1440) {
+            const days = Math.round(minutes / 1440);
+            return `${days} d`;
+        } else if (minutes >= 60) {
+            const hours = Math.round(minutes / 60);
+            return `${hours} h`;
+        } else {
+            return `${Math.round(minutes)} m`;
+        }
+    };
+
+    const getTimeClass = (estimatedTime, totalTimeSpent) => {
+        const estimatedMinutes = estimatedTime; // Convert hours to minutes if needed
+        const totalMinutes = totalTimeSpent / 60000; // Convert milliseconds to minutes
+        const difference = totalMinutes - estimatedMinutes;
+        const percentageDifference = (difference / estimatedMinutes) * 100;
+
+        if (percentageDifference <= 0) {
+            return 'green';
+        } else if (percentageDifference <= 50) {
+            return 'yellow';
+        } else {
+            return 'red';
+        }
+    };
+
+
+    const onDragEnd = (result) => {
+        // Handle the drag end event
+        console.log('Drag end', result);
+    };
+
+
 
     return (
         <div className="drawer-container-calendar-drawer">
@@ -28,48 +68,41 @@ const CalendarDrawer = ({ tasksNoDueDate, optimizeOption, handleOptimizeOptionCh
                 onClose={() => toggleDrawer(false)}
                 onOpen={() => toggleDrawer(true)}
                 className="bottom-drawer-calendar-drawer"
-                PaperProps={{ style: { width: drawerWidth, margin: '0 auto', borderRadius: isMobile ? '10px 10px 0px 0px' : '10px' } }}
+                PaperProps={{ style: { width: drawerWidth, margin: '0 auto', borderRadius: isMobile ? '10px 10px 0px 0px' : '10px', overflow: 'hidden' } }}
             >
                 <div className="drawer-header-calendar-drawer-open" onClick={() => toggleDrawer(!isDrawerOpen)}>
                     <Typography variant="h6">Tasks without Deadline ({tasksNoDueDate.length})</Typography>
                 </div>
                 <div className={`drawer-content-calendar-drawer ${isMobile ? 'drawer-content-vertical' : ''}`}>
-
-                    <div className="drawer-left-calendar-drawer">
+                    <DragDropContext onDragEnd={onDragEnd}>
                         <Droppable droppableId="noDeadlineTasks">
                             {(provided) => (
                                 <div className="no-deadline-tasks-calendar-drawer" {...provided.droppableProps} ref={provided.innerRef}>
-                                    {tasksNoDueDate.map((task, index) => {
-                                        const estimatedTime = task.estimatedTime || '-';
-                                        const totalTimeSpent = task.totalTimeSpent || '-';
-                                        const timeClass = task.completed ? 'completed-time' : '';
-
-                                        return (
-                                            <Draggable key={task.id} draggableId={String(task.id)} index={index}>
-                                                {(provided) => (
-                                                    <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} className="task-item-calendar-drawer" style={getTaskStyle(task)}>
-                                                        <div className="task-block-time">
-                                                            <span>{estimatedTime !== '-' ? `${estimatedTime} min` : estimatedTime}</span>
-                                                            {task.completed && <span className={`bold ${timeClass}`}>{totalTimeSpent}</span>}
-                                                        </div>
-                                                        <div className="task-block-content">
-                                                            <span>{task.task}</span>
-                                                        </div>
-                                                        <div className="task-block-checkbox">
-                                                            <Checkbox checked={!!task.completed}
-                                                                color={task.owner !== loggedInUser._id ? 'secondary' : 'primary'}
-                                                            />
-                                                        </div>
+                                    {tasksNoDueDate.map((task, index) => (
+                                        <Draggable key={task.id} draggableId={String(task.id)} index={index}>
+                                            {(provided) => (
+                                                <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} className="task-item-calendar-drawer">
+                                                    <div className="task-block-time">
+                                                        <span>{task.estimatedTime !== null ? `${normalizeTime(task.estimatedTime)} ` : "-"}</span>
                                                     </div>
-                                                )}
-                                            </Draggable>
-                                        );
-                                    })}
+
+                                                    <div className="task-block-content">
+                                                        <span>{task.task}</span>
+                                                    </div>
+                                                    <div className="task-checkbox">
+                                                        <Checkbox checked={!!task.completed}
+                                                            color={task.owner !== loggedInUser._id ? 'secondary' : 'primary'}
+                                                        />
+                                                    </div>
+                                                </div>
+                                            )}
+                                        </Draggable>
+                                    ))}
                                     {provided.placeholder}
                                 </div>
                             )}
                         </Droppable>
-                    </div>
+                    </DragDropContext>
                     <div className="drawer-right-calendar-drawer">
                         <div className="drawer-right-title-container">
                             <Typography variant="h4" className='drawer-right-title-calendar-drawer'>Optimize Tasks</Typography>
@@ -96,7 +129,7 @@ const CalendarDrawer = ({ tasksNoDueDate, optimizeOption, handleOptimizeOptionCh
                                 <MenuItem value="random">Randomly</MenuItem>
                             </Select>
                         </FormControl>
-                        <button className='modal-button button-calendar-drawer' onClick={handleOptimizeTasks(totalPrice)}>
+                        <button className='modal-button button-calendar-drawer' onClick={() => handleOptimizeTasks(totalPrice)}>
                             Go ({totalPrice}<img src="/currency-beta.png" alt="currency" className="currency-icon" />)
                         </button>
                     </div>

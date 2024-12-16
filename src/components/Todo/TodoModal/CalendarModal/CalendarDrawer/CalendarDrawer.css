@@ -18,10 +18,10 @@
 
 .bottom-drawer-calendar-drawer {
     z-index: 1000; 
-    overflow-y: auto;
-    overflow-x: hidden;
 }
 
+.bottom-drawer-calendar-drawer {
+}
 
 .drawer-header-calendar-drawer {
     display: flex;
@@ -75,6 +75,7 @@
 .no-deadline-tasks-calendar-drawer {
     max-height: 250px;
     overflow-y: scroll;
+    overflow-x: hidden;
     padding: 5px;
 }
 
@@ -99,7 +100,6 @@
     border-radius: 5px;
     background-color: #f8f3f9;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-    overflow: hidden;
 }
 
 .task-block-time {
