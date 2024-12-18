@@ -68,7 +68,7 @@ const CalendarDrawer = ({ tasksNoDueDate, optimizeOption, handleOptimizeOptionCh
                 onClose={() => toggleDrawer(false)}
                 onOpen={() => toggleDrawer(true)}
                 className="bottom-drawer-calendar-drawer"
-                PaperProps={{ style: { width: drawerWidth, margin: '0 auto', borderRadius: isMobile ? '10px 10px 0px 0px' : '10px', overflow: 'hidden' } }}
+                PaperProps={{ style: { width: drawerWidth, margin: '0 auto', borderRadius: isMobile ? '12px 12px 0px 0px' : '10px', overflow: 'hidden' } }}
             >
                 <div className="drawer-header-calendar-drawer-open" onClick={() => toggleDrawer(!isDrawerOpen)}>
                     <Typography variant="h6">Tasks without Deadline ({tasksNoDueDate.length})</Typography>

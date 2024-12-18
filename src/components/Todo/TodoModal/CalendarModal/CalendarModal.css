@@ -65,3 +65,58 @@
     height: auto;
     border-top: 1px solid #ddd;
 }
+
+
+.drawer-header-calendar-drawer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 15px;
+    background-color: var(--primary-color);
+    color: white;
+    cursor: pointer;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px;
+    box-sizing: border-box;
+    width: 100%;
+    z-index: 1201; 
+    transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.drawer-header-calendar-drawer:hover {
+    color: var(--secondary-color);
+    transform: scale(1.02);
+}
+
+.drawer-header-calendar-drawer:active {
+    transform: scale(0.98);
+}
+
+.drawer-header-calendar-drawer-open {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 15px;
+    background-color: var(--primary-color);
+    color: white;
+    cursor: pointer;
+    border: 1px solid #e0e0e0;
+    border-radius: 10px 10px 0px 0px;
+    box-sizing: border-box;
+    z-index: 1201; 
+    position: sticky;
+    top: 0;
+    bottom: auto;
+    transition: background-color 0.2s ease-in-out, transform 0.1s ease-in-out;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.drawer-header-calendar-drawer-open:hover {
+    color: var(--secondary-color);
+    transform: scale(1.02);
+}
+
+.drawer-header-calendar-drawer-open:active {
+    transform: scale(0.98);
+}
