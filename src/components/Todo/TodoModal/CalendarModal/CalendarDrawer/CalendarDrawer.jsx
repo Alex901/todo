@@ -6,10 +6,12 @@ import { mdiInformation } from '@mdi/js';
 import { useUserContext } from '../../../../../contexts/UserContext';
 import './CalendarDrawer.css';
 
-const CalendarDrawer = ({ tasksNoDueDate, optimizeOption, handleOptimizeOptionChange, handleOptimizeTasks, drawerWidth, isDrawerOpen, toggleDrawer, isMobile, interval }) => {
+const CalendarDrawer = ({ tasksNoDueDate, optimizeOption, handleOptimizeOptionChange, handleOptimizeTasks, drawerWidth, isDrawerOpen, toggleDrawer, isMobile, interval, draggedItem }) => {
     const pricePerTask = 0.2;
     const totalPrice = (tasksNoDueDate.length * pricePerTask).toFixed(1);
     const { loggedInUser } = useUserContext();
+    const [isDraggingOutside, setIsDraggingOutside] = React.useState(false);
+
 
     const getTaskStyle = (task) => {
         if (task.owner !== loggedInUser._id) {
@@ -74,7 +76,7 @@ const CalendarDrawer = ({ tasksNoDueDate, optimizeOption, handleOptimizeOptionCh
                     <Typography variant="h6">Tasks without Deadline ({tasksNoDueDate.length})</Typography>
                 </div>
                 <div className={`drawer-content-calendar-drawer ${isMobile ? 'drawer-content-vertical' : ''}`}>
-                    <DragDropContext onDragEnd={onDragEnd}>
+                    
                         <Droppable droppableId="noDeadlineTasks">
                             {(provided) => (
                                 <div className="no-deadline-tasks-calendar-drawer" {...provided.droppableProps} ref={provided.innerRef}>
@@ -102,7 +104,7 @@ const CalendarDrawer = ({ tasksNoDueDate, optimizeOption, handleOptimizeOptionCh
                                 </div>
                             )}
                         </Droppable>
-                    </DragDropContext>
+                    
                     <div className="drawer-right-calendar-drawer">
                         <div className="drawer-right-title-container">
                             <Typography variant="h4" className='drawer-right-title-calendar-drawer'>Optimize Tasks</Typography>

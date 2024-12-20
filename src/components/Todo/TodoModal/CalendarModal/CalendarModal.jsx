@@ -33,6 +33,7 @@ const CalendarModal = ({ isOpen, onClose }) => {
     const allListObject = loggedInUser?.myLists.find(list => list.listName === 'all');
     const [optimizeOption, setOptimizeOption] = useState('time');
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+    const [draggedItem, setDraggedItem] = useState(null);
 
     // Find the earliest and latest task dates
     const earliest = tasksWithDueDate.reduce((earliest, task) => {
@@ -291,13 +292,14 @@ const CalendarModal = ({ isOpen, onClose }) => {
         }
     };
 
+    // Drag and drop logic, consider moving to a separate file
     const handleDragEnd = (result) => {
         if (!result.destination) return;
 
         const { source, destination } = result;
 
         // Handle task drop logic here
-        if (destination.droppableId.startsWith('calendar-day-')) {
+        if (destination.droppableId.startsWith('calendar-day')) {
             const taskId = result.draggableId;
             const newDueDate = new Date(destination.droppableId.replace('calendar-day-', ''));
 
@@ -308,6 +310,21 @@ const CalendarModal = ({ isOpen, onClose }) => {
             // editTodo(updatedTask);
         }
     };
+
+    const onDragUpdate = (update) => {
+        console.log("DEBUG -- onDragUpdate -- update destination", update.destination);
+        if(update.destination && update.destination.droppableId === 'calendar-day') {
+            setIsDrawerOpen(false);
+        } else {
+            setIsDrawerOpen(true);
+        }
+    };
+
+    const onDragStart = (start) => {
+        console.log("DEBUG -- onDragStart -- start", start)
+        setDraggedItem(start.draggableId);
+    };
+
 
     const handleOptimizeOptionChange = (event) => {
         setOptimizeOption(event.target.value);
@@ -415,8 +432,12 @@ const CalendarModal = ({ isOpen, onClose }) => {
                             <Icon path={mdiChevronDoubleRight} size={1} />
                         </IconButton>
                     </div>
-                    <DragDropContext onDragEnd={handleDragEnd}>
-                        {interval === 'day' && <DailyView tasks={filteredList} today={today} selectedDate={selectedOption} loggedInUser={loggedInUser} />}
+                    <DragDropContext
+                        onDragEnd={handleDragEnd}
+                        onDragUpdate={onDragUpdate}
+                        onDragStart={onDragStart}
+                        >
+                        {interval === 'day' && <DailyView tasks={filteredList} today={today} selectedDate={selectedOption} loggedInUser={loggedInUser} draggedItem={draggedItem} />}
                         {interval === 'week' && <WeeklyView tasks={filteredList} today={today} thisWeek={selectedOption} onDayClick={handleDayClick} loggedInUser={loggedInUser} />}
                         {interval === 'month' && <MonthlyView tasks={filteredList} today={today} thisMonth={selectedOption} onDayClick={handleDayClick} loggedInUser={loggedInUser} />}
                         <CalendarDrawer
@@ -429,6 +450,7 @@ const CalendarModal = ({ isOpen, onClose }) => {
                             toggleDrawer={toggleDrawer}
                             isMobile={isMobile}
                             interval={interval}
+                            draggedItem={draggedItem}
                         />
                     </DragDropContext>
                 </div>

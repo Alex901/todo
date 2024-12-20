@@ -2,6 +2,8 @@ import React from 'react';
 import { Tooltip, Checkbox, Badge } from '@mui/material';
 import Icon from '@mdi/react';
 import { mdiAccountGroup } from '@mdi/js';
+import { extractTimeFromDateString } from '../../../../../../utils/timeUtils';
+import { Droppable, Draggable } from 'react-beautiful-dnd';
 import './DailyView.css';
 
 const DailyView = ({ tasks, today, loggedInUser }) => {
@@ -71,40 +73,53 @@ const DailyView = ({ tasks, today, loggedInUser }) => {
                     ))
                 )}
             </div>
-            <div className="daily-view-calendar">
-                <div className="calendar-tasks">
-                    {nonRepeatableTasks.length === 0 ? (
-                        <div className="no-tasks-message">
-                            No tasks on record.
-                        </div>
-                    ) : (
-                        nonRepeatableTasks.map(task => {
-                            const estimatedTime = normalizeTime(task.estimatedTime || 0);
-                            const totalTimeSpent = task.completed ? `(${normalizeTime(task.totalTimeSpent / 60000 || 0)})` : '';
-                            const timeClass = task.completed ? getTimeClass(task.estimatedTime, task.totalTimeSpent) : '';
-
-                            return (
-                                <div key={task._id} className="task-block" style={getTaskStyle(task)}>
-                                    <div className="task-block-time">
-                                        <span>{estimatedTime}</span>
-                                        {task.completed && <span className={`bold ${timeClass}`}>{totalTimeSpent}</span>}
-                                    </div>
-                                    <div className="task-block-content">
-                                        <span>{task.task}</span>
-                                    </div>
-                                    <div className="task-block-checkbox">
-                                        <Checkbox checked={!!task.completed}
-                                            color={task.owner !== loggedInUser._id ? 'secondary' : 'primary'}
-                                        />
-                                    </div>
-                                </div>
-                            );
-                        })
-                    )}
-                </div>
-            </div>
+            <Droppable droppableId={`calendar-day`}>
+                {(provided) => (
+                    <div className="calendar-tasks" ref={provided.innerRef} {...provided.droppableProps}>
+                        {nonRepeatableTasks.length === 0 ? (
+                            <div className="no-tasks-message">
+                                No tasks on record.
+                            </div>
+                        ) : (
+                            nonRepeatableTasks.map((task, index) => {
+                                const estimatedTime = normalizeTime(task.estimatedTime || 0);
+                                const totalTimeSpent = task.completed ? `(${normalizeTime(task.totalTimeSpent / 60000 || 0)})` : '';
+                                const timeClass = task.completed ? getTimeClass(task.estimatedTime, task.totalTimeSpent) : '';
+    
+                                return (
+                                    <Draggable key={task._id} draggableId={String(task._id)} index={index}>
+                                        {(provided) => (
+                                            <div
+                                                ref={provided.innerRef}
+                                                {...provided.draggableProps}
+                                                {...provided.dragHandleProps}
+                                                className="task-block"
+                                                style={getTaskStyle(task)}
+                                            >
+                                                <div className="task-block-time">
+                                                    <span>{estimatedTime}</span>
+                                                    {task.completed && <span className={`bold ${timeClass}`}>{totalTimeSpent}</span>}
+                                                </div>
+                                                <div className="task-block-content">
+                                                    <span>{task.task}</span>
+                                                </div>
+                                                <div className="task-block-checkbox">
+                                                    <Checkbox checked={!!task.completed}
+                                                        color={task.owner !== loggedInUser._id ? 'secondary' : 'primary'}
+                                                    />
+                                                </div>
+                                            </div>
+                                        )}
+                                    </Draggable>
+                                );
+                            })
+                        )}
+                        {provided.placeholder}
+                    </div>
+                )}
+            </Droppable>
         </div>
     );
-};
+}
 
 export default DailyView;

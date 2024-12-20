@@ -70,7 +70,7 @@
     flex-direction: column;
     margin-top: 5px;
     gap: 5px;
-
+    min-height: 400px;
 }
 
 .task-block {
@@ -78,7 +78,6 @@
     align-items: center;
     justify-content: space-between;
     padding: 10px;
-    
     border-radius: 4px;
     background-color: #f8f3f9;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
