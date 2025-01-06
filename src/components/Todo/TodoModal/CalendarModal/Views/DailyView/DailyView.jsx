@@ -6,7 +6,8 @@ import { extractTimeFromDateString } from '../../../../../../utils/timeUtils';
 import { Droppable, Draggable } from 'react-beautiful-dnd';
 import './DailyView.css';
 
-const DailyView = ({ tasks, today, loggedInUser }) => {
+const DailyView = ({ tasks, today, loggedInUser, draggedItem }) => {
+    console.log("DEBUG -- today:", today);
     const repeatableTasks = tasks.filter(task => task.repeatable);
     const nonRepeatableTasks = tasks.filter(task => !task.repeatable);
 
@@ -50,6 +51,26 @@ const DailyView = ({ tasks, today, loggedInUser }) => {
         return {};
     };
 
+    const getPlaceholderStyle = () => {
+        return {
+            backgroundColor: '#e0e0e0', // Different color for the placeholder
+            border: '2px dashed #b0b0b0',
+            padding: '10px',
+            margin: '10px 0',
+            borderRadius: '5px'
+        };
+    };
+
+    let draggedTask = null;
+    try {
+        draggedTask = JSON.parse(draggedItem);
+    } catch (error) {
+        draggedTask = null;
+        console.error("Failed to parse dragged item", error);
+    }
+
+    console.log("DEBUG -- DailyView; draggedTask: ", draggedTask);
+
     return (
         <div className="daily-view">
             <div className="daily-view-emoji-area">
@@ -73,46 +94,65 @@ const DailyView = ({ tasks, today, loggedInUser }) => {
                     ))
                 )}
             </div>
-            <Droppable droppableId={`calendar-day`}>
-                {(provided) => (
+            <Droppable droppableId={`calendar-day}`}>
+                {(provided, snapshot) => (
                     <div className="calendar-tasks" ref={provided.innerRef} {...provided.droppableProps}>
-                        {nonRepeatableTasks.length === 0 ? (
+                        {nonRepeatableTasks.length === 0 && !snapshot.isDraggingOver ? (
                             <div className="no-tasks-message">
                                 No tasks on record.
                             </div>
                         ) : (
-                            nonRepeatableTasks.map((task, index) => {
-                                const estimatedTime = normalizeTime(task.estimatedTime || 0);
-                                const totalTimeSpent = task.completed ? `(${normalizeTime(task.totalTimeSpent / 60000 || 0)})` : '';
-                                const timeClass = task.completed ? getTimeClass(task.estimatedTime, task.totalTimeSpent) : '';
-    
-                                return (
-                                    <Draggable key={task._id} draggableId={String(task._id)} index={index}>
-                                        {(provided) => (
-                                            <div
-                                                ref={provided.innerRef}
-                                                {...provided.draggableProps}
-                                                {...provided.dragHandleProps}
-                                                className="task-block"
-                                                style={getTaskStyle(task)}
-                                            >
-                                                <div className="task-block-time">
-                                                    <span>{estimatedTime}</span>
-                                                    {task.completed && <span className={`bold ${timeClass}`}>{totalTimeSpent}</span>}
+                            <>
+                                {nonRepeatableTasks.map((task, index) => {
+                                    if (draggedItem === JSON.stringify(task)) return null; // Skip rendering the dragged item
+                                    const estimatedTime = normalizeTime(task.estimatedTime || 0);
+                                    const totalTimeSpent = task.completed ? `(${normalizeTime(task.totalTimeSpent / 60000 || 0)})` : '';
+                                    const timeClass = task.completed ? getTimeClass(task.estimatedTime, task.totalTimeSpent) : '';
+
+                                    return (
+                                        <Draggable key={task._id} draggableId={JSON.stringify(task)} index={index}>
+                                            {(provided) => (
+                                                <div
+                                                    ref={provided.innerRef}
+                                                    {...provided.draggableProps}
+                                                    {...provided.dragHandleProps}
+                                                    className="task-block"
+                                                    style={getTaskStyle(task)}
+                                                >
+                                                    <div className="task-block-time">
+                                                        <span>{estimatedTime}</span>
+                                                        {task.completed && <span className={`bold ${timeClass}`}>{totalTimeSpent}</span>}
+                                                    </div>
+                                                    <div className="task-block-content">
+                                                        <span>{task.task}</span>
+                                                    </div>
+                                                    <div className="task-block-checkbox">
+                                                        <Checkbox checked={!!task.completed}
+                                                            color={task.owner !== loggedInUser._id ? 'secondary' : 'primary'}
+                                                        />
+                                                    </div>
                                                 </div>
-                                                <div className="task-block-content">
-                                                    <span>{task.task}</span>
-                                                </div>
-                                                <div className="task-block-checkbox">
-                                                    <Checkbox checked={!!task.completed}
-                                                        color={task.owner !== loggedInUser._id ? 'secondary' : 'primary'}
-                                                    />
-                                                </div>
-                                            </div>
-                                        )}
-                                    </Draggable>
-                                );
-                            })
+                                            )}
+                                        </Draggable>
+                                    );
+                                })}
+                                {snapshot.isDraggingOver && draggedItem && (
+                                    <div className="task-block" style={getPlaceholderStyle()}>
+                                        <div className="task-block-time">
+                                            <span>{normalizeTime(draggedTask.estimatedTime || 0)}</span>
+                                            {draggedTask.completed && <span className={`bold ${getTimeClass(draggedTask.estimatedTime, draggedTask.totalTimeSpent)}`}>{`(${normalizeTime(draggedTask.totalTimeSpent / 60000 || 0)})`}</span>}
+                                        </div>
+                                        <div className="task-block-content">
+                                            <span>{draggedTask.task}</span>
+                                        </div>
+                                        <div className="task-block-checkbox">
+                                            <Checkbox checked={!!draggedTask.completed}
+                                                color={draggedTask.owner !== loggedInUser._id ? 'secondary' : 'primary'}
+                                            />
+                                        </div>
+                                    </div>
+                                )}
+                            </>
                         )}
                         {provided.placeholder}
                     </div>

@@ -292,9 +292,43 @@ const CalendarModal = ({ isOpen, onClose }) => {
         }
     };
 
+    const onDragUpdate = (update) => {
+        console.log("DEBUG -- onDragUpdate -- update destination", update.destination);
+        if (update.destination && update.destination.droppableId === 'calendar-day') {
+            setIsDrawerOpen(false);
+        } else {
+            setIsDrawerOpen(true);
+        }
+    };
+
+    const onDragStart = (start) => {
+        console.log("DEBUG -- onDragStart -- start", start)
+        setDraggedItem(start.draggableId);
+    };
+
     // Drag and drop logic, consider moving to a separate file
     const handleDragEnd = (result) => {
+        console.log("DEBUG -- handleDragEnd -- result", result);
         if (!result.destination) return;
+
+        if (result.destination === result.source) {
+            if (source.droppableId === 'calendar-day') {
+                console.log("Task dropped back to the same day but the dueDate might have changed -- Do later");
+                return; 
+            } else if (source.droppableId === 'calendar-week') {
+                console.log("Change deadline for task?")
+                return; 
+            } else if (source.droppableId === 'calendar-month') {
+                console.log("Change deadline for task?")
+                return;
+            } else {
+                setDraggedItem(null);
+                return;
+            }
+
+
+
+        }
 
         const { source, destination } = result;
 
@@ -309,20 +343,7 @@ const CalendarModal = ({ isOpen, onClose }) => {
             console.log("Task dropped on: ", newDueDate);
             // editTodo(updatedTask);
         }
-    };
-
-    const onDragUpdate = (update) => {
-        console.log("DEBUG -- onDragUpdate -- update destination", update.destination);
-        if(update.destination && update.destination.droppableId === 'calendar-day') {
-            setIsDrawerOpen(false);
-        } else {
-            setIsDrawerOpen(true);
-        }
-    };
-
-    const onDragStart = (start) => {
-        console.log("DEBUG -- onDragStart -- start", start)
-        setDraggedItem(start.draggableId);
+        console.log("DEBUG -- handleDragEnd -- result end", result);
     };
 
 
@@ -436,7 +457,7 @@ const CalendarModal = ({ isOpen, onClose }) => {
                         onDragEnd={handleDragEnd}
                         onDragUpdate={onDragUpdate}
                         onDragStart={onDragStart}
-                        >
+                    >
                         {interval === 'day' && <DailyView tasks={filteredList} today={today} selectedDate={selectedOption} loggedInUser={loggedInUser} draggedItem={draggedItem} />}
                         {interval === 'week' && <WeeklyView tasks={filteredList} today={today} thisWeek={selectedOption} onDayClick={handleDayClick} loggedInUser={loggedInUser} />}
                         {interval === 'month' && <MonthlyView tasks={filteredList} today={today} thisMonth={selectedOption} onDayClick={handleDayClick} loggedInUser={loggedInUser} />}

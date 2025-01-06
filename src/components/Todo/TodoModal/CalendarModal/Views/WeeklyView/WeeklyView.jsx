@@ -6,7 +6,7 @@ import { mdiAccountGroup } from '@mdi/js';
 
 import './WeeklyView.css';
 
-const WeeklyView = ({ tasks, today, thisWeek, onDayClick, loggedInUser }) => {
+const WeeklyView = ({ tasks, today, thisWeek, onDayClick, loggedInUser, draggedItem }) => {
     const daysOfWeek = ['Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday'];
     const [maxHeight, setMaxHeight] = useState("80px");
     const emojiAreaRefs = useRef([]);

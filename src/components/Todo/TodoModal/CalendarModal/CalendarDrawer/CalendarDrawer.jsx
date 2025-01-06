@@ -51,14 +51,6 @@ const CalendarDrawer = ({ tasksNoDueDate, optimizeOption, handleOptimizeOptionCh
         }
     };
 
-
-    const onDragEnd = (result) => {
-        // Handle the drag end event
-        console.log('Drag end', result);
-    };
-
-
-
     return (
         <div className="drawer-container-calendar-drawer">
             <div className="drawer-header-calendar-drawer" onClick={() => toggleDrawer(!isDrawerOpen)}>
@@ -81,7 +73,7 @@ const CalendarDrawer = ({ tasksNoDueDate, optimizeOption, handleOptimizeOptionCh
                             {(provided) => (
                                 <div className="no-deadline-tasks-calendar-drawer" {...provided.droppableProps} ref={provided.innerRef}>
                                     {tasksNoDueDate.map((task, index) => (
-                                        <Draggable key={task.id} draggableId={String(task.id)} index={index}>
+                                        <Draggable key={task.id} draggableId={JSON.stringify(task)} index={index}>
                                             {(provided) => (
                                                 <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} className="task-item-calendar-drawer">
                                                     <div className="task-block-time">

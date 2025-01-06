@@ -1,7 +1,7 @@
 import React from 'react';
 import './MonthlyView.css';
 
-const MonthlyView = ({ tasks, today, thisMonth, onDayClick, loggedInUser }) => {
+const MonthlyView = ({ tasks, today, thisMonth, onDayClick, loggedInUser, draggedItem }) => {
     const startOfMonth = new Date(thisMonth.value.start);
     const endOfMonth = new Date(thisMonth.value.end);
 
