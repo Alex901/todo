@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import { Tooltip, Checkbox, Badge } from '@mui/material';
 import Icon from '@mdi/react';
 import { mdiAccountGroup } from '@mdi/js';
@@ -6,10 +6,15 @@ import { extractTimeFromDateString } from '../../../../../../utils/timeUtils';
 import { Droppable, Draggable } from 'react-beautiful-dnd';
 import './DailyView.css';
 
-const DailyView = ({ tasks, today, loggedInUser, draggedItem }) => {
-    console.log("DEBUG -- today:", today);
+const DailyView = ({ tasks, today, loggedInUser, draggedItem, date, placeholderIndex }) => {
+    date = new Date(date).toISOString().split('T')[0];
     const repeatableTasks = tasks.filter(task => task.repeatable);
     const nonRepeatableTasks = tasks.filter(task => !task.repeatable);
+
+
+    useEffect(() => {
+        console.log("DEBUG -- Placeholder index - dailyView: ", placeholderIndex);
+    }, [placeholderIndex]);
 
     const normalizeTime = (minutes) => {
         if (minutes >= 1440) {
@@ -29,7 +34,6 @@ const DailyView = ({ tasks, today, loggedInUser, draggedItem }) => {
         const difference = totalMinutes - estimatedMinutes;
         const percentageDifference = (difference / estimatedMinutes) * 100;
 
-        // console.log("DEBUG -- color finder: ", percentageDifference);
 
         if (percentageDifference <= 0) {
             return 'green';
@@ -94,7 +98,7 @@ const DailyView = ({ tasks, today, loggedInUser, draggedItem }) => {
                     ))
                 )}
             </div>
-            <Droppable droppableId={`calendar-day}`}>
+            <Droppable droppableId={`calendar-day:${date}:${JSON.stringify(nonRepeatableTasks.map(task => ({ dueDate: task.dueDate, estimatedTime: task.estimatedTime })))}`}>
                 {(provided, snapshot) => (
                     <div className="calendar-tasks" ref={provided.innerRef} {...provided.droppableProps}>
                         {nonRepeatableTasks.length === 0 && !snapshot.isDraggingOver ? (
@@ -110,33 +114,51 @@ const DailyView = ({ tasks, today, loggedInUser, draggedItem }) => {
                                     const timeClass = task.completed ? getTimeClass(task.estimatedTime, task.totalTimeSpent) : '';
 
                                     return (
-                                        <Draggable key={task._id} draggableId={JSON.stringify(task)} index={index}>
-                                            {(provided) => (
-                                                <div
-                                                    ref={provided.innerRef}
-                                                    {...provided.draggableProps}
-                                                    {...provided.dragHandleProps}
-                                                    className="task-block"
-                                                    style={getTaskStyle(task)}
-                                                >
+                                        <React.Fragment key={task._id}>
+                                            {index === placeholderIndex && (
+                                                <div className="task-block" style={getPlaceholderStyle()}>
                                                     <div className="task-block-time">
-                                                        <span>{estimatedTime}</span>
-                                                        {task.completed && <span className={`bold ${timeClass}`}>{totalTimeSpent}</span>}
+                                                        <span>{normalizeTime(draggedTask.estimatedTime || 0)}</span>
+                                                        {draggedTask.completed && <span className={`bold ${getTimeClass(draggedTask.estimatedTime, draggedTask.totalTimeSpent)}`}>{`(${normalizeTime(draggedTask.totalTimeSpent / 60000 || 0)})`}</span>}
                                                     </div>
                                                     <div className="task-block-content">
-                                                        <span>{task.task}</span>
+                                                        <span>{draggedTask.task}</span>
                                                     </div>
                                                     <div className="task-block-checkbox">
-                                                        <Checkbox checked={!!task.completed}
-                                                            color={task.owner !== loggedInUser._id ? 'secondary' : 'primary'}
+                                                        <Checkbox checked={!!draggedTask.completed}
+                                                            color={draggedTask.owner !== loggedInUser._id ? 'secondary' : 'primary'}
                                                         />
                                                     </div>
                                                 </div>
                                             )}
-                                        </Draggable>
+                                            <Draggable draggableId={JSON.stringify(task)} index={index}>
+                                                {(provided) => (
+                                                    <div
+                                                        ref={provided.innerRef}
+                                                        {...provided.draggableProps}
+                                                        {...provided.dragHandleProps}
+                                                        className="task-block"
+                                                        style={getTaskStyle(task)}
+                                                    >
+                                                        <div className="task-block-time">
+                                                            <span>{estimatedTime}</span>
+                                                            {task.completed && <span className={`bold ${timeClass}`}>{totalTimeSpent}</span>}
+                                                        </div>
+                                                        <div className="task-block-content">
+                                                            <span>{task.task}</span>
+                                                        </div>
+                                                        <div className="task-block-checkbox">
+                                                            <Checkbox checked={!!task.completed}
+                                                                color={task.owner !== loggedInUser._id ? 'secondary' : 'primary'}
+                                                            />
+                                                        </div>
+                                                    </div>
+                                                )}
+                                            </Draggable>
+                                        </React.Fragment>
                                     );
                                 })}
-                                {snapshot.isDraggingOver && draggedItem && (
+                                {snapshot.isDraggingOver && placeholderIndex === nonRepeatableTasks.length && (
                                     <div className="task-block" style={getPlaceholderStyle()}>
                                         <div className="task-block-time">
                                             <span>{normalizeTime(draggedTask.estimatedTime || 0)}</span>
