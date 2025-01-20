@@ -358,13 +358,7 @@ const TodoProvider = ({ children }) => {
       });
 
       if (response.status === 200) {
-        setTodoList(prevTodoList => prevTodoList.map(todo => {
-          if (todo._id === taskId) {
-            return { ...todo, ...updatedTask }
-          }
 
-          return todo;
-        }));
         checkLogin();
       } else {
         console.error("Error updating task: ", response.statusText);
@@ -373,12 +367,7 @@ const TodoProvider = ({ children }) => {
       console.error('Internal Server error: ', error);
     }
 
-    setTodoList(prevTodoList => prevTodoList.map(todo => {
-      if (todo.id === updatedTask.id) {
-        return { ...todo, ...updatedTask }
-      }
-      return todo;
-    }));
+
   }
 
   //Helper function to easilly update my database, this is quite dumb
@@ -406,6 +395,8 @@ const TodoProvider = ({ children }) => {
       console.error("Error updating database: ", error);
     }
   }
+
+  
   //Find task with id -> step id and set it to completed
   const setStepCompleted = async (taskId, stepId) => {
     try {

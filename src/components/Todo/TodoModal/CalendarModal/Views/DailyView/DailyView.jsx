@@ -11,8 +11,6 @@ const DailyView = ({ tasks, today, loggedInUser, draggedItem, date, placeholderI
     const repeatableTasks = tasks.filter(task => task.repeatable);
     const nonRepeatableTasks = tasks.filter(task => !task.repeatable);
 
-    console.log("DEBUG -- DATE DATE DATE: ", date);
-
     useEffect(() => {
         console.log("DEBUG -- Placeholder index - dailyView: ", placeholderIndex);
     }, [placeholderIndex]);

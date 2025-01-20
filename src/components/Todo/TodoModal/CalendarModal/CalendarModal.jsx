@@ -158,7 +158,7 @@ const CalendarModal = ({ isOpen, onClose }) => {
 
 
     const handleIntervalChange = (event) => {
-        setHasSwitched(false);
+        setHasSwitched(false); 
         setInterval(event.target.value);
     };
 
@@ -289,10 +289,12 @@ const CalendarModal = ({ isOpen, onClose }) => {
 
     // Drag and drop logic, consider moving to a separate file
     const handleDragEnd = (result) => {
-        console.log("DEBUG -- handleDragEnd -- result", result);
+       console.log("DEBUG -- handleDragEnd -- result", result);
         if (!result.destination) return;
 
         const { source, destination } = result;
+        console.log("DEBUG -- handleDragEnd -- source", source);
+        console.log("DEBUG -- handleDragEnd -- destination", destination);
 
         // If the task is dropped in the same place, do nothing
         if (destination.droppableId === source.droppableId && destination.index === source.index) {
@@ -307,7 +309,9 @@ const CalendarModal = ({ isOpen, onClose }) => {
         if (result.destination === result.source) {
             if (destination.droppableId.startsWith('calendar-day')) {
                 console.log("Task dropped back to the same day but the dueDate might have changed -- Do later");
-
+                setDraggedItem(null);
+                setPlaceholderIndex(null);
+                return;
             } else if (source.droppableId === 'calendar-week') {
                 console.log("Change deadline for task?")
                 return;
@@ -329,9 +333,7 @@ const CalendarModal = ({ isOpen, onClose }) => {
             const destinationDate = new Date(destination.droppableId.replace('calendar-day:', '').split(':')[0]);
             const currentDate = new Date();
             currentDate.setHours(0, 0, 0, 0);
-            console.log("DEBUG -- destinationDate -- calendar-day", destinationDate);
-            console.log("DEBUG -- currentDate -- calendar-day", currentDate);
-
+          
             if (destinationDate < currentDate) {
                 console.log("Cannot drop tasks into the past.");
                 setDraggedItem(null);
@@ -339,10 +341,16 @@ const CalendarModal = ({ isOpen, onClose }) => {
                 return;
             }
 
-            const newDueDate = deadlineFinder(droppedTask, destination);
-            const updatedTask = { ...droppedTask, dueDate: newDueDate.toISOString() };
-            console.log("DEBUG -- updated task -- calendar-day", updatedTask);
-
+            const { newDueDate, movedWithinDay } = deadlineFinder(droppedTask, destination);
+            if (newDueDate instanceof Date && !isNaN(newDueDate)) {
+                const updatedTask = { ...droppedTask, dueDate: newDueDate.toISOString() };
+                if (movedWithinDay) {
+                    console.log("Task was moved to a different time within the same day.");
+                }
+                editTodo(updatedTask);
+            } else {
+                console.error("Invalid new due date:", newDueDate);
+            }
         }
 
         setDraggedItem(null);
