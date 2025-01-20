@@ -270,16 +270,26 @@ const CalendarModal = ({ isOpen, onClose }) => {
         }
     };
 
-    const onDragUpdate = (update) => {
-        // console.log("DEBUG -- onDragUpdate -- update destination", update.destination);
-        if (update.destination && update.destination.droppableId !== 'noDeadlineTasks') {
-            setIsDrawerOpen(false);
-            setPlaceholderIndex(update.destination.index);
-        } else {
-            setIsDrawerOpen(true);
-            setPlaceholderIndex(null);
-        }
-    };
+const onDragUpdate = (update) => {
+    if (!update.destination) {
+        setIsDrawerOpen(false);
+        setPlaceholderIndex(null);
+        return;
+    }
+
+    if (update.destination.droppableId !== 'noDeadlineTasks') {
+        setIsDrawerOpen(false);
+    } else {
+        setIsDrawerOpen(true);
+    }
+    // Check if the source and destination are different
+    if (update.destination && update.source.droppableId !== update.destination.droppableId) {
+        setPlaceholderIndex(update.destination.index);
+        // Only open the drawer if the destination is noDeadlineTasks
+    } else {
+        setPlaceholderIndex(null);
+    }
+};
 
     const onDragStart = (start) => {
         //console.log("DEBUG -- onDragStart -- start", start.draggableId)

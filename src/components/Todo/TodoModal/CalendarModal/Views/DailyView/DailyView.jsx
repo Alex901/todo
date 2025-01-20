@@ -107,7 +107,7 @@ const DailyView = ({ tasks, today, loggedInUser, draggedItem, date, placeholderI
                         ) : (
                             <>
                                 {nonRepeatableTasks.map((task, index) => {
-                                    if (draggedItem === JSON.stringify(task)) return null; // Skip rendering the dragged item
+                                  
                                     const estimatedTime = normalizeTime(task.estimatedTime || 0);
                                     const totalTimeSpent = task.completed ? `(${normalizeTime(task.totalTimeSpent / 60000 || 0)})` : '';
                                     const timeClass = task.completed ? getTimeClass(task.estimatedTime, task.totalTimeSpent) : '';
