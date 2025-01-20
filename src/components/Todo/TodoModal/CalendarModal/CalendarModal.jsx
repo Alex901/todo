@@ -158,7 +158,7 @@ const CalendarModal = ({ isOpen, onClose }) => {
 
 
     const handleIntervalChange = (event) => {
-        setHasSwitched(false); 
+        setHasSwitched(false);
         setInterval(event.target.value);
     };
 
@@ -270,36 +270,35 @@ const CalendarModal = ({ isOpen, onClose }) => {
         }
     };
 
-const onDragUpdate = (update) => {
-    if (!update.destination) {
-        setIsDrawerOpen(false);
-        setPlaceholderIndex(null);
-        return;
-    }
+    const onDragUpdate = (update) => {
+        if (!update.destination) {
+            setIsDrawerOpen(false);
+            setPlaceholderIndex(null);
+            return;
+        }
 
-    if (update.destination.droppableId !== 'noDeadlineTasks') {
-        setIsDrawerOpen(false);
-    } else {
-        setIsDrawerOpen(true);
-    }
-    // Check if the source and destination are different
-    if (update.destination && update.source.droppableId !== update.destination.droppableId) {
-        setPlaceholderIndex(update.destination.index);
-        // Only open the drawer if the destination is noDeadlineTasks
-    } else {
-        setPlaceholderIndex(null);
-    }
-};
+        if (update.destination.droppableId !== 'noDeadlineTasks') {
+            setIsDrawerOpen(false);
+        } else {
+            setIsDrawerOpen(true);
+        }
+        // Check if the source and destination are different
+        if (update.destination && update.source.droppableId !== update.destination.droppableId) {
+            setPlaceholderIndex(update.destination.index);
+            // Only open the drawer if the destination is noDeadlineTasks
+        } else {
+            setPlaceholderIndex(null);
+        }
+    };
 
     const onDragStart = (start) => {
         //console.log("DEBUG -- onDragStart -- start", start.draggableId)
-
         setDraggedItem(start.draggableId);
     };
 
     // Drag and drop logic, consider moving to a separate file
     const handleDragEnd = (result) => {
-       console.log("DEBUG -- handleDragEnd -- result", result);
+        console.log("DEBUG -- handleDragEnd -- result", result);
         if (!result.destination) return;
 
         const { source, destination } = result;
@@ -307,32 +306,14 @@ const onDragUpdate = (update) => {
         console.log("DEBUG -- handleDragEnd -- destination", destination);
 
         // If the task is dropped in the same place, do nothing
-        if (destination.droppableId === source.droppableId && destination.index === source.index) {
+        if (destination.droppableId === source.droppableId) {
+            console.log("Task dropped in source -- nothing happens.");
             setDraggedItem(null);
             setPlaceholderIndex(null);
             return;
         }
 
         const droppedTask = JSON.parse(result.draggableId);
-
-        //This is when a task is dragged internally
-        if (result.destination === result.source) {
-            if (destination.droppableId.startsWith('calendar-day')) {
-                console.log("Task dropped back to the same day but the dueDate might have changed -- Do later");
-                setDraggedItem(null);
-                setPlaceholderIndex(null);
-                return;
-            } else if (source.droppableId === 'calendar-week') {
-                console.log("Change deadline for task?")
-                return;
-            } else {
-                setDraggedItem(null);
-                setPlaceholderIndex(null);
-                return;
-            }
-        }
-
-
 
         // Task has been dragged to another component
         if (destination.droppableId === 'noDeadlineTasks') {
@@ -343,7 +324,7 @@ const onDragUpdate = (update) => {
             const destinationDate = new Date(destination.droppableId.replace('calendar-day:', '').split(':')[0]);
             const currentDate = new Date();
             currentDate.setHours(0, 0, 0, 0);
-          
+
             if (destinationDate < currentDate) {
                 console.log("Cannot drop tasks into the past.");
                 setDraggedItem(null);

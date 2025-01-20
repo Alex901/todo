@@ -1,7 +1,8 @@
 import React, { useEffect } from 'react';
+import { useTodoContext } from '../../../../../../contexts/todoContexts';
 import { Tooltip, Checkbox, Badge } from '@mui/material';
 import Icon from '@mdi/react';
-import { mdiAccountGroup } from '@mdi/js';
+import { mdiAccountGroup, mdiCloseThick } from '@mdi/js';
 import { extractTimeFromDateString } from '../../../../../../utils/timeUtils';
 import { Droppable, Draggable } from 'react-beautiful-dnd';
 import './DailyView.css';
@@ -10,6 +11,7 @@ const DailyView = ({ tasks, today, loggedInUser, draggedItem, date, placeholderI
     date = new Date(date).toISOString().split('T')[0];
     const repeatableTasks = tasks.filter(task => task.repeatable);
     const nonRepeatableTasks = tasks.filter(task => !task.repeatable);
+    const { editTodo } = useTodoContext();
 
     useEffect(() => {
         console.log("DEBUG -- Placeholder index - dailyView: ", placeholderIndex);
@@ -72,7 +74,10 @@ const DailyView = ({ tasks, today, loggedInUser, draggedItem, date, placeholderI
         console.error("Failed to parse dragged item", error);
     }
 
-    console.log("DEBUG -- DailyView; draggedTask: ", draggedTask);
+    const handleRemoveDueDate = (task) => {
+        const updatedTask = { ...task, dueDate: null };
+        editTodo(updatedTask);
+    };
 
     return (
         <div className="daily-view">
@@ -107,7 +112,7 @@ const DailyView = ({ tasks, today, loggedInUser, draggedItem, date, placeholderI
                         ) : (
                             <>
                                 {nonRepeatableTasks.map((task, index) => {
-                                  
+
                                     const estimatedTime = normalizeTime(task.estimatedTime || 0);
                                     const totalTimeSpent = task.completed ? `(${normalizeTime(task.totalTimeSpent / 60000 || 0)})` : '';
                                     const timeClass = task.completed ? getTimeClass(task.estimatedTime, task.totalTimeSpent) : '';
@@ -147,9 +152,26 @@ const DailyView = ({ tasks, today, loggedInUser, draggedItem, date, placeholderI
                                                             <span>{task.task}</span>
                                                         </div>
                                                         <div className="task-block-checkbox">
-                                                            <Checkbox checked={!!task.completed}
-                                                                color={task.owner !== loggedInUser._id ? 'secondary' : 'primary'}
-                                                            />
+                                                            {!task.completed && (
+                                                                <div className="checkbox-container">
+                                                                    <Checkbox
+                                                                        checked={!!task.completed}
+                                                                        color={task.owner !== loggedInUser._id ? 'secondary' : 'primary'}
+                                                                    />
+                                                                    <button
+                                                                        className="remove-task-button"
+                                                                        onClick={() => handleRemoveDueDate(task)}
+                                                                    >
+                                                                        <Icon path={mdiCloseThick} size={1.5} color="red" />
+                                                                    </button>
+                                                                </div>
+                                                            )}
+                                                            {task.completed && (
+                                                                <Checkbox
+                                                                    checked={!!task.completed}
+                                                                    color={task.owner !== loggedInUser._id ? 'secondary' : 'primary'}
+                                                                />
+                                                            )}
                                                         </div>
                                                     </div>
                                                 )}

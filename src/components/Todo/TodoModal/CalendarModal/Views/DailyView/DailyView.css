@@ -144,3 +144,34 @@
     color: #888;
     text-align: center;
 }
+
+.checkbox-container {
+    position: relative;
+    display: inline-block;
+}
+
+.remove-task-button {
+    position: absolute;
+    top: 0px;
+    left: 0;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+    transform: scale(0);
+}
+
+.checkbox-container:hover .remove-task-button {
+    opacity: 1;
+    transform: scale(1);
+}
+
+.checkbox-container:hover .MuiCheckbox-root {
+    opacity: 0;
+    transform: scale(0);
+}
+
+.MuiCheckbox-root {
+    transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+}
