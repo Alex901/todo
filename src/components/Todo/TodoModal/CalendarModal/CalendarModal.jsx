@@ -14,6 +14,7 @@ import generateCalendarOptions from '../../../../utils/generateOptions/generateO
 import { generateMimicTask } from '../../../../utils/generateMimicTask';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import CalendarDrawer from './CalendarDrawer/CalendarDrawer';
+import { deadlineFinder } from '../../../../utils/dragAndDropUtils';
 
 const CalendarModal = ({ isOpen, onClose }) => {
     const { todoList, editTodo } = useTodoContext();
@@ -36,7 +37,8 @@ const CalendarModal = ({ isOpen, onClose }) => {
     const [draggedItem, setDraggedItem] = useState(null);
     const [palceholderIndex, setPlaceholderIndex] = React.useState(null);
 
-   
+
+    console.log("DEBUG -- Tasks - Calendar Modal",)
 
     // Find the earliest and latest task dates
     const earliest = tasksWithDueDate.reduce((earliest, task) => {
@@ -269,13 +271,10 @@ const CalendarModal = ({ isOpen, onClose }) => {
     };
 
     const onDragUpdate = (update) => {
-       // console.log("DEBUG -- onDragUpdate -- update destination", update.destination);
+        // console.log("DEBUG -- onDragUpdate -- update destination", update.destination);
         if (update.destination && update.destination.droppableId !== 'noDeadlineTasks') {
             setIsDrawerOpen(false);
             setPlaceholderIndex(update.destination.index);
-        } else if (update.combine) {
-            setIsDrawerOpen(false);
-            setPlaceholderIndex(null);
         } else {
             setIsDrawerOpen(true);
             setPlaceholderIndex(null);
@@ -283,8 +282,8 @@ const CalendarModal = ({ isOpen, onClose }) => {
     };
 
     const onDragStart = (start) => {
-        console.log("DEBUG -- onDragStart -- start", start.draggableId)
-        
+        //console.log("DEBUG -- onDragStart -- start", start.draggableId)
+
         setDraggedItem(start.draggableId);
     };
 
@@ -293,46 +292,61 @@ const CalendarModal = ({ isOpen, onClose }) => {
         console.log("DEBUG -- handleDragEnd -- result", result);
         if (!result.destination) return;
 
-        //Do this last, no hurry
+        const { source, destination } = result;
+
+        // If the task is dropped in the same place, do nothing
+        if (destination.droppableId === source.droppableId && destination.index === source.index) {
+            setDraggedItem(null);
+            setPlaceholderIndex(null);
+            return;
+        }
+
+        const droppedTask = JSON.parse(result.draggableId);
+
+        //This is when a task is dragged internally
         if (result.destination === result.source) {
             if (destination.droppableId.startsWith('calendar-day')) {
                 console.log("Task dropped back to the same day but the dueDate might have changed -- Do later");
-                return; 
+
             } else if (source.droppableId === 'calendar-week') {
-                console.log("Change deadline for task?")
-                return; 
-            } else if (source.droppableId === 'calendar-month') {
                 console.log("Change deadline for task?")
                 return;
             } else {
                 setDraggedItem(null);
+                setPlaceholderIndex(null);
                 return;
             }
         }
 
-        const { source, destination } = result;
 
-        // Handle task drop logic here
-        if (destination.droppableId.startsWith('calendar-day')) {
-            const droppedTask = result.draggableId;
-            const newDueDate = new Date(destination.droppableId.replace('calendar-day-', ''));
 
-            const updatedTask = todoList.find(task => task.id === droppedTask._id);
-            updatedTask.dueDate = newDueDate;
-
-            console.log("Task dropped on: ", newDueDate);
+        // Task has been dragged to another component
+        if (destination.droppableId === 'noDeadlineTasks') {
+            const updatedTask = { ...droppedTask, dueDate: null };
+            console.log("DEBUG -- updated task -- noDeadlineTasks", updatedTask);
             // editTodo(updatedTask);
-        } else if(destination.droppableId.staertsWith('calendar-week-day')) {
-            console.log("Task dropped on: ", destination.droppableId);
-        } else if(destination.droppableId.staertsWith('calendar-month-day')) {
-            console.log("Task dropped on: ", destination.droppableId);
-        } else if (destination.droppableId === 'noDeadlineTasks') {
-            console.log("Task dropped on noDeadlineTasks");
-        } else {
-            console.log("Task dropped on unknown destination");
+        } else if (destination.droppableId.startsWith('calendar-day')) {
+            const destinationDate = new Date(destination.droppableId.replace('calendar-day:', '').split(':')[0]);
+            const currentDate = new Date();
+            currentDate.setHours(0, 0, 0, 0);
+            console.log("DEBUG -- destinationDate -- calendar-day", destinationDate);
+            console.log("DEBUG -- currentDate -- calendar-day", currentDate);
+
+            if (destinationDate < currentDate) {
+                console.log("Cannot drop tasks into the past.");
+                setDraggedItem(null);
+                setPlaceholderIndex(null);
+                return;
+            }
+
+            const newDueDate = deadlineFinder(droppedTask, destination);
+            const updatedTask = { ...droppedTask, dueDate: newDueDate.toISOString() };
+            console.log("DEBUG -- updated task -- calendar-day", updatedTask);
+
         }
 
         setDraggedItem(null);
+        setPlaceholderIndex(null);
 
         console.log("DEBUG -- handleDragEnd -- result end", result);
     };
@@ -448,7 +462,7 @@ const CalendarModal = ({ isOpen, onClose }) => {
                         onDragUpdate={onDragUpdate}
                         onDragStart={onDragStart}
                     >
-                        {interval === 'day' && <DailyView tasks={filteredList} today={today} selectedDate={selectedOption} loggedInUser={loggedInUser} draggedItem={draggedItem} date={selectedOption.value.start} placeholderIndex={palceholderIndex} />}
+                        {interval === 'day' && <DailyView tasks={filteredList} today={today} selectedDate={selectedOption} loggedInUser={loggedInUser} draggedItem={draggedItem} date={selectedOption.value.end} placeholderIndex={palceholderIndex} />}
                         {interval === 'week' && <WeeklyView tasks={filteredList} today={today} thisWeek={selectedOption} onDayClick={handleDayClick} loggedInUser={loggedInUser} />}
                         {interval === 'month' && <MonthlyView tasks={filteredList} today={today} thisMonth={selectedOption} onDayClick={handleDayClick} loggedInUser={loggedInUser} />}
                         <CalendarDrawer
