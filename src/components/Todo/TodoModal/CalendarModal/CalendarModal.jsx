@@ -283,7 +283,8 @@ const CalendarModal = ({ isOpen, onClose }) => {
     };
 
     const onDragStart = (start) => {
-        //console.log("DEBUG -- onDragStart -- start", start)
+        console.log("DEBUG -- onDragStart -- start", start.draggableId)
+        
         setDraggedItem(start.draggableId);
     };
 
@@ -292,6 +293,7 @@ const CalendarModal = ({ isOpen, onClose }) => {
         console.log("DEBUG -- handleDragEnd -- result", result);
         if (!result.destination) return;
 
+        //Do this last, no hurry
         if (result.destination === result.source) {
             if (destination.droppableId.startsWith('calendar-day')) {
                 console.log("Task dropped back to the same day but the dueDate might have changed -- Do later");
@@ -320,7 +322,18 @@ const CalendarModal = ({ isOpen, onClose }) => {
 
             console.log("Task dropped on: ", newDueDate);
             // editTodo(updatedTask);
+        } else if(destination.droppableId.staertsWith('calendar-week-day')) {
+            console.log("Task dropped on: ", destination.droppableId);
+        } else if(destination.droppableId.staertsWith('calendar-month-day')) {
+            console.log("Task dropped on: ", destination.droppableId);
+        } else if (destination.droppableId === 'noDeadlineTasks') {
+            console.log("Task dropped on noDeadlineTasks");
+        } else {
+            console.log("Task dropped on unknown destination");
         }
+
+        setDraggedItem(null);
+
         console.log("DEBUG -- handleDragEnd -- result end", result);
     };
 

@@ -131,7 +131,7 @@ const DailyView = ({ tasks, today, loggedInUser, draggedItem, date, placeholderI
                                                     </div>
                                                 </div>
                                             )}
-                                            <Draggable draggableId={JSON.stringify(task)} index={index}>
+                                            <Draggable draggableId={JSON.stringify(task)} index={index} isDragDisabled={task.isDone}>
                                                 {(provided) => (
                                                     <div
                                                         ref={provided.innerRef}

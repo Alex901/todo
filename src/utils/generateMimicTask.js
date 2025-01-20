@@ -4,10 +4,10 @@ export const generateMimicTask = (task, startDate, endDate, allList, includeGrou
     const repeatUntilDate = task.repeatUntil ? new Date(task.repeatUntil) : new Date(endDate);
     endDate.setHours(23, 59, 59, 999);
 
-    console.log('DEBUG -- generateMimicTask -- task', task);
+ /*    console.log('DEBUG -- generateMimicTask -- task', task);
     console.log('DEBUG -- generateMimicTask -- allList', allList);
     console.log('DEBUG -- generateMimicTask -- includeGroup', includeGroup);
-    console.log('DEBUG -- generateMimicTask -- loggedInUserID', loggedInUserID);
+    console.log('DEBUG -- generateMimicTask -- loggedInUserID', loggedInUserID); */
 
 
     while (currentDate <= endDate && currentDate <= repeatUntilDate) {
