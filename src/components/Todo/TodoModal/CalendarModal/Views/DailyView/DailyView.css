@@ -105,9 +105,12 @@
 
 
 .task-block-checkbox {
-    width: 20%;
-    display: flex;
-    justify-content: center;
+    position: relative;
+    display: inline-block;
+    width: 36px; /* Set a fixed width */
+    height: 36px; /* Set a fixed height */
+    vertical-align: middle; /* Align vertically with text */
+
 }
 
 .task-block-time .bold {
@@ -150,21 +153,23 @@
     display: inline-block;
 }
 
+
 .remove-task-button {
     position: absolute;
-    top: 0px;
-    left: 0;
-    background: transparent;
+    top: 50%;
+    left: 50%;
+    background: none;
     border: none;
     cursor: pointer;
     opacity: 0;
     transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
-    transform: scale(0);
+    transform: translate(-50%, -50%) scale(0); /* Center the button */
+    border-radius: 10px;
 }
 
 .checkbox-container:hover .remove-task-button {
     opacity: 1;
-    transform: scale(1);
+    transform: translate(-50%, -50%) scale(1); /* Center the button */
 }
 
 .checkbox-container:hover .MuiCheckbox-root {
@@ -174,4 +179,6 @@
 
 .MuiCheckbox-root {
     transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+    width: 100%; /* Ensure the checkbox takes the full width */
+    height: 100%; /* Ensure the checkbox takes the full height */
 }
