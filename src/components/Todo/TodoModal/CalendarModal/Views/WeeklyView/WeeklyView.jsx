@@ -1,9 +1,8 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { Tooltip, Checkbox } from '@mui/material';
-import { Droppable } from 'react-beautiful-dnd';
 import Icon from '@mdi/react';
 import { mdiAccountGroup } from '@mdi/js';
-
+import { Droppable, Draggable } from 'react-beautiful-dnd';
 import './WeeklyView.css';
 
 const WeeklyView = ({ tasks, today, thisWeek, onDayClick, loggedInUser, draggedItem }) => {
@@ -157,6 +156,7 @@ const WeeklyView = ({ tasks, today, thisWeek, onDayClick, loggedInUser, draggedI
                                 ))
                             )}
                         </div>
+                        
                         <div className="weekly-view-calendar">
                             {nonRepeatableTasks.length === 0 ? (
                                 <div className="no-tasks-message-week">
@@ -189,9 +189,11 @@ const WeeklyView = ({ tasks, today, thisWeek, onDayClick, loggedInUser, draggedI
                                 </div>
                             )}
                         </div>
+                        
                     </div>
                 );
             })}
+
         </div>
     );
 };

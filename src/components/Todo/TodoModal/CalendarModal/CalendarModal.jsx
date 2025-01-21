@@ -38,8 +38,6 @@ const CalendarModal = ({ isOpen, onClose }) => {
     const [palceholderIndex, setPlaceholderIndex] = React.useState(null);
 
 
-    console.log("DEBUG -- Tasks - Calendar Modal",)
-
     // Find the earliest and latest task dates
     const earliest = tasksWithDueDate.reduce((earliest, task) => {
         const taskDates = [task.dueDate, task.completed, task.created]
@@ -342,7 +340,9 @@ const CalendarModal = ({ isOpen, onClose }) => {
             } else {
                 console.error("Invalid new due date:", newDueDate);
             }
-        }
+        } else if(destination.droppableId.startsWith('calendar-week')) {
+            console.log("Task dropped in calendar-week");
+        }   
 
         setDraggedItem(null);
         setPlaceholderIndex(null);
