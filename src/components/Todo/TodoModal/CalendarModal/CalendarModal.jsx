@@ -387,7 +387,8 @@ const CalendarModal = ({ isOpen, onClose }) => {
                                     color="primary"
                                 />
                             }
-                            label="Include Group(s)"
+                            label="Include Group Tasks"
+                            classes={{ label: 'group-tasks-label' }}
                         />
                     </div>
                     <div className="list-selector">

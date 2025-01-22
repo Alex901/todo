@@ -10,7 +10,7 @@
 }
 
 .calendar-modal {
-    padding: 20px;
+    padding: 20px, 10px;
     width: 100%;
 }
 
@@ -20,6 +20,18 @@
 
 .modal-content.month {
     width: 90%;
+}
+
+.group-selector {
+    display: flex;
+    justify-content: center;
+}
+
+.group-tasks-label {
+    flex: 1; 
+    text-align: left; 
+    display: flex;
+    align-items: center; 
 }
 
 .interval-selector {
@@ -34,6 +46,7 @@
     flex-direction: row;
     justify-content: center;
     gap: 10px; 
+    align-items: center; 
 }
 
 .calendar-navigation {

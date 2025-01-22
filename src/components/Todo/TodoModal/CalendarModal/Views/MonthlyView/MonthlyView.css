@@ -64,8 +64,8 @@
 }
 
 .task-circle.completed {
-    background-color: var(--secondary-color);
-    border: 2px solid var(--secondary-color);
+    background-color: var(--primary-color);
+    border: 2px solid var(--primary-color);
 }
 
 .task-circle-group {
