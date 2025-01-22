@@ -148,7 +148,7 @@
     text-align: center;
 }
 
-.checkbox-container {
+.calendar-checkbox-container {
     position: relative;
     display: inline-block;
 }
@@ -167,12 +167,12 @@
     border-radius: 10px;
 }
 
-.checkbox-container:hover .remove-task-button {
+.calendar-checkbox-container:hover .remove-task-button {
     opacity: 1;
     transform: translate(-50%, -50%) scale(1); /* Center the button */
 }
 
-.checkbox-container:hover .MuiCheckbox-root {
+.calendar-checkbox-container:hover .MuiCheckbox-root {
     opacity: 0;
     transform: scale(0);
 }

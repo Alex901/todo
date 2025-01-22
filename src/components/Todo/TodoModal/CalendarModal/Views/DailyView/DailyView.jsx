@@ -153,7 +153,7 @@ const DailyView = ({ tasks, today, loggedInUser, draggedItem, date, placeholderI
                                                         </div>
                                                         <div className="task-block-checkbox">
                                                             {!task.completed && (
-                                                                <div className="checkbox-container">
+                                                                <div className="calendar-checkbox-container">
                                                                     <Checkbox
                                                                         checked={!!task.completed}
                                                                         color={task.owner !== loggedInUser._id ? 'secondary' : 'primary'}
@@ -167,7 +167,7 @@ const DailyView = ({ tasks, today, loggedInUser, draggedItem, date, placeholderI
                                                                 </div>
                                                             )}
                                                             {task.completed && (
-                                                                <div className="checkbox-container">
+                                                                <div className="calendar-checkbox-container">
                                                                     <Checkbox
                                                                         checked={!!task.completed}
                                                                         color={task.owner !== loggedInUser._id ? 'secondary' : 'primary'}
