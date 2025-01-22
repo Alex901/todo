@@ -36,35 +36,47 @@ const ProgressArea = ({ tasksInActiveList }) => {
         : (timeSpent / totalTime) * 100;
 
 
-        const handleViewChange = (event) => {
-            setView(event.target.checked ? 'time' : 'tasks');
-        };
+    const handleViewChange = (event) => {
+        setView(event.target.checked ? 'time' : 'tasks');
+    };
+
+
 
     return (
         <div className="progress-container">
-            <div className="progress-title">Progress</div>
-            <div className="progress-bar">
-                <BorderLinearProgress
-                    variant={progress > 0 ? 'determinate' : 'indeterminate'}
-                    value={progress > 0 ? progress : undefined}
-                />
+            {totalTasks === 0 ? (
+                <div className="no-tasks-message-progress-bar">
+                No progress to display yet
             </div>
-            <div className="progress-label">
-            {view === 'tasks' ? `${tasksCompleted}/${totalTasks}` : `${progress.toFixed(0)}%`}
-            </div>
-            <div className="toggle-container">
-            <FormControlLabel
-                control={
-                    <Switch
-                        checked={view === 'time'}
-                        onChange={handleViewChange}
-                        name="viewToggle"
-                        color="primary"
-                    />
-                }
-                label={view === 'time' ? 'Time' : 'Tasks'}
-            />
-            </div>
+            ) : (
+                <>
+                    <div className="progress-title">Progress</div>
+                    <div className="progress-bar">
+                        <BorderLinearProgress
+                            variant={progress > 0 ? 'determinate' : 'indeterminate'}
+                            value={progress > 0 ? progress : undefined}
+                      
+                      />
+                      
+                    </div>
+                    <div className="progress-label">
+                        {view === 'tasks' ? `${tasksCompleted}/${totalTasks}` : `${progress.toFixed(0)}%`}
+                    </div>
+                    <div className="toggle-container">
+                        <FormControlLabel
+                            control={
+                                <Switch
+                                    checked={view === 'time'}
+                                    onChange={handleViewChange}
+                                    name="viewToggle"
+                                    color="primary"
+                                />
+                            }
+                            label={view === 'time' ? 'Time' : 'Tasks'}
+                        />
+                    </div>
+                </>
+            )}
         </div>
     );
 };

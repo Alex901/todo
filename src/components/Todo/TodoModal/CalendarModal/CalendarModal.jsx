@@ -366,6 +366,42 @@ const CalendarModal = ({ isOpen, onClose }) => {
         setIsDrawerOpen(open);
     }
 
+    const getFilteredOptions = () => {
+        const selectedIndex = options.findIndex(option => option.value.start === selectedOption.value.start);
+        const start = Math.max(selectedIndex - 3, 0);
+        const end = options.length - 1; // Display all future options
+
+        return options.slice(start, end + 1);
+    };
+
+    //TODO: reconsider this, it needs to update in real time. But not important enough.
+    const getUncompletedTasksCount = (date) => {
+        const formattedDate = new Date(date).toISOString().split('T')[0];
+        console.log("DEBUG -- formattedDate -- getUncompletedTasksCount", formattedDate)
+    
+        const dayTasks = [
+            ...todoList.filter(task => {
+                const taskDate = new Date(task.dueDate);
+                return !isNaN(taskDate) && taskDate.toISOString().split('T')[0] === formattedDate &&
+                    (includeGroupTasks || task.ownerModel !== 'Group');
+            }),
+            ...mimicTasks.filter(task => {
+                const taskDate = new Date(task.repeatDay);
+                return !isNaN(taskDate) && taskDate.toISOString().split('T')[0] === formattedDate &&
+                    (includeGroupTasks || task.ownerModel !== 'Group');
+            })
+        ];
+
+        console.log("DEBUG -- dayTasks -- getUncompletedTasksCount", dayTasks);
+    
+        const repeatableTasks = dayTasks.filter(task => task.repeatable && !task.completed).length;
+        const nonRepeatableTasks = dayTasks.filter(task => !task.repeatable && !task.completed).length;
+        console.log("DEBUG -- repeatableTasks -- getUncompletedTasksCount", repeatableTasks);   
+        console.log("DEBUG -- nonRepeatableTasks -- getUncompletedTasksCount", nonRepeatableTasks);
+        const totalTasks = repeatableTasks + nonRepeatableTasks;
+        return `(${nonRepeatableTasks}+${repeatableTasks})`;
+    };
+
     return (
         <BaseModal isOpen={isOpen} onRequestClose={onClose} title={
             <div className="modal-title">
@@ -446,11 +482,13 @@ const CalendarModal = ({ isOpen, onClose }) => {
                                 sx={{ minWidth: '120px' }}
                             >
                                 {/* Populate with dates that have tasks */}
-                                {options.map(option => (
-                                    <MenuItem key={option.value.start} value={option.value.start}>
-                                        {option.label}
-                                    </MenuItem>
-                                ))}
+                                {getFilteredOptions().map(option => (
+                                <MenuItem key={option.value.start} value={option.value.start}>
+                                    {interval === 'day'
+                                        ? `${option.label} `
+                                        : option.label}
+                                </MenuItem>
+                            ))}
                             </Select>
                         </FormControl>
                         <IconButton onClick={handleNextClick}>

@@ -1,4 +1,5 @@
 .progress-container {
+  padding-top: 10px;
     display: flex;
     flex-direction: row;
     align-items: center;
@@ -15,5 +16,14 @@
     width: 50%;
   }
 
+  .no-tasks-message-progress-bar {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.2em; /* Adjust font size to be more subtle */
+    color: red;
+    text-align: center;
+    padding-top: 6px;
+}
   
  
