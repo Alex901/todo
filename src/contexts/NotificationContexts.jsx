@@ -197,8 +197,8 @@ const NotificationProvider = ({ children }) => {
         try {
             const request = axios.post(`${BASE_URL}/notifications/request-to-join-group`, { from: userToJoin, to: moderatorIds, group: groupId, }, { withCredentials: true });
 
-                toast.success("Request to join group sent");
-           
+            toast.success("Request to join group sent");
+
         } catch (error) {
             console.error("Error requesting to join group: ", error);
             if (error.response) {
@@ -254,9 +254,6 @@ const NotificationProvider = ({ children }) => {
 
     //TODO: notify user about the outcome
     const acceptRequestToJoinGroup = (notificationToDelete, groupToAddUserTo, userToAddToGroup) => {
-        console.log("DEBUG: accept RequestToJoinGroup");
-        console.log("DEBUG: Add and notify user: ", userToAddToGroup, " to group", groupToAddUserTo);
-        console.log("DEBUG: Delete notification: ", notificationToDelete);
 
         addUserToGroup(groupToAddUserTo, userToAddToGroup);
 
@@ -285,13 +282,37 @@ const NotificationProvider = ({ children }) => {
         }
     }
 
+    const resolveNotification = async (notificationId) => {
+        console.log("DEBUG: resolveNotification: ", notificationId);
+        try {
+            const response = await axios.delete(`${BASE_URL}/notifications/delete/${notificationId}`, { withCredentials: true });
+            // console.log("DEBUG: response: ", response);
+            checkLogin();
+        } catch (error) {
+            console.error("Error resolving notification: ", error);
+            if (error.response) {
+                // The request was made and the server responded with a status code
+                // that falls out of the range of 2xx
+                console.error(error.response.data);
+                console.error(error.response.status);
+                console.error(error.response.headers);
+            } else if (error.request) {
+                // The request was made but no response was received
+                console.error(error.request);
+                toast.error("Error resolving notification: No response from the server");
+            } else {
+                // Something happened in setting up the request that triggered an Error
+                console.error('Error', error.message);
+            }
+        }
 
+    };
 
 
     return (
         <NotificationContexts.Provider value={{
             inviteToGroup, userNotifications, acceptGroupInvite, declineGroupInvite, getNotifications,
-            requestToJoinGroup, declineRequestToJoinGroup, acceptRequestToJoinGroup
+            requestToJoinGroup, declineRequestToJoinGroup, acceptRequestToJoinGroup, resolveNotification
         }}>
             {children}
         </NotificationContexts.Provider>

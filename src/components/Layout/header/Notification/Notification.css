@@ -3,7 +3,7 @@
     border: 1px solid #ccc;
     border-radius: 4px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    padding: 10px;
+    padding: 15px;
     margin-bottom: 5px;
     transition: opacity 0.5s ease-out;
   }
@@ -13,7 +13,7 @@
   }
 
 .notification-item:hover {
-    scale: 1.03;
+    scale: 1.01;
 }
 
 .notification-item .date,
@@ -47,6 +47,11 @@
     max-width: 250px;
 }
 
+.reward-message {
+    padding-bottom: 0px;
+    margin-bottom: 5px;
+}
+
 .highlight {
     font-weight: bold;
 }
@@ -66,6 +71,35 @@
 .notification-button.decline-notify:hover {
     color: #ff0000; /* Change this to the color you want */
     transform: scale(1.1);
+}
+
+.congratulations {
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+
+.currency-image {
+    width: 20px;
+    height: 20px;
+    margin-left: 5px;
+}
+
+.resolve-button {
+    background-color: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    padding: 8px 16px;
+    cursor: pointer;
+    margin-bottom: 5px;
+    font-size: 1em;
+    transition: background-color 0.3s ease;
+}
+
+.resolve-button:hover {
+    background-color: var(--success-color);
+    font-weight: bold;
 }
 
 @keyframes fadeOut {

@@ -5,6 +5,7 @@ import './CurrencyArea.css';
 
 const CurrencyArea = () => {
     const { loggedInUser } = useUserContext();
+    const currency = loggedInUser?.settings.currency;
 
     useEffect(() => {
         // console.log('DEBUG -- user -- currencyArea', loggedInUser);
@@ -13,7 +14,9 @@ const CurrencyArea = () => {
     return (
         <div className="currency-area">
           
-                <span className="currency">{loggedInUser?.settings.currency}</span>
+            <span className="currency">
+            {currency ? parseFloat(currency).toFixed(0) : ''}
+        </span>
           
             <Tooltip title="Productivity token" arrow>
                 <img src="\currency-beta.png" alt="Currency Beta" className="currency-image" />

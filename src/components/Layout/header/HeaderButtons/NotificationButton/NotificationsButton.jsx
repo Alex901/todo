@@ -57,6 +57,7 @@ const NotificationsButton = ({ isLoggedIn, userNotifications, isMobile, classNam
                 padding: '5px', 
                 marginTop: isMobile ? '0px' : '5px',
                 marginLeft: isMobile ? '-15px' : '0px',
+                backgroundColor: '#f0eded'
               },
             }}
           >
@@ -72,7 +73,7 @@ const NotificationsButton = ({ isLoggedIn, userNotifications, isMobile, classNam
               ))
             ) : (
               <MenuItem onClick={handleNotificationMenuClose}>
-                {t('noNotifications')}
+                {t('no-notifications')}
               </MenuItem>
             )}
           </Menu>

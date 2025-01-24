@@ -254,8 +254,7 @@ const TodoProvider = ({ children }) => {
           }
           return todo;
         });
-        setTodoList(updatedTodoList);
-        fetchTodoList();
+        checkLogin();
         console.log('Task marked as done successfully');
       } else {
         console.error('Error marking task as done:', response.statusText);
