@@ -73,7 +73,7 @@ const Header = () => {
           {/* Left section */}
           <div style={{ display: 'flex', alignItems: 'flex-start', width: 'auto' }}>
             <img src={logo} alt="Logo" style={{ marginRight: '20px', width: '32px', position: 'relative' }} />
-            <span className="mdl-layout-title" style={{ fontSize: '32px', color: "white" }}>HabitForge</span>
+            <span className="mdl-layout-title" style={{ fontSize: '32px', color: "white" }}>HabitForge - α</span>
 
           </div>
 

@@ -102,7 +102,7 @@ function App() {
     setEntriesInActiveList([]);
     if (todoList && loggedInUser) {
       todoList.forEach(todo => {
-        if (todo.inListNew.some(list => list?.listName?.toLowerCase() === loggedInUser.activeList.toLowerCase())) {
+        if (todo.inListNew.some(list => list?.listName?.toLowerCase() === loggedInUser.activeList.toLowerCase()) && !todo.repeatable) {
           setEntriesInActiveList(entriesInActiveList => [...entriesInActiveList, todo]);
         }
       });
