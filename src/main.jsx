@@ -94,7 +94,7 @@ function Main() {
                     draggable
                     pauseOnHover={false}
                     pauseOnFocusLoss={false}
-                    autoClose={3000}
+                    autoClose={50}
                   />
                   <TodoDrawer />
                   <App />
