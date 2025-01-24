@@ -244,8 +244,9 @@ const TodoProvider = ({ children }) => {
       }
       //extract _id
       const taskId = todo._id;
+      const userId = loggedInUser._id;
 
-      const response = await axios.patch(`${BASE_URL}/api/done`, { taskId });
+      const response = await axios.patch(`${BASE_URL}/api/done`, { taskId, userId });
       if (response.status === 200) {
         const updatedTodoList = todoList.map(todo => {
           if (todo.id === id) {
@@ -399,8 +400,9 @@ const TodoProvider = ({ children }) => {
   
   //Find task with id -> step id and set it to completed
   const setStepCompleted = async (taskId, stepId) => {
+    const userId = loggedInUser._id;
     try {
-      const response = await axios.patch(`${BASE_URL}/api/stepComplete`, { taskId, stepId });
+      const response = await axios.patch(`${BASE_URL}/api/stepComplete`, { taskId, stepId, userId });
       if (response.status === 200) {
         console.log("Step marked as done successfully");
 

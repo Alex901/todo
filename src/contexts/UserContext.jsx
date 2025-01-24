@@ -532,6 +532,12 @@ const UserProvider = ({ children }) => {
         }
     }
 
+    const rewardPoints = async (points) => {
+    console.log("lmao")
+    };
+        
+    
+
     return (
         <UserContext.Provider value={{
             isLoggedIn, loggedInUser, userList, login, logout, registerNewUser,
