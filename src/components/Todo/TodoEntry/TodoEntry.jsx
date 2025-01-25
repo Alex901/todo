@@ -156,7 +156,7 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
         const step = steps.find(step => step.id === stepId);
         if (type === 'doing' && !step.isDone) {
             setStepCompleted(todoData._id, stepId)
-        } else if (step.isDone) {
+        } else if (type === 'doing' && step.isDone) {
             setStepUncomplete(todoData._id, stepId)
         } else {
             return;
