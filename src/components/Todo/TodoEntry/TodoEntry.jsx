@@ -106,9 +106,11 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
         if (allStepsCompleted) {
             toggleTodoComplete(id);
             toast.success(`Your task has been completed.`);
+            setIsMoreChecked(false);
         } else {
             entry.current.classList.add('vibrate');
             setTimeout(() => entry.current.classList.remove('vibrate'), 1000);
+            setIsMoreChecked(true);
         }
     }
 
