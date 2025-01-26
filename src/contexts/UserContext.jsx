@@ -3,6 +3,7 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import axios from "axios";
 import { useTodoContext } from "./todoContexts";
 import { toast } from "react-toastify";
+import { use } from "react";
 
 let BASE_URL;
 
@@ -23,8 +24,12 @@ const UserProvider = ({ children }) => {
     const [isLoggedIn, setIsLoggedIn] = useState(false);
     const [loggedInUser, setLoggedInUser] = useState(null);
     const [userList, setUserList] = useState(null); //For autocomplete in GroupModal
+    const [emojiSettings, setEmojiSettings] = useState(null);
 
 
+    useEffect(() => {
+        console.log("Emoji settings: ", emojiSettings);
+    }, [emojiSettings]);
 
     useEffect(() => {
         //console.log("User logged in, fetching users");
@@ -38,6 +43,17 @@ const UserProvider = ({ children }) => {
             }
         })();
     }, [loggedInUser]);
+
+    const fetchEmojiSettings = async () => {
+        try {
+            const response = await axios.get(`${BASE_URL}/settings/emoji/top/10`, {
+                withCredentials: true
+            });
+            setEmojiSettings(response.data);
+        } catch (error) {
+            console.error('Error fetching emoji settings:', error);
+        }
+    };
 
 
     //TODO: this entire shotshow can be removed eventually
@@ -73,6 +89,7 @@ const UserProvider = ({ children }) => {
                 // console.log("Valid user is logged in", response.data.user)
                 // console.log("DEBUG -- CheckLogin user data in response: ", response.data.user)
                 setLoggedInUser(response.data.user);
+                await fetchEmojiSettings();
                 // to make sure I don't get an invalid activeList
                 if (loggedInUser?.activeList === null || loggedInUser?.activeList === undefined) {
                     setActiveList("all");
@@ -88,17 +105,17 @@ const UserProvider = ({ children }) => {
 
         try {
             const response = await axios.post(`${BASE_URL}/users/create`, userData);
-            if(response.status === 200) {
-               
-                if(loggedInUser) {
+            if (response.status === 200) {
+
+                if (loggedInUser) {
                     toast.success("User added successfully!");
                     checkLogin();
                 } else {
                     toast.success("Registration successful!");
                 }
-            } else if(response.status === 400) {
+            } else if (response.status === 400) {
                 toast.error("Username taken!");
-            } else if(response.status === 409) {
+            } else if (response.status === 409) {
                 toast.error("Email already in use");
             }
 
@@ -142,7 +159,7 @@ const UserProvider = ({ children }) => {
                 }
             })
             .catch(error => {
-                if(error.response.status === 400 || error.response.status === 404) {
+                if (error.response.status === 400 || error.response.status === 404) {
                     toast.error("Incorrect username or password");
                 } else if (error.response.status === 403) {
                     console.error('Error logging in', error);
@@ -151,7 +168,7 @@ const UserProvider = ({ children }) => {
                     console.error('Error logging in', error);
                     toast.error("Something went wrong, please try again later");
                 }
-                
+
             });
     };
 
@@ -402,7 +419,7 @@ const UserProvider = ({ children }) => {
             const response = await axios.patch(`${BASE_URL}/users/edituser/${_id}`, { userData, oldPassword, newPassword }, { withCredentials: true });
             if (response.status === 200) {
                 console.log("User edited: ", response.data);
-               // setLoggedInUser(response.data);
+                // setLoggedInUser(response.data);
                 toast.success("User edited");
                 checkLogin();
                 return response;
@@ -417,10 +434,10 @@ const UserProvider = ({ children }) => {
             }
         } catch (error) {
             console.error('Error editing user', error);
-            if(loggedInUser.__v === 0) {
+            if (loggedInUser.__v === 0) {
                 toast.error("Wrong password, please try again");
             } else {
-            toast.error("Failed to edit user");
+                toast.error("Failed to edit user");
             }
         }
     }
@@ -514,7 +531,7 @@ const UserProvider = ({ children }) => {
         console.log("delete user ", userToDelete);
         try {
             const response = await axios.delete(`${BASE_URL}/users/delete-user/${userToDelete._id}`);
-    
+
             if (response.status === 200) {
                 toast.success("User deleted successfully");
                 // Optionally, update the user list in the context
@@ -533,10 +550,10 @@ const UserProvider = ({ children }) => {
     }
 
     const rewardPoints = async (points) => {
-    console.log("lmao")
+        console.log("lmao")
     };
-        
-    
+
+
 
     return (
         <UserContext.Provider value={{

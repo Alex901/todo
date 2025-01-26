@@ -25,7 +25,6 @@ const ScoreArea = () => {
                 const interval = setInterval(() => {
                     setDisplayedScore(prevScore => {
                         const newScore = parseFloat(prevScore) + increment;
-                        console.log('DEBUG -- newScore:', newScore);
                         if (newScore >= targetScore) {
                             clearInterval(interval);
                             return parseFloat(targetScore);

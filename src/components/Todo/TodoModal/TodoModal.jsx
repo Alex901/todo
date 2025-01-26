@@ -12,6 +12,7 @@ import { mdiDelete, mdiDeleteEmpty } from '@mdi/js';
 import { useTranslation } from "react-i18next";
 import BaseModal from './BaseModal/BaseModal';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import EmojiSelector from '../../UtilityComponents/EmojiSelector/EmojiSelector';
 
 ReactModal.setAppElement('#root');
 
@@ -102,6 +103,14 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
 
     const handleToggleAdvancedOptions = () => {
         setShowAdvancedOptions(!showAdvancedOptions);
+    };
+
+    const handleEmojiSelect = (emoji) => {
+        console.log("DEBUG - SelectedEmoji: ", emoji);
+        setNewTaskData(prevData => ({
+            ...prevData,
+            repeatableEmoji: emoji
+        }));
     };
 
     const handleInputChange = (event) => {
@@ -344,9 +353,15 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
                             unmountOnExit
                         >
 
+
                             <div className="repeatable-main-options">
                                 {repeatable && (
                                     <>
+                                        <EmojiSelector
+                                            selectedEmoji={newTaskData.repeatableEmoji}
+                                            onEmojiSelect={handleEmojiSelect}
+                                        />
+
                                         <FormControl variant="outlined" style={{ minWidth: '50px' }} size='small'>
                                             <InputLabel id="emoji-select-label">Emoji</InputLabel>
                                             <Select
