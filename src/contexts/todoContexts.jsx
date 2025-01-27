@@ -224,8 +224,7 @@ const TodoProvider = ({ children }) => {
             dueDate: response.data.dueDate ? new Date(response.data.dueDate) : null //TODO: remember to change this
           }
         ];
-
-        fetchTodoList();
+        checkLogin();
       } else {
         console.error('Error adding todo:', response.statusText)
       }

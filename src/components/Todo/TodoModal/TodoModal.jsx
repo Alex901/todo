@@ -24,8 +24,8 @@ document.body.classList.remove('no-scroll');
 
 const TodoModal = ({ isOpen, onRequestClose }) => {
     const { addTodo } = useTodoContext();
+    const { isLoggedIn, loggedInUser, emojiSettings } = useUserContext();
     const [errorMessage, setErrorMessage] = useState('');
-    const { isLoggedIn, loggedInUser } = useUserContext();
     const [hoveredStepId, setHoveredStepId] = useState(null);
     const [showAdvancedOptions, setShowAdvancedOptions] = useState(false);
     const [repeatable, setRepeatability] = useState(false);
@@ -360,42 +360,8 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
                                         <EmojiSelector
                                             selectedEmoji={newTaskData.repeatableEmoji}
                                             onEmojiSelect={handleEmojiSelect}
+                                            userEmojiList={emojiSettings}
                                         />
-
-                                        <FormControl variant="outlined" style={{ minWidth: '50px' }} size='small'>
-                                            <InputLabel id="emoji-select-label">Emoji</InputLabel>
-                                            <Select
-                                                name="repeatableEmoji"
-                                                labelId="emoji-select-label"
-                                                id="emoji-select"
-                                                value={newTaskData.repeatableEmoji || ''}
-                                                onChange={handleSelectChange}
-                                                label="Select Emoji"
-                                            >
-                                                <MenuItem value="😊">😊</MenuItem>
-                                                <MenuItem value="🏋️‍♀️">🏋️‍♀️</MenuItem>
-                                                <MenuItem value="🏃‍♂️">🏃‍♂️</MenuItem>
-                                                <MenuItem value="🚴">🚴</MenuItem>
-                                                <MenuItem value="💼">💼</MenuItem>
-                                                <MenuItem value="🔧">🔧</MenuItem>
-                                                <MenuItem value="🎨">🎨</MenuItem>
-                                                <MenuItem value="💵">💵</MenuItem>
-                                                <MenuItem value="📅">📅</MenuItem>
-                                                <MenuItem value="👫">👫</MenuItem>
-                                                <MenuItem value="🐕">🐕</MenuItem>
-                                                <MenuItem value="🍹">🍹</MenuItem>
-                                                <MenuItem value="🍽️">🍽️</MenuItem>
-                                                <MenuItem value="📚">📚</MenuItem>
-                                                <MenuItem value="🛏️">🛏️</MenuItem>
-                                                <MenuItem value="🧹">🧹</MenuItem>
-                                                <MenuItem value="🛒">🛒</MenuItem>
-                                                <MenuItem value="🧘">🧘</MenuItem>
-                                                <MenuItem value="📞">📞</MenuItem>
-                                                <MenuItem value="✉️">✉️</MenuItem>
-                                                <MenuItem value="🚗">🚗</MenuItem>
-                                                <MenuItem value="🏠">🏠</MenuItem>
-                                            </Select>
-                                        </FormControl>
 
                                         <FormControlLabel
                                             control={

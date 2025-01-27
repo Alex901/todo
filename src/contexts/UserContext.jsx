@@ -46,7 +46,7 @@ const UserProvider = ({ children }) => {
 
     const fetchEmojiSettings = async () => {
         try {
-            const response = await axios.get(`${BASE_URL}/settings/emoji/top/10`, {
+            const response = await axios.get(`${BASE_URL}/settings/emoji/top/14`, {
                 withCredentials: true
             });
             setEmojiSettings(response.data);
@@ -557,7 +557,7 @@ const UserProvider = ({ children }) => {
 
     return (
         <UserContext.Provider value={{
-            isLoggedIn, loggedInUser, userList, login, logout, registerNewUser,
+            isLoggedIn, loggedInUser, userList, emojiSettings, login, logout, registerNewUser,
             setLoggedInUser, setActiveList, createList, deleteList, toggleUrgent, addTag,
             deleteTag, updateProfilePicture, editUser, checkLogin, toggleShowDetails,
             updateSettings, editUserList, deleteUser

@@ -11,13 +11,10 @@ const ScoreArea = () => {
     const score = loggedInUser?.settings.score;
 
     useEffect(() => {
-        console.log('DEBUG -- useEffect triggered -- score:', score);
         if (score) {
             const targetScore = parseFloat(score).toFixed(1);
             const currentScore = parseFloat(displayedScore).toFixed(1);
 
-            console.log('DEBUG -- targetScore:', targetScore);
-            console.log('DEBUG -- currentScore:', currentScore);
 
             if (targetScore > currentScore) {
                 const increment = (targetScore - currentScore) / 50; // Adjust the increment value for smoother animation

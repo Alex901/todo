@@ -1,23 +1,33 @@
 import React, { useState } from 'react';
-import { FormControl, InputLabel, Select, MenuItem, Popover } from '@mui/material';
+import { FormControl, InputLabel, Select, MenuItem, Popover, Typography, Link } from '@mui/material';
 import EmojiPicker from 'emoji-picker-react';
 import './EmojiSelector.css';
 
-const EmojiSelector = ({ selectedEmoji, onEmojiSelect }) => {
+const EmojiSelector = ({ selectedEmoji, onEmojiSelect, userEmojiList }) => {
     const [anchorEl, setAnchorEl] = useState(null);
+    const [showEmojiPicker, setShowEmojiPicker] = useState(false);
 
     const handleSelectClick = (event) => {
         setAnchorEl(event.currentTarget);
     };
 
-    const handleEmojiClick = (event, emojiObject) => {
-        console.log("DEBUG -- Emoji clicked: ", emojiObject.emoji, " -- Emoji object: ", emojiObject);
-        onEmojiSelect(emojiObject.emoji);
+    const handleEmojiClick = (event) => {
+        console.log("event", event);
+        onEmojiSelect(event.emoji);
         setAnchorEl(null);
     };
 
     const handleClose = () => {
         setAnchorEl(null);
+        setShowEmojiPicker(false);
+    };
+
+    const handleMoreClick = () => {
+        setShowEmojiPicker(true);
+    };
+
+    const handleBackClick = () => {
+        setShowEmojiPicker(false);
     };
 
     const open = Boolean(anchorEl);
@@ -54,14 +64,42 @@ const EmojiSelector = ({ selectedEmoji, onEmojiSelect }) => {
                     vertical: 'top',
                     horizontal: 'center',
                 }}
+                sx={{
+                    '& .MuiPaper-root': {
+                        borderRadius: '8px',
+                        border: '2px solid black',
+                    },
+                }}
             >
-                <EmojiPicker
-                    onEmojiClick={handleEmojiClick}
-                    disableAutoFocus={true}
-                    groupNames={{ smileys_people: "PEOPLE" }}
-                    reactionsDefaultOpen={true}
-                    native
-                />
+                {showEmojiPicker ? (
+                    <div className="emoji-picker-container">
+                        <Link component="button" variant="body2" onClick={handleBackClick} className="back-link">
+                            Back to Most Commonly Used
+                        </Link>
+                        <EmojiPicker
+                            onEmojiClick={handleEmojiClick}
+                            groupNames={{ smileys_people: "PEOPLE" }}
+                            lazyLoadEmojis={true}
+                            skinTonesDisabled={true}
+                            searchDisabled={true}
+                            emojiStyle='native'
+                        />
+                    </div>
+                ) : (
+                    <div className="emoji-list">
+                        <Typography variant="subtitle1" className="emoji-list-title">Most Commonly Used</Typography>
+                        <div className="emoji-grid">
+                            {Array.from({ length: 14 }).map((_, index) => (
+                                <span key={index} className="emoji-item" onClick={() => userEmojiList[index] && onEmojiSelect(userEmojiList[index])}>
+                                    {userEmojiList[index] || ''}
+                                </span>
+                            ))}
+                        </div>
+                        <Link component="button" variant="body2" onClick={handleMoreClick} className="more-link">
+                            More
+                        </Link>
+                    </div>
+                )}
             </Popover>
         </>
     );

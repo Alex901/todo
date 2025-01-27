@@ -9,20 +9,17 @@ import Icon from '@mdi/react';
 import { toast } from 'react-toastify';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
+import EmojiSelector from '../../../UtilityComponents/EmojiSelector/EmojiSelector';
 
 
 const EditModal = ({ isOpen, onRequestClose, editData }) => {
     const { editTodo } = useTodoContext();
     const [errorMessage, setErrorMessage] = useState('');
-    const { loggedInUser, isLoggedIn } = useUserContext();
+    const { loggedInUser, isLoggedIn, emojiSettings } = useUserContext();
     const [selectedOption, setSelectedOption] = useState(null);
     const [hoveredStepId, setHoveredStepId] = useState(null);
     const [loading, setLoading] = useState(true);
     //console.log("DEBUG -- EditModal -> editData", editData);
-
-    if (editData.repeatable) {
-        console.log("YEY! A repeatable task!");
-    }
 
     const options = [
         { value: 'VERY HIGH', label: 'VERY HIGH' },
@@ -217,6 +214,14 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
             handleSubmit();
         }
     }
+
+    const handleEmojiSelect = (emoji) => {
+        console.log("DEBUG - SelectedEmoji: ", emoji);
+        setTaskData(prevData => ({
+            ...prevData,
+            repeatableEmoji: emoji
+        }));
+    };
 
     const handleSelectChange = (selectedOption) => {
         setTaskData({
@@ -430,40 +435,11 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
                             unmountOnExit
                         >
                             <div className="edit-repeatable-main-options">
-                                <FormControl variant="outlined" style={{ minWidth: '50px' }} size='small'>
-                                    <InputLabel id="emoji-select-label">Emoji</InputLabel>
-                                    <Select
-                                        name="repeatableEmoji"
-                                        labelId="emoji-select-label"
-                                        id="emoji-select"
-                                        value={taskData.repeatableEmoji || ''}
-                                        onChange={handleInputChange}
-                                        label="Select Emoji"
-                                    >
-                                        <MenuItem value="😊">😊</MenuItem>
-                                        <MenuItem value="🏋️‍♀️">🏋️‍♀️</MenuItem>
-                                        <MenuItem value="🏃‍♂️">🏃‍♂️</MenuItem>
-                                        <MenuItem value="🚴">🚴</MenuItem>
-                                        <MenuItem value="💼">💼</MenuItem>
-                                        <MenuItem value="🔧">🔧</MenuItem>
-                                        <MenuItem value="🎨">🎨</MenuItem>
-                                        <MenuItem value="💵">💵</MenuItem>
-                                        <MenuItem value="📅">📅</MenuItem>
-                                        <MenuItem value="👫">👫</MenuItem>
-                                        <MenuItem value="🐕">🐕</MenuItem>
-                                        <MenuItem value="🍹">🍹</MenuItem>
-                                        <MenuItem value="🍽️">🍽️</MenuItem>
-                                        <MenuItem value="📚">📚</MenuItem>
-                                        <MenuItem value="🛏️">🛏️</MenuItem>
-                                        <MenuItem value="🧹">🧹</MenuItem>
-                                        <MenuItem value="🛒">🛒</MenuItem>
-                                        <MenuItem value="🧘">🧘</MenuItem>
-                                        <MenuItem value="📞">📞</MenuItem>
-                                        <MenuItem value="✉️">✉️</MenuItem>
-                                        <MenuItem value="🚗">🚗</MenuItem>
-                                        <MenuItem value="🏠">🏠</MenuItem>
-                                    </Select>
-                                </FormControl>
+                                <EmojiSelector
+                                    selectedEmoji={taskData.repeatableEmoji}
+                                    onEmojiSelect={handleEmojiSelect}
+                                    userEmojiList={emojiSettings}
+                                />
 
                                 <FormControlLabel
                                     control={
