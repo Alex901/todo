@@ -115,16 +115,35 @@ const Footer = () => {
                             InputLabelProps={{ style: { color: theme.palette.secondary.main } }}
                             onChange={(e) => setEmail(e.target.value)}
                         />
-                        <FormControlLabel
-                            control={
-                                <Checkbox
-                                    color="secondary"
-                                    onChange={(e) => setCheckbox(e.target.checked)}
-                                />
-                            }
-                            label="Be the first one to know about our new features and updates."
-                            style={{ marginBottom: '10px' }}
-                        />
+                        <div className="footer">
+                            {/* Other footer content */}
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        color="secondary"
+                                        onChange={(e) => setCheckbox(e.target.checked)}
+                                        className="footer-checkbox"
+                                        sx={{
+                                            padding: '0',
+                                            marginRight: '8px',
+                                            '& .MuiSvgIcon-root': {
+                                                width: '24px',
+                                                height: '24px',
+                                                color: 'white',
+                                            },
+                                            '& .MuiButtonBase-root': {
+                                                padding: '0',
+                                                margin: '0',
+                                                width: 'auto'
+                                            },
+                                        }}
+                                    />
+                                }
+                                label="Be the first one to know about our new features and updates."
+                                className="footer-form-control-label"
+                            />
+                            {/* Other footer content */}
+                        </div>
                         <button className='footer-button' color="primary" disabled={message === ''}>
                             Submit
                         </button>
