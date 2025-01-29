@@ -537,7 +537,7 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
                                 <Select
                                     labelId="priority-label"
                                     name="priority"
-                                    defaultValue=""
+                                    defaultValue="NORMAL"
                                     onChange={handleSelectChange}
                                     label="Priority"
                                 >
