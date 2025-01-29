@@ -13,6 +13,8 @@ import { useTranslation } from "react-i18next";
 import BaseModal from './BaseModal/BaseModal';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import EmojiSelector from '../../UtilityComponents/EmojiSelector/EmojiSelector';
+import useDynamicStep from '../../../CustomHooks/UseDynamicStep';
+import { formatTime } from '../../../utils/timeUtils';
 
 ReactModal.setAppElement('#root');
 
@@ -40,6 +42,7 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
         estimatedTime: 0,
         tags: [],
     });
+    const step = useDynamicStep(newTaskData.estimatedTime || 0);
 
     useEffect(() => {
         setNewTaskData(prevData => ({
@@ -256,12 +259,6 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
             tags: [...prevData.tags, chipToAdd],
         }));
     }
-
-    const formatTime = (minutes) => {
-        const hours = Math.floor(minutes / 60);
-        const remainingMinutes = minutes % 60;
-        return `${hours}h ${remainingMinutes}min`;
-    };
 
     const handleOnDragEnd = (result) => {
         if (!result.destination) return;
@@ -565,7 +562,7 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
                                 placeholder='Minutes'
                                 inputProps={{
                                     min: '0', // Set the minimum value
-                                    step: '5' // 5 min increments
+                                    step: step, 
                                 }}
                                 InputProps={{
                                     endAdornment: <InputAdornment position="end"></InputAdornment>,

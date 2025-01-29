@@ -47,4 +47,29 @@ const extractTimeFromDateString = (dateString) => {
     return `${hours}:${minutes}:${seconds}`;
 };
 
-export { normalizeDuration, normalizeTime, extractTimeFromDateString };
+const formatTime = (minutes) => {
+    const units = [
+        { label: 'Y', value: 525600 }, // 1 year = 525600 minutes
+        { label: 'M', value: 43800 },  // 1 month = 43800 minutes (approx)
+        { label: 'w', value: 10080 },  // 1 week = 10080 minutes
+        { label: 'd', value: 1440 },   // 1 day = 1440 minutes
+        { label: 'h', value: 60 },     // 1 hour = 60 minutes
+        { label: 'min', value: 1 }     // 1 minute = 1 minute
+    ];
+
+    let remainingMinutes = minutes;
+    const result = [];
+
+    for (const unit of units) {
+        const unitValue = Math.floor(remainingMinutes / unit.value);
+        if (unitValue > 0) {
+            result.push(`${unitValue}${unit.label}`);
+            remainingMinutes %= unit.value;
+        }
+        if (result.length === 2) break; // Only return the two largest values
+    }
+
+    return result.join(' ');
+};
+
+export { normalizeDuration, normalizeTime, extractTimeFromDateString, formatTime };

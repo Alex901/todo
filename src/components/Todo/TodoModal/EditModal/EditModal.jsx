@@ -10,6 +10,8 @@ import { toast } from 'react-toastify';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import EmojiSelector from '../../../UtilityComponents/EmojiSelector/EmojiSelector';
+import useDynamicStep from '../../../../CustomHooks/UseDynamicStep';
+import { formatTime } from '../../../../utils/timeUtils';
 
 
 const EditModal = ({ isOpen, onRequestClose, editData }) => {
@@ -20,6 +22,7 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
     const [hoveredStepId, setHoveredStepId] = useState(null);
     const [loading, setLoading] = useState(true);
     //console.log("DEBUG -- EditModal -> editData", editData);
+
 
     const options = [
         { value: 'VERY HIGH', label: 'VERY HIGH' },
@@ -61,6 +64,8 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
             repeatableEmoji: editData.repeatableEmoji || '',
         } : {})
     });
+
+    const step = useDynamicStep(taskData.estimatedTime);
 
     const optionsListNames = isLoggedIn && loggedInUser.myLists
         ? loggedInUser.myLists
@@ -338,12 +343,6 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
         console.log("Task data", taskData);
     }
 
-    const formatTime = (minutes) => {
-        const hours = Math.floor(minutes / 60);
-        const remainingMinutes = minutes % 60;
-        return `${hours}h ${remainingMinutes}min`;
-    };
-
     const handleOnDragEnd = (result) => {
         if (!result.destination) return;
 
@@ -614,7 +613,7 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
                             size="small"
                             style={{ width: '100px', textAlign: 'center' }}
                             placeholder="Time"
-                            inputProps={{ min: '0', step: '5' }}
+                            inputProps={{ min: '0', step: step }}
                             InputProps={{
                                 startAdornment: <InputAdornment position="start"></InputAdornment>,
                             }}

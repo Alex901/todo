@@ -135,7 +135,7 @@ const CreateListModal = ({ isOpen, onRequestClose }) => {
       overlayClassName="modal-overlay"
       shouldCloseOnOverlayClick={true}
       onChange={handleInputChange}
-      title={'Create list'}
+      title={'Create new project'}
     >
 
 
