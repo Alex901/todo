@@ -92,6 +92,10 @@ body {
   color: rgb(100, 158, 49)
 }
 
+.icon-button.export:hover {
+  color: rgb(67, 39, 205)
+}
+
 .delete-icon {
   opacity: 0.1;
   transition: opacity 0.3s ease;

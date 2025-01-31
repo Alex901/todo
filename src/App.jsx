@@ -58,6 +58,7 @@ function App() {
   const headerRef = useRef(null);
   const [isLoading, setIsLoading] = useState(true);
   const [isEditHovered, setIsEditHovered] = useState(false);
+  const [isExportHovered, setIsExportHovered] = useState(false);
   const [isDeleteHovered, setIsDeleteHovered] = useState(false);
   const [isShowDetailsSelected, setIsShowDetailsSelected] = useState(false);
   const [totalTimeToComplete, setTotalTimeToComplete] = useState("");
@@ -517,11 +518,11 @@ function App() {
 
       {isLoggedIn && (
 
-        <div className="content" style={{ display: 'flex', flexDirection: 'column', gap:'3px' }}>
-          {loggedInUser?.activeList === 'today' && (  
-            
+        <div className="content" style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
+          {loggedInUser?.activeList === 'today' && (
+
             <RepeatableDisplay></RepeatableDisplay>
-           
+
           )}
           <Card>
             <div className='nav' style={{ display: 'flex', flexDirection: 'column' }}>
@@ -534,13 +535,17 @@ function App() {
                     <div className={`listSelection${isMobile ? '-mobile' : ''}`}>
                       <div className={`list-selection-settings${isMobile ? '-mobile' : ''}`}>
                         <div className={`list-checkbox-container${isMobile ? '-mobile' : ''}`}>
-                          <FormControlLabel
-                            control={<Checkbox
-                              checked={isGroupOnlySelected}
-                              onChange={toggleGroupOnly}
-                            />}
-                            label="Show groups only"
-                          />
+                          {loggedInUser.groups.length > 0 && (
+                            <FormControlLabel
+                              control={
+                                <Checkbox
+                                  checked={isGroupOnlySelected}
+                                  onChange={toggleGroupOnly}
+                                />
+                              }
+                              label="Show groups only"
+                            />
+                          )}
                         </div>
                       </div>
                       <FormControl variant='standard' style={{ width: '22em', margin: '10px' }}>
@@ -802,13 +807,17 @@ function App() {
                     <div className="listSelection">
                       <div className="list-selection-settings">
                         <div className="list-checkbox-container">
-                          <FormControlLabel
-                            control={<Checkbox
-                              checked={isGroupOnlySelected}
-                              onChange={toggleGroupOnly}
-                            />}
-                            label="Show groups only"
-                          />
+                          {loggedInUser.groups.length > 0 && (
+                            <FormControlLabel
+                              control={
+                                <Checkbox
+                                  checked={isGroupOnlySelected}
+                                  onChange={toggleGroupOnly}
+                                />
+                              }
+                              label="Show groups only"
+                            />
+                          )}
                         </div>
                       </div>
                       <FormControl variant='standard' style={{ width: '22em', margin: '10px' }}>
@@ -861,6 +870,11 @@ function App() {
                         <div className="icon-button description" onClick={toggleDetails}>
                           <Icon path={isShowDetailsSelected ? mdiArchiveArrowUpOutline : mdiArchiveArrowDownOutline} size={1.4} />
                         </div>
+
+                        <div className="icon-button export" onClick={openExportModal}>
+                          <Icon path={mdiFileExport} size={1.2} />
+                        </div>
+
 
                         <div
                           className="icon-button delete"
@@ -970,9 +984,6 @@ function App() {
                         </IconButton>
                         <IconButton className="icon-button" onClick={openVoteModal}>
                           <Icon path={mdiVoteOutline} size={1.2} />
-                        </IconButton>
-                        <IconButton className="icon-button" onClick={openExportModal}>
-                          <Icon path={mdiFileExport} size={1.2} />
                         </IconButton>
                         <IconButton className="icon-button" onClick={openCalendarModal}>
                           <Icon path={mdiCalendarCheck} size={1.2} />
