@@ -75,6 +75,22 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
         'VERY HARD': [mdiCircle, mdiCircle, mdiCircle, mdiCircle, mdiCircle],
     };
 
+    const difficultyColors = {
+        'VERY EASY': 'lightgreen',
+        'EASY' : 'green',
+        'NORMAL' : 'black',
+        'HARD' : 'orange',
+        'VERY HARD' : 'red',
+    };
+
+    const priorityColors = {
+        'VERY HIGH': 'red',
+        'HIGH': 'orange',
+        'NORMAL': 'black',
+        'LOW': 'green',
+        'VERY LOW': 'lightgreen',
+    };
+
     //Contexts
     const { removeTodo, toggleTodoComplete, toggleTodoStart, getDoingCount,
         cancelTodo, getActiveListDoingCount, setStepCompleted, setStepUncomplete } = useTodoContext();
@@ -235,7 +251,7 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
                         <div className="information-container">
                             <div className="information-top">
                                 {isUrgent && <Icon path={mdiRunFast} size={1} color={'red'} />}
-                                <Icon path={priorityIcons[priority]} size={priority === 'NORMAL' ? 0.7 : 1} />
+                                <Icon path={priorityIcons[priority]} size={priority === 'NORMAL' ? 0.7 : 1} color={priorityColors[priority]} />
                             </div>
                             <div className="information-time">
                                 <Icon path={mdiClockOutline} size={1} />
@@ -251,7 +267,7 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
                             )}
                             <div className="information-dif">
                                 {difficultyIcons[difficulty].map((icon, index) => (
-                                    <Icon key={index} path={icon} size={0.3} />
+                                    <Icon key={index} path={icon} size={0.3} color={difficultyColors[difficulty]} />
                                 ))}
                             </div>
                         </div>
@@ -381,7 +397,7 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
                             )}
                             <div className="information-dif">
                                 {difficultyIcons[difficulty].map((icon, index) => (
-                                    <Icon key={index} path={icon} size={0.3} />
+                                    <Icon key={index} path={icon} size={0.3} color={difficultyColors[difficulty]} />
                                 ))}
                             </div>
                         </div>
@@ -483,7 +499,7 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
                             )}
                             <div className="information-dif">
                                 {difficultyIcons[difficulty].map((icon, index) => (
-                                    <Icon key={index} path={icon} size={0.3} />
+                                    <Icon key={index} path={icon} size={0.3} color={difficultyColors[difficulty]} />
                                 ))}
                             </div>
                         </div>
