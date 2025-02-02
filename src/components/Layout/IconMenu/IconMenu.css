@@ -1,9 +1,24 @@
 .im-icon-menu {
     display: flex;
     justify-content: center;
-    margin-top: 20px; /* Adjust as needed */
+    align-items: center;
+    padding: 10px;
+    background-color: #33333300; 
+    border-left: 1px solid #444; 
+    border-right: 1px solid #444; 
+    border-bottom: 1px solid #444; 
+    border-radius: 0 0 5px 5px; 
+    width: fit-content; 
+    margin: 3px auto;
 }
 
 .im-icon-button {
-    margin: 0 10px; /* Adjust spacing between buttons as needed */
+    color: white; 
+    margin: 0 10px; 
+    transition: transform 0.2s, color 0.2s; 
+}
+
+.im-icon-button:hover {
+    transform: scale(1.4); 
+    color: var(--secondary-color);
 }

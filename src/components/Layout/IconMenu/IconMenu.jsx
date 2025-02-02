@@ -8,13 +8,13 @@ const IconMenu = ({ openGroupModal, openVoteModal, openCalendarModal }) => {
     return (
         <div className="im-icon-menu">
             <IconButton className="im-icon-button" onClick={openGroupModal}>
-                <Icon path={mdiAccountGroup} size={1.2} />
+                <Icon path={mdiAccountGroup} size={1.2} color="white"  />
             </IconButton>
             <IconButton className="im-icon-button" onClick={openVoteModal}>
-                <Icon path={mdiVoteOutline} size={1.2} />
+                <Icon path={mdiVoteOutline} size={1.2} color="white" />
             </IconButton>
             <IconButton className="im-icon-button" onClick={openCalendarModal}>
-                <Icon path={mdiCalendarCheck} size={1.2} />
+                <Icon path={mdiCalendarCheck} size={1.2} color="white"  />
             </IconButton>
         </div>
     );
