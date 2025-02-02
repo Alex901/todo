@@ -27,6 +27,12 @@ body {
   color: var(--forestGreen-color);
 }
 
+.details-container {
+  padding: 20px;
+  border-top: 1px solid #e0e0e0;
+  border-bottom: 1px solid #e0e0e0;
+}
+
 .content {
   flex: 1;
   /* Allow content to expand to fill remaining space */
@@ -111,7 +117,7 @@ body {
   flex-wrap: wrap;
   gap: 5px;
   justify-content: center;
-  background-color: #f0eded;
+  background-color: #ffffff;
   border: 1px solid #cdc3c3;
   border-radius: 10px;
   padding: 4px;
@@ -271,7 +277,7 @@ body {
 .details-settings {
   display: flex;
   flex-wrap: wrap;
-  margin-top: 20px;
+  margin: 10px;
 }
 
 .settings-section, .share-section {

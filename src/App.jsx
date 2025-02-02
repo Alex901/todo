@@ -40,6 +40,7 @@ import BottomDrawer from './components/Mobile/BottomDrawer/BottomDrawer'
 import BottomDrawerButton from './components/Mobile/BottomDrawerButton/BottomDrawerButton'
 import RepeatableDisplay from './components/UtilityComponents/repeatableDisplay/RepeatableDisplay'
 import CalendarModal from './components/Todo/TodoModal/CalendarModal/CalendarModal'
+import IconMenu from './components/Layout/IconMenu/IconMenu'
 
 function App() {
   const [activeView, setActiveView] = useState('todo');
@@ -512,6 +513,13 @@ function App() {
       <div>
         {isLoggedIn && <Header />}
       </div>
+      {loggedInUser && !isMobile && (
+        <IconMenu
+          openGroupModal={() => openGroupModal()}
+          openVoteModal={() => openVoteModal()}
+          openCalendarModal={() => openCalendarModal()}
+        />
+      )}
       <>
         <CookieConsent />
       </>
@@ -596,6 +604,12 @@ function App() {
                         <div className={`icon-button description${isMobile ? '-mobile' : ''}`} onClick={toggleDetails}>
                           <Icon path={isShowDetailsSelected ? mdiArchiveArrowUpOutline : mdiArchiveArrowDownOutline} size={1.4} />
                         </div>
+
+
+                        <div className={`icon-button export${isMobile ? '-mobile' : ''}`} onClick={openExportModal}>
+                          <Icon path={mdiFileExport} size={1.2} />
+                        </div>
+
 
                         <div
                           className={`icon-button delete${isMobile ? '-mobile' : ''}`}
@@ -694,11 +708,7 @@ function App() {
                         </>
                       </div>
 
-                      <div className={`icons-container${isMobile ? '-mobile' : ''}`} style={{ display: 'flex', gap: '5px', width: `${100 - progressBarWidth}%` }}>
-                        <IconButton className={`icon-button${isMobile ? '-mobile' : ''}`} onClick={openExportModal}>
-                          <Icon path={mdiFileExport} size={1.2} />
-                        </IconButton>
-                      </div>
+                     
                     </div>
                   )}
 
@@ -953,44 +963,20 @@ function App() {
                         </div>
 
                       </div>
+
+                       
                       <div className="details-settings">
-                        <div className="settings-section">
-                          <h6 className="title">Settings</h6>
-                          {/* Add relevant settings here */}
-                        </div>
-                        <div className="share-section">
-                          <h6 className="title">Share</h6>
-                          {/* Add share details here */}
-                        </div>
-                      </div>
-                    </div>
-
-                  )}
-
-
-                  {isLoggedIn && (
-                    <div className="functions-container" ref={containerRef} >
-                      <div className="progress-bar-container" >
-                        <>
+                      <>
                           <ProgressArea tasksInActiveList={entriesInActiveList}>
                             {/* Children components or elements go here */}
                           </ProgressArea>
                         </>
                       </div>
-
-                      <div className="icons-container" style={{ display: 'flex', gap: '5px' }}>
-                        <IconButton className="icon-button" onClick={openGroupModal}>
-                          <Icon path={mdiAccountGroup} size={1.2} />
-                        </IconButton>
-                        <IconButton className="icon-button" onClick={openVoteModal}>
-                          <Icon path={mdiVoteOutline} size={1.2} />
-                        </IconButton>
-                        <IconButton className="icon-button" onClick={openCalendarModal}>
-                          <Icon path={mdiCalendarCheck} size={1.2} />
-                        </IconButton>
-                      </div>
                     </div>
+
                   )}
+
+
 
 
                   <GroupModal isOpen={isGroupModalOpen} onClose={closeGroupModal} />

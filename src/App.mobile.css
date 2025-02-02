@@ -18,6 +18,11 @@
     display: inline-table;
     border-radius: 10px;
   }
+
+  .details-container {
+    padding-top: 20px;
+    border-top: 1px solid #e0e0e0;
+  }
   
   .details-container-mobile svg {
     color: var(--forestGreen-color);

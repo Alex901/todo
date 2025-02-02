@@ -1,0 +1,9 @@
+.im-icon-menu {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px; /* Adjust as needed */
+}
+
+.im-icon-button {
+    margin: 0 10px; /* Adjust spacing between buttons as needed */
+}
