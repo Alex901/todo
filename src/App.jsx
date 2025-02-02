@@ -527,11 +527,7 @@ function App() {
       {isLoggedIn && (
 
         <div className="content" style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
-          {loggedInUser?.activeList === 'today' && (
-
-            <RepeatableDisplay></RepeatableDisplay>
-
-          )}
+      
           <Card>
             <div className='nav' style={{ display: 'flex', flexDirection: 'column' }}>
 
@@ -708,7 +704,7 @@ function App() {
                         </>
                       </div>
 
-                     
+
                     </div>
                   )}
 
@@ -964,13 +960,13 @@ function App() {
 
                       </div>
 
-                       
+
                       <div className="details-settings">
-                      <>
-                          <ProgressArea tasksInActiveList={entriesInActiveList}>
-                            {/* Children components or elements go here */}
-                          </ProgressArea>
-                        </>
+                        {loggedInUser.activeList === 'today' ? (
+                          <RepeatableDisplay />
+                        ) : (
+                          <ProgressArea tasksInActiveList={entriesInActiveList}/>
+                        )}
                       </div>
                     </div>
 

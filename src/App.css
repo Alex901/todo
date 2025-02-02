@@ -98,8 +98,12 @@ body {
   color: rgb(100, 158, 49)
 }
 
+
+
+
 .icon-button.export:hover {
-  color: rgb(67, 39, 205)
+  color: rgb(67, 39, 205);
+
 }
 
 .delete-icon {
@@ -392,3 +396,4 @@ body {
     width: 50%;
   }
 }
+
