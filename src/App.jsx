@@ -527,7 +527,7 @@ function App() {
       {isLoggedIn && (
 
         <div className="content" style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
-      
+
           <Card>
             <div className='nav' style={{ display: 'flex', flexDirection: 'column' }}>
 
@@ -681,27 +681,18 @@ function App() {
                           </Tooltip>
                         </div>
                       </div>
-                      <div className={`details-settings${isMobile ? '-mobile' : ''}`}>
-                        <div className={`settings-section${isMobile ? '-mobile' : ''}`}>
-                          <h6 className={`title${isMobile ? '-mobile' : ''}`}>Settings</h6>
-                          {/* Add relevant settings here */}
-                        </div>
-                        <div className={`share-section${isMobile ? '-mobile' : ''}`}>
-                          <h6 className={`title${isMobile ? '-mobile' : ''}`}>Share</h6>
-                          {/* Add share details here */}
-                        </div>
-                      </div>
+
                     </div>
                   )}
 
                   {isLoggedIn && (
                     <div className={`functions-container${isMobile ? '-mobile' : ''}`} ref={containerRef} style={{}}>
                       <div className={`progress-bar-container${isMobile ? '-mobile' : ''}`} style={{ width: `${progressBarWidth + 20}%` }}>
-                        <>
-                          <ProgressArea tasksInActiveList={entriesInActiveList}>
-                            {/* Children components or elements go here */}
-                          </ProgressArea>
-                        </>
+                        {loggedInUser.activeList === 'today' ? (
+                          <RepeatableDisplay />
+                        ) : (
+                          <ProgressArea tasksInActiveList={entriesInActiveList} />
+                        )}
                       </div>
 
 
@@ -965,7 +956,7 @@ function App() {
                         {loggedInUser.activeList === 'today' ? (
                           <RepeatableDisplay />
                         ) : (
-                          <ProgressArea tasksInActiveList={entriesInActiveList}/>
+                          <ProgressArea tasksInActiveList={entriesInActiveList} />
                         )}
                       </div>
                     </div>

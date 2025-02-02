@@ -37,7 +37,8 @@ body {
   flex: 1;
   /* Allow content to expand to fill remaining space */
   padding: 5em;
-  /* Add padding to create space between content and edges */;
+  /* Add padding to create space between content and edges */
+  ;
 }
 
 .nav button {
@@ -181,7 +182,8 @@ body {
 }
 
 .app-container {
-  min-height: 100vh; /* Ensure the parent container has enough height */
+  min-height: 100vh;
+  /* Ensure the parent container has enough height */
 }
 
 .sticky-center {
@@ -189,12 +191,13 @@ body {
   justify-content: center;
   position: sticky;
   top: 0;
-  z-index: 1000; /* Ensure it stays above other content */
+  z-index: 1000;
+  /* Ensure it stays above other content */
 }
 
 .icons-container {
   display: inline-flex;
-  justify-content: center; 
+  justify-content: center;
   flex-direction: row;
   gap: 5px;
   position: relative;
@@ -214,12 +217,12 @@ body {
   content: '...';
   position: absolute;
   right: 0;
-  background: white; 
+  background: white;
   display: none;
 }
 
 .icons-container.overflow::after {
-  display: block; 
+  display: block;
 }
 
 .bottom-drawer-button-wrapper {
@@ -255,7 +258,7 @@ body {
   display: flex;
   justify-content: center;
   gap: 5px;
-  
+
 }
 
 .list-description-title {
@@ -268,7 +271,7 @@ body {
   display: flex;
   flex-direction: row;
   gap: 10px;
-  margin: 10px auto;
+  margin-top: 10px;
 }
 
 .details-grid {
@@ -281,19 +284,22 @@ body {
 .details-settings {
   display: flex;
   flex-wrap: wrap;
-  margin: 10px;
 }
 
-.settings-section, .share-section {
+.settings-section,
+.share-section {
   flex: 1;
-  min-width: 300px; /* Adjust as needed */
+  min-width: 300px;
+  /* Adjust as needed */
   padding: 10px;
   box-sizing: border-box;
   border: 1px solid #ccc;
 }
 
-.settings-section .title, .share-section .title {
-  font-size: 16px; /* Adjust the size as needed */
+.settings-section .title,
+.share-section .title {
+  font-size: 16px;
+  /* Adjust the size as needed */
   text-align: center;
   margin-top: 0;
 }
@@ -325,7 +331,9 @@ body {
 }
 
 @media (max-width: 768px) {
-  .settings-section, .share-section {
+
+  .settings-section,
+  .share-section {
     flex: 100%;
     min-width: 100%;
   }
@@ -349,7 +357,7 @@ body {
     flex-direction: column;
     height: auto;
     overflow: auto;
-     /* Prevent scrolling on mobile devices */
+    /* Prevent scrolling on mobile devices */
   }
 }
 
@@ -372,8 +380,10 @@ body {
     flex-direction: row;
     gap: 5px;
     align-items: center;
-    justify-content: center; /* Center the icon-buttons */
-    width: 100%; /* Ensure it takes the full width of the container */
+    justify-content: center;
+    /* Center the icon-buttons */
+    width: 100%;
+    /* Ensure it takes the full width of the container */
   }
 
   .list-selection-settings {
@@ -383,6 +393,7 @@ body {
     margin-right: 0;
     width: 100%;
   }
+
   .functions-container {
     flex-direction: column;
     align-items: center;
@@ -396,4 +407,3 @@ body {
     width: 50%;
   }
 }
-
