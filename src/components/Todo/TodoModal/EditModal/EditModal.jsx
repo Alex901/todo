@@ -15,12 +15,13 @@ import { formatTime } from '../../../../utils/timeUtils';
 
 
 const EditModal = ({ isOpen, onRequestClose, editData }) => {
-    const { editTodo } = useTodoContext();
+    const { editTodo, todoList } = useTodoContext();
     const [errorMessage, setErrorMessage] = useState('');
     const { loggedInUser, isLoggedIn, emojiSettings } = useUserContext();
     const [selectedOption, setSelectedOption] = useState(null);
     const [hoveredStepId, setHoveredStepId] = useState(null);
     const [loading, setLoading] = useState(true);
+    const [filteredList, setFilteredList] = useState([]);
     //console.log("DEBUG -- EditModal -> editData", editData);
 
 
@@ -40,7 +41,10 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
         { value: 'VERY HARD', label: 'VERY HARD' },
     ];
 
+    // console.log("DEBUG - EditModal -> editData", editData);
+
     const [taskData, setTaskData] = useState({
+        _id: editData._id,
         id: editData.id,
         task: editData.task,
         description: editData.description,
@@ -54,6 +58,8 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
         inListNew: editData.inListNew,
         tags: editData.tags,
         repeatable: editData.repeatable || false,
+        tasksAfter: editData.tasksAfter || [],
+        tasksBefore: editData.tasksBefore || [],
         ...(editData.repeatable ? {
             repeatNotify: editData.repeatNotify || false,
             repeatInterval: editData.repeatInterval || 'daily',
@@ -64,6 +70,17 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
             repeatableEmoji: editData.repeatableEmoji || '',
         } : {})
     });
+
+    useEffect(() => {
+        console.log("DEBUG - Editmodal -- taskData", editData);
+    }, [taskData]);
+
+    useEffect(() => {
+        const filteredTasks = todoList.filter(task => {
+            return task.inListNew.some(list => list.listName === loggedInUser.activeList) && !task.repeatable;
+        });
+        setFilteredList(filteredTasks);
+    }, [todoList, loggedInUser.activeList]);
 
     const step = useDynamicStep(taskData.estimatedTime);
 
@@ -99,23 +116,40 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
 
     const handleInputChange = (event) => {
         let value = event.target.value;
+        const name = event.target.name;
+        console.log("DEBUG -- handleInputChange -- Name", name); 
+        console.log("DEBUG -- handleInputChange -- Value", value);
         //console.log("Value", value);
 
-        if (event.target.name === 'dueDate') {
+        if (name === 'dueDate') {
             value = new Date(value);
         }
 
-        if (event.target.name === 'estimatedTime') {
+        if (name === 'estimatedTime') {
             value = parseInt(value, 10);
         }
 
         setErrorMessage('');
-        setTaskData({
-            ...taskData,
-            [event.target.name]: value
-        });
-        console.log("Task data", taskData);
+        if (name === 'tasksBefore' || name === 'tasksAfter') {
+            const selectedTasks = Array.isArray(value)
+                ? value.map(id => filteredList.find(task => task._id === id))
+                : [filteredList.find(task => task._id === value)];
+            setTaskData((prevData) => ({
+                ...prevData,
+                [name]: selectedTasks,
+            }));
+        } else {
+            setTaskData({
+                ...taskData,
+                [name]: value,
+            });
+        }
+        console.log("DEBUG -- Task data after input change", taskData);
     };
+
+    useEffect(() => {
+        console.log("DEBUG -- Task data use-effect", taskData);
+    }, [taskData]);
 
     //Helper methods for handleSubmit
     const cleanRepeatableAttributes = (taskData) => {
@@ -184,6 +218,16 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
         return updatedTaskData;
     };
 
+    const cleanBATasks = (taskData) => {
+        if (taskData.tasksAfter && taskData.tasksAfter.length > 0) {
+            taskData.tasksAfter = taskData.tasksAfter.map(task => task._id);
+        }
+        if (taskData.tasksBefore && taskData.tasksBefore.length > 0) {
+            taskData.tasksBefore = taskData.tasksBefore.map(task => task._id);
+        }
+        return taskData;
+    };
+
     const handleSubmit = () => {
         event.preventDefault();
         console.log("TodoModal -> newTaskData", taskData);
@@ -201,6 +245,7 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
 
         // Clean up repeatable attributes
         let cleanedTaskData = cleanRepeatableAttributes(taskData);
+        cleanedTaskData = cleanBATasks(cleanedTaskData);
         cleanedTaskData = updateTodayList(cleanedTaskData);
 
         // Remove or set dueDate to empty if the task is repeatable
@@ -208,6 +253,7 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
             cleanedTaskData.dueDate = null;
         }
 
+        console.log("DEBUG - cleanedTaskData", cleanedTaskData);
         editTodo(cleanedTaskData);
         toast.success('Changes saved');
 
@@ -363,6 +409,33 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
                 : (prevData.repeatDays || []).filter((day) => day !== name),
         }));
     };
+
+    // Extract IDs from tasksBefore and tasksAfter
+    const tasksBeforeIds = (taskData.tasksBefore || []).map(task => task._id);
+    const tasksAfterIds = (taskData.tasksAfter || []).map(task => task._id);
+
+    // console.log("DEBUG -- tasksBeforeIds", tasksBeforeIds);
+    // console.log("DEBUG -- tasksAfterIds", tasksAfterIds);
+
+    // console.log("DEBUG - This is the edited task data:", taskData)
+    // console.log("DEBUG -- This is the before entries in task Data: ", taskData.tasksBefore || "No entries")
+    // console.log("DEBUG -- This is the after entries in task Data: ", taskData.tasksAfter || "No entries")
+    // console.log("DEBUG - This is the entire filtered list", filteredList);
+
+    const tasksBeforeOptions = filteredList.filter(task => {
+        const isIncluded = !tasksAfterIds.includes(task._id) && task._id !== taskData._id;
+        // console.log(`DEBUG - tasksBeforeOptions - Task: ${task.task}, ID: ${task._id}, Included: ${isIncluded}`);
+        return isIncluded;
+    });
+
+    const tasksAfterOptions = filteredList.filter(task => {
+        const isIncluded = !tasksBeforeIds.includes(task._id) && task._id !== taskData._id;
+        // console.log(`DEBUG - tasksAfterOptions - Task: ${task.task}, ID: ${task._id}, Included: ${isIncluded}`);
+        return isIncluded;
+    });
+
+    // console.log("DEBUG - tasksBeforeOptions", tasksBeforeOptions);
+    // console.log("DEBUG - tasksAfterOptions", tasksAfterOptions);
 
     //I steal the ccs classes from my create modal -- don't judge me, haha
     return (
@@ -728,6 +801,43 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
                             </div>
                         </>
                     )}
+
+                    <div className="linked-tasks-container">
+                        <FormControl className="linked-tasks-form-control" style={{ minWidth: '100px', width: 'auto', height: 'auto' }} size='small'>
+                            <InputLabel id="tasks-before-label">Tasks Before</InputLabel>
+                            <Select
+                                name="tasksBefore"
+                                label="Tasks Before"
+                                multiple
+                                value={tasksBeforeIds || []}
+                                onChange={handleInputChange}
+                                renderValue={(selected) => selected.map(_id => tasksBeforeOptions.find(task => task._id === _id)?.task).join(', ')}
+                            >
+                                {tasksBeforeOptions.map((task) => (
+                                    <MenuItem key={task._id} value={task._id}>
+                                        {task.task}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                        <FormControl className="linked-tasks-form-control" style={{ minWidth: '100px', width: 'auto', height: 'auto' }} size='small'>
+                            <InputLabel id="tasks-after-label">Tasks After</InputLabel>
+                            <Select
+                                name="tasksAfter"
+                                label="Tasks After"
+                                multiple
+                                value={tasksAfterIds|| []}
+                                onChange={handleInputChange}
+                                renderValue={(selected) => selected.map(id => tasksAfterOptions.find(task => task._id === id)?.task).join(', ')}
+                            >
+                                {tasksAfterOptions.map((task) => (
+                                    <MenuItem key={task._id} value={task._id}>
+                                        {task.task}
+                                    </MenuItem>
+                                ))}
+                            </Select>
+                        </FormControl>
+                    </div>
 
 
                     <hr style={{ width: '80%', margin: '10px auto' }} />

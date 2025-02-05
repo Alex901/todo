@@ -53,4 +53,20 @@
     align-items: center;
 }
 
+.linked-tasks-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 20px; /* Adjust as needed to match the rest of the form */
+    margin-top: 10px;
+}
+
+.linked-tasks-form-control {
+    flex: 1;
+    min-width: 200px;
+}
+
 

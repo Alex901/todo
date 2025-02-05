@@ -25,12 +25,13 @@ document.body.classList.add('no-scroll');
 document.body.classList.remove('no-scroll');
 
 const TodoModal = ({ isOpen, onRequestClose }) => {
-    const { addTodo } = useTodoContext();
+    const { addTodo, todoList } = useTodoContext();
     const { isLoggedIn, loggedInUser, emojiSettings } = useUserContext();
     const [errorMessage, setErrorMessage] = useState('');
     const [hoveredStepId, setHoveredStepId] = useState(null);
     const [showAdvancedOptions, setShowAdvancedOptions] = useState(false);
     const [repeatable, setRepeatability] = useState(false);
+    const [filteredList, setFilteredList] = useState(todoList);
     const [newTaskData, setNewTaskData] = useState({
         taskName: '',
         description: '',
@@ -56,7 +57,9 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
                 repeatUntill: null,
                 repeatTimes: null,
                 repeatableEmoji: '😊',
-                repeatNotify: false
+                repeatNotify: false,
+                tasksAfter: [],
+                tasksBefore: [],
             } : {
                 repeatable: undefined,
                 repeatInterval: undefined,
@@ -66,10 +69,21 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
                 repeatUntill: undefined,
                 repeatTimes: undefined,
                 repeatableEmoji: undefined,
-                repeatNotify: undefined
+                repeatNotify: undefined,
+                repeatableLongestStreak: undefined,
             })
         }));
     }, [repeatable]);
+
+    useEffect(() => {
+        const filteredTasks = todoList.filter(task => {
+            if (repeatable) {
+                return task.repeatable;
+            }
+            return task.inListNew.some(list => list.listName === loggedInUser.activeList) && !task.repeatable && !task.completed;
+        });
+        setFilteredList(filteredTasks);
+    }, [repeatable, todoList, loggedInUser.activeList]);
 
     useEffect(() => {
         if (newTaskData.repeatInterval === 'monthly' && newTaskData.repeatMonthlyOption === '') {
@@ -118,16 +132,28 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
 
     const handleInputChange = (event) => {
         let value = event.target.value;
+        const name = event.target.name;
+        console.log("DEBUG - Name: ", name, " Value: ", value);
 
         // Special case for estimatedTime input
-        if (event.target.name === 'estimatedTime') {
+        if (name === 'estimatedTime') {
             value = parseInt(value, 10);
         }
 
-        setNewTaskData({
-            ...newTaskData,
-            [event.target.name]: value,
-        });
+        // Handle array fields like tasksBefore and tasksAfter
+        if (name === 'tasksBefore' || name === 'tasksAfter') {
+            console.log("DEBUG -- It is a linked task")
+            setNewTaskData((prevData) => ({
+                ...prevData,
+                [name]: Array.isArray(value) ? value : [value],
+            }));
+        } else {
+            setNewTaskData({
+                ...newTaskData,
+                [name]: value,
+            });
+        }
+
         setErrorMessage('');
     };
 
@@ -210,7 +236,9 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
             steps: [],
             difficulty: "",
             estimatedTime: null,
-            tags: []
+            tags: [],
+            tasksBefore: [],
+            tasksAfter: [],
         });
         setRepeatability(false);
         setShowAdvancedOptions(false);
@@ -301,6 +329,10 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
         setShowAdvancedOptions(false);
         onRequestClose();
     }
+
+    const tasksBeforeOptions = filteredList.filter(task => !(newTaskData.tasksAfter || []).includes(task._id));
+    const tasksAfterOptions = filteredList.filter(task => !(newTaskData.tasksBefore || []).includes(task._id));
+
 
     return (
 
@@ -562,7 +594,7 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
                                 placeholder='Minutes'
                                 inputProps={{
                                     min: '0', // Set the minimum value
-                                    step: step, 
+                                    step: step,
                                 }}
                                 InputProps={{
                                     endAdornment: <InputAdornment position="end"></InputAdornment>,
@@ -596,12 +628,11 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
 
 
                         </div>
-                        <div className="tags-container-create" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%', gap: '20px', flexWrap: 'wrap', marginTop: '10px' }}>
+                        <div className="tags-container-create" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%', gap: '20px', flexWrap: 'wrap' }}>
                             <FormControl variant="outlined" style={{ minWidth: '100px', width: 'auto', height: 'auto' }} size='small'>
                                 <InputLabel id="tags-label">Tags</InputLabel>
                                 <Select
 
-                                    label="Tags"
                                     multiple
                                     size="small"
                                     value={newTaskData.tags}
@@ -635,7 +666,7 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
                                     ))}
                                 </Select>
                             </FormControl>
-                            <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', marginTop: '14px' }}>
+                            <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                                 <FormControlLabel
                                     control={
                                         <Checkbox
@@ -648,9 +679,44 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
                                 />
                             </div>
                         </div>
-
-
-
+                        <div className="linked-tasks-container">
+                            <FormControl className="linked-tasks-form-control" style={{ minWidth: '100px', width: 'auto', height: 'auto' }} size='small'>
+                                <InputLabel id="tasks-before-label">Tasks Before</InputLabel>
+                                <Select
+                                    name="tasksBefore"
+                                    size='small'
+                                    label="Tasks Before"
+                                    multiple
+                                    value={newTaskData.tasksBefore || []}
+                                    onChange={handleInputChange}
+                                    renderValue={(selected) => selected.map(id => tasksBeforeOptions.find(task => task._id === id)?.task).join(', ')}
+                                >
+                                    {tasksBeforeOptions.map((task) => (
+                                        <MenuItem key={task._id} value={task._id}>
+                                            {task.task}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                            <FormControl className="linked-tasks-form-control" style={{ minWidth: '100px', width: 'auto', height: 'auto' }} size='small'>
+                                <InputLabel id="tasks-after-label">Tasks After</InputLabel>
+                                <Select
+                                    name="tasksAfter"
+                                    size='small'
+                                    label="Tasks After"
+                                    multiple
+                                    value={newTaskData.tasksAfter || []}
+                                    onChange={handleInputChange}
+                                    renderValue={(selected) => selected.map(id => tasksAfterOptions.find(task => task._id === id)?.task).join(', ')}
+                                >
+                                    {tasksAfterOptions.map((task) => (
+                                        <MenuItem key={task._id} value={task._id}>
+                                            {task.task}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </div>
 
                         <hr style={{ width: '80%', margin: '10px auto' }} />
 

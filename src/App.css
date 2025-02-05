@@ -36,7 +36,7 @@ body {
 .content {
   flex: 1;
   /* Allow content to expand to fill remaining space */
-  padding: 5em;
+  padding: 2em;
   /* Add padding to create space between content and edges */
   ;
 }
@@ -284,6 +284,7 @@ body {
 .details-settings {
   display: flex;
   flex-wrap: wrap;
+  margin: 10px;
 }
 
 .settings-section,

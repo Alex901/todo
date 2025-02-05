@@ -18,7 +18,7 @@ const ScoreArea = () => {
 
             if (targetScore > currentScore) {
                 const increment = (targetScore - currentScore) / 50; // Adjust the increment value for smoother animation
-                console.log('DEBUG -- increment:', increment);
+                //console.log('DEBUG -- increment:', increment);
                 const interval = setInterval(() => {
                     setDisplayedScore(prevScore => {
                         const newScore = parseFloat(prevScore) + increment;

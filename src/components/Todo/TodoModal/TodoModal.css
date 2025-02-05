@@ -174,3 +174,18 @@
     transform: scale(0.5); /* Shrink when exiting */
     transition: opacity 500ms ease-in, transform 500ms ease-in; /* Smooth exit with ease-in effect */
 }
+
+.linked-tasks-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 100%;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 20px; /* Adjust as needed to match the rest of the form */
+}
+
+.linked-tasks-form-control {
+    flex: 1;
+    min-width: 200px;
+}

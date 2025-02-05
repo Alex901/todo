@@ -114,7 +114,7 @@ const TodoProvider = ({ children }) => {
         dueDate: todo.dueDate ? new Date(todo.dueDate) : null
       }));
 
-      //console.log("\x1b[31mDEBUG\x1b[0m - parsedData.length", parsedData.length);
+      //console.log("\x1b[31mDEBUG\x1b[0m - parsedData", parsedData);
       setTodoList(parsedData);
 
 
@@ -189,6 +189,9 @@ const TodoProvider = ({ children }) => {
         isUrgent: newTaskData.isUrgent || false, //And this one
         inList: loggedInUser ? ['all'].concat(loggedInUser.activeList !== 'all' ? [loggedInUser.activeList] : []) : [], //Mark for deletion
         inListNew: inListNewTmp,
+        tasksBefore: newTaskData.tasksBefore || [],
+        tasksAfter: newTaskData.tasksAfter || [],
+
       };
       // console.log("DEBUG -- NewTodo", newTodo);
       // console.log("addTodo: newTodo", newTodo);

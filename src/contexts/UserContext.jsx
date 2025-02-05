@@ -26,11 +26,6 @@ const UserProvider = ({ children }) => {
     const [userList, setUserList] = useState(null); //For autocomplete in GroupModal
     const [emojiSettings, setEmojiSettings] = useState(null);
 
-
-    useEffect(() => {
-        console.log("Emoji settings: ", emojiSettings);
-    }, [emojiSettings]);
-
     useEffect(() => {
         //console.log("User logged in, fetching users");
         // console.log("loggedInUser: ", loggedInUser);
