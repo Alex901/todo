@@ -80,7 +80,7 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
             if (repeatable) {
                 return task.repeatable;
             }
-            return task.inListNew.some(list => list.listName === loggedInUser.activeList) && !task.repeatable && !task.completed;
+            return task.inListNew.some(list => list.listName === loggedInUser.activeList) && !task.repeatable && !task.completed && !task.started;
         });
         setFilteredList(filteredTasks);
     }, [repeatable, todoList, loggedInUser.activeList]);

@@ -77,7 +77,7 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
 
     useEffect(() => {
         const filteredTasks = todoList.filter(task => {
-            return task.inListNew.some(list => list.listName === loggedInUser.activeList) && !task.repeatable;
+            return task.inListNew.some(list => list.listName === loggedInUser.activeList) && !task.repeatable && !task.completed && !task.started;
         });
         setFilteredList(filteredTasks);
     }, [todoList, loggedInUser.activeList]);
