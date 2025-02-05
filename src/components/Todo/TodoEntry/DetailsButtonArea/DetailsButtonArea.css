@@ -1,0 +1,44 @@
+.details-button-area {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 10px 0;
+    grid-column: span 2;
+}
+
+.details-button-area-hr {
+    width: 100%;
+    border: 0;
+    border-top: 1px solid rgba(144, 131, 131, 0.856);
+    margin-bottom: 10px;
+}
+
+.details-button-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    gap: 5px;
+}
+
+.entryButton {
+    margin: 1px;
+    width: 32px;
+    height: 32px;
+    background-color: rgba(234, 228, 227, 0);
+    border: 1px solid rgba(144, 131, 131, 0.856);
+    cursor: pointer;
+    color: #887571;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: 5px;
+    
+}
+
+.entryButton:hover {
+    border: 1px solid rgba(255, 255, 255, 0.856);
+    color: #ffffff;
+    box-shadow: 0 0 5px rgba(0, 0, 0, 0.5);
+}

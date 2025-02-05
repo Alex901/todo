@@ -679,6 +679,7 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
                                 />
                             </div>
                         </div>
+                        {!repeatable && (
                         <div className="linked-tasks-container">
                             <FormControl className="linked-tasks-form-control" style={{ minWidth: '100px', width: 'auto', height: 'auto' }} size='small'>
                                 <InputLabel id="tasks-before-label">Tasks Before</InputLabel>
@@ -717,6 +718,7 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
                                 </Select>
                             </FormControl>
                         </div>
+                        )}
 
                         <hr style={{ width: '80%', margin: '10px auto' }} />
 

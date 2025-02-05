@@ -5,6 +5,7 @@ import TodoModal from "../TodoModal/TodoModal";
 import ConfirmationModal from "../TodoModal/ConfirmationModal/ConfirmationModal";
 import { useUserContext } from "../../../contexts/UserContext";
 import { useTodoContext } from "../../../contexts/todoContexts";
+import DetailsButtonArea from "./DetailsButtonArea/DetailsButtonArea";
 import Tags from "./Tags/Tags";
 
 
@@ -27,7 +28,7 @@ import Icon from '@mdi/react';
 import { toast } from 'react-toastify';
 
 const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should use state. Maybe fix?
-    
+
 
     const { id,
         task,
@@ -77,10 +78,10 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
 
     const difficultyColors = {
         'VERY EASY': 'lightgreen',
-        'EASY' : 'green',
-        'NORMAL' : 'black',
-        'HARD' : 'orange',
-        'VERY HARD' : 'red',
+        'EASY': 'green',
+        'NORMAL': 'black',
+        'HARD': 'orange',
+        'VERY HARD': 'red',
     };
 
     const priorityColors = {
@@ -224,21 +225,33 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
         const today = new Date();
         const tomorrow = new Date(today);
         tomorrow.setDate(today.getDate() + 1);
-      
+
         const isToday = dueDate.toDateString() === today.toDateString();
         const isTomorrow = dueDate.toDateString() === tomorrow.toDateString();
         const isPast = dueDate < today && !isToday;
-      
+
         if (isPast) {
-          return "Past deadline";
+            return "Past deadline";
         } else if (isToday) {
-          return `Today ${dueDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+            return `Today ${dueDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
         } else if (isTomorrow) {
-          return `Tomorrow ${dueDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+            return `Tomorrow ${dueDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
         } else {
-          return `${dueDate.toLocaleDateString("en-GB")} - ${dueDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
+            return `${dueDate.toLocaleDateString("en-GB")} - ${dueDate.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}`;
         }
-      };
+    };
+
+    const handleSimplifyTask = () => {
+        console.log('Simplify task');
+    };
+
+    const handleAddTaskBefore = () => {
+        console.log('Add task before');
+    };
+
+    const handleAddTaskAfter = () => {
+        console.log('Add task after');
+    };
 
     //TODO: this is not pretty, make commonTodoEntry component and use it on all cases. 
     //Making changes on three places is not good practice and confusing in the long run.
@@ -304,31 +317,35 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
                         </button>
                     </div>
                 </div>
-                { isLoggedIn && (
-                        <div className={`more-information ${isMoreChecked ? 'open' : ''}`}>
-                            <div className="steps-container">
-                                {steps && steps.length > 0 ? (
-                                    <>
-                                        {steps.map((step, index) => (
-                                            <div key={index} className="step-entry" onClick={() => handleStepClick(step.id)}>
-                                                <p className="step-id"><strong>{`Step ${index + 1}`}</strong></p>
-                                                <p className={`step-name ${step.isDone ? 'step-completed' : ''}`}>{step.taskName}</p>
-                                            </div>
-                                        ))}
-                                    </>
-                                ) : (
-                                    <div className="no-steps">No steps in this task!</div>
-                                )}
-                            </div>
+                {isLoggedIn && (
+                    <div className={`more-information ${isMoreChecked ? 'open' : ''}`}>
+                        <div className="steps-container">
+                            {steps && steps.length > 0 ? (
+                                <>
+                                    {steps.map((step, index) => (
+                                        <div key={index} className="step-entry" onClick={() => handleStepClick(step.id)}>
+                                            <p className="step-id"><strong>{`Step ${index + 1}`}</strong></p>
+                                            <p className={`step-name ${step.isDone ? 'step-completed' : ''}`}>{step.taskName}</p>
+                                        </div>
+                                    ))}
+                                </>
+                            ) : (
+                                <div className="no-steps">No steps in this task!</div>
+                            )}
+                        </div>
 
-                            <div className="description-container">
-                                <p className="description-label"> <strong>Description </strong> </p>
-                                <p>{description != null ? description : "No description"}</p>
-
-                            </div>
+                        <div className="description-container">
+                            <p className="description-label"> <strong>Description </strong> </p>
+                            <p>{description != null ? description : "No description"}</p>
 
                         </div>
-                    )
+                        <DetailsButtonArea
+                            onAddTaskBefore={handleAddTaskBefore}
+                            onSimplifyTask={handleSimplifyTask}
+                            onAddTaskAfter={handleAddTaskAfter}
+                        />
+                    </div>
+                )
                 }
 
                 {

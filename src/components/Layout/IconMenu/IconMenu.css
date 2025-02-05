@@ -21,4 +21,5 @@
 .im-icon-button:hover {
     transform: scale(1.4); 
     color: var(--secondary-color);
+    pointer: Cursor;
 }
