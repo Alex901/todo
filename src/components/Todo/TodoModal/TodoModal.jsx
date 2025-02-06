@@ -24,7 +24,7 @@ document.body.classList.add('no-scroll');
 // When modal closes
 document.body.classList.remove('no-scroll');
 
-const TodoModal = ({ isOpen, onRequestClose }) => {
+const TodoModal = ({ isOpen, onRequestClose, initialData }) => {
     const { addTodo, todoList } = useTodoContext();
     const { isLoggedIn, loggedInUser, emojiSettings } = useUserContext();
     const [errorMessage, setErrorMessage] = useState('');
@@ -42,7 +42,25 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
         difficulty: "",
         estimatedTime: 0,
         tags: [],
+        tasksBefore: [],
+        tasksAfter: [],
     });
+
+    useEffect(() => {
+        console.log("DEBUG -- todoData: ", newTaskData);
+        console.log("DEBUG -- initialData: ", initialData);
+    }, [newTaskData]);
+
+    useEffect(() => {
+        if (initialData) {
+            setNewTaskData((prevData) => ({
+                ...prevData,
+                tasksBefore: initialData.tasksBefore || [],
+                tasksAfter: initialData.tasksAfter || [],
+            }));
+        }
+    }, [initialData]);
+
     const step = useDynamicStep(newTaskData.estimatedTime || 0);
 
     useEffect(() => {
@@ -680,44 +698,44 @@ const TodoModal = ({ isOpen, onRequestClose }) => {
                             </div>
                         </div>
                         {!repeatable && (
-                        <div className="linked-tasks-container">
-                            <FormControl className="linked-tasks-form-control" style={{ minWidth: '100px', width: 'auto', height: 'auto' }} size='small'>
-                                <InputLabel id="tasks-before-label">Tasks Before</InputLabel>
-                                <Select
-                                    name="tasksBefore"
-                                    size='small'
-                                    label="Tasks Before"
-                                    multiple
-                                    value={newTaskData.tasksBefore || []}
-                                    onChange={handleInputChange}
-                                    renderValue={(selected) => selected.map(id => tasksBeforeOptions.find(task => task._id === id)?.task).join(', ')}
-                                >
-                                    {tasksBeforeOptions.map((task) => (
-                                        <MenuItem key={task._id} value={task._id}>
-                                            {task.task}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
-                            <FormControl className="linked-tasks-form-control" style={{ minWidth: '100px', width: 'auto', height: 'auto' }} size='small'>
-                                <InputLabel id="tasks-after-label">Tasks After</InputLabel>
-                                <Select
-                                    name="tasksAfter"
-                                    size='small'
-                                    label="Tasks After"
-                                    multiple
-                                    value={newTaskData.tasksAfter || []}
-                                    onChange={handleInputChange}
-                                    renderValue={(selected) => selected.map(id => tasksAfterOptions.find(task => task._id === id)?.task).join(', ')}
-                                >
-                                    {tasksAfterOptions.map((task) => (
-                                        <MenuItem key={task._id} value={task._id}>
-                                            {task.task}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
-                        </div>
+                            <div className="linked-tasks-container">
+                                <FormControl className="linked-tasks-form-control" style={{ minWidth: '100px', width: 'auto', height: 'auto' }} size='small'>
+                                    <InputLabel id="tasks-before-label">Tasks Before</InputLabel>
+                                    <Select
+                                        name="tasksBefore"
+                                        size='small'
+                                        label="Tasks Before"
+                                        multiple
+                                        value={newTaskData.tasksBefore || []}
+                                        onChange={handleInputChange}
+                                        renderValue={(selected) => selected.map(id => tasksBeforeOptions.find(task => task._id === id)?.task).join(', ')}
+                                    >
+                                        {tasksBeforeOptions.map((task) => (
+                                            <MenuItem key={task._id} value={task._id}>
+                                                {task.task}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                                <FormControl className="linked-tasks-form-control" style={{ minWidth: '100px', width: 'auto', height: 'auto' }} size='small'>
+                                    <InputLabel id="tasks-after-label">Tasks After</InputLabel>
+                                    <Select
+                                        name="tasksAfter"
+                                        size='small'
+                                        label="Tasks After"
+                                        multiple
+                                        value={newTaskData.tasksAfter || []}
+                                        onChange={handleInputChange}
+                                        renderValue={(selected) => selected.map(id => tasksAfterOptions.find(task => task._id === id)?.task).join(', ')}
+                                    >
+                                        {tasksAfterOptions.map((task) => (
+                                            <MenuItem key={task._id} value={task._id}>
+                                                {task.task}
+                                            </MenuItem>
+                                        ))}
+                                    </Select>
+                                </FormControl>
+                            </div>
                         )}
 
                         <hr style={{ width: '80%', margin: '10px auto' }} />

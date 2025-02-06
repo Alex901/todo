@@ -343,6 +343,7 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
                             onAddTaskBefore={handleAddTaskBefore}
                             onSimplifyTask={handleSimplifyTask}
                             onAddTaskAfter={handleAddTaskAfter}
+                            taskId={todoData._id}
                         />
                     </div>
                 )

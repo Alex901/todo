@@ -72,10 +72,6 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
     });
 
     useEffect(() => {
-        console.log("DEBUG - Editmodal -- taskData", editData);
-    }, [taskData]);
-
-    useEffect(() => {
         const filteredTasks = todoList.filter(task => {
             return task.inListNew.some(list => list.listName === loggedInUser.activeList) && !task.repeatable && !task.completed && !task.started;
         });
@@ -117,8 +113,8 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
     const handleInputChange = (event) => {
         let value = event.target.value;
         const name = event.target.name;
-        console.log("DEBUG -- handleInputChange -- Name", name);
-        console.log("DEBUG -- handleInputChange -- Value", value);
+        // console.log("DEBUG -- handleInputChange -- Name", name);
+        // console.log("DEBUG -- handleInputChange -- Value", value);
         //console.log("Value", value);
 
         if (name === 'dueDate') {
@@ -144,12 +140,8 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
                 [name]: value,
             });
         }
-        console.log("DEBUG -- Task data after input change", taskData);
+        // console.log("DEBUG -- Task data after input change", taskData);
     };
-
-    useEffect(() => {
-        console.log("DEBUG -- Task data use-effect", taskData);
-    }, [taskData]);
 
     //Helper methods for handleSubmit
     const cleanRepeatableAttributes = (taskData) => {
@@ -414,28 +406,15 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
     const tasksBeforeIds = (taskData.tasksBefore || []).map(task => task._id);
     const tasksAfterIds = (taskData.tasksAfter || []).map(task => task._id);
 
-    // console.log("DEBUG -- tasksBeforeIds", tasksBeforeIds);
-    // console.log("DEBUG -- tasksAfterIds", tasksAfterIds);
-
-    // console.log("DEBUG - This is the edited task data:", taskData)
-    // console.log("DEBUG -- This is the before entries in task Data: ", taskData.tasksBefore || "No entries")
-    // console.log("DEBUG -- This is the after entries in task Data: ", taskData.tasksAfter || "No entries")
-    // console.log("DEBUG - This is the entire filtered list", filteredList);
-
     const tasksBeforeOptions = filteredList.filter(task => {
         const isIncluded = !tasksAfterIds.includes(task._id) && task._id !== taskData._id;
-        // console.log(`DEBUG - tasksBeforeOptions - Task: ${task.task}, ID: ${task._id}, Included: ${isIncluded}`);
         return isIncluded;
     });
 
     const tasksAfterOptions = filteredList.filter(task => {
         const isIncluded = !tasksBeforeIds.includes(task._id) && task._id !== taskData._id;
-        // console.log(`DEBUG - tasksAfterOptions - Task: ${task.task}, ID: ${task._id}, Included: ${isIncluded}`);
         return isIncluded;
     });
-
-    // console.log("DEBUG - tasksBeforeOptions", tasksBeforeOptions);
-    // console.log("DEBUG - tasksAfterOptions", tasksAfterOptions);
 
     //I steal the ccs classes from my create modal -- don't judge me, haha
     return (
