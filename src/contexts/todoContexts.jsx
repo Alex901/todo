@@ -280,6 +280,7 @@ const TodoProvider = ({ children }) => {
       if (response.status === 200) {
         setTodoList(prevTodoList => prevTodoList.filter(todo => todo.id !== id));
         toast.success(`Your task has been deleted.`);
+        checkLogin();
       } else {
         console.error('Error deleting todo ', response.statusText);
       }
