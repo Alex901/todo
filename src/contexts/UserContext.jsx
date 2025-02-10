@@ -497,7 +497,7 @@ const UserProvider = ({ children }) => {
 
     const editUserList = async (listToEdit, editedListData) => {
 
-        console.log("Edit list", listToEdit, "with editedListData:", editedListData, "and loggedInUser.activeList:");
+        console.log("Edit project", listToEdit, "with editedListData:", editedListData, "and loggedInUser.activeList:");
         try {
             if (!isLoggedIn) {
                 console.log("User not logged in");

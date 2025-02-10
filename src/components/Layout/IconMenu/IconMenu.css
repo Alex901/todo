@@ -3,13 +3,13 @@
     justify-content: center;
     align-items: center;
     padding: 10px;
-    background-color: #33333300; 
-    border-left: 1px solid #444; 
-    border-right: 1px solid #444; 
-    border-bottom: 1px solid #444; 
-    border-radius: 0 0 5px 5px; 
+    border-radius: 10px; 
     width: fit-content; 
-    margin: 3px auto;
+    margin: 10px auto;
+    background-color: rgba(255, 255, 255, 0);
+    backdrop-filter: blur(51px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 0px 8px rgba(0, 0, 0, 0.4); /* Slight box shadow */
 }
 
 .im-icon-button {
@@ -22,4 +22,11 @@
     transform: scale(1.4); 
     color: var(--secondary-color);
     pointer: Cursor;
+}
+
+.vertical-separator {
+    width: 1px;
+    height: 20px;
+    background-color: white;
+    margin: 0 5px;
 }

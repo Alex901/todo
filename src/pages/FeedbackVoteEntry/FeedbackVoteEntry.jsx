@@ -7,6 +7,7 @@ import { useUserContext } from '../../contexts/UserContext';
 import currencyBeta from '/currency-beta.png'; 
 import placeholderImage from '../../assets/placeholder_vote.png'; // Placeholder for "I voted" mark
 
+//This is in the wrong place, should be in LandingPage-folder
 const FeedbackVoteEntry = ({ feedback }) => {
     const messageRef = useRef(null);
     const { upvoteFeature, downvoteFeature } = useFeedbackContext();

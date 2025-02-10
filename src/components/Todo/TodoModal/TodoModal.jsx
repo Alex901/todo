@@ -46,10 +46,6 @@ const TodoModal = ({ isOpen, onRequestClose, initialData }) => {
         tasksAfter: [],
     });
 
-    useEffect(() => {
-        console.log("DEBUG -- todoData: ", newTaskData);
-        console.log("DEBUG -- initialData: ", initialData);
-    }, [newTaskData]);
 
     useEffect(() => {
         if (initialData) {
@@ -151,7 +147,7 @@ const TodoModal = ({ isOpen, onRequestClose, initialData }) => {
     const handleInputChange = (event) => {
         let value = event.target.value;
         const name = event.target.name;
-        console.log("DEBUG - Name: ", name, " Value: ", value);
+        // console.log("DEBUG - Name: ", name, " Value: ", value);
 
         // Special case for estimatedTime input
         if (name === 'estimatedTime') {
@@ -160,7 +156,7 @@ const TodoModal = ({ isOpen, onRequestClose, initialData }) => {
 
         // Handle array fields like tasksBefore and tasksAfter
         if (name === 'tasksBefore' || name === 'tasksAfter') {
-            console.log("DEBUG -- It is a linked task")
+            // console.log("DEBUG -- It is a linked task")
             setNewTaskData((prevData) => ({
                 ...prevData,
                 [name]: Array.isArray(value) ? value : [value],

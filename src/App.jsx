@@ -42,6 +42,7 @@ import RepeatableDisplay from './components/UtilityComponents/repeatableDisplay/
 import CalendarModal from './components/Todo/TodoModal/CalendarModal/CalendarModal'
 import IconMenu from './components/Layout/IconMenu/IconMenu'
 
+//TODO: Eventually everything within the Card-tag, should be made into its own component.
 function App() {
   const [activeView, setActiveView] = useState('todo');
   const { getTodoCount, getDoneCount, getDoingCount, getActiveListTodoCount, getActiveListDoingCount, getActiveListDoneCount,
@@ -966,9 +967,7 @@ function App() {
 
 
 
-                  <GroupModal isOpen={isGroupModalOpen} onClose={closeGroupModal} />
-                  <VoteModal isOpen={isVoteModalOpen} onClose={closeVoteModal} />
-                  <CalendarModal isOpen={isCalendarModalOpen} onClose={closeCalendarModal} />
+                
 
 
 
@@ -1131,9 +1130,13 @@ function App() {
             )}
           </Card>
 
+        
         </div>
       )}
       {!isLoggedIn && !loggedInUser && <LandingPage />}
+      <GroupModal isOpen={isGroupModalOpen} onClose={closeGroupModal} />
+                  <VoteModal isOpen={isVoteModalOpen} onClose={closeVoteModal} />
+                  <CalendarModal isOpen={isCalendarModalOpen} onClose={closeCalendarModal} />
     </div>
   )
 }
