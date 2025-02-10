@@ -78,7 +78,14 @@ function App() {
   const [isFirstTimeLoginModalOpen, setIsFirstTimeLoginModalOpen] = useState(false);
   const [isDrawerOpen, setDrawerOpen] = useState(false);
   const [isCalendarModalOpen, setIsCalendarModalOpen] = useState(false);
+  const [view, setView] = useState(loggedInUser?.settings.activeView);
   const isMobile = useMediaQuery('(max-width:800px)');
+
+  const handleViewChange = (view) => {
+    setView(view);
+    console.log("DEBUG -- App.js -- view: ", view)
+    updateSettings("activeView", view);
+  }
 
   const handleOpenDrawer = () => setDrawerOpen(true);
   const handleCloseDrawer = () => setDrawerOpen(false);
@@ -92,6 +99,7 @@ function App() {
       if (loggedInUser.__v === 0) {
         openNewLoginModal();
       }
+      setView(loggedInUser.settings.activeView)
     }
   }, [loggedInUser]);
 
@@ -519,6 +527,8 @@ function App() {
           openGroupModal={() => openGroupModal()}
           openVoteModal={() => openVoteModal()}
           openCalendarModal={() => openCalendarModal()}
+          activeView={view}
+          onViewChange={handleViewChange}
         />
       )}
       <>
