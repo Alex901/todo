@@ -8,7 +8,7 @@ const Social = () => {
     return (
         <>
             <Card>
-                <h2> Social</h2>
+                <h2> Social - Coming soon! </h2>
             </Card>
         </>
     );

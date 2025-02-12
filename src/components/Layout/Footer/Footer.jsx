@@ -22,7 +22,7 @@ const CustomTextField = styled(TextField)({
     },
 });
 
-const Footer = () => {
+const Footer = ({openAboutModal, openStoryModal, openInspirationModal, openLoginModal, openRegisterModal}) => {
     const theme = useTheme();
     const [message, setMessage] = useState('');
     const [email, setEmail] = useState('');
@@ -58,6 +58,10 @@ const Footer = () => {
         setCheckbox(false);
     };
 
+    const handleComingSoon = () => {
+        alert('Coming soon');
+    };
+
     return (
         <footer className="footer-main">
             <div className="social-icons">
@@ -70,29 +74,26 @@ const Footer = () => {
             <div className="footer-content">
                 <div className="footer-section">
                     <h5 className="category">Contact</h5>
-                    <p>123 Street</p>
-                    <p>City, State, Zip</p>
-                    <p>Email: info@website.com</p>
+                    <p>Email: info@habitforge.se</p>
                 </div>
                 <div className="footer-section">
                     <h5 className="category">Navigation</h5>
-                    <p>About</p>
-                    <p>Our story</p>
-                    <p>Blog</p>
-                    <p>Login</p>
-                    <p>Register</p>
+                    <p onClick={openAboutModal} style={{ cursor: 'pointer' }}>About</p>
+                    <p onClick={openStoryModal} style={{ cursor: 'pointer' }}>Our story</p>
+                    <p onClick={openLoginModal} style={{ cursor: 'pointer' }}>Login</p>
+                    <p onClick={openRegisterModal} style={{ cursor: 'pointer' }}>Register</p>
                 </div>
                 <div className="footer-section">
                     <h5 className="category">Resources</h5>
-                    <p>Downloads</p>
-                    <p>Pre-made guides</p>
-                    <p>Support</p>
+                    <p onClick={handleComingSoon} style={{ cursor: 'pointer' }}>Downloads</p>
+                    <p onClick={openInspirationModal} style={{ cursor: 'pointer' }}>Inspiration</p>
+                    <p onClick={handleComingSoon} style={{ cursor: 'pointer' }}>Pre-made guides</p>
                 </div>
                 <div className="footer-form-container">
                     <h4>Get in touch!</h4>
                     <form className='footer-form' onSubmit={handleSubmit}>
                         <CustomTextField
-                            label="Anything missing? Let us know"
+                            label="Need support? Have a question or maybe you just want to say 'hi'"
                             value={message}
                             variant="outlined"
                             size="small"
@@ -152,7 +153,7 @@ const Footer = () => {
             </div>
             <hr className="footer-divider divider-bottom" />
             <div className='copyright-disc'>
-                <p>© 2024 HabitForge. All Rights Reserved</p>
+                <p>© 2025 HabitForge. All Rights Reserved</p>
             </div>
         </footer>
     );

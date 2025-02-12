@@ -41,6 +41,8 @@ import BottomDrawerButton from './components/Mobile/BottomDrawerButton/BottomDra
 import RepeatableDisplay from './components/UtilityComponents/repeatableDisplay/RepeatableDisplay'
 import CalendarModal from './components/Todo/TodoModal/CalendarModal/CalendarModal'
 import HeaderMenu from './components/Layout/HeaderMenu/HeaderMenu'
+import Dashboard from './Views/Dashboard/Dashboard'
+import Social from './Views/Social/Social'
 
 //TODO: Eventually everything within the Card-tag, should be made into its own component.
 function App() {
@@ -83,7 +85,6 @@ function App() {
 
   const handleViewChange = (view) => {
     setView(view);
-    console.log("DEBUG -- App.js -- view: ", view)
     updateSettings("activeView", view);
   }
 
@@ -513,33 +514,17 @@ function App() {
     setIsGroupOnlySelected(prevState => !prevState);
   }
 
-
-
-  return (
-
-    <div className='app'>
-      <FirstTimeLoginModal open={isFirstTimeLoginModalOpen} onClose={closeNewLoginModal} />
-      <div>
-        {isLoggedIn && <Header />}
-      </div>
-      {loggedInUser && !isMobile && (
-         <HeaderMenu
-         openGroupModal={() => openGroupModal()}
-         openVoteModal={() => openVoteModal()}
-         openCalendarModal={() => openCalendarModal()}
-         activeView={view}
-         onViewChange={handleViewChange}
-     />
-      )}
-      <>
-        <CookieConsent />
-      </>
-
-      {isLoggedIn && (
-
-        <div className="content" style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
-
-          <Card>
+  const renderView = () => {
+    switch (view) {
+      case 'dashboard':
+        return <Dashboard />;
+      case 'social':
+        return <Social />;
+      case 'list':
+       default:
+       return (
+        <>
+        <Card>
             <div className='nav' style={{ display: 'flex', flexDirection: 'column' }}>
 
 
@@ -974,13 +959,6 @@ function App() {
 
                   )}
 
-
-
-
-
-
-
-
                   {isLoggedIn && (
 
                     <div className="tags-container">
@@ -1142,8 +1120,37 @@ function App() {
               </div>
             )}
           </Card>
+        </>
+        )
+       }
+  }
 
 
+
+  return (
+
+    <div className='app'>
+      <FirstTimeLoginModal open={isFirstTimeLoginModalOpen} onClose={closeNewLoginModal} />
+      <div>
+        {isLoggedIn && <Header />}
+      </div>
+      {loggedInUser && !isMobile && (
+         <HeaderMenu
+         openGroupModal={() => openGroupModal()}
+         openVoteModal={() => openVoteModal()}
+         openCalendarModal={() => openCalendarModal()}
+         activeView={view}
+         onViewChange={handleViewChange}
+     />
+      )}
+      <>
+        <CookieConsent />
+      </>
+
+      {isLoggedIn && (
+
+        <div className="content" style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
+          {renderView()}         
         </div>
       )}
       {!isLoggedIn && !loggedInUser && <LandingPage />}

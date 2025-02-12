@@ -142,7 +142,8 @@
     flex-direction: column;
     align-items: start;
     justify-content: center;
-    width: 10px;
+    width: 60px;
+    padding-right: 10px;
     height: auto;
     overflow: visible;
 }

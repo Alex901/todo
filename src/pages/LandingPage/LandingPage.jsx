@@ -23,6 +23,10 @@ import { useTranslation } from "react-i18next";
 import { useFeedbackContext } from '../../contexts/FeedbackContext';
 import { useUserContext } from '../../contexts/UserContext';
 import FeedbackVoteEntry from '../FeedbackVoteEntry/FeedbackVoteEntry';
+import AboutModal from '../../components/Todo/TodoModal/OfflineModals/AboutModal/AboutModal';
+import InspirationModal from '../../components/Todo/TodoModal/OfflineModals/InspirationModal/InspirationModal';
+import StoryModal from '../../components/Todo/TodoModal/OfflineModals/StoryModal/StoryModal';
+import InformationModal from '../../components/Todo/TodoModal/OfflineModals/InformationModal/InformationModal';
 
 
 const LandingPage = () => { //Could break this out into a header component ofc
@@ -34,6 +38,9 @@ const LandingPage = () => { //Could break this out into a header component ofc
     const [reviews, setReviews] = useState([]);
     const [featureRecommendations, setFeatureRecommendations] = useState([]);
     const carouselRef = useRef(null);
+    const [showAboutModal, setShowAboutModal] = useState(false);
+    const [showStoryModal, setShowStoryModal] = useState(false);
+    const [showInspirationModal, setShowInspirationModal] = useState(false);
 
     const scrollLeft = () => {
         if (carouselRef.current) {
@@ -72,16 +79,24 @@ const LandingPage = () => { //Could break this out into a header component ofc
     const closeRegisterModal = () => setShowRegisterModal(false);
 
     const openLoginModal = () => setShowLoginModal(true);
-
     const closeLoginModal = () => setShowLoginModal(false);
 
+    const openAboutModal = () => setShowAboutModal(true);
+    const closeAboutModal = () => setShowAboutModal(false);
+
+    const openStoryModal = () => setShowStoryModal(true);
+    const closeStoryModal = () => setShowStoryModal(false);
+
+    const openInspirationModal = () => setShowInspirationModal(true);
+    const closeInspirationModal = () => setShowInspirationModal(false);
+
     const features = [
-        { image: ideaImage, title: 'Bring your idea into reality', description: 'Do you want to learn something new? Maybe get rid of a bad habit? Or why not replace that bad habit with a good one? It all starts from a concept, that you will nurture into reality! And we will help you stay on track.' },
-        { image: stepsImage, title: 'Daily steps and reminders', description: 'To keep you engaged in your new activity each day, to maximize the effectiveness.' },
-        { image: trackImage, title: 'Track your progress', description: 'All progress is being recorded so our algorithm can decide if things are too easy/hard and adjust the difficulty of your daily tasks based on that. Also, you get some shiny graphs!!' },
-        { image: motivatedImage, title: 'Eliminate stress', description: 'By always knowing what the next thing you have to do is, and no need to spend countless hours in planning out your days' },
-        { image: cooperateImage, title: 'Cooperate', description: 'You can go on an entirely solo learning journey. Or you can do so as a group. Where you can simply keep each other accountable. Or you can work together towards a common goal.' },
-        { image: testingImage, title: 'Discover new ways of doing things', description: 'Try out all our tools to bolster productivity, and streamline your workflow!' },
+        { image: ideaImage, title: 'Plan your actions', description: 'Every journey begins with a plan. Whether you want to learn something new, kick a bad habit, or replace it with a better one, map out your steps—and we’ll help you stay on track.' },
+        { image: stepsImage, title: 'Daily steps and reminders', description: 'Stay engaged with daily nudges and actionable steps that keep your momentum going.' },
+        { image: trackImage, title: 'Track your progress', description: 'We record your progress so our algorithm can adjust task difficulty to perfectly match your needs. Plus, enjoy detailed graphs that showcase your achievements.' },
+        { image: motivatedImage, title: 'Eliminate stress', description: 'Enjoy peace of mind by always knowing what’s next. No more endless hours spent planning your day.' },
+        { image: cooperateImage, title: 'Colaborate', description: 'Embark on a solo journey, or join a dynamic group where everyone cheers each other on, stays motivated, and works together toward shared goals.' },
+        { image: testingImage, title: 'Discover new ways of doing things', description: 'Experiment with our suite of tools designed to boost productivity and streamline your workflow!' },
     ];
 
 
@@ -216,10 +231,19 @@ const LandingPage = () => { //Could break this out into a header component ofc
             </div>
 
             <div className="data-presentation-CTA"></div>
-            <Footer />
+            <Footer
+                openAboutModal={openAboutModal}
+                openStoryModal={openStoryModal}
+                openInspirationModal={openInspirationModal}
+                openLoginModal={openLoginModal}
+                openRegisterModal={openRegisterModal}
+            />
+       
+            <AboutModal isOpen={showAboutModal} onRequestClose={closeAboutModal} />
+            <StoryModal isOpen={showStoryModal} onRequestClose={closeStoryModal} />
+            <InspirationModal  isOpen={showInspirationModal} onRequestClose={closeInspirationModal} />
+            
         </div>
-
-
     );
 }
 
