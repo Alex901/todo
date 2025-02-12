@@ -81,6 +81,12 @@ h1 {
   }
 }
 
+@media (max-width: 599) {
+  body {
+    background: rgb(255, 255, 255);
+  }
+}
+
 /* Global modal styles */
 .modal-overlay {
   position: fixed;
@@ -188,6 +194,10 @@ h1 {
 
 ::-webkit-scrollbar-button {
   display: none;
+}
+
+body.mobile-background {
+  background-color: white;
 }
 
 /* Remember Firefox! */

@@ -1,4 +1,5 @@
-.im-icon-menu {
+
+.im-menu {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -12,16 +13,17 @@
     box-shadow: 0 0px 8px rgba(0, 0, 0, 0.4); /* Slight box shadow */
 }
 
+
 .im-icon-button {
     color: white; 
-    margin: 0 10px; 
+    margin: 0 3px; 
     transition: transform 0.2s, color 0.2s; 
 }
 
 .im-icon-button:hover {
     transform: scale(1.4); 
     color: var(--secondary-color);
-    pointer: Cursor;
+    cursor: pointer;
 }
 
 .vertical-separator {

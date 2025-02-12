@@ -40,7 +40,7 @@ import BottomDrawer from './components/Mobile/BottomDrawer/BottomDrawer'
 import BottomDrawerButton from './components/Mobile/BottomDrawerButton/BottomDrawerButton'
 import RepeatableDisplay from './components/UtilityComponents/repeatableDisplay/RepeatableDisplay'
 import CalendarModal from './components/Todo/TodoModal/CalendarModal/CalendarModal'
-import IconMenu from './components/Layout/IconMenu/IconMenu'
+import HeaderMenu from './components/Layout/HeaderMenu/HeaderMenu'
 
 //TODO: Eventually everything within the Card-tag, should be made into its own component.
 function App() {
@@ -523,13 +523,13 @@ function App() {
         {isLoggedIn && <Header />}
       </div>
       {loggedInUser && !isMobile && (
-        <IconMenu
-          openGroupModal={() => openGroupModal()}
-          openVoteModal={() => openVoteModal()}
-          openCalendarModal={() => openCalendarModal()}
-          activeView={view}
-          onViewChange={handleViewChange}
-        />
+         <HeaderMenu
+         openGroupModal={() => openGroupModal()}
+         openVoteModal={() => openVoteModal()}
+         openCalendarModal={() => openCalendarModal()}
+         activeView={view}
+         onViewChange={handleViewChange}
+     />
       )}
       <>
         <CookieConsent />
@@ -977,7 +977,7 @@ function App() {
 
 
 
-                
+
 
 
 
@@ -1080,10 +1080,11 @@ function App() {
                 </>
               )}
 
+
               {isLoggedIn && !isMobile && <hr style={{ width: '80%', margin: '1em auto' }}></hr>}
 
-              {/* Second row */}
-              <div className='sticky-container'>
+              {/* Second row (and a really dumb name, change it at some point) */}
+              <div className='sticky-container'> 
                 <div style={{ display: 'flex', justifyContent: 'center', position: 'sticky', top: 0 }}>
                   <button className="navButton" onClick={switchTodoView} style={{
                     background: activeView === 'todo' ? '#eaeaef' : '#E65151',
@@ -1132,6 +1133,8 @@ function App() {
 
             <ExportListModal isOpen={isOpenListModalOpen} onClose={closeExportListModal} />
 
+              </Card>
+              <Card>
             <AnythingList type={activeView} />
             {isMobile && (
               <div className="bottom-drawer-button-wrapper">
@@ -1140,13 +1143,13 @@ function App() {
             )}
           </Card>
 
-        
+
         </div>
       )}
       {!isLoggedIn && !loggedInUser && <LandingPage />}
       <GroupModal isOpen={isGroupModalOpen} onClose={closeGroupModal} />
-                  <VoteModal isOpen={isVoteModalOpen} onClose={closeVoteModal} />
-                  <CalendarModal isOpen={isCalendarModalOpen} onClose={closeCalendarModal} />
+      <VoteModal isOpen={isVoteModalOpen} onClose={closeVoteModal} />
+      <CalendarModal isOpen={isCalendarModalOpen} onClose={closeCalendarModal} />
     </div>
   )
 }

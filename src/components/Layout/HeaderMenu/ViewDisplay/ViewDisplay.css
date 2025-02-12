@@ -1,0 +1,14 @@
+.view-display {
+    background-color: white;
+    border-radius: 10px 30px;
+    border: 2px solid rgb(146, 137, 137);
+    padding: 10px 20px;
+}
+
+.view-display > h2 {
+    color: var(--primary-color);
+    font-size: 1.5rem;
+    font-weight: 700;
+    padding: 0;
+    margin: 0;
+}

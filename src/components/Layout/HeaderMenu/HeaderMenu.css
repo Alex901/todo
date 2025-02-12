@@ -1,0 +1,11 @@
+.app-main-menu {
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    border-radius: 10px; 
+    width: fit-content; 
+    margin: 10px auto;
+    gap: 20px;
+    height: 80px;
+  }
