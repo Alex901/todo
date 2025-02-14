@@ -131,7 +131,7 @@ const LandingPage = () => { //Could break this out into a header component ofc
                         </div>
                     </div>
                     <p style={{ fontSize: '0.8em', margin: '10px' }}>
-                        ({t("data-safe")})
+                        (This is a service in development, read more <a className="read-more-link" href="#" onClick={openInformationModal} style={{ color: 'var(--primary-color)', textDecoration: 'underline' }}>here</a>)
                     </p>
                 </div>
 

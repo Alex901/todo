@@ -333,9 +333,6 @@
  
 }
 
-
-
-
 .carousel-arrow {
   position: absolute;
   top: 50%;
@@ -351,6 +348,13 @@
 
 .right-arrow {
   right: 10px;
+}
+
+.read-more-link:hover {
+  transform: scale(1.1);
+  color: var(--secondary-color);
+  font-weight: 900;
+  cursor: pointer;
 }
 
 @media (max-width: 1024px) {
