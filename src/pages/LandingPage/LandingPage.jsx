@@ -41,6 +41,7 @@ const LandingPage = () => { //Could break this out into a header component ofc
     const [showAboutModal, setShowAboutModal] = useState(false);
     const [showStoryModal, setShowStoryModal] = useState(false);
     const [showInspirationModal, setShowInspirationModal] = useState(false);
+    const [showInformationModal, setShowInformationModal] = useState(false);
 
     const scrollLeft = () => {
         if (carouselRef.current) {
@@ -90,6 +91,9 @@ const LandingPage = () => { //Could break this out into a header component ofc
     const openInspirationModal = () => setShowInspirationModal(true);
     const closeInspirationModal = () => setShowInspirationModal(false);
 
+    const openInformationModal = () => setShowInformationModal(true);
+    const closeInformationModal = () => setShowInformationModal(false);
+
     const features = [
         { image: ideaImage, title: 'Plan your actions', description: 'Every journey begins with a plan. Whether you want to learn something new, kick a bad habit, or replace it with a better one, map out your steps—and we’ll help you stay on track.' },
         { image: stepsImage, title: 'Daily steps and reminders', description: 'Stay engaged with daily nudges and actionable steps that keep your momentum going.' },
@@ -102,7 +106,13 @@ const LandingPage = () => { //Could break this out into a header component ofc
 
     return (
         <div className="landing-page">
-            <Header className="sticky" />
+            <Header className="sticky" 
+                openAboutModal={openAboutModal}
+                openStoryModal={openStoryModal}
+                openInspirationModal={openInspirationModal}
+                openInformationModal={openInformationModal}
+
+            />
             <div className="hero">
                 <div className='hero-left'>
                     <div className="hero-content-left">
@@ -242,7 +252,7 @@ const LandingPage = () => { //Could break this out into a header component ofc
             <AboutModal isOpen={showAboutModal} onRequestClose={closeAboutModal} />
             <StoryModal isOpen={showStoryModal} onRequestClose={closeStoryModal} />
             <InspirationModal  isOpen={showInspirationModal} onRequestClose={closeInspirationModal} />
-            
+            <InformationModal isOpen={showInformationModal} onRequestClose={closeInformationModal} />
         </div>
     );
 }

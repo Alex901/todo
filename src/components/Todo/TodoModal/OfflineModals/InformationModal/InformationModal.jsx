@@ -12,7 +12,19 @@ const InformationModal = ({ isOpen, onRequestClose }) => {
             shouldCloseOnOverlayClick={true}
         >
             <p>
-                Some fun information
+                HabitForge is a work in progress, guided by my personal vision while being shaped by your invaluable feedback. Right now, it's completely free to use, and while I plan to keep it that way as much as possible, hosting costs may eventually lead to a donation model.
+                <br ></br>
+                <br ></br>
+                The platform is designed to be flexible. Whether you use it as a personal habit tracker, a simple to-do list, or a collaborative tool with friends, you have the freedom to shape it to your needs. Although the central theme is consistency, HabitForge is adaptable to many approaches, and a detailed onboarding guide is on the way.
+                <br ></br>
+                <br ></br>
+                This project started as a hobby and quickly turned into a fun, rewarding journey. Feel free to explore and use HabitForge as it is today, and know that updates are coming steadily. Your feedback is crucial in shaping the future of this platform.
+                <br ></br>
+                <br ></br>
+                Thank you for your support,
+                <br ></br>
+                <br ></br>
+                Alex
             </p>
         </BaseModal>
     );

@@ -331,15 +331,7 @@ body {
   gap: 5px;
 }
 
-.app-main-menu {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  border-radius: 10px; 
-  width: fit-content; 
-  margin: 10px auto;
-}
+
 
 @media (max-width: 768px) {
 

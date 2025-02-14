@@ -19,7 +19,7 @@ import NotificationsButton from "./HeaderButtons/NotificationButton/Notification
 import SelectLanguageButton from "./HeaderButtons/SelectLanguageButton/SelectLanguageButton";
 import CurrencyArea from "./CurrencyArea/CurrencyArea";
 import ScoreArea from "./ScoreArea/ScoreArea";
-const Header = () => {
+const Header = ({ openAboutModal, openStoryModal, openInspirationModal, openInformationModal }) => {
   const [time, setTime] = useState(new Date());
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
@@ -92,16 +92,31 @@ const Header = () => {
 
           {/* Right section */}
           <div style={{ display: 'flex', alignItems: 'center', position: 'relative', justifyContent: 'space-between', gap: isLoggedIn ? '12px' : '25px' }}>
-            <SelectLanguageButton isLoggedIn={isLoggedIn} />
+            
             {isLoggedIn ? (
               <>
+               <SelectLanguageButton isLoggedIn={isLoggedIn} />
                 <NotificationsButton
                   isLoggedIn={isLoggedIn}
                   userNotifications={userNotifications}
                 />
                 <UserAvatar />
               </>
-            ) : null}
+            ) : (
+              <>
+              <div className="offline-links">
+                <div className="filler"></div>
+                <a href="#" className="mdl-navigation__link" onClick={openInformationModal} style={{ color: 'yellow', fontWeight: 'bold' }}>Information</a>
+                <a href="#" className="mdl-navigation__link" onClick={openStoryModal}>Story</a>
+                <a href="#" className="mdl-navigation__link" onClick={openInspirationModal}>Inspiration</a>
+                <a href="#" className="mdl-navigation__link" onClick={openAboutModal}>About</a>
+                <div className="filler"></div>
+              </div>
+              
+              <SelectLanguageButton isLoggedIn={isLoggedIn} />
+              </>
+            )}
+           
 
             {!isLoggedIn && <a href="#" className="mdl-navigation__link login-link" style={{ padding: '0' }} onClick={openLoginModal}>{t('login')}</a>}
             {!isLoggedIn && <button className="header-button" onClick={openRegisterModal}>{t('register')}</button>}

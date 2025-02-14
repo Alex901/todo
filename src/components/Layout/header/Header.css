@@ -108,7 +108,7 @@
 
 
 
-.mdl-navigation__link.login-link:hover {
+.mdl-navigation__link:hover {
   color: #e8b962;
   transform: scale(1.2);
 }
@@ -202,5 +202,41 @@
 .notification-container.active {
   background-color: #ffffff; 
   right: 0; 
+}
+
+.offline-links {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+}
+
+.filler {
+  flex: 1;
+  width: 200px;
+}
+
+@media screen and (max-width: 2000px) {
+  .filler {
+    width: 400px;
+  }
+}
+
+@media screen and (max-width: 1800px) {
+  .filler {
+    width: 300px;
+  }
+}
+
+@media screen and (max-width: 1600px) {
+  .filler {
+    width: 230px;
+  }
+}
+
+@media screen and (max-width: 1400px) {
+  .offline-links {
+    display: none;
+  }
+
 }
 
