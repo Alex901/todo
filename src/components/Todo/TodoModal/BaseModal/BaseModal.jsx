@@ -5,7 +5,7 @@ import "./BaseModal.css";
 
 ReactModal.setAppElement('#root');
 
-const BaseModal = ({ isTabs, isOpen, onRequestClose, title, children, ...props }) => {
+const BaseModal = ({ isTabs, isOpen, onRequestClose, title, children, slideInFrom, ...props }) => {
   const modalRef = useRef(null);
 
   useEffect(() => {

@@ -24,10 +24,7 @@ const InformationModal = ({ isOpen, onRequestClose }) => {
                 This project started as a hobby and quickly turned into a fun, rewarding journey. Feel free to explore and use HabitForge as it is today, and know that updates are coming steadily. Your feedback is crucial in shaping the future of this platform.
                 <br ></br>
                 <br ></br>
-                Thank you for your support,
-                <br ></br>
-                <br ></br>
-                Alex
+                Thank you for your support
             </p>
         </BaseModal>
     );
