@@ -10,6 +10,7 @@ const AboutModal = ({ isOpen, onRequestClose }) => {
             className="modal-content"
             overlayClassName="modal-overlay"
             shouldCloseOnOverlayClick={true}
+            slideInFrom="right"
         >
             <p>
                 At HabitForge, we believe that consistency is the foundation of lasting change. Our platform is designed to help you build habits that stick by focusing on small, manageable steps. Why? Because big transformations don’t happen overnight—they happen through tiny, consistent actions repeated over time.

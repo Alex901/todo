@@ -15,7 +15,6 @@ const BaseModal = ({ isTabs, isOpen, onRequestClose, title, children, slideInFro
       }
     };
 
-
     const overlayElement = document.querySelector('.modal-overlay');
 
     if (isOpen && overlayElement) {
@@ -40,6 +39,20 @@ const BaseModal = ({ isTabs, isOpen, onRequestClose, title, children, slideInFro
     return null;
   }
 
+  const getSlideInAnimation = () => {
+    switch (slideInFrom) {
+      case 'left':
+        return 'slideInLeft 0.3s forwards';
+      case 'right':
+        return 'slideInRight 0.3s forwards';
+      case 'bottom':
+        return 'slideInBottom 0.3s forwards';
+      case 'top':
+      default:
+        return 'slideInTop 0.3s forwards';
+    }
+  };
+
   return (
     <ReactModal
       isOpen={isOpen}
@@ -48,6 +61,11 @@ const BaseModal = ({ isTabs, isOpen, onRequestClose, title, children, slideInFro
       className="modal-content"
       overlayClassName="modal-overlay"
       shouldCloseOnOverlayClick={true}
+      style={{
+        content: {
+          animation: getSlideInAnimation(),
+        },
+      }}
     >
         <div className={` ${isTabs ? 'modal-header-tabs' : 'modal-header'}`}>
         <h2 className="modal-title">{title}</h2>
