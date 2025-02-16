@@ -100,6 +100,7 @@
     border-radius: 5px;
     background-color: #f8f3f9;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    min-width: 300px;
 }
 
 .task-block-time {

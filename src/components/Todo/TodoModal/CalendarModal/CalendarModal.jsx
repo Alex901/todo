@@ -21,11 +21,12 @@ const CalendarModal = ({ isOpen, onClose }) => {
     const { loggedInUser } = useUserContext();
     const [interval, setInterval] = useState('day');
     const [selectedList, setSelectedList] = useState('all');
+    const selectedListId = loggedInUser?.myLists.find(list => list.listName === selectedList)?._id;
     const today = new Date();
     const [currentDate, setCurrentDate] = useState(today);
     const [filteredList, setFilteredList] = useState(todoList);
     const tasksWithDueDate = todoList.filter(task => task.dueDate !== null);
-    const tasksNoDueDate = todoList.filter(task => !task.dueDate && !task.repeatable && !task.completed);
+    const tasksNoDueDate = todoList.filter(task => !task.dueDate && !task.repeatable && !task.completed && task.inListNew.some(list => list._id === selectedListId));
     let repeatableTasks = todoList.filter(task => task.repeatable);
     const [mimicTasks, setMimicTasks] = useState(repeatableTasks);
     const [hasSwitched, setHasSwitched] = useState(false);
@@ -37,6 +38,7 @@ const CalendarModal = ({ isOpen, onClose }) => {
     const [draggedItem, setDraggedItem] = useState(null);
     const [palceholderIndex, setPlaceholderIndex] = React.useState(null);
 
+    console.log("DEBUG -- SelectedListId", todoList);
 
     // Find the earliest and latest task dates
     const earliest = tasksWithDueDate.reduce((earliest, task) => {
