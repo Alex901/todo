@@ -41,7 +41,7 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
         { value: 'VERY HARD', label: 'VERY HARD' },
     ];
 
-    // console.log("DEBUG - EditModal -> editData", editData);
+    console.log("DEBUG - EditModal -> editData", editData);
 
     const [taskData, setTaskData] = useState({
         _id: editData._id,
@@ -54,6 +54,7 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
         steps: editData.steps,
         difficulty: editData.difficulty,
         estimatedTime: editData.estimatedTime,
+        owner: editData.owner,
         inList: editData.inList,
         inListNew: editData.inListNew,
         tags: editData.tags,

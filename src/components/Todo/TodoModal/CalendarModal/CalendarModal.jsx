@@ -38,8 +38,6 @@ const CalendarModal = ({ isOpen, onClose }) => {
     const [draggedItem, setDraggedItem] = useState(null);
     const [palceholderIndex, setPlaceholderIndex] = React.useState(null);
 
-    console.log("DEBUG -- SelectedListId", todoList);
-
     // Find the earliest and latest task dates
     const earliest = tasksWithDueDate.reduce((earliest, task) => {
         const taskDates = [task.dueDate, task.completed, task.created]
