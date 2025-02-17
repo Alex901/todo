@@ -55,6 +55,7 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
         difficulty: editData.difficulty,
         estimatedTime: editData.estimatedTime,
         owner: editData.owner,
+        
         inList: editData.inList,
         inListNew: editData.inListNew,
         tags: editData.tags,
