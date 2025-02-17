@@ -1149,7 +1149,7 @@ function App() {
 
       {isLoggedIn && (
 
-        <div className="content" style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
+        <div className="content fade-in-content" style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
           {renderView()}         
         </div>
       )}

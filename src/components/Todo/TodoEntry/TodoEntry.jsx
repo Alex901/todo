@@ -210,16 +210,20 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
     }
 
     const formatEstimatedTime = (minutes) => {
-        if (minutes < 60) {
-            return `${minutes}min`;
+        const weeks = Math.ceil(minutes / (60 * 24 * 7));
+        const days = Math.ceil(minutes / (60 * 24));
+        const hours = Math.ceil(minutes / 60);
+      
+        if (weeks > 1) {
+          return `${weeks}w`;
+        } else if (days > 1) {
+          return `${days}d`;
+        } else if (hours > 1) {
+          return `${hours}h`;
+        } else {
+          return `${minutes}min`;
         }
-        const hours = Math.floor(minutes / 60);
-        const remainingMinutes = minutes % 60;
-        if (remainingMinutes === 0) {
-            return `${hours}h`;
-        }
-        return `${hours}h ${remainingMinutes}min`;
-    };
+      };
 
     const formatDueDate = (dueDate) => {
         const today = new Date();

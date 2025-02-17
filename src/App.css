@@ -38,7 +38,7 @@ body {
   /* Allow content to expand to fill remaining space */
   padding: 0;
   /* Add padding to create space between content and edges */
-  ;
+  transition: fade-in 5s ease-in-out;
 }
 
 .nav button {
@@ -329,6 +329,19 @@ body {
   align-items: center;
   width: 100%;
   gap: 5px;
+}
+
+.fade-in-content {
+  animation: fadeIn 5s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
 }
 
 
