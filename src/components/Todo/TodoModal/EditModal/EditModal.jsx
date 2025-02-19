@@ -747,7 +747,7 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
                                         labelId="tag-label"
                                         id="tag"
                                         multiple
-                                        value={[]} // assuming editData.tags is an array of selected tag objects
+                                        value={editData.tags} // assuming editData.tags is an array of selected tag objects
                                         onChange={event => {
                                             const selectedTagLabel = event.target.value;
                                             if (!selectedTagLabel) {
