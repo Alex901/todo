@@ -41,7 +41,7 @@ body {
   transition: fade-in 5s ease-in-out;
 }
 
-.nav button {
+.navButton {
   padding: 5px;
   margin: 1px;
   border: 2px solid rgb(146, 137, 137);
@@ -51,7 +51,7 @@ body {
   border-radius: 10px;
 }
 
-.nav button:hover {
+.navButton:hover {
   background-color: #4d4d4d;
   transform: scale(1.1);
   border: 1px solid rgb(194, 188, 188);

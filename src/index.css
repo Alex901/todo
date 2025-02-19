@@ -81,9 +81,9 @@ h1 {
   }
 }
 
-@media (max-width: 599) {
+@media (max-width: 800) {
   body {
-    background: rgb(255, 255, 255);
+    background-color: rgb(255, 255, 255);
   }
 }
 
