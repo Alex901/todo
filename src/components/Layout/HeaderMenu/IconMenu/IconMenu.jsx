@@ -5,7 +5,6 @@ import { mdiAccountGroup, mdiCheckDecagram  , mdiCalendarCheck, mdiViewDashboard
 import './IconMenu.css'; // Import CSS for styling
 
 const IconMenu = ({ openGroupModal, openVoteModal, openCalendarModal, activeView, onViewChange }) => {
-    console.log('IconMenu activeView:', activeView);
     return (
         <div className="im-menu">
             <IconButton className="im-icon-button" onClick={openGroupModal}>

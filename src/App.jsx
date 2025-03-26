@@ -84,13 +84,15 @@ function App() {
   const isMobile = useMediaQuery('(max-width:800px)');
 
   useEffect(() => {
-    // Fetch the active view from the server on page load
-    if (loggedInUser?.settings?.activeView) {
+    // Fetch the active view from the server only once when the user logs in
+    if (loggedInUser?.settings?.activeView && view === null) {
+      console.log("DEBUG -- App.js -- setting initial selection");
       setView(loggedInUser.settings.activeView); // Set the initial view from the server
     }
-  }, [loggedInUser]);
+  }, [loggedInUser, view]);
 
   const handleViewChange = (newView) => {
+    console.log("DEBUG -- changing view to: ", newView)
     setView(newView);
     updateSettings("activeView", newView);
   }
