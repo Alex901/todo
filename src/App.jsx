@@ -80,12 +80,19 @@ function App() {
   const [isFirstTimeLoginModalOpen, setIsFirstTimeLoginModalOpen] = useState(false);
   const [isDrawerOpen, setDrawerOpen] = useState(false);
   const [isCalendarModalOpen, setIsCalendarModalOpen] = useState(false);
-  const [view, setView] = useState(loggedInUser?.settings.activeView);
+  const [view, setView] = useState(null);
   const isMobile = useMediaQuery('(max-width:800px)');
 
-  const handleViewChange = (view) => {
-    setView(view);
-    updateSettings("activeView", view);
+  useEffect(() => {
+    // Fetch the active view from the server on page load
+    if (loggedInUser?.settings?.activeView) {
+      setView(loggedInUser.settings.activeView); // Set the initial view from the server
+    }
+  }, [loggedInUser]);
+
+  const handleViewChange = (newView) => {
+    setView(newView);
+    updateSettings("activeView", newView);
   }
 
   const handleOpenDrawer = () => setDrawerOpen(true);
@@ -736,7 +743,7 @@ function App() {
                             );
                           })}
 
-                        <div style={{ display: 'flex', justifyContent: 'center' }}>
+                        <div style={{ display: 'flex', justifyContent: 'center', padding:'5px' }}>
                           <Chip
                             ref={newTagAnchorRef}
                             label="Add tag"
@@ -999,7 +1006,7 @@ function App() {
                             );
                           })}
 
-                        <div style={{ display: 'flex', justifyContent: 'center' }}>
+                        <div style={{ display: 'flex', justifyContent: 'center', padding:'5px' }}>
                           <Chip
                             ref={newTagAnchorRef}
                             label="Add tag"
@@ -1059,7 +1066,7 @@ function App() {
               )}
 
 
-              {isLoggedIn && !isMobile && <hr style={{ width: '80%', margin: '1em auto' }}></hr>}
+
 
             </div>
 

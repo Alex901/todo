@@ -26,3 +26,4 @@ TranslationOutput
 *.sln
 *.sw?
 .env
+.qodo

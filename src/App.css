@@ -21,6 +21,7 @@ body {
 .nav {
   display: inline-table;
   border-radius: 10px;
+  gap: 10px;
 }
 
 .details-container svg {
@@ -125,7 +126,7 @@ body {
   background-color: #ffffff;
   border: 1px solid #cdc3c3;
   border-radius: 10px;
-  padding: 4px;
+  padding: 5px;
 }
 
 .functions-container {
