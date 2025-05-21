@@ -52,7 +52,7 @@ const SelectLanguageButton = ({ isLoggedIn, isMobile, className }) => {
           <img src={ukFlag} alt="English" className="flag-icon" />
           {t('english')}
         </MenuItem>
-        <MenuItem onClick={() => handleLanguageChange('sv')}>
+        <MenuItem onClick={() => handleLanguageChange('sv')} disabled>
           <img src={sweFlag} alt="Swedish" className="flag-icon" />
           {t('swedish')}
         </MenuItem>
