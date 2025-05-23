@@ -783,7 +783,7 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
                     )}
                     {!taskData.repeatable && (
                         <div className="linked-tasks-container">
-                            <FormControl className="linked-tasks-form-control" style={{ minWidth: '100px', width: 'auto', height: 'auto' }} size='small'>
+                            <FormControl className="linked-tasks-form-control" style={{ minWidth: '100px', width: 'auto', height: 'auto', maxWidth: '180px' }} size='small'>
                                 <InputLabel id="tasks-before-label">Tasks Before</InputLabel>
                                 <Select
                                     name="tasksBefore"
@@ -800,7 +800,7 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
                                     ))}
                                 </Select>
                             </FormControl>
-                            <FormControl className="linked-tasks-form-control" style={{ minWidth: '100px', width: 'auto', height: 'auto' }} size='small'>
+                            <FormControl className="linked-tasks-form-control" style={{ minWidth: '100px', width: 'auto', height: 'auto', maxWidth: '180px' }} size='small'>
                                 <InputLabel id="tasks-after-label">Tasks After</InputLabel>
                                 <Select
                                     name="tasksAfter"
