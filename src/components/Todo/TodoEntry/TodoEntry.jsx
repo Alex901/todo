@@ -30,6 +30,8 @@ import { toast } from 'react-toastify';
 const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should use state. Maybe fix?
 
 
+
+
     const { id,
         task,
         isDone,
@@ -95,7 +97,7 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
     //Contexts
     const { removeTodo, toggleTodoComplete, toggleTodoStart, getDoingCount,
         cancelTodo, getActiveListDoingCount, setStepCompleted, setStepUncomplete } = useTodoContext();
-    const { isLoggedIn } = useUserContext();
+    const { isLoggedIn, loggedInUser } = useUserContext();
     const [currentTime, setCurrentTime] = useState(Date.now());
 
     let isDueSoon = dueDate && ((dueDate.getTime() - new Date().getTime()) < 24 * 60 * 60 * 1000); // less than 24 hours left
@@ -213,17 +215,17 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
         const weeks = Math.ceil(minutes / (60 * 24 * 7));
         const days = Math.ceil(minutes / (60 * 24));
         const hours = Math.ceil(minutes / 60);
-      
+
         if (weeks > 1) {
-          return `${weeks}w`;
+            return `${weeks}w`;
         } else if (days > 1) {
-          return `${days}d`;
+            return `${days}d`;
         } else if (hours > 1) {
-          return `${hours}h`;
+            return `${hours}h`;
         } else {
-          return `${minutes}min`;
+            return `${minutes}min`;
         }
-      };
+    };
 
     const formatDueDate = (dueDate) => {
         const today = new Date();
@@ -323,6 +325,26 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
                 </div>
                 {isLoggedIn && (
                     <div className={`more-information ${isMoreChecked ? 'open' : ''}`}>
+                        {['all', 'today'].includes(loggedInUser?.activeList) && (
+                            <div className="todo-more-information">
+                                <div className="in-lists-container">
+                                    <p className="in-lists-label"><strong>In List(s):</strong></p>
+                                    {todoData.inListNew && todoData.inListNew.length > 0 ? (
+                                        <div className="list-chips-container">
+                                            {todoData.inListNew
+                                                .filter((list) => !['all', 'today'].includes(list.listName.toLowerCase())) // Exclude "all" and "today"
+                                                .map((list, index) => (
+                                                    <div key={index} className="list-chip">
+                                                        {list.listName}
+                                                    </div>
+                                                ))}
+                                        </div>
+                                    ) : (
+                                        <p>No lists found</p>
+                                    )}
+                                </div>
+                            </div>
+                        )}
                         <div className="steps-container">
                             {steps && steps.length > 0 ? (
                                 <>
@@ -457,6 +479,26 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
                 </div>
                 {isMoreChecked && isLoggedIn && (
                     <div className={`more-information ${isMoreChecked ? 'open' : ''}`} style={{ gridTemplateColumns: (steps && steps.length > 0 && description) ? '2fr 1fr' : '1fr' }}>
+                           {['all', 'today'].includes(loggedInUser?.activeList) && (
+                            <div className="todo-more-information">
+                                <div className="in-lists-container">
+                                    <p className="in-lists-label"><strong>In List(s):</strong></p>
+                                    {todoData.inListNew && todoData.inListNew.length > 0 ? (
+                                        <div className="list-chips-container">
+                                            {todoData.inListNew
+                                                .filter((list) => !['all', 'today'].includes(list.listName.toLowerCase())) // Exclude "all" and "today"
+                                                .map((list, index) => (
+                                                    <div key={index} className="list-chip">
+                                                        {list.listName}
+                                                    </div>
+                                                ))}
+                                        </div>
+                                    ) : (
+                                        <p>No lists found</p>
+                                    )}
+                                </div>
+                            </div>
+                        )}
                         {steps && steps.length > 0 && (
                             <div className="steps-container">
                                 {steps.map((step, index) => (
@@ -562,6 +604,26 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
                 </div>
                 {isMoreChecked && isLoggedIn && (
                     <div className={`more-information ${isMoreChecked ? 'open' : ''}`} style={{ gridTemplateColumns: (steps && steps.length > 0 && description) ? '2fr 1fr' : '1fr' }}>
+                           {['all', 'today'].includes(loggedInUser?.activeList) && (
+                            <div className="todo-more-information">
+                                <div className="in-lists-container">
+                                    <p className="in-lists-label"><strong>In List(s):</strong></p>
+                                    {todoData.inListNew && todoData.inListNew.length > 0 ? (
+                                        <div className="list-chips-container">
+                                            {todoData.inListNew
+                                                .filter((list) => !['all', 'today'].includes(list.listName.toLowerCase())) // Exclude "all" and "today"
+                                                .map((list, index) => (
+                                                    <div key={index} className="list-chip">
+                                                        {list.listName}
+                                                    </div>
+                                                ))}
+                                        </div>
+                                    ) : (
+                                        <p>No lists found</p>
+                                    )}
+                                </div>
+                            </div>
+                        )}
                         {steps && steps.length > 0 && (
                             <div className="steps-container">
                                 {steps.map((step, index) => (

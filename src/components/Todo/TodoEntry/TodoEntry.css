@@ -233,6 +233,52 @@
     border-radius: 10px;
   }
   
+.todo-more-information {
+    grid-column: 1 / -1; /* Span the entire width */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 10px;
+    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    width: 100%;
+    box-sizing: border-box; /* Ensure padding doesn't affect width */
+}
+
+.in-lists-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.in-lists-label {
+    font-family: math;
+    font-size: 0.9 rem;
+    color: #333;
+    margin: 0;
+}
+
+.list-chips-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+}
+
+.list-chip {
+    padding: 5px 10px;
+    background-color: #e0e0e0;
+    border-radius: 15px;
+    font-size: 0.9rem;
+    color: #333;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.list-chip:hover {
+    background-color: #d0d0d0;
+}
   
 .steps-container, 
 .description-container {
