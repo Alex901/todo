@@ -244,6 +244,27 @@ p.error {
     color: #d01e39; /* Red color on hover */
 }
 
+.already-account-area {
+    text-align: center;
+    margin-top: 20px;
+}
+
+.already-account-message {
+    font-size: 1rem;
+    color: #666; /* Subtle gray color */
+}
+
+.login-link-highlight {
+    color: #007acc;
+    cursor: pointer;
+    text-decoration: underline;
+    transition: color 0.3s ease;
+}
+
+.login-link-highlight:hover {
+    color: #d01e39; /* Red color on hover */
+}
+
 
 @media (max-width: 768px) {
     .register-modal-content {

@@ -5,13 +5,13 @@ import { useUserContext } from '../../../../contexts/UserContext';
 import { toast } from 'react-toastify';
 import { TextField, Button, InputAdornment, IconButton } from '@mui/material';
 import Icon from '@mdi/react';
-import { mdiEye, mdiEyeOff } from '@mdi/js';
+import { mdiEye, mdiEyeOff, mdiGoogle, mdiFacebook, mdiGit } from '@mdi/js';
 import BaseModal from '../../../Todo/TodoModal/BaseModal/BaseModal';
 
 
 ReactModal.setAppElement('#root');
 
-const LoginModal = ({ isOpen, onRequestClose }) => {
+const LoginModal = ({ isOpen, onRequestClose, openLoginModal }) => {
     const [username, setUsername] = React.useState("");
     const [password, setPassword] = React.useState("");
     const [repeatPassword, setRepeatPassword] = React.useState("");
@@ -32,7 +32,7 @@ const LoginModal = ({ isOpen, onRequestClose }) => {
         if (isOpen) {
             document.addEventListener('click', handleOverlayClick);
         }
-       
+
         return () => {
             document.removeEventListener('click', handleOverlayClick);
         };
@@ -94,6 +94,22 @@ const LoginModal = ({ isOpen, onRequestClose }) => {
             shouldCloseOnOverlayClick={true}
             title={'Register'}
         >
+            <div className="social-login-area">
+
+                <div className="social-icons-login">
+                    <IconButton className="social-icon-login google">
+                        <Icon path={mdiGoogle} size={1.5} />
+                    </IconButton>
+                    <IconButton className="social-icon-login facebook">
+                        <Icon path={mdiFacebook} size={1.5} />
+                    </IconButton>
+                    <IconButton className="social-icon-login github">
+                        <Icon path={mdiGit} size={1.5} />
+                    </IconButton>
+                </div>
+            </div>
+
+            <hr />
             <form className='modal-form' onSubmit={handleRegister}>
                 <TextField
                     id="email"
@@ -114,33 +130,33 @@ const LoginModal = ({ isOpen, onRequestClose }) => {
                     onChange={e => setUsername(e.target.value)}
                     className="modal-input"
                 />
-               
-                    <TextField
-                        id="password"
-                        label="Password"
-                        variant="outlined"
-                        type={showPassword ? "text" : "password"}
-                        value={password}
-                        onChange={e => setPassword(e.target.value)}
-                        className="modal-input"
-                        InputProps={{
-                            endAdornment: (
-                                <InputAdornment position="end">
-                                    <IconButton
-                                        aria-label="toggle password visibility"
-                                        onClick={() => setShowPassword(!showPassword)}
-                                        sx={{
-                                            right: 0,
-                                            backgroundColor: 'transparent',
-                                          }}
-                                    >
-                                        {showPassword ? <Icon path={mdiEye} size={1} /> : <Icon path={mdiEyeOff} size={1} />}
-                                    </IconButton>
-                                </InputAdornment>
-                            )
-                        }}
-                    />
-             
+
+                <TextField
+                    id="password"
+                    label="Password"
+                    variant="outlined"
+                    type={showPassword ? "text" : "password"}
+                    value={password}
+                    onChange={e => setPassword(e.target.value)}
+                    className="modal-input"
+                    InputProps={{
+                        endAdornment: (
+                            <InputAdornment position="end">
+                                <IconButton
+                                    aria-label="toggle password visibility"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    sx={{
+                                        right: 0,
+                                        backgroundColor: 'transparent',
+                                    }}
+                                >
+                                    {showPassword ? <Icon path={mdiEye} size={1} /> : <Icon path={mdiEyeOff} size={1} />}
+                                </IconButton>
+                            </InputAdornment>
+                        )
+                    }}
+                />
+
                 <TextField
                     id="repeatPassword"
                     label="Repeat Password"
@@ -149,26 +165,31 @@ const LoginModal = ({ isOpen, onRequestClose }) => {
                     value={repeatPassword}
                     onChange={handleConfirmPasswordChange}
                     className="modal-input"
-                          InputProps={{
-                            endAdornment: (
-                                <InputAdornment position="end">
-                                    <IconButton
-                                        aria-label="toggle password visibility"
-                                        onClick={() => setShowPassword(!showPassword)}
-                                        sx={{
-                                            right: 0,
-                                            backgroundColor: 'transparent',
-                                          }}
-                                    >
-                                        {showPassword ? <Icon path={mdiEye} size={1} /> : <Icon path={mdiEyeOff} size={1} />}
-                                    </IconButton>
-                                </InputAdornment>
-                            )
-                        }}
+                    InputProps={{
+                        endAdornment: (
+                            <InputAdornment position="end">
+                                <IconButton
+                                    aria-label="toggle password visibility"
+                                    onClick={() => setShowPassword(!showPassword)}
+                                    sx={{
+                                        right: 0,
+                                        backgroundColor: 'transparent',
+                                    }}
+                                >
+                                    {showPassword ? <Icon path={mdiEye} size={1} /> : <Icon path={mdiEyeOff} size={1} />}
+                                </IconButton>
+                            </InputAdornment>
+                        )
+                    }}
                 />
                 {passwordError && <p className="error">{passwordError}</p>}
                 <button className='modal-button register-button'>Continue</button>
             </form>
+            <div className="already-account-area">
+                <p className="already-account-message">
+                    Already have an account? Login <span onClick={openLoginModal} className="login-link-highlight"> here</span>
+                </p>
+            </div>
         </BaseModal>
     );
 }

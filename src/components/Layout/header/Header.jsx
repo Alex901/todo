@@ -127,7 +127,7 @@ const Header = ({ openAboutModal, openStoryModal, openInspirationModal, openInfo
         </div>
       </header>
       <LoginModal isOpen={isLoginModalOpen} onRequestClose={closeLoginModal} openRegisterModal={openRegisterModal} />
-      <RegisterModal isOpen={isRegisterModalOpen} onRequestClose={closeRegisterModal} />
+      <RegisterModal isOpen={isRegisterModalOpen} onRequestClose={closeRegisterModal} openLoginModal={openLoginModal} />
 
       <div className="mdl-layout" style={{}}>
 

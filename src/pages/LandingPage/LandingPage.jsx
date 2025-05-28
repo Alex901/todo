@@ -88,7 +88,7 @@ const LandingPage = () => { //Could break this out into a header component ofc
     };
 
     const closeRegisterModal = () => setShowRegisterModal(false);
-    
+
     const closeLoginModal = () => setShowLoginModal(false);
 
     const openAboutModal = () => setShowAboutModal(true);
@@ -133,7 +133,7 @@ const LandingPage = () => { //Could break this out into a header component ofc
                             </a>
                             <div className='hero-get-started-actions'>
                                 <button className="hero-button" onClick={openRegisterModal}> {t("hero-button")} </button>
-                                <RegisterModal isOpen={showRegisterModal} onRequestClose={closeRegisterModal} />
+                                <RegisterModal isOpen={showRegisterModal} onRequestClose={closeRegisterModal} openLoginModal={openLoginModal} />
                             </div>
                             <p>{t("already-account")} <a className="hero-login-link" onClick={openLoginModal}>{t("login")}</a></p>
                             <LoginModal isOpen={showLoginModal} onRequestClose={closeLoginModal} openRegisterModal={openRegisterModal} />
