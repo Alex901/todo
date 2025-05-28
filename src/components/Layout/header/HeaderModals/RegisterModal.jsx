@@ -134,7 +134,7 @@ const LoginModal = ({ isOpen, onRequestClose }) => {
                                             backgroundColor: 'transparent',
                                           }}
                                     >
-                                        {showPassword ? <Icon path={mdiEyeOff} size={1} /> : <Icon path={mdiEye} size={1} />}
+                                        {showPassword ? <Icon path={mdiEye} size={1} /> : <Icon path={mdiEyeOff} size={1} />}
                                     </IconButton>
                                 </InputAdornment>
                             )
@@ -149,6 +149,22 @@ const LoginModal = ({ isOpen, onRequestClose }) => {
                     value={repeatPassword}
                     onChange={handleConfirmPasswordChange}
                     className="modal-input"
+                          InputProps={{
+                            endAdornment: (
+                                <InputAdornment position="end">
+                                    <IconButton
+                                        aria-label="toggle password visibility"
+                                        onClick={() => setShowPassword(!showPassword)}
+                                        sx={{
+                                            right: 0,
+                                            backgroundColor: 'transparent',
+                                          }}
+                                    >
+                                        {showPassword ? <Icon path={mdiEye} size={1} /> : <Icon path={mdiEyeOff} size={1} />}
+                                    </IconButton>
+                                </InputAdornment>
+                            )
+                        }}
                 />
                 {passwordError && <p className="error">{passwordError}</p>}
                 <button className='modal-button register-button'>Continue</button>

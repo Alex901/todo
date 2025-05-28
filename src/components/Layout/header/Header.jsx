@@ -50,6 +50,7 @@ const Header = ({ openAboutModal, openStoryModal, openInspirationModal, openInfo
 
   const openLoginModal = (event) => {
     event.preventDefault();
+    setIsRegisterModalOpen(false);
     setIsLoginModalOpen(true);
   }
 
@@ -59,6 +60,7 @@ const Header = ({ openAboutModal, openStoryModal, openInspirationModal, openInfo
 
   const openRegisterModal = (event) => {
     event.preventDefault();
+    setIsLoginModalOpen(false);
     setIsRegisterModalOpen(true);
   }
 
@@ -106,7 +108,7 @@ const Header = ({ openAboutModal, openStoryModal, openInspirationModal, openInfo
               <>
               <div className="offline-links">
                 <div className="filler"></div>
-                <a href="#" className="mdl-navigation__link" onClick={openInformationModal} style={{ color: 'yellow', fontWeight: 'bold' }}>Information</a>
+                <a href="#" className="mdl-navigation__link" onClick={openInformationModal}>Information</a>
                 <a href="#" className="mdl-navigation__link" onClick={openStoryModal}>Story</a>
                 <a href="#" className="mdl-navigation__link" onClick={openInspirationModal}>Inspiration</a>
                 <a href="#" className="mdl-navigation__link" onClick={openAboutModal}>About</a>
@@ -124,7 +126,7 @@ const Header = ({ openAboutModal, openStoryModal, openInspirationModal, openInfo
           </div>
         </div>
       </header>
-      <LoginModal isOpen={isLoginModalOpen} onRequestClose={closeLoginModal} />
+      <LoginModal isOpen={isLoginModalOpen} onRequestClose={closeLoginModal} openRegisterModal={openRegisterModal} />
       <RegisterModal isOpen={isRegisterModalOpen} onRequestClose={closeRegisterModal} />
 
       <div className="mdl-layout" style={{}}>

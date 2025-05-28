@@ -117,9 +117,9 @@ const CalendarDrawer = ({ tasksNoDueDate, optimizeOption, handleOptimizeOptionCh
                                 label="Optimize By"
                                 sx={{ minWidth: '150px' }}
                             >
-                                <MenuItem value="time">Where there is time</MenuItem>
-                                <MenuItem value="asap">As soon as possible</MenuItem>
-                                <MenuItem value="tags">Based on tags</MenuItem>
+                                <MenuItem value="priority">Priority</MenuItem>
+                                <MenuItem value="time">Task size</MenuItem>
+                                <MenuItem value="tags">Tags</MenuItem>
                                 <MenuItem value="random">Randomly</MenuItem>
                             </Select>
                         </FormControl>

@@ -75,11 +75,20 @@ const LandingPage = () => { //Could break this out into a header component ofc
 
     const openRegisterModal = (event) => {
         event.preventDefault();
-        setShowRegisterModal(true)
+        console.log("Open register Modal")
+        setShowLoginModal(false);
+        setShowRegisterModal(true);
     };
-    const closeRegisterModal = () => setShowRegisterModal(false);
 
-    const openLoginModal = () => setShowLoginModal(true);
+    const openLoginModal = (event) => {
+        event.preventDefault();
+        console.log("Open login Modal")
+        setShowRegisterModal(false);
+        setShowLoginModal(true);
+    };
+
+    const closeRegisterModal = () => setShowRegisterModal(false);
+    
     const closeLoginModal = () => setShowLoginModal(false);
 
     const openAboutModal = () => setShowAboutModal(true);
@@ -106,7 +115,7 @@ const LandingPage = () => { //Could break this out into a header component ofc
 
     return (
         <div className="landing-page">
-            <Header className="sticky" 
+            <Header className="sticky"
                 openAboutModal={openAboutModal}
                 openStoryModal={openStoryModal}
                 openInspirationModal={openInspirationModal}
@@ -127,7 +136,7 @@ const LandingPage = () => { //Could break this out into a header component ofc
                                 <RegisterModal isOpen={showRegisterModal} onRequestClose={closeRegisterModal} />
                             </div>
                             <p>{t("already-account")} <a className="hero-login-link" onClick={openLoginModal}>{t("login")}</a></p>
-                            <LoginModal isOpen={showLoginModal} onRequestClose={closeLoginModal} />
+                            <LoginModal isOpen={showLoginModal} onRequestClose={closeLoginModal} openRegisterModal={openRegisterModal} />
                         </div>
                     </div>
                     <p style={{ fontSize: '0.8em', margin: '10px' }}>
@@ -224,11 +233,11 @@ const LandingPage = () => { //Could break this out into a header component ofc
 
                         </div>
                         <div className='carusel-arrow-div'>
-                        <IconButton onClick={scrollRight} className="carousel-arrow right-arrow">
-                            <SvgIcon>
-                                <path d={mdiChevronRight} />
-                            </SvgIcon>
-                        </IconButton>
+                            <IconButton onClick={scrollRight} className="carousel-arrow right-arrow">
+                                <SvgIcon>
+                                    <path d={mdiChevronRight} />
+                                </SvgIcon>
+                            </IconButton>
                         </div>
                     </div>
                 </div>
@@ -248,10 +257,10 @@ const LandingPage = () => { //Could break this out into a header component ofc
                 openLoginModal={openLoginModal}
                 openRegisterModal={openRegisterModal}
             />
-       
+
             <AboutModal isOpen={showAboutModal} onRequestClose={closeAboutModal} />
             <StoryModal isOpen={showStoryModal} onRequestClose={closeStoryModal} />
-            <InspirationModal  isOpen={showInspirationModal} onRequestClose={closeInspirationModal} />
+            <InspirationModal isOpen={showInspirationModal} onRequestClose={closeInspirationModal} />
             <InformationModal isOpen={showInformationModal} onRequestClose={closeInformationModal} />
         </div>
     );

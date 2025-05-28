@@ -2,6 +2,7 @@
     margin-top: 0px;
     margin-bottom: 15px;
 }
+
 .modal-form {
     display: flex;
     flex-direction: column;
@@ -26,7 +27,7 @@ p.error {
 }
 
 .modal-input {
-    width:80%;
+    width: 80%;
     height: 36px;
     border-radius: 5px;
     border: 1px solid black;
@@ -41,7 +42,8 @@ p.error {
     left: 0;
     right: 0;
     bottom: 0;
-    background-color: rgba(0, 0, 0, 0.5); /* Semi-transparent overlay */
+    background-color: rgba(0, 0, 0, 0.5);
+    /* Semi-transparent overlay */
 }
 
 .register-modal-content {
@@ -62,13 +64,13 @@ p.error {
 
 
 .modal-input {
-    width:70%;
+    width: 70%;
     height: 36px;
     border-radius: 5px;
     border: 1px solid black;
 }
 
-.cancel-button{
+.cancel-button {
     margin: 5px;
     background-color: #d86363;
     height: 50px;
@@ -79,7 +81,7 @@ p.error {
     bottom: 0;
 }
 
-.cancel-button:hover{
+.cancel-button:hover {
     background-color: #d62727;
     color: #ffffff;
 }
@@ -103,7 +105,8 @@ p.error {
     outline: none;
 }
 
-.show-password-button:active, .show-password-button:focus {
+.show-password-button:active,
+.show-password-button:focus {
     border: none;
     outline: none;
     background: none;
@@ -114,8 +117,10 @@ p.error {
 }
 
 .admin-modal {
-    width: 600px; /* Adjust the width as needed */
-    max-width: 100%; /* Ensure it doesn't exceed the viewport width */
+    width: 600px;
+    /* Adjust the width as needed */
+    max-width: 100%;
+    /* Ensure it doesn't exceed the viewport width */
 }
 
 .modal-button-group {
@@ -145,14 +150,109 @@ p.error {
     margin-bottom: 10px;
 }
 
+.login-button {
+    width: 500px;
+}
+
+.social-login-area {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
+    width: 100%;
+    position: definite;
+    bottom: 20px;
+    /* Adjust as needed */
+}
+
+.social-login-title {
+    font-size: 1.2rem;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 15px;
+    text-align: center;
+}
+
+.social-icons-login {
+    display: flex;
+    justify-content: space-evenly;
+    width: 100%;
+    padding: 0 20px;
+    /* Add some padding for spacing */
+}
+
+.social-icon-login {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background-color: #f0f0f0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: transform 0.3s ease, background-color 0.3s ease;
+}
+
+.social-icon-login.google:hover {
+    background-color: #db4437;
+    /* Google red */
+    color: white;
+    transform: scale(1.2);
+    /* Slight enlargement */
+}
+
+.social-icon-login.facebook:hover {
+    background-color: #4267B2;
+    /* Facebook blue */
+    color: white;
+    transform: scale(1.2);
+    /* Slight enlargement */
+}
+
+.social-icon-login.github:hover {
+    background-color: #2b3137;
+    /* GitHub black */
+    color: white;
+    transform: scale(1.2);
+    /* Slight enlargement */
+}
+
+.register-link-highlight {
+    color: #007acc;
+    cursor: pointer;
+    text-decoration: underline;
+    transition: color 0.3s ease;
+    font-weight: 700;
+}
+
+.register-link-highlight:hover {
+    color: #d01e39;
+}
+
+.forgot-password-link {
+    text-align: right; 
+    font-size: 0.9rem;
+}
+
+.forgot-password-link a {
+    color: #999; /* Faint gray color */
+    text-decoration: underline;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.forgot-password-link a:hover {
+    color: #d01e39; /* Red color on hover */
+}
+
+
 @media (max-width: 768px) {
     .register-modal-content {
         width: 90%;
     }
 }
+
 @media (max-width: 500px) {
     .register-modal-content {
         width: 80%;
     }
 }
-

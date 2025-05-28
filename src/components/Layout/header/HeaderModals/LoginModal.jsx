@@ -5,12 +5,12 @@ import { useUserContext } from '../../../../contexts/UserContext';
 import { toast } from 'react-toastify';
 import { TextField, Button, InputAdornment, IconButton } from '@mui/material';
 import Icon from '@mdi/react';
-import { mdiEye, mdiEyeOff } from '@mdi/js';
+import { mdiEye, mdiEyeOff, mdiGoogle, mdiFacebook, mdiGit } from '@mdi/js';
 import BaseModal from '../../../Todo/TodoModal/BaseModal/BaseModal';
 
 ReactModal.setAppElement('#root');
 
-const LoginModal = ({ isOpen, onRequestClose }) => {
+const LoginModal = ({ isOpen, onRequestClose, openRegisterModal }) => {
     const [username, setUsername] = React.useState("");
     const [password, setPassword] = React.useState("");
     const [showPassword, setShowPassword] = React.useState(false);
@@ -65,6 +65,11 @@ const LoginModal = ({ isOpen, onRequestClose }) => {
         onRequestClose();
     };
 
+    const handleForgotPassword = (event) => {
+        event.preventDefault();
+        toast.info("This feature is not implemented yet. Please contact support for assistance.");
+    }
+
     return (
         <BaseModal
             isOpen={isOpen}
@@ -101,7 +106,7 @@ const LoginModal = ({ isOpen, onRequestClose }) => {
                                     aria-label="toggle password visibility"
                                     onClick={() => setShowPassword(!showPassword)}
                                 >
-                                    {showPassword ? <Icon path={mdiEyeOff} size={1} /> : <Icon path={mdiEye} size={1} />}
+                                    {showPassword ? <Icon path={mdiEye} size={1} /> : <Icon path={mdiEyeOff} size={1} />}
                                 </IconButton>
                             </InputAdornment>
                         )
@@ -109,8 +114,28 @@ const LoginModal = ({ isOpen, onRequestClose }) => {
 
                 />
                 {passwordError && <p className='error'>{passwordError}</p>}
-                <button className='modal-button'>Login</button>
+                <div className="forgot-password-link">
+                    <a href="#" onClick={handleForgotPassword}>Forgotten your password?</a>
+                </div>
+                <button className='modal-button login-button'>Login</button>
             </form>
+
+            <div className="social-login-area">
+                <p className="social-login-message">
+                    Don't have an account yet? Get started with one <span onClick={openRegisterModal} className="register-link-highlight"> here</span>, or log in using your socials:
+                </p>
+                <div className="social-icons-login">
+                    <IconButton className="social-icon-login google">
+                        <Icon path={mdiGoogle} size={1.5} />
+                    </IconButton>
+                    <IconButton className="social-icon-login facebook">
+                        <Icon path={mdiFacebook} size={1.5} />
+                    </IconButton>
+                    <IconButton className="social-icon-login github">
+                        <Icon path={mdiGit} size={1.5} />
+                    </IconButton>
+                </div>
+            </div>
         </BaseModal>
     );
 }
