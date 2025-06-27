@@ -80,7 +80,7 @@ function App() {
   const [isFirstTimeLoginModalOpen, setIsFirstTimeLoginModalOpen] = useState(false);
   const [isDrawerOpen, setDrawerOpen] = useState(false);
   const [isCalendarModalOpen, setIsCalendarModalOpen] = useState(false);
-  const [view, setView] = useState(loggedInUser?.activeView);
+  const [view, setView] = useState(loggedInUser?.settings?.activeView);
   const isMobile = useMediaQuery('(max-width:800px)');
 
   useEffect(() => {
@@ -89,11 +89,10 @@ function App() {
       console.log("DEBUG -- App.js -- setting initial selection");
       setView(loggedInUser.settings.activeView); // Set the initial view from the server
     }
-  }, [loggedInUser, view]);
+  }, [loggedInUser]);
 
 const handleViewChange = async (newView) => {
     console.log("DEBUG -- changing view to: ", newView);
-    setView(newView); // Optimistically update the view
     
     try {
         await updateSettings("activeView", newView); // Wait for backend confirmation
