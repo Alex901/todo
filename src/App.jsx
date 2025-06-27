@@ -80,7 +80,7 @@ function App() {
   const [isFirstTimeLoginModalOpen, setIsFirstTimeLoginModalOpen] = useState(false);
   const [isDrawerOpen, setDrawerOpen] = useState(false);
   const [isCalendarModalOpen, setIsCalendarModalOpen] = useState(false);
-  const [view, setView] = useState(null);
+  const [view, setView] = useState(loggedInUser?.activeView);
   const isMobile = useMediaQuery('(max-width:800px)');
 
   useEffect(() => {
@@ -91,11 +91,18 @@ function App() {
     }
   }, [loggedInUser, view]);
 
-  const handleViewChange = (newView) => {
-    console.log("DEBUG -- changing view to: ", newView)
-    setView(newView);
-    updateSettings("activeView", newView);
-  }
+const handleViewChange = async (newView) => {
+    console.log("DEBUG -- changing view to: ", newView);
+    setView(newView); // Optimistically update the view
+    
+    try {
+        await updateSettings("activeView", newView); // Wait for backend confirmation
+    } catch (error) {
+        console.error("Failed to update view on backend:", error);
+        // Revert to the previous view if the backend update fails
+        setView(previousView => previousView);
+    }
+};
 
   const handleOpenDrawer = () => setDrawerOpen(true);
   const handleCloseDrawer = () => setDrawerOpen(false);

@@ -34,7 +34,7 @@
 
 .todo-entry:hover {
     transform: scale(1.02, 1.07);
-    background-color: rgba(123, 31, 162, 1);
+    background-color: rgba(123, 31, 162, 0.9);
     color: white
 }
 
