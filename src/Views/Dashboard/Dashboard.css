@@ -1,0 +1,23 @@
+.feature-placeholder {
+
+    align-items: center;
+    justify-content: center;
+    background: rgba(255, 255, 255, 0.7); /* Glassed effect with transparency */
+    backdrop-filter: blur(8px); /* Adds the blurred glass effect */
+
+    font-size: 1.2rem; /* Slightly larger text */
+    text-align: center;
+    z-index: 10; /* Ensures it overlays the card content */
+    padding: 20px;
+}
+
+.placeholder-message {
+    font-size: 1.5rem; /* Larger text for better readability */
+    font-weight: bold;
+    color: #444; /* Slightly darker text for contrast */
+}
+
+.placeholder-message strong {
+    color: #d01e39; /* Highlight the points requirement */
+    font-weight: bold;
+}

@@ -9,7 +9,11 @@ const Dashboard = () => {
     return (
         <>
             <Card>
-                <h2> Dashboard - Coming soon</h2>
+                <div className="feature-placeholder">
+                    <p className="placeholder-message">
+                        Earn <strong> 500 points</strong> to unlock this feature!
+                    </p>
+                </div>
             </Card>
         </>
     );

@@ -45,7 +45,7 @@ body {
 .navButton {
   padding: 5px;
   margin: 1px;
-  border: 2px solid rgb(146, 137, 137);
+  border: 1px solid rgb(146, 137, 137);
   background-color: #777474;
   cursor: pointer;
   color: white;

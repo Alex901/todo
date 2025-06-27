@@ -1109,7 +1109,7 @@ const handleViewChange = async (newView) => {
               <Card>
                 
               <div className='sticky-container'> 
-                <div style={{ display: 'flex', justifyContent: 'center', position: 'sticky', top: 0 }}>
+                <div style={{ display: 'flex', justifyContent: 'center', position: 'sticky', top: 0, marginBottom: '-1px' }}>
                   <button className="navButton" onClick={switchTodoView} style={{
                     background: activeView === 'todo' ? '#eaeaef' : '#E65151',
                     color: activeView === 'todo' ? 'black' : 'white',

@@ -487,7 +487,7 @@ const AnythingList = ({ type }) => {
                             ) : (
                                 <div style={{ width: '100%', height: '20em', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                                     {type === 'todo' && <strong>"To create new a new activity, use the '+'-button."</strong>}
-                                    {type === 'doing' && "Looks like you are not doing anything at the moment. Go to 'todo' to start a task."}
+                                    {type === 'doing' && "Looks like you are not doing anything at the moment. Go to 'Prepared' to start a task."}
                                     {type === 'done' && "No finished tasks yet."}
                                 </div>
                             )
