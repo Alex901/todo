@@ -93,6 +93,7 @@ function App() {
 
 const handleViewChange = async (newView) => {
     console.log("DEBUG -- changing view to: ", newView);
+    setView(newView); // Optimistically update the view
     
     try {
         await updateSettings("activeView", newView); // Wait for backend confirmation
