@@ -510,6 +510,7 @@ const UserProvider = ({ children }) => {
                 console.log("List edited: ", response.data);
                 checkLogin();
                 console.log("loggedInUser: ", loggedInUser);
+                checkLogin();
                 setActiveList(editedListData.listName);
                 toast.success("List edited");
             } else if (response.status === 404) {

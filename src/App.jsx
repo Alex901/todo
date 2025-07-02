@@ -88,6 +88,7 @@ function App() {
     if (loggedInUser?.settings?.activeView && view === null) {
       console.log("DEBUG -- App.js -- setting initial selection");
       setView(loggedInUser.settings.activeView); // Set the initial view from the server
+      checkLogin(); // Ensure the user is logged and latest updates are used
     }
   }, [loggedInUser]);
 
