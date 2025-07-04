@@ -8,7 +8,7 @@ import TodoEntry from "../TodoEntry/TodoEntry";
 import { useTodoContext } from "../../../contexts/todoContexts";
 import { useUserContext } from "../../../contexts/UserContext";
 import Icon from '@mdi/react';
-import { mdiMenuUp, mdiMenuDown } from '@mdi/js';
+import { mdiMenuUp, mdiMenuDown, mdiProgressStarFourPoints } from '@mdi/js';
 import { } from '@mdi/js';
 import { Grid, FallingLines } from "react-loader-spinner";
 import { MagnifyingGlass } from "react-loader-spinner";
@@ -39,6 +39,8 @@ const AnythingList = ({ type }) => {
     const [keepMenuOpen, setKeepMenuOpen] = useState(false);
 
     const isMobile = useMediaQuery('(max-width: 800px)');
+
+
 
     const priorityMapping = {
         'VERY LOW': 1,
@@ -90,6 +92,8 @@ const AnythingList = ({ type }) => {
     const endOfWeek = getEndOfWeek(new Date());
     const activeList = loggedInUser ? loggedInUser.myLists.find(list => list.listName === loggedInUser.activeList) : null;
     const tags = activeList ? activeList.tags : [];
+
+
 
     const customSortFunction = (a, b, isAscending) => {
         const getDateCategory = (date) => {
@@ -280,6 +284,14 @@ const AnythingList = ({ type }) => {
     //     }
     // };
 
+    const completeProject = () => {
+        alert("Complete project")
+    }
+
+    const reviveProject = () => {
+        alert("Revive project")
+    }
+
     //Create the todo lists
     return (
         <div className="list-container">
@@ -365,7 +377,7 @@ const AnythingList = ({ type }) => {
                                         label="Deadline this week"
                                     />
                                 </div>
-                        
+
                                 <div className="checkbox-container" style={{}}>
                                     <FormControlLabel
                                         control={
@@ -476,20 +488,53 @@ const AnythingList = ({ type }) => {
                     {isLoggedIn ? <div className={`title-${type}`}></div> : null}
 
                     <div className={`list-view${isMobile ? '-mobile' : ''}`}>
-
                         {
-                            (type === 'todo' && activeTodoList.filter(todo => !todo.isStarted && !todo.isDone).length > 0) ||
-                                (type === 'doing' && activeTodoList.filter(todo => todo.isStarted && !todo.isDone).length > 0) ||
-                                (type === 'done' && activeTodoList.filter(todo => todo.isDone).length > 0) ? (
-                                activeTodoList.map(todo => (
-                                    <TodoEntry key={todo.id} type={type} todoData={todo} onEdit={handleEdit} />
-                                ))
+                            activeList?.completed ? (
+                                type === 'done' ? (
+                                    // Case: Project Completed and Type is 'done'
+                                    activeTodoList.filter(todo => todo.isDone).length > 0 ? (
+                                        activeTodoList.map(todo => (
+                                            <TodoEntry key={todo.id} type={type} todoData={todo} onEdit={handleEdit} />
+                                        ))
+                                    ) : (
+                                        <div style={{ width: '100%', height: '20em', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+                                            <strong>"No finished tasks yet."</strong>
+                                        </div>
+                                    )
+                                ) : (
+                                    // Case: Project Completed and Type is not 'done'
+                                    <div style={{ width: '100%', height: '20em', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+                                        <strong>"You have completed this project."</strong>
+                                        <p>Click <span style={{ color: '#007acc', cursor: 'pointer' }} onClick={() => setType('done')}>here</span> to review.</p>
+                                        <p>If you want to continue this project, you can revive it for <strong>5<img src="/currency-beta.png" alt="Currency Beta" className="currency-image" /></strong>.</p>
+                                        <button onClick={reviveProject} style={{ padding: '10px 20px', fontSize: '1rem', backgroundColor: '#007acc', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>
+                                            Revive Project
+                                        </button>
+                                    </div>
+                                )
                             ) : (
-                                <div style={{ width: '100%', height: '20em', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-                                    {type === 'todo' && <strong>"To create new a new activity, use the '+'-button."</strong>}
-                                    {type === 'doing' && "Looks like you are not doing anything at the moment. Go to 'Prepared' to start a task."}
-                                    {type === 'done' && "No finished tasks yet."}
-                                </div>
+                                (type === 'todo' && activeTodoList.filter(todo => !todo.isStarted && !todo.isDone).length > 0) ||
+                                    (type === 'doing' && activeTodoList.filter(todo => todo.isStarted && !todo.isDone).length > 0) ||
+                                    (type === 'done' && activeTodoList.filter(todo => todo.isDone).length > 0) ? (
+                                    activeTodoList.map(todo => (
+                                        <TodoEntry key={todo.id} type={type} todoData={todo} onEdit={handleEdit} />
+                                    ))
+                                ) : (
+                                    // Case: Option to Complete the Project
+                                    <div style={{ width: '100%', height: '20em', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+                                        <strong>"It looks like you have completed all the tasks."</strong>
+                                        <p>Do you wish to complete the project?</p>
+                                        <p>
+                                            Reward:
+                                            <strong>x <Icon path={mdiProgressStarFourPoints} size={1} aria-label="Score Icon" /></strong>
+                                            and
+                                            <strong>y <img src="/currency-beta.png" alt="Currency Beta" className="currency-image" aria-label="Productivity Token" /></strong>
+                                        </p>
+                                        <button onClick={completeProject} style={{ padding: '10px 20px', fontSize: '1rem', backgroundColor: '#007acc', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>
+                                            Complete
+                                        </button>
+                                    </div>
+                                )
                             )
                         }
                     </div>
@@ -515,17 +560,25 @@ const AnythingList = ({ type }) => {
                 ) : (
                     <>
                         {type === 'todo' && loggedInUser.activeList !== 'all' ? (
-                            <div className="button-view">
-                                <TodoButton onClick={handleClick} />
-                                <TodoModal
-                                    isOpen={isModalOpen}
-                                    onRequestClose={handleCloseSubmitModal}
-                                />
-                            </div>
+                            !activeList.completed ? (
+                                <div className="button-view">
+                                    <TodoButton onClick={handleClick} />
+                                    <TodoModal
+                                        isOpen={isModalOpen}
+                                        onRequestClose={handleCloseSubmitModal}
+                                    />
+                                </div>
+                            ) : (
+                                <div className="button-view">
+                                    <strong>"The project has been completed."</strong>
+                                </div>
+                            )
                         ) : (
                             <div className="button-view">
                                 <strong>
-                                    {type === 'doing' || type === 'done' ? (
+                                    {activeList.completed ? (
+                                        "The project has been completed."
+                                    ) : type === 'doing' || type === 'done' ? (
                                         <>
                                             Go to "prepared"-tab to create new task.
                                         </>
