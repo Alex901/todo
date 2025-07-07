@@ -19,7 +19,7 @@ import {
 } from '@mui/material';
 import BottomDrawerButton from "../../Mobile/BottomDrawerButton/BottomDrawerButton";
 
-const AnythingList = ({ type }) => {
+const AnythingList = ({ type, setType }) => {
     const [isModalOpen, setIsModalOpen] = useState(false);
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [activeTodoList, setActiveTodoList] = useState([]);
@@ -37,10 +37,52 @@ const AnythingList = ({ type }) => {
     const [isTagsOpen, setIsTagsOpen] = useState(false);
     const [isFiltering, setIsFiltering] = useState(false);
     const [keepMenuOpen, setKeepMenuOpen] = useState(false);
+    const [nothingToFilter, setNothingToFilter] = useState(false);
+    const [isAnyFilterSelected, setIsAnyFilterSelected] = useState(false);
+    const [canFinishProject, setCanFinishProject] = useState(false);
+
+    console.log("DEBUG: loggedInuser ", activeTodoList.length);
+
+    // console.log("DEBUG -- isFiltering:", activeTodoList.filter(todo => todo.isDone).length >= 10);
 
     const isMobile = useMediaQuery('(max-width: 800px)');
 
+    useEffect(() => {
+        setCanFinishProject(activeTodoList.filter(todo => todo.isDone).length >= 10);
+        console.log("DEBUG -- canFinishProject: ", canFinishProject);
+    }, [activeTodoList]);
 
+    useEffect(() => {
+        setIsAnyFilterSelected(
+            isUrgentOnly || isDeadlineOnly || selectedTags.length > 0 || isNewOnly
+        );
+    }, [isUrgentOnly, isDeadlineOnly, selectedTags, isNewOnly]);
+
+    useEffect(() => {
+        // Check if there are tasks for the selected type
+        const hasTasks = activeTodoList.some(todo => {
+            if (type === 'done') {
+                return todo.isDone;
+            } else if (type === 'doing') {
+                return todo.isStarted && !todo.isDone;
+            } else if (type === 'todo') {
+                return !todo.isStarted && !todo.isDone;
+            }
+            return false;
+        });
+
+        setNothingToFilter(!hasTasks); // Set to true if no tasks match the type
+    }, [activeTodoList, type]);
+
+    useEffect(() => {
+        // Reset selectedTags when the active project changes
+        setSelectedTags([]);
+    }, [loggedInUser]);
+
+
+    // console.log("activeTodoList: ", activeTodoList);
+    // const debugTesks = activeTodoList.filter(todo => !todo.isStarted && !todo.isDone);
+    // console.log("DEBUG -- Prepared Tasks:", debugTesks);
 
     const priorityMapping = {
         'VERY LOW': 1,
@@ -160,6 +202,8 @@ const AnythingList = ({ type }) => {
 
         return list;
     }, [todoList, isUrgentOnly, isDeadlineOnly, selectedTags, isNewOnly]);
+
+    console.log("DEBUG -- filteredTodoList: ", filteredTodoList);
 
     const sortedTodoList = useMemo(() => {
         const sortedList = [...filteredTodoList].sort((a, b) => {
@@ -303,6 +347,7 @@ const AnythingList = ({ type }) => {
                         <Stack spacing={1} sx={{}}>
                             <FormControl variant="outlined" style={{ minWidth: 120 }}>
                                 <Autocomplete
+                                    disabled={nothingToFilter && selectedTags.length === 0}
                                     open={isTagsOpen}
                                     onOpen={() => {
                                         setIsTagsOpen(true);
@@ -319,6 +364,7 @@ const AnythingList = ({ type }) => {
                                     size="small"
                                     limitTags={3}
                                     options={tags}
+                                    value={selectedTags}
                                     getOptionLabel={(option) => option.label}
                                     onChange={handleTagChange}
                                     renderOption={(props, option) => (
@@ -361,6 +407,7 @@ const AnythingList = ({ type }) => {
                                             <Checkbox
                                                 checked={isUrgentOnly}
                                                 onChange={toggleUrgentTasks}
+                                                disabled={nothingToFilter && !isUrgentOnly}
                                             />
                                         }
                                         label="Urgent"
@@ -372,6 +419,7 @@ const AnythingList = ({ type }) => {
                                             <Checkbox
                                                 checked={isDeadlineOnly}
                                                 onChange={toggleDeadlineOnly}
+                                                disabled={nothingToFilter && !isDeadlineOnly}
                                             />
                                         }
                                         label="Deadline this week"
@@ -384,6 +432,7 @@ const AnythingList = ({ type }) => {
                                             <Checkbox
                                                 checked={isNewOnly}
                                                 onChange={toggleNewOnly}
+                                                disabled={nothingToFilter && !isNewOnly}
                                             />
                                         }
                                         label="New"
@@ -489,51 +538,175 @@ const AnythingList = ({ type }) => {
 
                     <div className={`list-view${isMobile ? '-mobile' : ''}`}>
                         {
-                            activeList?.completed ? (
-                                type === 'done' ? (
-                                    // Case: Project Completed and Type is 'done'
-                                    activeTodoList.filter(todo => todo.isDone).length > 0 ? (
+                            isAnyFilterSelected && (
+                                (type === 'todo' && activeTodoList.filter(todo => !todo.isStarted && !todo.isDone).length === 0) ||
+                                (type === 'doing' && activeTodoList.filter(todo => todo.isStarted && !todo.isDone).length === 0) ||
+                                (type === 'done' && activeTodoList.filter(todo => todo.isDone).length === 0)
+                            ) ? (
+                                <div style={{ width: '100%', height: '20em', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
+                                    {type === 'todo' ? (
+                                        <strong>"No prepared tasks match these filters."</strong>
+                                    ) : type === 'doing' ? (
+                                        <strong>"No ongoing tasks match these filters."</strong>
+                                    ) : type === 'done' ? (
+                                        <strong>"No completed tasks match these filters."</strong>
+                                    ) : (
+                                        <strong>"No result for these filters."</strong>
+                                    )}
+                                </div>
+                            ) : (
+                                // 3) Project is completed
+                                activeList?.completed ? (
+                                    type === 'todo' || type === 'doing' ? (
+                                        // 3.1) If type == todo OR type == doing → Show revive project screen
+                                        <div style={{ width: '100%', height: '20em', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
+                                            <strong>"You have completed this project."</strong>
+                                            <p>Click <span style={{ color: '#007acc', cursor: 'pointer' }} onClick={() => setType('done')}>here</span> to review.</p>
+                                            <p>If you want to continue this project, you can revive it for:</p>
+                                            <p>
+                                                <strong>{activeList.score.score.ToFixed(1)}</strong>
+                                                <Icon path={mdiProgressStarFourPoints} size={1} style={{ marginLeft: '5px', verticalAlign: 'middle' }} />
+                                                <strong>{activeList.score.currency}</strong>
+                                                <img src="/currency-beta.png" alt="Currency Beta" className="currency-image" style={{ marginLeft: '5px', verticalAlign: 'middle' }} />
+                                            </p>
+                                            <button onClick={reviveProject} style={{ padding: '10px 20px', fontSize: '1rem', backgroundColor: '#007acc', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>
+                                                Revive Project
+                                            </button>
+                                        </div>
+                                    ) : (
+                                        // 3.2) If type == done → Base case: list tasks normally, apply filters etc.
                                         activeTodoList.map(todo => (
                                             <TodoEntry key={todo.id} type={type} todoData={todo} onEdit={handleEdit} />
                                         ))
-                                    ) : (
-                                        <div style={{ width: '100%', height: '20em', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-                                            <strong>"No finished tasks yet."</strong>
-                                        </div>
                                     )
                                 ) : (
-                                    // Case: Project Completed and Type is not 'done'
-                                    <div style={{ width: '100%', height: '20em', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-                                        <strong>"You have completed this project."</strong>
-                                        <p>Click <span style={{ color: '#007acc', cursor: 'pointer' }} onClick={() => setType('done')}>here</span> to review.</p>
-                                        <p>If you want to continue this project, you can revive it for <strong>5<img src="/currency-beta.png" alt="Currency Beta" className="currency-image" /></strong>.</p>
-                                        <button onClick={reviveProject} style={{ padding: '10px 20px', fontSize: '1rem', backgroundColor: '#007acc', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>
-                                            Revive Project
-                                        </button>
-                                    </div>
-                                )
-                            ) : (
-                                (type === 'todo' && activeTodoList.filter(todo => !todo.isStarted && !todo.isDone).length > 0) ||
-                                    (type === 'doing' && activeTodoList.filter(todo => todo.isStarted && !todo.isDone).length > 0) ||
-                                    (type === 'done' && activeTodoList.filter(todo => todo.isDone).length > 0) ? (
-                                    activeTodoList.map(todo => (
-                                        <TodoEntry key={todo.id} type={type} todoData={todo} onEdit={handleEdit} />
-                                    ))
-                                ) : (
-                                    // Case: Option to Complete the Project
-                                    <div style={{ width: '100%', height: '20em', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center' }}>
-                                        <strong>"It looks like you have completed all the tasks."</strong>
-                                        <p>Do you wish to complete the project?</p>
-                                        <p>
-                                            Reward:
-                                            <strong>x <Icon path={mdiProgressStarFourPoints} size={1} aria-label="Score Icon" /></strong>
-                                            and
-                                            <strong>y <img src="/currency-beta.png" alt="Currency Beta" className="currency-image" aria-label="Productivity Token" /></strong>
-                                        </p>
-                                        <button onClick={completeProject} style={{ padding: '10px 20px', fontSize: '1rem', backgroundColor: '#007acc', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>
-                                            Complete
-                                        </button>
-                                    </div>
+                                    // 4) Project is NOT completed
+                                    canFinishProject ? (
+                                        // 4.1) Project is completable
+                                        type === 'todo' ? (
+                                            activeTodoList.filter(todo => !todo.isStarted && !todo.isDone).length > 0 ? (
+                                                // 4.1.1) type == todo → If todo tasks present → list tasks
+                                                activeTodoList.map(todo => (
+                                                    <TodoEntry key={todo.id} type={type} todoData={todo} onEdit={handleEdit} />
+                                                ))
+                                            ) : activeTodoList.filter(todo => todo.isStarted && !todo.isDone).length > 0 ? (
+                                                // Else if no todo tasks but doing tasks present →
+                                                // "Project is completable but uncompleted tasks remain" + link to doing
+                                                <div style={{ width: '100%', height: '20em', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
+                                                    <strong>"Project is completable but uncompleted tasks remain."</strong>
+                                                    <p>Complete the remaining tasks to earn:</p>
+                                                    <p>
+                                                        <strong>{activeList.score.score.toFixed(1)}</strong>
+                                                        <Icon path={mdiProgressStarFourPoints} size={1} style={{ marginLeft: '5px', verticalAlign: 'middle' }} />
+                                                        <strong>{activeList.score.currency}</strong>
+                                                        <img src="/currency-beta.png" alt="Currency Beta" className="currency-image" style={{ marginLeft: '5px', verticalAlign: 'middle' }} />
+                                                    </p>
+                                                    <p>Go to <span style={{ color: '#007acc', cursor: 'pointer' }} onClick={() => setType('doing')}>ongoing</span>.</p>
+                                                </div>
+                                            ) : (
+                                                // Else (no todo or doing tasks) → show complete project screen
+                                                <div style={{ width: '100%', height: '20em', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
+                                                    <strong>"You are now able to complete this project."</strong>
+                                                    <p>Completing this project will earn you:</p>
+                                                    <p>
+                                                        <strong>{activeList.score.score.toFixed(1)}</strong>
+                                                        <Icon path={mdiProgressStarFourPoints} size={1} style={{ marginLeft: '5px', verticalAlign: 'middle' }} />
+                                                        <strong>{activeList.score.currency}</strong>
+                                                        <img src="/currency-beta.png" alt="Currency Beta" className="currency-image" style={{ marginLeft: '5px', verticalAlign: 'middle' }} />
+                                                    </p>
+                                                    <button onClick={completeProject} style={{ padding: '10px 20px', fontSize: '1rem', backgroundColor: '#007acc', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer', marginTop: '10px' }}>
+                                                        Complete Project
+                                                    </button>
+                                                </div>
+                                            )
+                                        ) : type === 'doing' ? (
+                                            activeTodoList.filter(todo => todo.isStarted && !todo.isDone).length > 0 ? (
+                                                // 4.1.2) type == doing → If doing tasks present → list tasks
+                                                activeTodoList.map(todo => (
+                                                    <TodoEntry key={todo.id} type={type} todoData={todo} onEdit={handleEdit} />
+                                                ))
+                                            ) : activeTodoList.filter(todo => !todo.isStarted && !todo.isDone).length > 0 ? (
+                                                // Else if no doing tasks but todo tasks present →
+                                                // "Project is completable but uncompleted tasks remain" + link to todo
+                                                <div style={{ width: '100%', height: '20em', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
+                                                    <strong>"Project is completable but uncompleted tasks remain."</strong>
+                                                    <p>Complete the remaining tasks to earn:</p>
+                                                    <p>
+                                                        <strong>{activeList.score.score.toFixed(1)}</strong>
+                                                        <Icon path={mdiProgressStarFourPoints} size={1} style={{ marginLeft: '5px', verticalAlign: 'middle' }} />
+                                                        <strong>{activeList.score.currency}</strong>
+                                                        <img src="/currency-beta.png" alt="Currency Beta" className="currency-image" style={{ marginLeft: '5px', verticalAlign: 'middle' }} />
+                                                    </p>
+                                                    <p>Go to <span style={{ color: '#007acc', cursor: 'pointer' }} onClick={() => setType('todo')}>prepared</span>.</p>
+                                                </div>
+                                            ) : (
+                                                // Else → show complete project screen
+                                                <div style={{ width: '100%', height: '20em', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
+                                                    <strong>"You are now able to complete this project."</strong>
+                                                    <p>Completing this project will earn you:</p>
+                                                    <p>
+                                                        <strong>{activeList.score.score.toFixed(1)}</strong>
+                                                        <Icon path={mdiProgressStarFourPoints} size={1} style={{ marginLeft: '5px', verticalAlign: 'middle' }} />
+                                                        <strong>{activeList.score.currency}</strong>
+                                                        <img src="/currency-beta.png" alt="Currency Beta" className="currency-image" style={{ marginLeft: '5px', verticalAlign: 'middle' }} />
+                                                    </p>
+                                                    <button onClick={completeProject} style={{ padding: '10px 20px', fontSize: '1rem', backgroundColor: '#007acc', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer', marginTop: '10px' }}>
+                                                        Complete Project
+                                                    </button>
+                                                </div>
+                                            )
+                                        ) : (
+                                            // 4.1.3) type == done → List project/tasks normally
+                                            activeTodoList.map(todo => (
+                                                <TodoEntry key={todo.id} type={type} todoData={todo} onEdit={handleEdit} />
+                                            ))
+                                        )
+                                    ) : (
+                                        // 4.2) Project is NOT completable
+                                        type === 'todo' ? (
+                                            activeTodoList.filter(todo => !todo.isStarted && !todo.isDone).length > 0 ? (
+                                                // 4.2.1) type == todo → If todo tasks present → list tasks
+                                                activeTodoList.map(todo => (
+                                                    <TodoEntry key={todo.id} type={type} todoData={todo} onEdit={handleEdit} />
+                                                ))
+                                            ) : (
+                                                // Else → show message:
+                                                // "You don't have any prepared tasks in this project, use '+'-button to create one."
+                                                <div style={{ width: '100%', height: '20em', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
+                                                    <strong>"You don't have any prepared tasks in this project."</strong>
+                                                    <p>Use the '+'-button to create one.</p>
+                                                </div>
+                                            )
+                                        ) : type === 'doing' ? (
+                                            activeTodoList.filter(todo => todo.isStarted && !todo.isDone).length > 0 ? (
+                                                // 4.2.2) type == doing → If doing tasks present → list tasks
+                                                activeTodoList.map(todo => (
+                                                    <TodoEntry key={todo.id} type={type} todoData={todo} onEdit={handleEdit} />
+                                                ))
+                                            ) : (
+                                                // Else → show message:
+                                                // "It looks like you don’t have anything going on, go to todo (Prepared) to create a task or just enjoy the chill 😎"
+                                                <div style={{ width: '100%', height: '20em', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
+                                                    <strong>"It looks like you don’t have anything going on."</strong>
+                                                    <p>Go to <span style={{ color: '#007acc', cursor: 'pointer' }} onClick={() => setType('todo')}>Prepared</span> to create a task or just enjoy the chill <span style={{ fontSize: '1.5em' }}>😎</span>.</p>
+                                                </div>
+                                            )
+                                        ) : (
+                                            activeTodoList.filter(todo => todo.isDone).length > 0 ? (
+                                                // 4.2.3) type == done → If completed tasks present → list tasks
+                                                activeTodoList.map(todo => (
+                                                    <TodoEntry key={todo.id} type={type} todoData={todo} onEdit={handleEdit} />
+                                                ))
+                                            ) : (
+                                                // Else → show message:
+                                                // "No completed tasks yet, go to todo to prepare one."
+                                                <div style={{ width: '100%', height: '20em', display: 'flex', flexDirection: 'column', justifyContent: 'center', alignItems: 'center', textAlign: 'center' }}>
+                                                    <strong>"No completed tasks yet."</strong>
+                                                    <p>Go to <span style={{ color: '#007acc', cursor: 'pointer' }} onClick={() => setType('todo')}>Prepared</span> to create one.</p>
+                                                </div>
+                                            )
+                                        )
+                                    )
                                 )
                             )
                         }
@@ -580,7 +753,7 @@ const AnythingList = ({ type }) => {
                                         "The project has been completed."
                                     ) : type === 'doing' || type === 'done' ? (
                                         <>
-                                            Go to "prepared"-tab to create new task.
+
                                         </>
                                     ) : (
                                         <>

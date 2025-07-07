@@ -1130,7 +1130,7 @@ const handleViewChange = async (newView) => {
                   }}> Review ({isLoggedIn ? getActiveListDoneCount() : getDoneCount()}) </button>
                 </div>
               </div>
-            <AnythingList type={activeView} />
+            <AnythingList type={activeView} setType={setActiveView} />
             {isMobile && (
               <div className="bottom-drawer-button-wrapper">
                 <BottomDrawerButton listName={loggedInUser.activeList} onOpen={handleOpenDrawer} user={loggedInUser} />
