@@ -29,9 +29,6 @@ import { toast } from 'react-toastify';
 
 const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should use state. Maybe fix?
 
-
-
-
     const { id,
         task,
         isDone,
@@ -59,6 +56,7 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
     const [isConfirmCancelModalOpen, setIsConfirmCancelModalOpen] = useState(false);
     const [editingTask, setEditingTask] = useState(null);
     const entry = useRef(null);
+    const hasEntriesBefore = todoData.tasksBefore.length > 0 ? true : false;
 
     //Icon mapping
     const priorityIcons = {
@@ -136,6 +134,8 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
     const handleClickToStart = () => {
         if ((isLoggedIn ? getActiveListDoingCount() : getDoingCount()) > 2) {
             setIsModalOpen(true);
+        } else if(hasEntriesBefore) {
+            alert("You have tasks assigned before this one. You should complete them first.");
         } else {
             toggleTodoStart(id);
             toast.info(`A new task has been started.`);
