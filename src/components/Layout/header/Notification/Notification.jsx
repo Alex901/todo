@@ -86,23 +86,40 @@ const Notification = ({ notificationData, type, message, timestamp }) => {
         <p className="message">{message}</p>
       </div>
     );
+  } else if (type === 'info') {
+    return (
+      <div className={`notification-item ${isVisible ? '' : 'fade-out'}`}>
+        <p className='date'>{new Date(timestamp).toLocaleString()}</p>
+        <div className="message">
+          <p className="info-title"><strong>Information</strong></p>
+          <p className="info-message">
+            {message}
+          </p>
+        </div>
+        <div className="button-container">
+          <button className="resolve-button" onClick={() => handleResolveNotification()}>
+            OK
+          </button>
+        </div>
+      </div>
+    );
   } else if (type === 'award') {
     return (
       <div className={`notification-item ${isVisible ? '' : 'fade-out'}`}>
-          <p className='date'>{new Date(timestamp).toLocaleString()}</p>
-          <div className="message">
-              <p className="congratulations"><strong>Congratulations</strong></p>
-              <p className="reward-message">
-                  You have been rewarded 1 <img src="/currency-beta.png" alt="Currency Beta" className="currency-image" /> for completing a task.
-              </p>
-          </div>
-          <div className="button-container">
+        <p className='date'>{new Date(timestamp).toLocaleString()}</p>
+        <div className="message">
+          <p className="congratulations"><strong>Congratulations</strong></p>
+          <p className="reward-message">
+            {message}
+          </p>
+        </div>
+        <div className="button-container">
           <button className="resolve-button" onClick={() => handleResolveNotification()}>
-              Yey
+            Yey
           </button>
-          </div> 
+        </div>
       </div>
-  );
+    );
 
   }
 

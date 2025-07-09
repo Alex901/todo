@@ -509,8 +509,6 @@ const UserProvider = ({ children }) => {
 
                 console.log("List edited: ", response.data);
                 checkLogin();
-                console.log("loggedInUser: ", loggedInUser);
-                checkLogin();
                 setActiveList(editedListData.listName);
                 toast.success("List edited");
             } else if (response.status === 404) {
@@ -545,10 +543,63 @@ const UserProvider = ({ children }) => {
         }
     }
 
-    const rewardPoints = async (points) => {
-        console.log("lmao")
-    };
+    const completeProject = async (projectId, userId) => {
 
+        console.log("Complete project with ID: ", projectId);
+        try {
+            const response = await axios.patch(`${BASE_URL}/users/complete-project/${userId}`, { projectId });
+            if (response.status === 200) {
+                console.log("Project completed successfully");
+                toast.success("Project completed successfully");
+                checkLogin();
+            } else if (response.status === 404) {
+                console.log("Project not found");
+                toast.error("Project not found");
+            } else {
+                console.log("Internal server error");
+                toast.error("Failed to complete project -- internal server error");
+            }
+        } catch (error) {
+            console.error('Error completing project', error);
+            toast.error("Failed to complete project");
+        }
+    }
+
+    const reviveProject = async (projectId, userId, reviveCost) => {
+        if (loggedInUser.settings.currency < reviveCost) {
+            toast.error("Not enough shiny coins to revive the project. :(");
+            return;
+        }
+
+        try {
+            // Check if the user has enough currency
+            if (loggedInUser.currency < reviveCost) {
+                toast.error("Not enough currency to revive the project.");
+                return;
+            }
+
+            // Make the API call to revive the project
+            const response = await axios.patch(`${BASE_URL}/users/revive-project/${userId}`, { projectId, reviveCost });
+
+            if (response.status === 200) {
+                console.log("Project revived successfully");
+                toast.success("Project revived successfully");
+                checkLogin(); // Refresh user data
+            } else if (response.status === 400) {
+                console.log("Not enough currency");
+                toast.error("Not enough currency to revive the project.");
+            } else if (response.status === 404) {
+                console.log("Project not found");
+                toast.error("Project not found");
+            } else {
+                console.log("Internal server error");
+                toast.error("Failed to revive project -- internal server error");
+            }
+        } catch (error) {
+            console.error("Error reviving project", error);
+            toast.error("Failed to revive project");
+        }
+    };
 
 
     return (
@@ -556,7 +607,7 @@ const UserProvider = ({ children }) => {
             isLoggedIn, loggedInUser, userList, emojiSettings, login, logout, registerNewUser,
             setLoggedInUser, setActiveList, createList, deleteList, toggleUrgent, addTag,
             deleteTag, updateProfilePicture, editUser, checkLogin, toggleShowDetails,
-            updateSettings, editUserList, deleteUser
+            updateSettings, editUserList, deleteUser, completeProject, reviveProject
         }} >
             {children}
         </UserContext.Provider>

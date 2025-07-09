@@ -17,6 +17,7 @@ import {
     Checkbox, FormControlLabel, Autocomplete, TextField, Stack,
     Chip, useMediaQuery
 } from '@mui/material';
+import ConfirmationModal from "../TodoModal/ConfirmationModal/ConfirmationModal";
 import BottomDrawerButton from "../../Mobile/BottomDrawerButton/BottomDrawerButton";
 
 const AnythingList = ({ type, setType }) => {
@@ -24,7 +25,7 @@ const AnythingList = ({ type, setType }) => {
     const [isEditModalOpen, setIsEditModalOpen] = useState(false);
     const [activeTodoList, setActiveTodoList] = useState([]);
     const [editingTask, setEditingTask] = useState(null);
-    const { loggedInUser, isLoggedIn, toggleUrgent, updateSettings } = useUserContext();
+    const { loggedInUser, isLoggedIn, toggleUrgent, updateSettings, completeProject, reviveProject } = useUserContext();
     const { todoList } = useTodoContext();
     const [isAscending, setIsAscending] = useState(false);
     const [isUrgentOnly, setIsUrgentOnly] = useState(false);
@@ -40,8 +41,10 @@ const AnythingList = ({ type, setType }) => {
     const [nothingToFilter, setNothingToFilter] = useState(false);
     const [isAnyFilterSelected, setIsAnyFilterSelected] = useState(false);
     const [canFinishProject, setCanFinishProject] = useState(false);
+    const [isConfirmModalOpen, setIsConfirmationOpen] = useState(false);
+    const [modalConfig, setModalConfig] = useState({});
 
-    console.log("DEBUG: loggedInuser ", activeTodoList.length);
+
 
     // console.log("DEBUG -- isFiltering:", activeTodoList.filter(todo => todo.isDone).length >= 10);
 
@@ -134,8 +137,9 @@ const AnythingList = ({ type, setType }) => {
     const endOfWeek = getEndOfWeek(new Date());
     const activeList = loggedInUser ? loggedInUser.myLists.find(list => list.listName === loggedInUser.activeList) : null;
     const tags = activeList ? activeList.tags : [];
-
-
+    const reviveCost = activeList.completed ? (activeList.score.currency * 2 + 5) : 0;
+    console.log("DEBUG reviveCost: ", reviveCost);
+    // console.log("DEBUG: activeList ", activeList);
 
     const customSortFunction = (a, b, isAscending) => {
         const getDateCategory = (date) => {
@@ -327,13 +331,56 @@ const AnythingList = ({ type, setType }) => {
     //         event.preventDefault();
     //     }
     // };
+    const closeConfirmationModal = () => {
+        setIsConfirmationOpen(false);
+        setModalConfig({});
+    };
 
-    const completeProject = () => {
-        alert("Complete project")
-    }
+    const handleCompleteProject = () => {
+        setModalConfig({
+            message: (
+                <>
+                    Completing this project will award you the designated rewards. <br />
+                    However, you will no longer be able to add new tasks to this project. <br />
+                    If needed, you can revive the project later, but it will cost
+                    <strong> {activeList.score.currency * 2 + 5} </strong>
+                    <img
+                        src="/currency-beta.png"
+                        alt="Currency Beta"
+                        className="currency-image"
+                        style={{ marginLeft: '5px', verticalAlign: 'middle' }}
+                    />.
+                </>
+            ),
+            onConfirm: () => {
+                completeProject(activeList._id, loggedInUser._id);
+                setIsConfirmationOpen(false);
+            },
+        });
+        setIsConfirmationOpen(true);
+    };
 
-    const reviveProject = () => {
-        alert("Revive project")
+    const handleReviveProject = () => {
+        setModalConfig({
+            message: (
+                <>
+                    By reviving the project you can add new tasks again. <br />
+                    It will cost
+                    <strong> {reviveCost}</strong>
+                    <img
+                        src="/currency-beta.png"
+                        alt="Currency Beta"
+                        className="currency-image"
+                        style={{ marginLeft: '5px', verticalAlign: 'middle' }}
+                    />.
+                </>
+            ),
+            onConfirm: () => {
+                reviveProject(activeList._id, loggedInUser._id, reviveCost);
+                setIsConfirmationOpen(false);
+            }
+        });
+        setIsConfirmationOpen(true);
     }
 
     //Create the todo lists
@@ -564,12 +611,10 @@ const AnythingList = ({ type, setType }) => {
                                             <p>Click <span style={{ color: '#007acc', cursor: 'pointer' }} onClick={() => setType('done')}>here</span> to review.</p>
                                             <p>If you want to continue this project, you can revive it for:</p>
                                             <p>
-                                                <strong>{activeList.score.score.ToFixed(1)}</strong>
-                                                <Icon path={mdiProgressStarFourPoints} size={1} style={{ marginLeft: '5px', verticalAlign: 'middle' }} />
-                                                <strong>{activeList.score.currency}</strong>
+                                                <strong>{reviveCost}</strong>
                                                 <img src="/currency-beta.png" alt="Currency Beta" className="currency-image" style={{ marginLeft: '5px', verticalAlign: 'middle' }} />
                                             </p>
-                                            <button onClick={reviveProject} style={{ padding: '10px 20px', fontSize: '1rem', backgroundColor: '#007acc', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>
+                                            <button onClick={handleReviveProject} style={{ padding: '10px 20px', fontSize: '1rem', backgroundColor: '#007acc', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer' }}>
                                                 Revive Project
                                             </button>
                                         </div>
@@ -614,7 +659,7 @@ const AnythingList = ({ type, setType }) => {
                                                         <strong>{activeList.score.currency}</strong>
                                                         <img src="/currency-beta.png" alt="Currency Beta" className="currency-image" style={{ marginLeft: '5px', verticalAlign: 'middle' }} />
                                                     </p>
-                                                    <button className="complete-project-button" onClick={completeProject}>
+                                                    <button className="complete-project-button" onClick={handleCompleteProject}>
                                                         Complete Project
                                                     </button>
                                                 </div>
@@ -710,6 +755,13 @@ const AnythingList = ({ type, setType }) => {
                                 )
                             )
                         }
+                        <ConfirmationModal
+                            isOpen={isConfirmModalOpen}
+                            onRequestClose={closeConfirmationModal}
+                            message={modalConfig.message}
+                            onConfirm={modalConfig.onConfirm}
+                            onClose={closeConfirmationModal}
+                        />
                     </div>
                 </>
             )}

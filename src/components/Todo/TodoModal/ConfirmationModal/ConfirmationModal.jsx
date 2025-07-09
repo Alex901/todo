@@ -32,7 +32,7 @@ const ConfirmationModal = ({ isOpen, onRequestClose, message, onConfirm, onClose
             overlayClassName="modal-overlay"
             shouldCloseOnOverlayClick={true}
         >
-            <div className='modalTitle'> <h3 className="title"> Are you sure? </h3></div>
+            <div className='modalTitle'> <h4 className="title"> Are you sure? </h4></div>
             <div className="message-container">
                 <div className="message-content">
                 <p className="message">{message}</p>

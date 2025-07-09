@@ -57,7 +57,8 @@ const NotificationsButton = ({ isLoggedIn, userNotifications, isMobile, classNam
                 padding: '5px', 
                 marginTop: isMobile ? '0px' : '5px',
                 marginLeft: isMobile ? '-15px' : '0px',
-                backgroundColor: '#f0eded'
+                backgroundColor: '#f0eded',
+                maxHeight: isMobile ? 'calc(100vh - 100px)' : '400px',
               },
             }}
           >
