@@ -614,7 +614,7 @@ const AnythingList = ({ type, setType }) => {
                                                         <strong>{activeList.score.currency}</strong>
                                                         <img src="/currency-beta.png" alt="Currency Beta" className="currency-image" style={{ marginLeft: '5px', verticalAlign: 'middle' }} />
                                                     </p>
-                                                    <button onClick={completeProject} style={{ padding: '10px 20px', fontSize: '1rem', backgroundColor: '#007acc', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer', marginTop: '10px' }}>
+                                                    <button className="complete-project-button" onClick={completeProject}>
                                                         Complete Project
                                                     </button>
                                                 </div>
@@ -650,7 +650,7 @@ const AnythingList = ({ type, setType }) => {
                                                         <strong>{activeList.score.currency}</strong>
                                                         <img src="/currency-beta.png" alt="Currency Beta" className="currency-image" style={{ marginLeft: '5px', verticalAlign: 'middle' }} />
                                                     </p>
-                                                    <button onClick={completeProject} style={{ padding: '10px 20px', fontSize: '1rem', backgroundColor: '#007acc', color: 'white', border: 'none', borderRadius: '5px', cursor: 'pointer', marginTop: '10px' }}>
+                                                    <button className="complete-project-button" onClick={completeProject}>
                                                         Complete Project
                                                     </button>
                                                 </div>

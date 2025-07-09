@@ -119,6 +119,28 @@
     color: white;
 }
 
+.complete-project-button {
+    padding: 10px 20px;
+    font-size: 1rem;
+    background-color: #005bb5; /* Adjusted to match general aesthetics */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.complete-project-button:hover {
+    background-color: #007acc; /* Slightly lighter shade for hover */
+    transform: scale(1.05); /* Subtle zoom effect */
+}
+
+.complete-project-button:active {
+    background-color: #004a99; /* Darker shade for active state */
+    transform: scale(0.98); /* Slightly shrink on click */
+}
+
 /* Media queries */
 
 @media (max-width: 768px) {
