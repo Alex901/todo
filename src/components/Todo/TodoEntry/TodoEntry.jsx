@@ -328,7 +328,7 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
                         {['all', 'today'].includes(loggedInUser?.activeList) && (
                             <div className="todo-more-information">
                                 <div className="in-lists-container">
-                                    <p className="in-lists-label"><strong>In List(s):</strong></p>
+                                    <p className="in-lists-label"><strong>Project(s):</strong></p>
                                     {todoData.inListNew && todoData.inListNew.length > 0 ? (
                                         <div className="list-chips-container">
                                             {todoData.inListNew
@@ -482,7 +482,7 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
                            {['all', 'today'].includes(loggedInUser?.activeList) && (
                             <div className="todo-more-information">
                                 <div className="in-lists-container">
-                                    <p className="in-lists-label"><strong>In List(s):</strong></p>
+                                    <p className="in-lists-label"><strong>Project(s):</strong></p>
                                     {todoData.inListNew && todoData.inListNew.length > 0 ? (
                                         <div className="list-chips-container">
                                             {todoData.inListNew
@@ -607,7 +607,7 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
                            {['all', 'today'].includes(loggedInUser?.activeList) && (
                             <div className="todo-more-information">
                                 <div className="in-lists-container">
-                                    <p className="in-lists-label"><strong>In List(s):</strong></p>
+                                    <p className="in-lists-label"><strong>Project(s):</strong></p>
                                     {todoData.inListNew && todoData.inListNew.length > 0 ? (
                                         <div className="list-chips-container">
                                             {todoData.inListNew
