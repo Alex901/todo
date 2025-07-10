@@ -641,8 +641,8 @@ const handleViewChange = async (newView) => {
                     <div className={`details-rows${isMobile ? '-mobile' : ''}`}>
                       <div className={`details-container${isMobile ? '-mobile' : ''}`}>
                         {activeList?.description ? (
-                          <div style={{ flex: 1 }}>
-                            <strong className={`list-description-title${isMobile ? '-mobile' : ''}`}>Description</strong>
+                          <div className={`list-description-div${isMobile ? '-mobile' : ''}`} >
+                            <strong className={`list-description-title${isMobile ? '-mobile' : ''}`}>Goal</strong>
                             <br />
                             <span className={`list-description-text${isMobile ? '-mobile' : ''}`}>
                               {activeList.description}
@@ -910,7 +910,7 @@ const handleViewChange = async (newView) => {
                       <div className="details-container">
                         {activeList?.description ? (
                           <div style={{ flex: 1 }}>
-                            <strong className="list-description-title">Description</strong>
+                            <strong className="list-description-title">Goal</strong>
                             <br />
                             <span className="list-description-text">
                               {activeList.description}

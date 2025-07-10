@@ -32,6 +32,7 @@ const ExportListModal = ({ isOpen, onClose }) => {
         started: false,
         completed: false,
         duration: true,
+        repeatable: false,
     });
 
     const handleOptionChange = (event) => {

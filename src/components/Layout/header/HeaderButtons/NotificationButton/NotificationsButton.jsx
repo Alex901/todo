@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import IconButton from '@mui/material/IconButton';
 import Badge from '@mui/material/Badge';
 import Menu from '@mui/material/Menu';
@@ -12,6 +12,7 @@ import './NotificationsButton.css';
 const NotificationsButton = ({ isLoggedIn, userNotifications, isMobile, className }) => {
   const { t } = useTranslation();
   const [anchorEl, setAnchorEl] = useState(null);
+  const [notifications, setNotifications] = useState(userNotifications);
 
   const handleNotificationMenuClick = (event) => {
     setAnchorEl(event.currentTarget);
@@ -20,6 +21,11 @@ const NotificationsButton = ({ isLoggedIn, userNotifications, isMobile, classNam
   const handleNotificationMenuClose = () => {
     setAnchorEl(null);
   };
+
+  useEffect(() => {
+    setNotifications(userNotifications);
+  }, [userNotifications]);
+
 
   return (
     <>
@@ -33,7 +39,7 @@ const NotificationsButton = ({ isLoggedIn, userNotifications, isMobile, classNam
             <div className="icon-badge-container">
               <Icon path={mdiBellOutline} size={1.2} />
               <Badge
-                badgeContent={userNotifications.length}
+                badgeContent={notifications.length}
                 color="secondary"
                 className="notification-badge"
               />
@@ -54,7 +60,9 @@ const NotificationsButton = ({ isLoggedIn, userNotifications, isMobile, classNam
             }}
             PaperProps={{
               style: {
-                padding: '5px', 
+                padding: '5px',
+                paddingRight: isMobile ? '0px' : '10px',
+                paddingLeft: isMobile ? '0px' : '5px',
                 marginTop: isMobile ? '0px' : '5px',
                 marginLeft: isMobile ? '-15px' : '0px',
                 backgroundColor: '#f0eded',
@@ -62,8 +70,8 @@ const NotificationsButton = ({ isLoggedIn, userNotifications, isMobile, classNam
               },
             }}
           >
-            {userNotifications.length > 0 ? (
-              userNotifications.map((notification, index) => (
+            {notifications.length > 0 ? (
+              notifications.map((notification, index) => (
                 <Notification
                   key={index}
                   notificationData={notification}

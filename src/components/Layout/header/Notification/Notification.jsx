@@ -12,6 +12,8 @@ const Notification = ({ notificationData, type, message, timestamp }) => {
   const firstWord = words.shift();
   const lastWord = words.pop();
 
+  
+
   const handleAcceptGroupInvite = () => {
     console.log(notificationData);
     acceptGroupInvite(notificationData._id, notificationData.group);
