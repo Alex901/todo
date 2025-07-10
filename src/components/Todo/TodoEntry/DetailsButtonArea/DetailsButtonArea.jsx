@@ -12,7 +12,7 @@ const DetailsButtonArea = ({ onAddTaskBefore, onSimplifyTask, onAddTaskAfter, ta
 
     const handleOpenModal = (type) => {
         const data = type === 'before' ? { tasksAfter: [taskId] } : { tasksBefore: [taskId] };
-        console.log("DEBUG -- data:", data)
+        // console.log("DEBUG -- data:", data)
         setModalData(data);
         setIsTodoModalOpen(true);
     };

@@ -52,7 +52,7 @@ const AnythingList = ({ type, setType }) => {
 
     useEffect(() => {
         setCanFinishProject(activeTodoList.filter(todo => todo.isDone).length >= 10);
-        console.log("DEBUG -- canFinishProject: ", canFinishProject);
+        // console.log("DEBUG -- canFinishProject: ", canFinishProject);
     }, [activeTodoList]);
 
     useEffect(() => {
@@ -138,7 +138,7 @@ const AnythingList = ({ type, setType }) => {
     const activeList = loggedInUser ? loggedInUser.myLists.find(list => list.listName === loggedInUser.activeList) : null;
     const tags = activeList ? activeList.tags : [];
     const reviveCost = activeList.completed ? (activeList.score.currency * 2 + 5) : 0;
-    console.log("DEBUG reviveCost: ", reviveCost);
+    // console.log("DEBUG reviveCost: ", reviveCost);
     // console.log("DEBUG: activeList ", activeList);
 
     const customSortFunction = (a, b, isAscending) => {
@@ -207,7 +207,7 @@ const AnythingList = ({ type, setType }) => {
         return list;
     }, [todoList, isUrgentOnly, isDeadlineOnly, selectedTags, isNewOnly]);
 
-    console.log("DEBUG -- filteredTodoList: ", filteredTodoList);
+    // console.log("DEBUG -- filteredTodoList: ", filteredTodoList);
 
     const sortedTodoList = useMemo(() => {
         const sortedList = [...filteredTodoList].sort((a, b) => {
@@ -265,7 +265,7 @@ const AnythingList = ({ type, setType }) => {
     }
 
     const handleSortChangeWrapper = (event) => {
-        console.log("DEBUG -- event.target.value: ", event);
+        // console.log("DEBUG -- event.target.value: ", event);
         const validSortOptions = ['created', 'task', 'priority', 'steps', 'difficulty', 'dueDate', 'estimatedTime', 'lastUpdated'];
         if (validSortOptions.includes(event.target.value)) {
             handleSortChange(event);
@@ -307,7 +307,7 @@ const AnythingList = ({ type, setType }) => {
     };
 
     const handleMenuCheckboxClick = (event) => {
-        console.log("DEBUG -- event: ", event);
+        // console.log("DEBUG -- event: ", event);
         event.stopPropagation();
     }
 

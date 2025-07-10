@@ -137,7 +137,7 @@ const TodoModal = ({ isOpen, onRequestClose, initialData }) => {
     };
 
     const handleEmojiSelect = (emoji) => {
-        console.log("DEBUG - SelectedEmoji: ", emoji);
+        // console.log("DEBUG - SelectedEmoji: ", emoji);
         setNewTaskData(prevData => ({
             ...prevData,
             repeatableEmoji: emoji

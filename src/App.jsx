@@ -86,14 +86,14 @@ function App() {
   useEffect(() => {
     // Fetch the active view from the server only once when the user logs in
     if (loggedInUser?.settings?.activeView && view === null) {
-      console.log("DEBUG -- App.js -- setting initial selection");
+      // console.log("DEBUG -- App.js -- setting initial selection");
       setView(loggedInUser.settings.activeView); // Set the initial view from the server
       checkLogin(); // Ensure the user is logged and latest updates are used
     }
   }, [loggedInUser]);
 
 const handleViewChange = async (newView) => {
-    console.log("DEBUG -- changing view to: ", newView);
+    // console.log("DEBUG -- changing view to: ", newView);
     setView(newView); // Optimistically update the view
     
     try {
