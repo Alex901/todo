@@ -601,9 +601,15 @@ const UserProvider = ({ children }) => {
         }
     };
 
-    const loginWithGoogle = async (token) => {
-        console.log("LOGIN WITH GOOGLE")
+const loginWithGoogle = async () => {
+    try {
+        // Redirect to the backend's Google OAuth endpoint
+        window.location.href = `${BASE_URL}/auth/login/google`;
+    } catch (error) {
+        console.error("Error during Google login:", error);
+        toast.error("Failed to log in with Google. Please try again.");
     }
+};
 
 
     return (

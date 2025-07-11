@@ -16,7 +16,7 @@ const LoginModal = ({ isOpen, onRequestClose, openRegisterModal }) => {
     const [showPassword, setShowPassword] = React.useState(false);
     const [userNameError, setUserNameError] = React.useState("");
     const [passwordError, setPasswordError] = React.useState("");
-    const { login } = useUserContext();
+    const { login, loginWithGoogle } = useUserContext();
 
 
     useEffect(() => {
@@ -68,6 +68,10 @@ const LoginModal = ({ isOpen, onRequestClose, openRegisterModal }) => {
     const handleForgotPassword = (event) => {
         event.preventDefault();
         toast.info("This feature is not implemented yet. Please contact support for assistance.");
+    }
+
+    const handleLoginWithGoogle = async () => {
+        loginWithGoogle();
     }
 
     return (
@@ -126,7 +130,7 @@ const LoginModal = ({ isOpen, onRequestClose, openRegisterModal }) => {
                 </p>
                 <div className="social-icons-login">
                     <IconButton className="social-icon-login google">
-                        <Icon path={mdiGoogle} size={1.5} />
+                       <Icon path={mdiGoogle} size={1.5} onClick={handleLoginWithGoogle} />
                     </IconButton>
                     <IconButton className="social-icon-login facebook">
                         <Icon path={mdiFacebook} size={1.5} />
