@@ -23,6 +23,8 @@ const NotificationProvider = ({ children }) => {
     const [userNotifications, setUserNotifications] = useState([]);
     const { addUserToGroup } = useGroupContext();
 
+    console.log("DEBUG: loggedInUser in NotifiationProvider cotnext", loggedInUser);
+
     useEffect(() => {
         if (loggedInUser) {
             // Call the function immediately on component mount
