@@ -601,13 +601,17 @@ const UserProvider = ({ children }) => {
         }
     };
 
+    const loginWithGoogle = async (token) => {
+        console.log("LOGIN WITH GOOGLE")
+    }
+
 
     return (
         <UserContext.Provider value={{
             isLoggedIn, loggedInUser, userList, emojiSettings, login, logout, registerNewUser,
             setLoggedInUser, setActiveList, createList, deleteList, toggleUrgent, addTag,
             deleteTag, updateProfilePicture, editUser, checkLogin, toggleShowDetails,
-            updateSettings, editUserList, deleteUser, completeProject, reviveProject
+            updateSettings, editUserList, deleteUser, completeProject, reviveProject, loginWithGoogle,
         }} >
             {children}
         </UserContext.Provider>

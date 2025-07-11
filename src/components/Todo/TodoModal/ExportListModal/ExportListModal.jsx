@@ -31,8 +31,7 @@ const ExportListModal = ({ isOpen, onClose }) => {
         "Completed on Time?": false,
         started: false,
         completed: false,
-        duration: true,
-        repeatable: false,
+        duration: true
     });
 
     const handleOptionChange = (event) => {
@@ -54,7 +53,7 @@ const ExportListModal = ({ isOpen, onClose }) => {
         console.log("List to export: ", listToExport.length);
         const duration = getDuration(listToExport);
         console.log("Duration: ", duration, "hours");
-    
+
         const doc = new jsPDF();
         doc.setFillColor(169, 169, 169);
         const projectName = customName ? customName : selectedList;
@@ -63,7 +62,7 @@ const ExportListModal = ({ isOpen, onClose }) => {
         const textWidth = doc.getTextWidth(title);
         const textX = (pageWidth - textWidth) / 2;
         doc.text(title, textX, 10);
-    
+
         // Add project summary
         doc.autoTable({
             head: [['Email', 'Project', 'Tasks', 'Duration']],
@@ -72,7 +71,7 @@ const ExportListModal = ({ isOpen, onClose }) => {
             ],
             startY: 30
         });
-    
+
         // Function to generate headers based on selected options
         const generateHeaders = (isCompleted) => {
             const headers = ['Task Name'];
@@ -85,7 +84,7 @@ const ExportListModal = ({ isOpen, onClose }) => {
             if (isCompleted && selectedOptions.duration) headers.push('Duration');
             return headers;
         };
-    
+
         // Function to generate body data based on selected options
         const generateBodyData = (task, isCompleted) => {
             const rowData = [task.task];
@@ -98,7 +97,7 @@ const ExportListModal = ({ isOpen, onClose }) => {
             if (isCompleted && selectedOptions.duration) rowData.push(task.completed ? normalizeDuration(new Date(task.completed) - new Date(task.started)) : '');
             return rowData;
         };
-    
+
         // Function to check if a new page is needed
         const checkNewPage = (doc, startY) => {
             const pageHeight = doc.internal.pageSize.getHeight();
@@ -108,7 +107,7 @@ const ExportListModal = ({ isOpen, onClose }) => {
             }
             return startY;
         };
-    
+
         // Handle completed tasks
         let currentYearMonth = null;
         let startY = 70;
@@ -170,10 +169,10 @@ const ExportListModal = ({ isOpen, onClose }) => {
                     startY = doc.autoTable.previous.finalY + 10; // Update startY to the end of the previous table
                 }
             }
-            
+
         });
 
-    
+
         // Handle uncompleted tasks if "Include Completed tasks only" is false
         if (!selectedOptions["Include Completed tasks only"]) {
             startY += 20;
@@ -208,7 +207,7 @@ const ExportListModal = ({ isOpen, onClose }) => {
                     }
                 }
             });
-        
+
             if (bodyData.length > 0) {
                 doc.autoTable({
                     head: [generateHeaders(false)],
@@ -220,10 +219,10 @@ const ExportListModal = ({ isOpen, onClose }) => {
                 startY = doc.autoTable.previous.finalY + 10; // Update startY to the end of the previous table
                 checkNewPage(doc, startY);
             }
-        
+
             console.log("Uncompleted tasks bodyData:", bodyData);
         }
-    
+
         // Handle repeatable tasks
         const repeatableTasks = listToExport.filter(task => task.repeatable);
         if (repeatableTasks.length > 0) {
@@ -239,7 +238,7 @@ const ExportListModal = ({ isOpen, onClose }) => {
                 const fastestCompletion = Math.min(...repeatableCompleted.map(rc => rc.duration));
                 const slowestCompletion = Math.max(...repeatableCompleted.map(rc => rc.duration));
                 const repeatStreak = task.repeatStreak || 0;
-    
+
                 return [
                     task.task,
                     repeatCount,
@@ -248,7 +247,7 @@ const ExportListModal = ({ isOpen, onClose }) => {
                     repeatStreak
                 ];
             });
-    
+
             doc.autoTable({
                 head: [['Task Name', 'Repeat Count', 'Fastest Completion', 'Slowest Completion', 'Longest Streak']],
                 body: repeatableBodyData,
@@ -258,14 +257,14 @@ const ExportListModal = ({ isOpen, onClose }) => {
             });
             startY = doc.autoTable.previous.finalY + 10; // Update startY to the end of the previous table
         }
-    
+
         // Add total time spent on project
         startY += 20;
         doc.text(`Total Time Spent on Project: ${duration} hours`, 10, startY);
-    
+
         const date = new Date().toISOString().slice(0, 10);
         const pdfName = `${projectName}-${date}.pdf`;
-    
+
         doc.save(pdfName);
     };
 
@@ -366,23 +365,25 @@ const ExportListModal = ({ isOpen, onClose }) => {
                 <div className="export-options" style={{ display: 'flex', flexDirection: 'column' }}>
                     <h5>Settings</h5>
 
-                    <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', alignItems: 'center', flexDirection: 'row' }}>
-                        <FormGroup row>
-                            {Object.keys(selectedOptions).map((option, index) => (
-                                <FormControlLabel
-                                    control={
-                                        <Checkbox
-                                            checked={selectedOptions[option]}
-                                            onChange={handleOptionChange}
-                                            name={option}
-                                        />
-                                    }
-                                    label={option}
-                                    key={option}
-                                    style={{ width: '30%' }}
-                                />
-                            ))}
-                        </FormGroup>
+                    <div className="checkbox-container" >
+                        <div className="checkbox-container">
+                            <FormGroup row>
+                                {Object.keys(selectedOptions).map((option, index) => (
+                                    <div className="checkbox-wrapper" key={option}>
+                                        <div className="checkbox-part">
+                                            <Checkbox
+                                                checked={selectedOptions[option]}
+                                                onChange={handleOptionChange}
+                                                name={option}
+                                            />
+                                        </div>
+                                        <div className="text-part">
+                                            <label>{option}</label>
+                                        </div>
+                                    </div>
+                                ))}
+                            </FormGroup>
+                        </div>
                     </div>
                 </div>
 
