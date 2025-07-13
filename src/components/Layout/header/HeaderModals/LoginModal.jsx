@@ -16,7 +16,7 @@ const LoginModal = ({ isOpen, onRequestClose, openRegisterModal }) => {
     const [showPassword, setShowPassword] = React.useState(false);
     const [userNameError, setUserNameError] = React.useState("");
     const [passwordError, setPasswordError] = React.useState("");
-    const { login, loginWithGoogle } = useUserContext();
+    const { login, loginWithGoogle, loginWithFacebook, loginWithGithub } = useUserContext();
 
 
     useEffect(() => {
@@ -74,6 +74,14 @@ const LoginModal = ({ isOpen, onRequestClose, openRegisterModal }) => {
         loginWithGoogle();
     }
 
+    const handleLoginWithFacebook = () => {
+        loginwithFacebook();
+    };
+
+    const handleLoginWithGithub = () => {
+        loginWithGithub();
+    }
+
     return (
         <BaseModal
             isOpen={isOpen}
@@ -119,24 +127,27 @@ const LoginModal = ({ isOpen, onRequestClose, openRegisterModal }) => {
                 />
                 {passwordError && <p className='error'>{passwordError}</p>}
                 <div className="forgot-password-link">
-                    <a href="#" onClick={handleForgotPassword}>Forgotten your password?</a>
+                    <a href="#" onClick={handleForgotPassword}>Forgot your password?</a>
                 </div>
                 <button className='modal-button login-button'>Login</button>
             </form>
 
             <div className="social-login-area">
                 <p className="social-login-message">
-                    Don't have an account yet? Get started with one <span onClick={openRegisterModal} className="register-link-highlight"> here</span>, or log in using your socials:
+                    Don't have an account yet? Get started with one <span onClick={openRegisterModal} className="register-link-highlight"> here</span>, or log in <strong> using one of your social medial accounts: </strong>
+                </p>
+                <p style={{ fontSize: '0.9em', color: 'gray', marginTop: '-5px' }}>
+                    (If you don't already have an Habitforge account, this action will create one for you.)
                 </p>
                 <div className="social-icons-login">
                     <IconButton className="social-icon-login google">
-                       <Icon path={mdiGoogle} size={1.5} onClick={handleLoginWithGoogle} />
+                        <Icon path={mdiGoogle} size={1.5} onClick={handleLoginWithGoogle} />
                     </IconButton>
                     <IconButton className="social-icon-login facebook">
-                        <Icon path={mdiFacebook} size={1.5} />
+                        <Icon path={mdiFacebook} size={1.5} onClick={handleLoginWithFacebook} />
                     </IconButton>
                     <IconButton className="social-icon-login github">
-                        <Icon path={mdiGit} size={1.5} />
+                        <Icon path={mdiGit} size={1.5} onClick={handleLoginWithGithub} />
                     </IconButton>
                 </div>
             </div>
