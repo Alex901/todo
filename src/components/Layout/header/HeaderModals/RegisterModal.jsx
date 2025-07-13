@@ -7,6 +7,8 @@ import { TextField, Button, InputAdornment, IconButton } from '@mui/material';
 import Icon from '@mdi/react';
 import { mdiEye, mdiEyeOff, mdiGoogle, mdiFacebook, mdiGit } from '@mdi/js';
 import BaseModal from '../../../Todo/TodoModal/BaseModal/BaseModal';
+import TermsModal from '../../../Todo/TodoModal/OfflineModals/TermsModal/TermsModal';
+import PrivacyModal from '../../../Todo/TodoModal/OfflineModals/PrivacyModal/PrivacyModal';
 
 
 ReactModal.setAppElement('#root');
@@ -21,6 +23,8 @@ const LoginModal = ({ isOpen, onRequestClose, openLoginModal }) => {
     const [passwordError, setPasswordError] = React.useState("");
     const { registerNewUser } = useUserContext();
     const [usernameError, setUserNameError] = React.useState("");
+    const [isTermsModalOpen, setIsTermsModalOpen] = React.useState(false);
+    const [isPrivacyModalOpen, setIsPrivacyModalOpen] = React.useState(false);
 
     useEffect(() => {
         const handleOverlayClick = (event) => {
@@ -94,22 +98,7 @@ const LoginModal = ({ isOpen, onRequestClose, openLoginModal }) => {
             shouldCloseOnOverlayClick={true}
             title={'Register'}
         >
-            <div className="social-login-area">
 
-                <div className="social-icons-login">
-                    <IconButton className="social-icon-login google">
-                        <Icon path={mdiGoogle} size={1.5} />
-                    </IconButton>
-                    <IconButton className="social-icon-login facebook">
-                        <Icon path={mdiFacebook} size={1.5} />
-                    </IconButton>
-                    <IconButton className="social-icon-login github">
-                        <Icon path={mdiGit} size={1.5} />
-                    </IconButton>
-                </div>
-            </div>
-
-            <hr />
             <form className='modal-form' onSubmit={handleRegister}>
                 <TextField
                     id="email"
@@ -185,11 +174,37 @@ const LoginModal = ({ isOpen, onRequestClose, openLoginModal }) => {
                 {passwordError && <p className="error">{passwordError}</p>}
                 <button className='modal-button register-button'>Continue</button>
             </form>
+            <div className="terms-and-privacy">
+                <p style={{ fontSize: '0.9em', color: 'gray', marginTop: '10px' }}>
+                    By registering, you agree to our
+                    <span
+                        onClick={() => setIsTermsModalOpen(true)}
+                        style={{ color: 'blue', textDecoration: 'underline', marginLeft: '5px', cursor: 'pointer' }}
+                    >
+                    Terms of Service 
+                    </span>
+                     {' '}and
+                    <span
+                        onClick={() => setIsPrivacyModalOpen(true)}
+                        style={{ color: 'blue', textDecoration: 'underline', marginLeft: '5px', cursor: 'pointer' }}
+                    >
+                        Privacy Policy
+                    </span>.
+                </p>
+            </div>
             <div className="already-account-area">
                 <p className="already-account-message">
                     Already have an account? Login <span onClick={openLoginModal} className="login-link-highlight"> here</span>
                 </p>
             </div>
+            <TermsModal
+                isOpen={isTermsModalOpen}
+                onRequestClose={() => setIsTermsModalOpen(false)}
+            />
+            <PrivacyModal
+                isOpen={isPrivacyModalOpen}
+                onRequestClose={() => setIsPrivacyModalOpen(false)}
+            />
         </BaseModal>
     );
 }
