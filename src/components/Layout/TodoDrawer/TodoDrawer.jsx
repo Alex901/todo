@@ -20,6 +20,8 @@ import { mdiLogout, mdiLogin, mdiAccountPlus, mdiHelpCircle, mdiCommentQuote, md
 import VoteModal from '../../Todo/TodoModal/VoteModal/VoteModal';
 import GroupModal from '../../Todo/TodoModal/GroupModal/GroupModal';
 import CalendarModal from '../../Todo/TodoModal/CalendarModal/CalendarModal';
+import ViewDisplay from '../HeaderMenu/ViewDisplay/ViewDisplay';
+import IconMenu from '../HeaderMenu/IconMenu/IconMenu';
 
 import './TodoDrawer.css';
 const TodoDrawer = () => {
@@ -28,7 +30,7 @@ const TodoDrawer = () => {
     const [click, setClicked] = useState(false);
     const [isLoginModalOpen, setLoginModalOpen] = useState(false);
     const [isRegisterModalOpen, setRegisterModalOpen] = useState(false);
-    const { loggedInUser, logout } = useUserContext();
+    const { loggedInUser, logout, updateSettings } = useUserContext();
     const { userNotifications } = useNotificationContext();
     const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
     const [isFeedbackModalOpen, setIsFeedbackModalOpen] = useState(false);
@@ -40,6 +42,7 @@ const TodoDrawer = () => {
     const drawerRef = useRef(null);
     const buttonRef = useRef(null);
     const hasNotifications = userNotifications.length > 0;
+    const [view, setView] = useState(loggedInUser?.settings?.activeView);
 
     useEffect(() => {
         const iconContainer = iconContainerRef.current;
@@ -144,10 +147,24 @@ const TodoDrawer = () => {
         toast.success("Bye, see you soon!");
     };
 
+    const handleViewChange = async (newView) => {
+        // console.log("DEBUG -- changing view to: ", newView);
+        setView(newView); // Optimistically update the view
+
+        try {
+            await updateSettings("activeView", newView); // Wait for backend confirmation
+        } catch (error) {
+            console.error("Failed to update view on backend:", error);
+            // Revert to the previous view if the backend update fails
+            setView(previousView => previousView);
+        }
+    };
 
     return (
         <div>
             <React.Fragment>
+
+
 
                 {/* <StyledBadge className='badge' badgeContent={userNotifications.length} color="secondary"> */}
                 <button
@@ -158,15 +175,39 @@ const TodoDrawer = () => {
                 </button>
                 {/* </StyledBadge> */}
 
+
+
                 <Drawer anchor='right'
                     open={isOpen}
                     onClose={toggleDrawer(false)}
-                    className="custom-drawer">
+                    className="custom-drawer"
+                    BackdropProps={{
+                        classes: { root: 'custom-backdrop' },
+                        children: (
+                            <div className="bottom-navigation-drawer">
+                               
+                                <div className='navigation-buttons'>
+                                    <IconMenu
+                                        openGroupModal={handleGroupClick}
+                                        openVoteModal={handleVoteClick}
+                                        openCalendarModal={handleCalendarClick}
+                                        activeView={view}
+                                        onViewChange={handleViewChange} // Placeholder for view change handler
+                                    />
+                                     <div className="navigation-footer">
+                                    <ViewDisplay activeView={view} />
+                                </div>
+                                </div>
+                            </div>
+                        ),
+                    }}>
+
                     <div ref={drawerRef} className="drawer-content">
 
                         <div className="icon-container" ref={iconContainerRef}>
 
                             {loggedInUser ? (
+
                                 <>
 
                                     <NotificationsButton
@@ -176,7 +217,7 @@ const TodoDrawer = () => {
                                         className={`drawer-icon ${hasNotifications ? 'has-notifications' : ''}`}
                                     />
 
-                                    <IconButton onClick={handleCalendarClick} className="drawer-icon">
+                                    {/* <IconButton onClick={handleCalendarClick} className="drawer-icon">
                                         <Icon path={mdiCalendarCheck} size={1.2} color="black" />
                                     </IconButton>
 
@@ -190,13 +231,14 @@ const TodoDrawer = () => {
 
                                     <IconButton onClick={handleVoteClick} className="drawer-icon">
                                         <Icon path={mdiVote} size={1.2} color="black" />
-                                    </IconButton>
+                                    </IconButton> */}
 
                                     <IconButton onClick={handleSettingsClick} className="drawer-icon">
                                         <Icon path={mdiCog} size={1.2} color="black" />
                                     </IconButton>
 
                                 </>
+
                             ) : (
                                 <>
                                     <IconButton onClick={handleRegisterClick} className="drawer-icon">
@@ -218,8 +260,10 @@ const TodoDrawer = () => {
                             </IconButton>
                         </div>
                     </div>
-
                 </Drawer>
+
+
+
                 <RegisterModal isOpen={isRegisterModalOpen} onRequestClose={handleCloseModal} />
                 <LoginModal isOpen={isLoginModalOpen} onRequestClose={handleCloseModal} />
                 <SettingsModal isOpen={isSettingsModalOpen} onClose={handleCloseModal} />
