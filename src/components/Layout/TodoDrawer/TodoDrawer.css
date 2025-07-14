@@ -112,7 +112,6 @@
     flex-direction: column;
     align-items: center;
     border-top: 1px solid rgba(255, 255, 255, 0.3); /* Semi-transparent border */
-
     backdrop-filter: blur(10px); /* Apply blur effect to the background */
 }
 
@@ -129,7 +128,7 @@
     }
 }
 
-@media screen and (min-width: 1024px) {
+@media screen and (min-width: 800px) {
     .mobile-nav-button {
         display: none;
     }
