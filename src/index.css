@@ -212,3 +212,9 @@ body.mobile-background {
       
   }
 }
+
+@media (max-width: 768px) {
+  body {
+    background: #ffffff; /* Plain white background for mobile */
+  }
+}
