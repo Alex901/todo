@@ -781,7 +781,7 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
                             </div>
                         </>
                     )}
-                    {!taskData.repeatable && (
+                    {!taskData.repeatable && activeList.listName !== 'today' && activeList.listName !== 'all' && (
                         <div className="linked-tasks-container">
                             <FormControl className="linked-tasks-form-control" style={{ minWidth: '100px', width: 'auto', height: 'auto', maxWidth: '180px' }} size='small'>
                                 <InputLabel id="tasks-before-label">Tasks Before</InputLabel>

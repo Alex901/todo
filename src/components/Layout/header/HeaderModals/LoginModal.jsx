@@ -75,7 +75,7 @@ const LoginModal = ({ isOpen, onRequestClose, openRegisterModal }) => {
     }
 
     const handleLoginWithFacebook = () => {
-        loginwithFacebook();
+        loginWithFacebook();
     };
 
     const handleLoginWithGithub = () => {

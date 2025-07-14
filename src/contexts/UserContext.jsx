@@ -613,23 +613,25 @@ const loginWithGoogle = async () => {
 };
 
 const loginWithFacebook = async () => {
-    try {
-        // Redirect to the backend's Facebook OAuth endpoint
-        window.location.href = `${BASE_URL}/auth/login/facebook`;
-    } catch (error) {
-        console.error("Error during Facebook login:", error);
-        toast.error("Failed to log in with Facebook. Please try again.");
-    }
+    alert('Coming soon')
+    // try {
+    //     // Redirect to the backend's Facebook OAuth endpoint
+    //     window.location.href = `${BASE_URL}/auth/login/facebook`;
+    // } catch (error) {
+    //     console.error("Error during Facebook login:", error);
+    //     toast.error("Failed to log in with Facebook. Please try again.");
+    // }
 };
 
 const loginWithGithub = async () => {
-    try {
-        // Redirect to the backend's GitHub OAuth endpoint
-        window.location.href = `${BASE_URL}/auth/login/github`;
-    } catch (error) {
-        console.error("Error during GitHub login:", error);
-        toast.error("Failed to log in with GitHub. Please try again.");
-    }
+    alert('Coming soon')
+    // try {
+    //     // Redirect to the backend's GitHub OAuth endpoint
+    //     window.location.href = `${BASE_URL}/auth/login/github`;
+    // } catch (error) {
+    //     console.error("Error during GitHub login:", error);
+    //     toast.error("Failed to log in with GitHub. Please try again.");
+    // }
 };
 
 
