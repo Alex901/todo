@@ -23,7 +23,7 @@ const NotificationProvider = ({ children }) => {
     const [userNotifications, setUserNotifications] = useState([]);
     const { addUserToGroup } = useGroupContext();
 
-    // console.log("DEBUG: loggedInUser in NotifiationProvider cotnext", loggedInUser);
+    console.log("DEBUG: loggedInUser in NotifiationProvider cotnext", loggedInUser);
 
     useEffect(() => {
         if (loggedInUser) {
