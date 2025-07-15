@@ -23,7 +23,7 @@ const NotificationProvider = ({ children }) => {
     const [userNotifications, setUserNotifications] = useState([]);
     const { addUserToGroup } = useGroupContext();
 
-    console.log("DEBUG: loggedInUser in NotifiationProvider cotnext", loggedInUser);
+    // console.log("DEBUG: loggedInUser in NotifiationProvider cotnext", loggedInUser);
 
     useEffect(() => {
         if (loggedInUser) {
@@ -40,6 +40,7 @@ const NotificationProvider = ({ children }) => {
             return () => clearInterval(intervalId);
         }
     }, [loggedInUser]);
+    
 
     /**
  * Fetches all notifications that are directed at loggedInUser if there are any.

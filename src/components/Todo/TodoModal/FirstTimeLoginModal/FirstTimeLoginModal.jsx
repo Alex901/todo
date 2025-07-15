@@ -16,7 +16,7 @@ const FirstTimeLoginModal = ({ open, onClose }) => {
     const [usernameError, setUsernameError] = useState('');
     const [passwordError, setPasswordError] = useState('');
 
-    console.log("LoggedInUser:", loggedInUser);
+    // console.log("LoggedInUser:", loggedInUser);
     
 
     const handleUsernameChange = (event) => {

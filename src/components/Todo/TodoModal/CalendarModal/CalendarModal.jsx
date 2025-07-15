@@ -377,7 +377,7 @@ const CalendarModal = ({ isOpen, onClose }) => {
     //TODO: reconsider this, it needs to update in real time. But not important enough.
     const getUncompletedTasksCount = (date) => {
         const formattedDate = new Date(date).toISOString().split('T')[0];
-        console.log("DEBUG -- formattedDate -- getUncompletedTasksCount", formattedDate)
+        // console.log("DEBUG -- formattedDate -- getUncompletedTasksCount", formattedDate)
     
         const dayTasks = [
             ...todoList.filter(task => {
@@ -396,8 +396,8 @@ const CalendarModal = ({ isOpen, onClose }) => {
     
         const repeatableTasks = dayTasks.filter(task => task.repeatable && !task.completed).length;
         const nonRepeatableTasks = dayTasks.filter(task => !task.repeatable && !task.completed).length;
-        console.log("DEBUG -- repeatableTasks -- getUncompletedTasksCount", repeatableTasks);   
-        console.log("DEBUG -- nonRepeatableTasks -- getUncompletedTasksCount", nonRepeatableTasks);
+        // console.log("DEBUG -- repeatableTasks -- getUncompletedTasksCount", repeatableTasks);   
+        // console.log("DEBUG -- nonRepeatableTasks -- getUncompletedTasksCount", nonRepeatableTasks);
         const totalTasks = repeatableTasks + nonRepeatableTasks;
         return `(${nonRepeatableTasks}+${repeatableTasks})`;
     };

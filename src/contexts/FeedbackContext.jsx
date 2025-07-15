@@ -58,7 +58,7 @@ const FeedbackProvider = ({ children }) => {
         console.log('Submitting feedback...', feedbackData);
         try {
             axios.post(`${BASE_URL}/feedback/post-feedback`, feedbackData, { withCredentials: true });
-            getNotifications(); //To update the notification list
+
         } catch (error) {
             console.error('Error submitting feedback:', error);
             if (error.response) {
