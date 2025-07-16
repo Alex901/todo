@@ -72,4 +72,53 @@ const formatTime = (minutes) => {
     return result.join(' ');
 };
 
-export { normalizeDuration, normalizeTime, extractTimeFromDateString, formatTime };
+const getDateConstraints = (tasksBeforeOptions = [], tasksAfterOptions = []) => {
+    // console.trace("getDateConstraints called from:");
+
+    // console.log("DEBUG calculating date constraints with tasksBeforeOptions: ", tasksBeforeOptions);
+    // console.log("DEBUG calculating date constraints with tasksAfterOptions: ", tasksAfterOptions);
+    const now = new Date();
+    const currentDateTime = new Date(now.getTime() - now.getTimezoneOffset() * 60000).toISOString().slice(0, 16); // Current date/time in ISO format
+
+    // Default minDate is the current date/time
+    let minDate = currentDateTime;
+
+    // If there are tasksAfterOptions, calculate the latest due date among them (considering estimatedTime and totalTimeSpent)
+    if (tasksAfterOptions.length) {
+        const latestAfterDate = new Date(
+            Math.max(
+                ...tasksAfterOptions.map(task => {
+                    const dueDate = new Date(task.dueDate).getTime();
+                    const estimatedTimeMs = (task.estimatedTime || 0) * 60 * 1000; // Convert minutes to milliseconds
+                    const totalTimeSpentMs = task.totalTimeSpent || 0; // Already in milliseconds
+                    return dueDate + estimatedTimeMs + totalTimeSpentMs;
+                })
+            )
+        );
+        minDate = latestAfterDate > now ? latestAfterDate.toISOString().slice(0, 16) : currentDateTime;
+    }
+
+    // Default maxDate is null (no restriction)
+    let maxDate = null;
+
+    // If there are tasksBeforeOptions, calculate the earliest due date among them (considering estimatedTime and totalTimeSpent)
+    if (tasksBeforeOptions.length) {
+        const earliestBeforeDate = new Date(
+            Math.min(
+                ...tasksBeforeOptions.map(task => {
+                    const dueDate = new Date(task.dueDate).getTime();
+                    const estimatedTimeMs = (task.estimatedTime || 0) * 60 * 1000; // Convert minutes to milliseconds
+                    const totalTimeSpentMs = task.totalTimeSpent || 0; // Already in milliseconds
+                    return dueDate - estimatedTimeMs - totalTimeSpentMs;
+                })
+            )
+        );
+        maxDate = earliestBeforeDate.toISOString().slice(0, 16);
+    }
+
+    console.log({ min: minDate, max: maxDate });
+
+    return { min: minDate, max: maxDate };
+};
+
+export { normalizeDuration, normalizeTime, extractTimeFromDateString, formatTime, getDateConstraints };

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import BaseModal from '../BaseModal/BaseModal';
 import './EditModal.css'
 import { useTodoContext } from '../../../../contexts/todoContexts';
@@ -11,7 +11,7 @@ import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import EmojiSelector from '../../../UtilityComponents/EmojiSelector/EmojiSelector';
 import useDynamicStep from '../../../../CustomHooks/UseDynamicStep';
-import { formatTime } from '../../../../utils/timeUtils';
+import { formatTime, getDateConstraints } from '../../../../utils/timeUtils';
 
 
 const EditModal = ({ isOpen, onRequestClose, editData }) => {
@@ -23,7 +23,11 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
     const [loading, setLoading] = useState(true);
     const [filteredList, setFilteredList] = useState([]);
     //console.log("DEBUG -- EditModal -> editData", editData);
+    const [selectedTasksBefore, setSelectedTasksBefore] = useState(editData.tasksBefore || []);
+    const [selectedTasksAfter, setSelectedTasksAfter] = useState(editData.tasksAfter || []);
+    const [constraints, setConstraints] = useState({ min: null, max: null });
 
+    // console.log("DEBUG -- editModal -- filteredList", filteredList);
 
     const options = [
         { value: 'VERY HIGH', label: 'VERY HIGH' },
@@ -127,6 +131,7 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
         }
 
         setErrorMessage('');
+        console.log("DEBUG -- event", event.target.value)
         if (name === 'tasksBefore' || name === 'tasksAfter') {
             const selectedTasks = Array.isArray(value)
                 ? value.map(id => filteredList.find(task => task._id === id))
@@ -135,13 +140,18 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
                 ...prevData,
                 [name]: selectedTasks,
             }));
+            const updateState = name === 'tasksBefore' ? setSelectedTasksBefore : setSelectedTasksAfter;
+            updateState(() => {
+                // Replace the tasks directly with the selected tasks
+                return selectedTasks;
+            });
         } else {
             setTaskData({
                 ...taskData,
                 [name]: value,
             });
         }
-        // console.log("DEBUG -- Task data after input change", taskData);
+
     };
 
     //Helper methods for handleSubmit
@@ -249,7 +259,9 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
         console.log("DEBUG - cleanedTaskData", cleanedTaskData);
         editTodo(cleanedTaskData);
         toast.success('Changes saved');
-
+        setSelectedTasksBefore([]);
+        setSelectedTasksAfter([]);
+        setConstraints({ min: null, max: null });
         onRequestClose();
     }
 
@@ -417,6 +429,14 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
         return isIncluded;
     });
 
+    useMemo(() => {
+
+
+        // Calculate constraints based on the selected tasks
+        const { min, max } = getDateConstraints(selectedTasksBefore, selectedTasksAfter);
+        setConstraints({ min, max });
+    }, [selectedTasksBefore, selectedTasksAfter, editData]);
+
     //I steal the ccs classes from my create modal -- don't judge me, haha
     return (
 
@@ -425,6 +445,9 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
             contentLabel="Edit todo task"
             onRequestClose={() => {
                 toast.warn('Edit canceled -- changes not saved');
+                setSelectedTasksBefore([]);
+                setSelectedTasksAfter([]);
+                setConstraints({ min: null, max: null });
                 onRequestClose();
             }}
             overlayClassName="modal-overlay"
@@ -631,6 +654,10 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
                                         value={taskData.dueDate ? new Date(taskData.dueDate).toISOString().substring(0, 16) : ""}
                                         InputLabelProps={{
                                             shrink: true,
+                                        }}
+                                        inputProps={{
+                                            min: constraints.min, // Minimum selectable date
+                                            max: constraints.max, // Maximum selectable date
                                         }}
                                     />
                                 </FormControl>

@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo } from 'react';
 import ReactModal from 'react-modal';
 import './TodoModal.css'
 import { useTodoContext } from '../../../contexts/todoContexts';
@@ -14,7 +14,8 @@ import BaseModal from './BaseModal/BaseModal';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import EmojiSelector from '../../UtilityComponents/EmojiSelector/EmojiSelector';
 import useDynamicStep from '../../../CustomHooks/UseDynamicStep';
-import { formatTime } from '../../../utils/timeUtils';
+import { formatTime, getDateConstraints } from '../../../utils/timeUtils';
+
 
 ReactModal.setAppElement('#root');
 
@@ -45,6 +46,9 @@ const TodoModal = ({ isOpen, onRequestClose, initialData }) => {
         tasksBefore: [],
         tasksAfter: [],
     });
+    const [selectedTasksBefore, setSelectedTasksBefore] = useState([]);
+    const [selectedTasksAfter, setSelectedTasksAfter] = useState([]);
+    const [constraints, setConstraints] = useState({ min: null, max: null });
 
 
     useEffect(() => {
@@ -156,11 +160,17 @@ const TodoModal = ({ isOpen, onRequestClose, initialData }) => {
 
         // Handle array fields like tasksBefore and tasksAfter
         if (name === 'tasksBefore' || name === 'tasksAfter') {
-            // console.log("DEBUG -- It is a linked task")
+            console.log("DEBUG -- It is a linked task")
+            console.log("DEBUG - Name: ", name, " Value: ", value);
             setNewTaskData((prevData) => ({
                 ...prevData,
                 [name]: Array.isArray(value) ? value : [value],
             }));
+            if (name === 'tasksBefore') {
+                setSelectedTasksBefore(Array.isArray(value) ? value : [value]);
+            } else if (name === 'tasksAfter') {
+                setSelectedTasksAfter(Array.isArray(value) ? value : [value]);
+            }
         } else {
             setNewTaskData({
                 ...newTaskData,
@@ -256,6 +266,9 @@ const TodoModal = ({ isOpen, onRequestClose, initialData }) => {
         });
         setRepeatability(false);
         setShowAdvancedOptions(false);
+        setSelectedTasksBefore([]);
+        setSelectedTasksAfter([]);
+        setConstraints({ min: null, max: null });
     }
 
     const handleKeyPress = (e) => {
@@ -342,10 +355,30 @@ const TodoModal = ({ isOpen, onRequestClose, initialData }) => {
         setErrorMessage('');
         setShowAdvancedOptions(false);
         onRequestClose();
+        setSelectedTasksBefore([]);
+        setSelectedTasksAfter([]);
+        setConstraints({ min: null, max: null });
     }
 
     const tasksBeforeOptions = filteredList.filter(task => !(newTaskData.tasksAfter || []).includes(task._id));
     const tasksAfterOptions = filteredList.filter(task => !(newTaskData.tasksBefore || []).includes(task._id));
+
+    useMemo(() => {
+        // Map selected task IDs to their corresponding task objects
+        const beforeTasks = selectedTasksBefore.map((id) => todoList.find((task) => task._id === id)).filter(Boolean);
+        const afterTasks = selectedTasksAfter.map((id) => todoList.find((task) => task._id === id)).filter(Boolean);
+
+        console.log("DEBUG - Tasks Options selected Before: ", beforeTasks);
+        console.log("DEBUG - Tasks Options selected After: ", afterTasks);
+
+        // Calculate constraints based on the selected tasks
+        const { min, max } = getDateConstraints(beforeTasks, afterTasks);
+
+        console.log("DEBUG - Calculated Constraints: ", { min, max });
+
+        // Update the state with the new constraints
+        setConstraints({ min, max });
+    }, [selectedTasksBefore, selectedTasksAfter, todoList]);
 
 
     return (
@@ -572,6 +605,10 @@ const TodoModal = ({ isOpen, onRequestClose, initialData }) => {
                                             name='dueDate'
                                             InputLabelProps={{
                                                 shrink: true,
+                                            }}
+                                            inputProps={{
+                                                min: constraints.min, // Set the minimum date to current date
+                                                max: constraints.max, // Set the maximum date based on tasksBeforeOptions
                                             }}
                                         />
                                     </FormControl>
