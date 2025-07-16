@@ -25,49 +25,87 @@ const NotificationProvider = ({ children }) => {
 
     console.log("DEBUG: loggedInUser in NotifiationProvider cotnext", loggedInUser);
 
+    // useEffect(() => {
+    //     if (loggedInUser) {
+    //         // Call the function immediately on component mount
+    //         getNotifications();
+
+    //         // Then set up the interval to call it every 60 seconds
+    //         const intervalId = setInterval(() => {
+    //             getNotifications();
+    //         }, 60000); // 60000 milliseconds = 60 seconds
+
+    //         // Don't forget to clear the interval when the component unmounts
+
+    //         return () => clearInterval(intervalId);
+    //     }
+    // }, [loggedInUser]);
+
     useEffect(() => {
         if (loggedInUser) {
-            // Call the function immediately on component mount
-            getNotifications();
+            const eventSource = new EventSource(`${BASE_URL}/notifications/`, { withCredentials: true });
 
-            // Then set up the interval to call it every 60 seconds
-            const intervalId = setInterval(() => {
-                getNotifications();
-            }, 60000); // 60000 milliseconds = 60 seconds
+            // Handle incoming messages
+            eventSource.onmessage = (event) => {
+                try {
+                    const notification = JSON.parse(event.data);
+                    if (Array.isArray(notification)) {
+                        // Initial batch of notifications (array)
+                        console.log('Initial batch of notifications:', notification);
+                        setUserNotifications(notification); // Replace the state with the initial batch
+                    } else if (notification && typeof notification === 'object') {
+                        // Single notification (either initial or new)
+                        console.log('New notification:', notification);
+                        setUserNotifications((prevNotifications) => [...prevNotifications, notification]);
+                    } else {
+                        // No notifications (empty response)
+                        console.log('No notifications received.');
+                    }
+                } catch (error) {
+                    console.error('Error parsing SSE message:', error);
+                }
+            };
 
-            // Don't forget to clear the interval when the component unmounts
+            // Handle errors
+            eventSource.onerror = (error) => {
+                console.error('Error with SSE connection:', error);
+                eventSource.close();
+            };
 
-            return () => clearInterval(intervalId);
+            // Clean up the SSE connection when the component unmounts
+            return () => {
+                eventSource.close();
+            };
         }
     }, [loggedInUser]);
-    
+
 
     /**
  * Fetches all notifications that are directed at loggedInUser if there are any.
  */
-    const getNotifications = async () => {
-        try {
-            const response = await axios.get(`${BASE_URL}/notifications/`, { withCredentials: true });
-            // console.log("DEBUG: response: ", response);
-            setUserNotifications(response.data);
-        } catch (error) {
-            console.error("Error fetching notifications: ", error);
-            if (error.response) {
-                // The request was made and the server responded with a status code
-                // that falls out of the range of 2xx
-                console.error(error.response.data);
-                console.error(error.response.status);
-                console.error(error.response.headers);
-            } else if (error.request) {
-                // The request was made but no response was received
-                console.error(error.request);
-                toast.error("Error fetching notifications: No response from the server");
-            } else {
-                // Something happened in setting up the request that triggered an Error
-                console.error('Error', error.message);
-            }
-        }
-    }
+    // const getNotifications = async () => {
+    //     try {
+    //         const response = await axios.get(`${BASE_URL}/notifications/`, { withCredentials: true });
+    //         // console.log("DEBUG: response: ", response);
+    //         setUserNotifications(response.data);
+    //     } catch (error) {
+    //         console.error("Error fetching notifications: ", error);
+    //         if (error.response) {
+    //             // The request was made and the server responded with a status code
+    //             // that falls out of the range of 2xx
+    //             console.error(error.response.data);
+    //             console.error(error.response.status);
+    //             console.error(error.response.headers);
+    //         } else if (error.request) {
+    //             // The request was made but no response was received
+    //             console.error(error.request);
+    //             toast.error("Error fetching notifications: No response from the server");
+    //         } else {
+    //             // Something happened in setting up the request that triggered an Error
+    //             console.error('Error', error.message);
+    //         }
+    //     }
+    // }
 
     /**
      * Invites a user to a group.
@@ -129,7 +167,7 @@ const NotificationProvider = ({ children }) => {
             const response = await axios.delete(`${BASE_URL}/notifications/delete/${notificationId}`, { withCredentials: true });
             //  console.log("DEBUG: response: ", response);
             if (response.status === 200) {
-                getNotifications();
+                // getNotifications();
                 toast.success("Invite accepted");
             }
         } catch (error) {
@@ -314,7 +352,7 @@ const NotificationProvider = ({ children }) => {
 
     return (
         <NotificationContexts.Provider value={{
-            inviteToGroup, userNotifications, acceptGroupInvite, declineGroupInvite, getNotifications,
+            inviteToGroup, userNotifications, acceptGroupInvite, declineGroupInvite,
             requestToJoinGroup, declineRequestToJoinGroup, acceptRequestToJoinGroup, resolveNotification
         }}>
             {children}

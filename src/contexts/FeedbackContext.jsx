@@ -20,7 +20,6 @@ const FeedbackContext = createContext();
 
 const FeedbackProvider = ({ children }) => {
     const { loggedInUser, checkLogin } = useUserContext();
-    const { setNotification, getNotifications } = useNotificationContext();
     const [feedbackList, setFeedbackList] = useState([]);
     const [approvedFeedbackList, setApprovedFeedbackList] = useState([]);
 
@@ -79,7 +78,7 @@ const FeedbackProvider = ({ children }) => {
             const response = await axios.put(`${BASE_URL}/feedback/resolveFeedback/${feedbackId}`, { resolved }, { withCredentials: true });
             if(response.status === 200){
                 fetchFeedback(); //To update the feedback list
-                getNotifications(); //To update the notification list
+                // getNotifications(); //To update the notification list
             } else if(response.status === 404) {
                 console.error('Feedback not found:', response);
             } else {
