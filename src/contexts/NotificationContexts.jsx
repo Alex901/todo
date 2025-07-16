@@ -23,7 +23,7 @@ const NotificationProvider = ({ children }) => {
     const [userNotifications, setUserNotifications] = useState([]);
     const { addUserToGroup } = useGroupContext();
 
-    console.log("DEBUG: loggedInUser in NotifiationProvider cotnext", loggedInUser);
+    // console.log("DEBUG: loggedInUser in NotifiationProvider cotnext", loggedInUser);
 
     // useEffect(() => {
     //     if (loggedInUser) {
@@ -115,7 +115,7 @@ const NotificationProvider = ({ children }) => {
      * @param {string} groupId - The ID of the group to which the user is being invited.
      */
     const inviteToGroup = async (from, to, groupId) => {
-        console.log("DEBUG: inviteToGroup: ", from, to, groupId);
+        // console.log("DEBUG: inviteToGroup: ", from, to, groupId);
 
         const sendInvite = async (recipient) => {
             try {
@@ -158,7 +158,7 @@ const NotificationProvider = ({ children }) => {
      */
     //TODO: notify user about the outcome
     const acceptGroupInvite = async (notificationId, groupId) => {
-        console.log("DEBUG: acceptGroupInvite, notification id and group to add too: ", notificationId, groupId);
+        // console.log("DEBUG: acceptGroupInvite, notification id and group to add too: ", notificationId, groupId);
         //Add the user to the group and set up the lists 
         //Delete the notification
         addUserToGroup(groupId, loggedInUser._id);
@@ -197,7 +197,7 @@ const NotificationProvider = ({ children }) => {
      */
     //TODO: notify user about the outcome
     const declineGroupInvite = async (notificationId) => {
-        console.log("DEBUG: declineGroupInvite: ", notificationId);
+        // console.log("DEBUG: declineGroupInvite: ", notificationId);
         //delete the notification and notify the sender at some point
         try {
             const response = await axios.delete(`${BASE_URL}/notifications/delete/${notificationId}`, { withCredentials: true });
@@ -224,15 +224,15 @@ const NotificationProvider = ({ children }) => {
     }
 
     const requestToJoinGroup = (userToJoin, group) => {
-        console.log("DEBUG: requestToJoinGroup - userToJoin: ", userToJoin);
-        console.log("DEBUG: requestToJoinGroup - group: ", group);
+        // console.log("DEBUG: requestToJoinGroup - userToJoin: ", userToJoin);
+        // console.log("DEBUG: requestToJoinGroup - group: ", group);
 
         const groupId = group._id;
 
         const moderatorIds = group.members
             .filter(member => member.role === 'moderator')
             .map(moderator => moderator.member_id._id);
-        console.log("DEBUG: moderators: ", moderatorIds);
+        // console.log("DEBUG: moderators: ", moderatorIds);
 
 
         try {
@@ -266,7 +266,7 @@ const NotificationProvider = ({ children }) => {
 
     //TODO: notify user about the outcome
     const declineRequestToJoinGroup = (notificationToDelete, userToNotify) => {
-        console.log("DEBUG: notify user: ", userToNotify);
+        // console.log("DEBUG: notify user: ", userToNotify);
 
         try {
             const response = axios.delete(`${BASE_URL}/notifications/delete/${notificationToDelete}`, { withCredentials: true });
@@ -324,7 +324,7 @@ const NotificationProvider = ({ children }) => {
     }
 
     const resolveNotification = async (notificationId) => {
-        console.log("DEBUG: resolveNotification: ", notificationId);
+        // console.log("DEBUG: resolveNotification: ", notificationId);
         try {
             const response = await axios.delete(`${BASE_URL}/notifications/delete/${notificationId}`, { withCredentials: true });
             // console.log("DEBUG: response: ", response);
