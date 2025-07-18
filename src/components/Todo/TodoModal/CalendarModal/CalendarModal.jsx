@@ -18,7 +18,7 @@ import { deadlineFinder } from '../../../../utils/dragAndDropUtils';
 
 const CalendarModal = ({ isOpen, onClose }) => {
     const { todoList, editTodo } = useTodoContext();
-    const { loggedInUser } = useUserContext();
+    const { loggedInUser, checkLogin } = useUserContext();
     const [interval, setInterval] = useState('day');
     const [selectedList, setSelectedList] = useState('all');
     const selectedListId = loggedInUser?.myLists.find(list => list.listName === selectedList)?._id;
@@ -27,13 +27,14 @@ const CalendarModal = ({ isOpen, onClose }) => {
     const [filteredList, setFilteredList] = useState(todoList);
     const tasksWithDueDate = todoList.filter(task => task.dueDate !== null);
     const tasksNoDueDate = todoList.filter(task => !task.dueDate && !task.repeatable && !task.completed && task.inListNew.some(list => list._id === selectedListId));
+    const tasksPastDueDate = tasksWithDueDate.filter(task => new Date(task.dueDate) < today && !task.completed && task.inListNew.some(list => list._id === selectedListId));
     let repeatableTasks = todoList.filter(task => task.repeatable);
     const [mimicTasks, setMimicTasks] = useState(repeatableTasks);
     const [hasSwitched, setHasSwitched] = useState(false);
     const [includeGroupTasks, setIncludeGroupTasks] = useState(true);
     const isMobile = useMediaQuery('(max-width: 800px)');
     const allListObject = loggedInUser?.myLists.find(list => list.listName === 'all');
-    const [optimizeOption, setOptimizeOption] = useState('time');
+    const [optimizeOption, setOptimizeOption] = useState('');
     const [isDrawerOpen, setIsDrawerOpen] = useState(false);
     const [draggedItem, setDraggedItem] = useState(null);
     const [palceholderIndex, setPlaceholderIndex] = React.useState(null);
@@ -337,6 +338,7 @@ const CalendarModal = ({ isOpen, onClose }) => {
                     console.log("Task was moved to a different time within the same day.");
                 }
                 editTodo(updatedTask);
+                //checkLogin for rerender
             } else {
                 console.error("Invalid new due date:", newDueDate);
             }
@@ -355,9 +357,13 @@ const CalendarModal = ({ isOpen, onClose }) => {
         setOptimizeOption(event.target.value);
     };
 
-    const handleOptimizeTasks = () => {
+    const handleOptimizeTasks = (totalPrice) => {
+        if(totalPrice > loggedInUser.settings.currency) {
+            alert("Not enough currency to proforme this operation.")
+        }
         // Implement the logic to optimize tasks based on the selected option
         console.log("Optimizing tasks based on:", optimizeOption);
+        console.log("Total price:", totalPrice);
     };
 
     const drawerWidth = isMobile ? '100%' : (interval === 'day' ? '60%' : (interval === 'week' ? '80%' : '100%'));
@@ -505,6 +511,7 @@ const CalendarModal = ({ isOpen, onClose }) => {
                         {interval === 'month' && <MonthlyView tasks={filteredList} today={today} thisMonth={selectedOption} onDayClick={handleDayClick} loggedInUser={loggedInUser} />}
                         <CalendarDrawer
                             tasksNoDueDate={tasksNoDueDate}
+                            tasksPastDueDate={tasksPastDueDate}
                             optimizeOption={optimizeOption}
                             handleOptimizeOptionChange={handleOptimizeOptionChange}
                             handleOptimizeTasks={handleOptimizeTasks}

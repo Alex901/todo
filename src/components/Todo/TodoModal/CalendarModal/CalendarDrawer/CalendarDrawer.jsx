@@ -1,17 +1,33 @@
-import React from 'react';
-import { SwipeableDrawer, Typography, FormControl, InputLabel, Select, MenuItem, Button, Checkbox, Tooltip, IconButton, InputAdornment } from '@mui/material';
+import React, { useState } from 'react';
+import { TextField, FormControlLabel, SwipeableDrawer, Typography, FormControl, InputLabel, Select, MenuItem, Button, Checkbox, Tooltip, IconButton, InputAdornment } from '@mui/material';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import Icon from '@mdi/react';
 import { mdiInformation } from '@mdi/js';
 import { useUserContext } from '../../../../../contexts/UserContext';
 import './CalendarDrawer.css';
 
-const CalendarDrawer = ({ tasksNoDueDate, optimizeOption, handleOptimizeOptionChange, handleOptimizeTasks, drawerWidth, isDrawerOpen, toggleDrawer, isMobile, interval, draggedItem }) => {
+const CalendarDrawer = ({ tasksNoDueDate, tasksPastDueDate, optimizeOption, handleOptimizeOptionChange, handleOptimizeTasks, drawerWidth, isDrawerOpen, toggleDrawer, isMobile, interval, draggedItem }) => {
     const pricePerTask = 0.2;
     const totalPrice = (tasksNoDueDate.length * pricePerTask).toFixed(1);
     const { loggedInUser } = useUserContext();
     const [isDraggingOutside, setIsDraggingOutside] = React.useState(false);
+    const [includePastDeadline, setIncludePastDeadline] = React.useState(false);
+    const [maxTasks, setMaxTasks] = useState(3);
+    const [additionalSettings, setAdditionalSettings] = useState([{}]);
 
+    // console.log("DEBUG --- tasksPastDueDate:", tasksPastDueDate);
+
+    const mergedTasks = includePastDeadline
+        ? tasksNoDueDate.concat(tasksPastDueDate).reduce((uniqueTasks, currentTask) => {
+            // Check if the task is already in the uniqueTasks array
+            if (!uniqueTasks.some(task => task._id === currentTask._id)) {
+                uniqueTasks.push(currentTask);
+            }
+            return uniqueTasks;
+        }, [])
+        : tasksNoDueDate;
+
+    // console.log("DEBUG --- mergedTasks:", mergedTasks);
 
     const getTaskStyle = (task) => {
         if (task.owner !== loggedInUser._id) {
@@ -54,7 +70,7 @@ const CalendarDrawer = ({ tasksNoDueDate, optimizeOption, handleOptimizeOptionCh
     return (
         <div className="drawer-container-calendar-drawer">
             <div className="drawer-header-calendar-drawer" onClick={() => toggleDrawer(!isDrawerOpen)}>
-                <Typography variant="h6">Tasks without Deadline ({tasksNoDueDate.length})</Typography>
+                <Typography variant="h6">Tasks without Deadline ({mergedTasks.length})</Typography>
             </div>
             <SwipeableDrawer
                 anchor="bottom"
@@ -65,67 +81,112 @@ const CalendarDrawer = ({ tasksNoDueDate, optimizeOption, handleOptimizeOptionCh
                 PaperProps={{ style: { width: drawerWidth, margin: '0 auto', borderRadius: isMobile ? '12px 12px 0px 0px' : '10px', overflow: 'hidden' } }}
             >
                 <div className="drawer-header-calendar-drawer-open" onClick={() => toggleDrawer(!isDrawerOpen)}>
-                    <Typography variant="h6">Tasks without Deadline ({tasksNoDueDate.length})</Typography>
+                    <Typography variant="h6">Tasks without Deadline ({mergedTasks.length})</Typography>
                 </div>
                 <div className={`drawer-content-calendar-drawer ${isMobile ? 'drawer-content-vertical' : ''}`}>
-                    
-                        <Droppable droppableId="noDeadlineTasks">
-                            {(provided) => (
-                                <div className="no-deadline-tasks-calendar-drawer" {...provided.droppableProps} ref={provided.innerRef}>
-                                    {tasksNoDueDate.map((task, index) => (
-                                        <Draggable key={task.id} draggableId={JSON.stringify(task)} index={index}>
-                                            {(provided) => (
-                                                <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} className="task-item-calendar-drawer">
-                                                    <div className="task-block-time">
-                                                        <span>{task.estimatedTime !== null ? `${normalizeTime(task.estimatedTime)} ` : "-"}</span>
-                                                    </div>
 
-                                                    <div className="task-block-content">
-                                                        <span>{task.task}</span>
-                                                    </div>
-                                                    <div className="task-checkbox">
-                                                        <Checkbox checked={!!task.completed}
-                                                            color={task.owner !== loggedInUser._id ? 'secondary' : 'primary'}
-                                                        />
-                                                    </div>
+                    <Droppable droppableId="noDeadlineTasks">
+                        {(provided) => (
+                            <div className="no-deadline-tasks-calendar-drawer" {...provided.droppableProps} ref={provided.innerRef}>
+                                {mergedTasks.map((task, index) => (
+                                    <Draggable key={task.id} draggableId={JSON.stringify(task)} index={index}>
+                                        {(provided) => (
+                                            <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps} className="task-item-calendar-drawer">
+                                                <div className="task-block-time">
+                                                    <span>{task.estimatedTime !== null ? `${normalizeTime(task.estimatedTime)} ` : "-"}</span>
                                                 </div>
-                                            )}
-                                        </Draggable>
-                                    ))}
-                                    {provided.placeholder}
-                                </div>
-                            )}
-                        </Droppable>
-                    
+
+                                                <div className="task-block-content">
+                                                    <span>{task.task}</span>
+                                                </div>
+                                                <div className="task-checkbox">
+                                                    <Checkbox checked={!!task.completed}
+                                                        color={task.owner !== loggedInUser._id ? 'secondary' : 'primary'}
+                                                    />
+                                                </div>
+                                            </div>
+                                        )}
+                                    </Draggable>
+                                ))}
+                                {provided.placeholder}
+                            </div>
+                        )}
+                    </Droppable>
+
                     <div className="drawer-right-calendar-drawer">
-                        <div className="drawer-right-title-container">
-                            <Typography variant="h4" className='drawer-right-title-calendar-drawer'>Optimize Tasks</Typography>
-                            <InputAdornment position="end">
-                                <Tooltip title="Insert tasks without deadline to your calendar in a selected order">
-                                    <IconButton>
-                                        <Icon className="information-icon" path={mdiInformation} size={1.2} />
-                                    </IconButton>
-                                </Tooltip>
-                            </InputAdornment>
+                        {/* Row 1: Title */}
+                        <div className="drawer-right-title-container" style={{ textAlign: 'center', marginBottom: '16px' }}>
+                            <Typography variant="h4" className="drawer-right-title-calendar-drawer">Optimize Tasks</Typography>
                         </div>
-                        <FormControl variant="outlined" size="small">
-                            <InputLabel id="optimize-select-label">Optimize By</InputLabel>
-                            <Select
-                                labelId="optimize-select-label"
-                                value={optimizeOption}
-                                onChange={handleOptimizeOptionChange}
-                                label="Optimize By"
-                                sx={{ minWidth: '150px' }}
-                            >
-                                <MenuItem value="priority">Priority</MenuItem>
-                                <MenuItem value="time">Task size</MenuItem>
-                                <MenuItem value="tags">Tags</MenuItem>
-                                <MenuItem value="random">Randomly</MenuItem>
-                            </Select>
-                        </FormControl>
-                        <button className='modal-button button-calendar-drawer' onClick={() => handleOptimizeTasks(totalPrice)}>
-                            Go ({totalPrice}<img src="/currency-beta.png" alt="currency" className="currency-icon" />)
-                        </button>
+
+                        {/* Row 2: Checkbox and Selector */}
+                        <div className="drawer-right-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
+                            <Tooltip title="Include tasks that are past deadline" arrow>
+                            <FormControlLabel
+                                control={
+                                    <Checkbox
+                                        checked={includePastDeadline}
+                                        onChange={(e) => setIncludePastDeadline(e.target.checked)}
+                                        color="primary"
+                                    />
+                                }
+                                label="Past Deadline?"
+                            />
+                            </Tooltip>
+                            <FormControl variant="outlined" size="small" style={{ minWidth: '150px' }}>
+                                <InputLabel id="optimize-select-label">Optimize By</InputLabel>
+                                <Select
+                                    labelId="optimize-select-label"
+                                    value={optimizeOption}
+                                    onChange={handleOptimizeOptionChange}
+                                    label="Optimize By"
+                                >
+                                    <MenuItem value=""> </MenuItem>
+                                    <MenuItem value="priority">Priority</MenuItem>
+                                    <MenuItem value="time">Duration</MenuItem>
+                                    <MenuItem value="tags">Tags</MenuItem>
+                                    <MenuItem value="Urgency">Urgency</MenuItem>
+                                    <MenuItem value="random">Randomly</MenuItem>
+                                </Select>
+                            </FormControl>
+                        </div>
+
+                        {/* Row 3: Special Options Based on Selection */}
+                        <div className="drawer-right-special-options" style={{ marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '16px' }}>
+                            <Tooltip title="Select the maximum number of tasks allowed per day" arrow>
+                                <FormControl variant="outlined" size="small" style={{ width: '60px' }}>
+                                    <TextField
+                                        id="max-tasks-per-day"
+                                        type="number"
+                                        label="Tasks/day"
+                                        placeholder="Enter max tasks"
+                                        variant="outlined"
+                                        size="small"
+                                        value={maxTasks}
+                                        onChange={(e) => {
+                                            const value = Math.min(10, Math.max(0, e.target.value)); // Ensure value is between 0 and 10
+                                            setMaxTasks(value);
+                                        }}
+                                        InputProps={{
+                                            style: { textAlign: 'center' }, // Smaller padding and font size
+                                        }}
+
+                                    />
+                                </FormControl>
+                            </Tooltip>
+                            {optimizeOption === 'priority' && <Typography>Special options for Priority</Typography>}
+                            {optimizeOption === 'time' && <Typography>Special options for Duration</Typography>}
+                            {optimizeOption === 'tags' && <Typography>Special options for Tags</Typography>}
+                            {optimizeOption === 'Urgency' && <Typography>Special options for Urgency</Typography>}
+                            {optimizeOption === 'random' && <Typography>Special options for Randomly</Typography>}
+                        </div>
+
+                        {/* Row 4: Button */}
+                        <div className="drawer-right-button-container" style={{ textAlign: 'center' }}>
+                            <button className="modal-button button-calendar-drawer" disabled={optimizeOption === ''} onClick={() => handleOptimizeTasks(totalPrice)}>
+                                Go ({totalPrice}<img src="/currency-beta.png" alt="currency" className="currency-icon" />)
+                            </button>
+                        </div>
                     </div>
                 </div>
             </SwipeableDrawer>

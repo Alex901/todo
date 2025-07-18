@@ -17,11 +17,10 @@
 }
 
 .bottom-drawer-calendar-drawer {
-    z-index: 1000; 
+    z-index: 1000;
 }
 
-.bottom-drawer-calendar-drawer {
-}
+.bottom-drawer-calendar-drawer {}
 
 .drawer-header-calendar-drawer {
     display: flex;
@@ -34,7 +33,7 @@
     border-radius: 0px 0px 10px 10px;
     box-sizing: border-box;
     width: 100%;
-    z-index: 1201; 
+    z-index: 1201;
 }
 
 .drawer-header-calendar-drawer-open {
@@ -47,7 +46,7 @@
     border: 1px solid #6a0a96;
     border-radius: 10px 10px 0px 0px;
     box-sizing: border-box;
-    z-index: 1201; 
+    z-index: 1201;
     position: sticky;
     top: 0;
     bottom: auto;
@@ -56,9 +55,11 @@
 
 .drawer-content-vertical {
     flex-direction: column;
+;
 }
 
-.drawer-left-calendar-drawer, .drawer-right-calendar-drawer {
+.drawer-left-calendar-drawer,
+.drawer-right-calendar-drawer {
     flex: 1;
     padding: 10px;
 }
@@ -73,14 +74,31 @@
 }
 
 .no-deadline-tasks-calendar-drawer {
-    max-height: 250px;
+    max-height: 300px;
+    min-height: 200px;
+    height: auto;
     overflow-y: scroll;
     overflow-x: hidden;
-    padding: 5px;
+    padding: 10px 5px;
 }
 
 .drawer-right-title-calendar-drawer {
     margin-right: 5px;
+}
+
+.drawer-right-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+}
+
+.drawer-right-special-options {
+    margin-bottom: 16px;
+}
+
+.drawer-right-button-container {
+    text-align: center;
 }
 
 .drawer-right-title-container {
@@ -88,6 +106,7 @@
     align-items: center;
     margin-top: 10px;
     margin-bottom: 10px;
+    padding: 0;
 }
 
 .task-item-calendar-drawer {
@@ -135,8 +154,11 @@
     vertical-align: middle;
 }
 
-@media (max-width: 768px) {
-    .drawer-right-calendar-drawer, .drawer-right-calendar-drawer {
-        border-top: 1px solid #e0e0e0;
+@media (max-width: 800px) {
+
+    .drawer-right-calendar-drawer,
+    .drawer-right-calendar-drawer {
+        border: 2px solid #e0e0e0;
+        border-radius: 10px;
     }
 }
