@@ -14,7 +14,7 @@ const DailyView = ({ tasks, today, loggedInUser, draggedItem, date, placeholderI
     const { editTodo } = useTodoContext();
 
     useEffect(() => {
-        console.log("DEBUG -- Placeholder index - dailyView: ", placeholderIndex);
+        // console.log("DEBUG -- Placeholder index - dailyView: ", placeholderIndex);
     }, [placeholderIndex]);
 
     const normalizeTime = (minutes) => {

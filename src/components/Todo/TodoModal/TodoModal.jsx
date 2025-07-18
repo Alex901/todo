@@ -368,13 +368,13 @@ const TodoModal = ({ isOpen, onRequestClose, initialData }) => {
         const beforeTasks = selectedTasksBefore.map((id) => todoList.find((task) => task._id === id)).filter(Boolean);
         const afterTasks = selectedTasksAfter.map((id) => todoList.find((task) => task._id === id)).filter(Boolean);
 
-        console.log("DEBUG - Tasks Options selected Before: ", beforeTasks);
-        console.log("DEBUG - Tasks Options selected After: ", afterTasks);
+        // console.log("DEBUG - Tasks Options selected Before: ", beforeTasks);
+        // console.log("DEBUG - Tasks Options selected After: ", afterTasks);
 
         // Calculate constraints based on the selected tasks
         const { min, max } = getDateConstraints(beforeTasks, afterTasks);
 
-        console.log("DEBUG - Calculated Constraints: ", { min, max });
+        // console.log("DEBUG - Calculated Constraints: ", { min, max });
 
         // Update the state with the new constraints
         setConstraints({ min, max });

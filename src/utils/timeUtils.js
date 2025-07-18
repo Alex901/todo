@@ -116,7 +116,7 @@ const getDateConstraints = (tasksBeforeOptions = [], tasksAfterOptions = []) => 
         maxDate = earliestBeforeDate.toISOString().slice(0, 16);
     }
 
-    console.log({ min: minDate, max: maxDate });
+    // console.log({ min: minDate, max: maxDate });
 
     return { min: minDate, max: maxDate };
 };

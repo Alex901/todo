@@ -1,18 +1,19 @@
 import React, { useState } from 'react';
-import { TextField, FormControlLabel, SwipeableDrawer, Typography, FormControl, InputLabel, Select, MenuItem, Button, Checkbox, Tooltip, IconButton, InputAdornment } from '@mui/material';
+import { TextField, FormControlLabel, SwipeableDrawer, Typography, FormControl, InputLabel, Select, MenuItem, Button, Checkbox, Tooltip, IconButton, InputAdornment, ToggleButton, ToggleButtonGroup } from '@mui/material';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import Icon from '@mdi/react';
-import { mdiInformation } from '@mdi/js';
+import { mdiInformation, mdiSortAscending, mdiSortDescending } from '@mdi/js';
 import { useUserContext } from '../../../../../contexts/UserContext';
 import './CalendarDrawer.css';
 
 const CalendarDrawer = ({ tasksNoDueDate, tasksPastDueDate, optimizeOption, handleOptimizeOptionChange, handleOptimizeTasks, drawerWidth, isDrawerOpen, toggleDrawer, isMobile, interval, draggedItem }) => {
     const pricePerTask = 0.2;
-    const totalPrice = (tasksNoDueDate.length * pricePerTask).toFixed(1);
+
     const { loggedInUser } = useUserContext();
     const [isDraggingOutside, setIsDraggingOutside] = React.useState(false);
     const [includePastDeadline, setIncludePastDeadline] = React.useState(false);
     const [maxTasks, setMaxTasks] = useState(3);
+    const [sortOptions, setSortOptions] = useState("descending");
     const [additionalSettings, setAdditionalSettings] = useState([{}]);
 
     // console.log("DEBUG --- tasksPastDueDate:", tasksPastDueDate);
@@ -26,6 +27,8 @@ const CalendarDrawer = ({ tasksNoDueDate, tasksPastDueDate, optimizeOption, hand
             return uniqueTasks;
         }, [])
         : tasksNoDueDate;
+
+    const totalPrice = (mergedTasks.length * pricePerTask).toFixed(1);
 
     // console.log("DEBUG --- mergedTasks:", mergedTasks);
 
@@ -122,16 +125,16 @@ const CalendarDrawer = ({ tasksNoDueDate, tasksPastDueDate, optimizeOption, hand
                         {/* Row 2: Checkbox and Selector */}
                         <div className="drawer-right-row" style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '16px' }}>
                             <Tooltip title="Include tasks that are past deadline" arrow>
-                            <FormControlLabel
-                                control={
-                                    <Checkbox
-                                        checked={includePastDeadline}
-                                        onChange={(e) => setIncludePastDeadline(e.target.checked)}
-                                        color="primary"
-                                    />
-                                }
-                                label="Past Deadline?"
-                            />
+                                <FormControlLabel
+                                    control={
+                                        <Checkbox
+                                            checked={includePastDeadline}
+                                            onChange={(e) => setIncludePastDeadline(e.target.checked)}
+                                            color="primary"
+                                        />
+                                    }
+                                    label="Past Deadline?"
+                                />
                             </Tooltip>
                             <FormControl variant="outlined" size="small" style={{ minWidth: '150px' }}>
                                 <InputLabel id="optimize-select-label">Optimize By</InputLabel>
@@ -144,6 +147,7 @@ const CalendarDrawer = ({ tasksNoDueDate, tasksPastDueDate, optimizeOption, hand
                                     <MenuItem value=""> </MenuItem>
                                     <MenuItem value="priority">Priority</MenuItem>
                                     <MenuItem value="time">Duration</MenuItem>
+                                    <MenuItem value="difficulty">Difficulty</MenuItem>
                                     <MenuItem value="tags">Tags</MenuItem>
                                     <MenuItem value="Urgency">Urgency</MenuItem>
                                     <MenuItem value="random">Randomly</MenuItem>
@@ -152,7 +156,7 @@ const CalendarDrawer = ({ tasksNoDueDate, tasksPastDueDate, optimizeOption, hand
                         </div>
 
                         {/* Row 3: Special Options Based on Selection */}
-                        <div className="drawer-right-special-options" style={{ marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '16px' }}>
+                        <div className="drawer-right-special-options" style={{ marginBottom: '16px', display: 'flex', alignItems: 'center', gap: '30px' }}>
                             <Tooltip title="Select the maximum number of tasks allowed per day" arrow>
                                 <FormControl variant="outlined" size="small" style={{ width: '60px' }}>
                                     <TextField
@@ -174,16 +178,55 @@ const CalendarDrawer = ({ tasksNoDueDate, tasksPastDueDate, optimizeOption, hand
                                     />
                                 </FormControl>
                             </Tooltip>
-                            {optimizeOption === 'priority' && <Typography>Special options for Priority</Typography>}
-                            {optimizeOption === 'time' && <Typography>Special options for Duration</Typography>}
-                            {optimizeOption === 'tags' && <Typography>Special options for Tags</Typography>}
-                            {optimizeOption === 'Urgency' && <Typography>Special options for Urgency</Typography>}
-                            {optimizeOption === 'random' && <Typography>Special options for Randomly</Typography>}
+                            {['priority', 'time', 'difficulty'].includes(optimizeOption) && (
+                                <ToggleButtonGroup
+                                    value={sortOptions || 'descending'} // Default to 'ascending'
+                                    exclusive
+                                    onChange={(e, newOrder) => {
+                                        if (newOrder !== null) {
+                                            setSortOptions(newOrder); // Update the sortOptions state directly
+                                        }
+                                    }}
+                                    aria-label="Order"
+                                >
+                                    <Tooltip
+                                        title={
+                                            optimizeOption === 'priority'
+                                                ? 'Lowest priority first' // Corrected for priority
+                                                : optimizeOption === 'time'
+                                                    ? 'Shortest tasks first'
+                                                    : 'Easiest tasks first'
+                                        }
+                                        arrow
+                                    >
+                                        <ToggleButton value="ascending" aria-label="Ascending">
+                                            <Icon path={mdiSortAscending} size={1} /> {/* Ascending Icon */}
+                                        </ToggleButton>
+                                    </Tooltip>
+                                    <Tooltip
+                                        title={
+                                            optimizeOption === 'priority'
+                                                ? 'Highest priority first' // Corrected for priority
+                                                : optimizeOption === 'time'
+                                                    ? 'Longest tasks first'
+                                                    : 'Hardest tasks first'
+                                        }
+                                        arrow
+                                    >
+                                        <ToggleButton value="descending" aria-label="Descending">
+                                            <Icon path={mdiSortDescending} size={1} /> {/* Descending Icon */}
+                                        </ToggleButton>
+                                    </Tooltip>
+                                </ToggleButtonGroup>
+                            )}
+                            {optimizeOption === 'tags' && <Typography>Coming soon</Typography>}
+                            {optimizeOption === 'Urgency' && <Typography>Urgent tasks are prioritized</Typography>}
+                            {optimizeOption === 'random' && <Typography>Tasks are added randomly </Typography>}
                         </div>
 
                         {/* Row 4: Button */}
                         <div className="drawer-right-button-container" style={{ textAlign: 'center' }}>
-                            <button className="modal-button button-calendar-drawer" disabled={optimizeOption === ''} onClick={() => handleOptimizeTasks(totalPrice)}>
+                            <button className="modal-button button-calendar-drawer" disabled={optimizeOption === '' || optimizeOption === 'tags'} onClick={() => handleOptimizeTasks(totalPrice, sortOptions, mergedTasks, maxTasks)}>
                                 Go ({totalPrice}<img src="/currency-beta.png" alt="currency" className="currency-icon" />)
                             </button>
                         </div>

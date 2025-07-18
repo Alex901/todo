@@ -342,9 +342,9 @@ const CalendarModal = ({ isOpen, onClose }) => {
             } else {
                 console.error("Invalid new due date:", newDueDate);
             }
-        } else if(destination.droppableId.startsWith('calendar-week')) {
+        } else if (destination.droppableId.startsWith('calendar-week')) {
             console.log("Task dropped in calendar-week");
-        }   
+        }
 
         setDraggedItem(null);
         setPlaceholderIndex(null);
@@ -357,13 +357,17 @@ const CalendarModal = ({ isOpen, onClose }) => {
         setOptimizeOption(event.target.value);
     };
 
-    const handleOptimizeTasks = (totalPrice) => {
-        if(totalPrice > loggedInUser.settings.currency) {
+    const handleOptimizeTasks = (totalPrice, sortOptions, mergedTasks, maxTasks) => {
+        if (totalPrice > loggedInUser.settings.currency) {
             alert("Not enough currency to proforme this operation.")
         }
         // Implement the logic to optimize tasks based on the selected option
-        console.log("Optimizing tasks based on:", optimizeOption);
-        console.log("Total price:", totalPrice);
+
+        console.log("Optimize Option:", optimizeOption);
+        console.log("Total Price:", totalPrice);
+        console.log("Sort Order:", sortOptions);
+        console.log("Merged Tasks:", mergedTasks);
+        console.log("Max Tasks Per Day:", maxTasks);
     };
 
     const drawerWidth = isMobile ? '100%' : (interval === 'day' ? '60%' : (interval === 'week' ? '80%' : '100%'));
@@ -384,7 +388,7 @@ const CalendarModal = ({ isOpen, onClose }) => {
     const getUncompletedTasksCount = (date) => {
         const formattedDate = new Date(date).toISOString().split('T')[0];
         // console.log("DEBUG -- formattedDate -- getUncompletedTasksCount", formattedDate)
-    
+
         const dayTasks = [
             ...todoList.filter(task => {
                 const taskDate = new Date(task.dueDate);
@@ -399,7 +403,7 @@ const CalendarModal = ({ isOpen, onClose }) => {
         ];
 
         console.log("DEBUG -- dayTasks -- getUncompletedTasksCount", dayTasks);
-    
+
         const repeatableTasks = dayTasks.filter(task => task.repeatable && !task.completed).length;
         const nonRepeatableTasks = dayTasks.filter(task => !task.repeatable && !task.completed).length;
         // console.log("DEBUG -- repeatableTasks -- getUncompletedTasksCount", repeatableTasks);   
@@ -489,12 +493,12 @@ const CalendarModal = ({ isOpen, onClose }) => {
                             >
                                 {/* Populate with dates that have tasks */}
                                 {getFilteredOptions().map(option => (
-                                <MenuItem key={option.value.start} value={option.value.start}>
-                                    {interval === 'day'
-                                        ? `${option.label} `
-                                        : option.label}
-                                </MenuItem>
-                            ))}
+                                    <MenuItem key={option.value.start} value={option.value.start}>
+                                        {interval === 'day'
+                                            ? `${option.label} `
+                                            : option.label}
+                                    </MenuItem>
+                                ))}
                             </Select>
                         </FormControl>
                         <IconButton onClick={handleNextClick}>
