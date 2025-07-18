@@ -458,7 +458,38 @@ const TodoProvider = ({ children }) => {
     }
   }
 
-
+  const updateManyTasks = async (sortOptions, optimizedOption, mergedTasks, maxTasks, totalPrice) => {
+   
+    const strippedTasks = mergedTasks.map(task => ({
+      _id: task._id,
+    }));
+   
+    console.log("todoContext: updateManyTasks", {
+    sortOptions,
+    optimizedOption,
+    maxTasks,
+    totalPrice,
+    strippedTasks,
+});
+    // try {
+    //   const response = await axios.post(`${BASE_URL}/api/updateManyTasks`, {
+    //     sortOptions,
+    //     optimizedOption,
+    //     strippedTasks,
+    //     maxTasks,
+    //     totalPrice,
+    //   });
+    //   if (response.status === 200) {
+    //     console.log("Tasks updated successfully");
+    //     // Optionally, you can refresh the todo list after updating
+    //     checkLogin();
+    //   } else {
+    //     console.error("Error updating tasks: ", response.statusText);
+    //   }
+    // } catch (error) {
+    //   console.error("Error updating tasks: ", error);
+    // }
+  };
 
 
   //Other functions
@@ -511,7 +542,7 @@ const TodoProvider = ({ children }) => {
       todoList, listToday: listToday, addTodo, cancelTodo, removeTodo, toggleTodoComplete,
       getTodoCount, getDoneCount, getDoingCount, editTodo, toggleTodoStart, refreshTodoList,
       getActiveListDoingCount, getActiveListTodoCount, getActiveListDoneCount, getListDoingCount,
-      getListDoneCount, getListTodoCount, setStepCompleted, setStepUncomplete,
+      getListDoneCount, getListTodoCount, setStepCompleted, setStepUncomplete, updateManyTasks, 
     }}>
       {children}
     </TodoContext.Provider>

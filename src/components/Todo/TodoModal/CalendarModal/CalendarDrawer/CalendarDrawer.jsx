@@ -226,7 +226,7 @@ const CalendarDrawer = ({ tasksNoDueDate, tasksPastDueDate, optimizeOption, hand
 
                         {/* Row 4: Button */}
                         <div className="drawer-right-button-container" style={{ textAlign: 'center' }}>
-                            <button className="modal-button button-calendar-drawer" disabled={optimizeOption === '' || optimizeOption === 'tags'} onClick={() => handleOptimizeTasks(totalPrice, sortOptions, mergedTasks, maxTasks)}>
+                            <button className="modal-button button-calendar-drawer" disabled={optimizeOption === '' || optimizeOption === 'tags' || mergedTasks.length === 0} onClick={() => handleOptimizeTasks(totalPrice, sortOptions, mergedTasks, maxTasks)}>
                                 Go ({totalPrice}<img src="/currency-beta.png" alt="currency" className="currency-icon" />)
                             </button>
                         </div>

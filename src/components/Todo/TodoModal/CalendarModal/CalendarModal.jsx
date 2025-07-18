@@ -17,7 +17,7 @@ import CalendarDrawer from './CalendarDrawer/CalendarDrawer';
 import { deadlineFinder } from '../../../../utils/dragAndDropUtils';
 
 const CalendarModal = ({ isOpen, onClose }) => {
-    const { todoList, editTodo } = useTodoContext();
+    const { todoList, editTodo, updateManyTasks } = useTodoContext();
     const { loggedInUser, checkLogin } = useUserContext();
     const [interval, setInterval] = useState('day');
     const [selectedList, setSelectedList] = useState('all');
@@ -360,14 +360,15 @@ const CalendarModal = ({ isOpen, onClose }) => {
     const handleOptimizeTasks = (totalPrice, sortOptions, mergedTasks, maxTasks) => {
         if (totalPrice > loggedInUser.settings.currency) {
             alert("Not enough currency to proforme this operation.")
+        } else {
+            updateManyTasks(sortOptions, optimizeOption, mergedTasks, maxTasks, totalPrice);
+            setIsDrawerOpen(false);
+            setDraggedItem(null);
+            setPlaceholderIndex(null);
+            resetValues();
+            // Optionally, you can also close the modal here
+            onClose();
         }
-        // Implement the logic to optimize tasks based on the selected option
-
-        console.log("Optimize Option:", optimizeOption);
-        console.log("Total Price:", totalPrice);
-        console.log("Sort Order:", sortOptions);
-        console.log("Merged Tasks:", mergedTasks);
-        console.log("Max Tasks Per Day:", maxTasks);
     };
 
     const drawerWidth = isMobile ? '100%' : (interval === 'day' ? '60%' : (interval === 'week' ? '80%' : '100%'));
