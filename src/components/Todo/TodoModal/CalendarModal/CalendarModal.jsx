@@ -20,7 +20,7 @@ const CalendarModal = ({ isOpen, onClose }) => {
     const { todoList, editTodo, updateManyTasks } = useTodoContext();
     const { loggedInUser, checkLogin } = useUserContext();
     const [interval, setInterval] = useState('day');
-    const [selectedList, setSelectedList] = useState('all');
+    const [selectedList, setSelectedList] = useState(loggedInUser?.activeList);
     const selectedListId = loggedInUser?.myLists.find(list => list.listName === selectedList)?._id;
     const today = new Date();
     const [currentDate, setCurrentDate] = useState(today);

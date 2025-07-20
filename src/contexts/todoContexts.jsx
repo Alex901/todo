@@ -459,36 +459,43 @@ const TodoProvider = ({ children }) => {
   }
 
   const updateManyTasks = async (sortOptions, optimizedOption, mergedTasks, maxTasks, totalPrice) => {
-   
+    const totalPriceInt = parseInt(totalPrice, 10);
     const strippedTasks = mergedTasks.map(task => ({
       _id: task._id,
     }));
-   
+    totalPrice = totalPriceInt;
+
+    const loggedInUserId = loggedInUser ? loggedInUser._id : null;
+
     console.log("todoContext: updateManyTasks", {
-    sortOptions,
-    optimizedOption,
-    maxTasks,
-    totalPrice,
-    strippedTasks,
-});
-    // try {
-    //   const response = await axios.post(`${BASE_URL}/api/updateManyTasks`, {
-    //     sortOptions,
-    //     optimizedOption,
-    //     strippedTasks,
-    //     maxTasks,
-    //     totalPrice,
-    //   });
-    //   if (response.status === 200) {
-    //     console.log("Tasks updated successfully");
-    //     // Optionally, you can refresh the todo list after updating
-    //     checkLogin();
-    //   } else {
-    //     console.error("Error updating tasks: ", response.statusText);
-    //   }
-    // } catch (error) {
-    //   console.error("Error updating tasks: ", error);
-    // }
+      sortOptions,
+      optimizedOption,
+      maxTasks,
+      totalPrice,
+      strippedTasks,
+      loggedInUserId
+    });
+    try {
+      const response = await axios.post(`${BASE_URL}/api/updateManyTasks`, {
+        sortOptions,
+        optimizedOption,
+        strippedTasks,
+        maxTasks,
+        totalPrice,
+        loggedInUserId
+      });
+      if (response.status === 200) {
+        console.log("Tasks updated successfully");
+        // Optionally, you can refresh the todo list after updating
+        checkLogin();
+      } else if (response.status === 400) {
+        console.error("Error updating tasks: ", response.data.message || response.statusText);
+      } else {
+        console.error("Error updating tasks: ", response.statusText);
+      }
+    } catch (error) {
+      console.error("Error updating tasks: ", error);
+    }
   };
 
 
@@ -542,7 +549,7 @@ const TodoProvider = ({ children }) => {
       todoList, listToday: listToday, addTodo, cancelTodo, removeTodo, toggleTodoComplete,
       getTodoCount, getDoneCount, getDoingCount, editTodo, toggleTodoStart, refreshTodoList,
       getActiveListDoingCount, getActiveListTodoCount, getActiveListDoneCount, getListDoingCount,
-      getListDoneCount, getListTodoCount, setStepCompleted, setStepUncomplete, updateManyTasks, 
+      getListDoneCount, getListTodoCount, setStepCompleted, setStepUncomplete, updateManyTasks,
     }}>
       {children}
     </TodoContext.Provider>
