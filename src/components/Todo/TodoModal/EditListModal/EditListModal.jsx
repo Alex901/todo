@@ -73,14 +73,20 @@ const EditListModal = ({ isOpen, onRequestClose, listData }) => {
                     required
                     error={errorMessage !== ''}
                     helperText={errorMessage}
+
                 />
                 <TextField
                     name="description"
                     value={editedListData.description}
                     onChange={handleInputChange}
-                    label="Description"
+                    label="Describe your goal"
                     variant="outlined"
                     fullWidth
+                    multiline
+                    rows={3} // Start with three lines
+                    InputProps={{
+                        style: { resize: 'vertical' }, // Allow vertical resizing
+                    }}
                 />
                 {listData.type === "groupList" && (
                     <div className="form-control-with-adornment">
