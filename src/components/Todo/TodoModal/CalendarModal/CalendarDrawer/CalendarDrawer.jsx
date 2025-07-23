@@ -16,7 +16,7 @@ const CalendarDrawer = ({ tasksNoDueDate, tasksPastDueDate, optimizeOption, hand
     const [sortOptions, setSortOptions] = useState("descending");
     const [additionalSettings, setAdditionalSettings] = useState([{}]);
 
-    // console.log("DEBUG --- tasksPastDueDate:", tasksPastDueDate);
+    console.log("DEBG -- sortOptions", sortOptions);
 
     const mergedTasks = includePastDeadline
         ? tasksNoDueDate.concat(tasksPastDueDate).reduce((uniqueTasks, currentTask) => {

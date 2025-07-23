@@ -177,16 +177,16 @@ const TodoDrawer = () => {
 
 
 
-                <Drawer anchor='right'
+                <Drawer
+                    anchor="right"
                     open={isOpen}
                     onClose={toggleDrawer(false)}
                     className="custom-drawer"
                     BackdropProps={{
                         classes: { root: 'custom-backdrop' },
-                        children: (
+                        children: loggedInUser ? (
                             <div className="bottom-navigation-drawer">
-                               
-                                <div className='navigation-buttons'>
+                                <div className="navigation-buttons">
                                     <IconMenu
                                         openGroupModal={handleGroupClick}
                                         openVoteModal={handleVoteClick}
@@ -194,13 +194,25 @@ const TodoDrawer = () => {
                                         activeView={view}
                                         onViewChange={handleViewChange} // Placeholder for view change handler
                                     />
-                                     <div className="navigation-footer">
-                                    <ViewDisplay activeView={view} />
+                                    <div className="navigation-footer">
+                                        <ViewDisplay activeView={view} />
+                                    </div>
                                 </div>
+                            </div>
+                        ) : (
+                            <div className="bottom-navigation-drawer">
+                                <div className="marketing-content">
+                                    <Typography variant="h6" className="marketing-text">
+                                        Join HabitForge today and build a system that works — one step at a time.
+                                    </Typography>
+                                    <Typography variant="body1" className="marketing-subtext">
+                                        Start small, stay consistent, and make lasting progress.
+                                    </Typography>
                                 </div>
                             </div>
                         ),
-                    }}>
+                    }}
+                >
 
                     <div ref={drawerRef} className="drawer-content">
 
