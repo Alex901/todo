@@ -194,9 +194,9 @@ const TodoDrawer = () => {
                                         activeView={view}
                                         onViewChange={handleViewChange} // Placeholder for view change handler
                                     />
-                                    <div className="navigation-footer">
+                                    {/* <div className="navigation-footer">
                                         <ViewDisplay activeView={view} />
-                                    </div>
+                                    </div> */}
                                 </div>
                             </div>
                         ) : (

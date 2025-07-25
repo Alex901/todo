@@ -131,7 +131,7 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
         }
 
         setErrorMessage('');
-        console.log("DEBUG -- event", event.target.value)
+        // console.log("DEBUG -- event", event.target.value)
         if (name === 'tasksBefore' || name === 'tasksAfter') {
             const selectedTasks = Array.isArray(value)
                 ? value.map(id => filteredList.find(task => task._id === id))

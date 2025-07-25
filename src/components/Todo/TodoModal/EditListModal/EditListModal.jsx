@@ -33,7 +33,6 @@ const EditListModal = ({ isOpen, onRequestClose, listData }) => {
         }
     }, [isOpen, listData]);
 
-
     const handleSubmit = () => {
         console.log('submit');
         if (editedListData.listName === '') {
