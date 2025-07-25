@@ -360,8 +360,29 @@ const TodoModal = ({ isOpen, onRequestClose, initialData }) => {
         setConstraints({ min: null, max: null });
     }
 
-    const tasksBeforeOptions = filteredList.filter(task => !(newTaskData.tasksAfter || []).includes(task._id));
-    const tasksAfterOptions = filteredList.filter(task => !(newTaskData.tasksBefore || []).includes(task._id));
+    const tasksBeforeOptions = filteredList.filter(task => {
+        const taskDeadline = new Date(task.dueDate).getTime();
+        const currentTaskDeadline = newTaskData.dueDate ? new Date(newTaskData.dueDate).getTime() : null;
+
+        // Exclude tasks past their deadline or tasks with deadlines later than the current task's deadline
+        return (
+            taskDeadline > Date.now() && // Task is not past its deadline
+            (!currentTaskDeadline || taskDeadline < currentTaskDeadline) && // Task deadline is earlier than the current task's deadline
+            !(newTaskData.tasksAfter || []).includes(task._id) // Task is not already listed in "tasksAfter"
+        );
+    });
+
+    const tasksAfterOptions = filteredList.filter(task => {
+        const taskDeadline = new Date(task.dueDate).getTime();
+        const currentTaskDeadline = newTaskData.dueDate ? new Date(newTaskData.dueDate).getTime() : null;
+
+        // Exclude tasks past their deadline or tasks with deadlines earlier than the current task's deadline
+        return (
+            taskDeadline > Date.now() && // Task is not past its deadline
+            (!currentTaskDeadline || taskDeadline > currentTaskDeadline) && // Task deadline is later than the current task's deadline
+            !(newTaskData.tasksBefore || []).includes(task._id) // Task is not already listed in "tasksBefore"
+        );
+    });
 
     useMemo(() => {
         // Map selected task IDs to their corresponding task objects
@@ -733,11 +754,11 @@ const TodoModal = ({ isOpen, onRequestClose, initialData }) => {
                         {!repeatable && (
                             <div className="linked-tasks-container">
                                 <FormControl className="linked-tasks-form-control" style={{ minWidth: '100px', width: 'auto', height: 'auto' }} size='small'>
-                                    <InputLabel id="tasks-before-label">Tasks Before</InputLabel>
+                                    <InputLabel id="tasks-before-label">Tasks to do Before</InputLabel>
                                     <Select
                                         name="tasksBefore"
                                         size='small'
-                                        label="Tasks Before"
+                                        label="Tasks to do Before"
                                         multiple
                                         value={newTaskData.tasksBefore || []}
                                         onChange={handleInputChange}
@@ -751,11 +772,11 @@ const TodoModal = ({ isOpen, onRequestClose, initialData }) => {
                                     </Select>
                                 </FormControl>
                                 <FormControl className="linked-tasks-form-control" style={{ minWidth: '100px', width: 'auto', height: 'auto' }} size='small'>
-                                    <InputLabel id="tasks-after-label">Tasks After</InputLabel>
+                                    <InputLabel id="tasks-after-label">Tasks to do After</InputLabel>
                                     <Select
                                         name="tasksAfter"
                                         size='small'
-                                        label="Tasks After"
+                                        label="Tasks to do After"
                                         multiple
                                         value={newTaskData.tasksAfter || []}
                                         onChange={handleInputChange}

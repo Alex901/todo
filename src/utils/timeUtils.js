@@ -84,10 +84,10 @@ const getDateConstraints = (tasksBeforeOptions = [], tasksAfterOptions = []) => 
     let minDate = currentDateTime;
 
     // If there are tasksAfterOptions, calculate the latest due date among them (considering estimatedTime and totalTimeSpent)
-    if (tasksAfterOptions.length) {
+    if (tasksBeforeOptions.length) {
         const latestAfterDate = new Date(
             Math.max(
-                ...tasksAfterOptions.map(task => {
+                ...tasksBeforeOptions.map(task => {
                     const dueDate = new Date(task.dueDate).getTime();
                     const estimatedTimeMs = (task.estimatedTime || 0) * 60 * 1000; // Convert minutes to milliseconds
                     const totalTimeSpentMs = task.totalTimeSpent || 0; // Already in milliseconds
@@ -102,10 +102,10 @@ const getDateConstraints = (tasksBeforeOptions = [], tasksAfterOptions = []) => 
     let maxDate = null;
 
     // If there are tasksBeforeOptions, calculate the earliest due date among them (considering estimatedTime and totalTimeSpent)
-    if (tasksBeforeOptions.length) {
+    if (tasksAfterOptions.length) {
         const earliestBeforeDate = new Date(
             Math.min(
-                ...tasksBeforeOptions.map(task => {
+                ...tasksAfterOptions.map(task => {
                     const dueDate = new Date(task.dueDate).getTime();
                     const estimatedTimeMs = (task.estimatedTime || 0) * 60 * 1000; // Convert minutes to milliseconds
                     const totalTimeSpentMs = task.totalTimeSpent || 0; // Already in milliseconds

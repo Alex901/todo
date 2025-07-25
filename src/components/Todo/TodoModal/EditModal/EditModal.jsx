@@ -420,13 +420,29 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
     const tasksAfterIds = (taskData.tasksAfter || []).map(task => task._id);
 
     const tasksBeforeOptions = filteredList.filter(task => {
-        const isIncluded = !tasksAfterIds.includes(task._id) && task._id !== taskData._id;
-        return isIncluded;
+        const taskDeadline = new Date(task.dueDate).getTime();
+        const currentTaskDeadline = taskData.dueDate ? new Date(taskData.dueDate).getTime() : null;
+
+        // Exclude tasks past their deadline or tasks with deadlines later than the current task's deadline
+        return (
+            taskDeadline > Date.now() && // Task is not past its deadline
+            (!currentTaskDeadline || taskDeadline < currentTaskDeadline) && // Task deadline is earlier than the current task's deadline
+            !tasksAfterIds.includes(task._id) && // Task is not already listed in "tasksAfter"
+            task._id !== taskData._id // Task is not the current task itself
+        );
     });
 
     const tasksAfterOptions = filteredList.filter(task => {
-        const isIncluded = !tasksBeforeIds.includes(task._id) && task._id !== taskData._id;
-        return isIncluded;
+        const taskDeadline = new Date(task.dueDate).getTime();
+        const currentTaskDeadline = taskData.dueDate ? new Date(taskData.dueDate).getTime() : null;
+
+        // Exclude tasks past their deadline or tasks with deadlines earlier than the current task's deadline
+        return (
+            taskDeadline > Date.now() && // Task is not past its deadline
+            (!currentTaskDeadline || taskDeadline > currentTaskDeadline) && // Task deadline is later than the current task's deadline
+            !tasksBeforeIds.includes(task._id) && // Task is not already listed in "tasksBefore"
+            task._id !== taskData._id // Task is not the current task itself
+        );
     });
 
     useMemo(() => {
@@ -811,10 +827,10 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
                     {!taskData.repeatable && activeList.listName !== 'today' && activeList.listName !== 'all' && (
                         <div className="linked-tasks-container">
                             <FormControl className="linked-tasks-form-control" style={{ minWidth: '100px', width: 'auto', height: 'auto', maxWidth: '180px' }} size='small'>
-                                <InputLabel id="tasks-before-label">Tasks Before</InputLabel>
+                                <InputLabel id="tasks-before-label">Tasks to do Before</InputLabel>
                                 <Select
                                     name="tasksBefore"
-                                    label="Tasks Before"
+                                    label="Tasks to do Before"
                                     multiple
                                     value={tasksBeforeIds || []}
                                     onChange={handleInputChange}
@@ -828,10 +844,10 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
                                 </Select>
                             </FormControl>
                             <FormControl className="linked-tasks-form-control" style={{ minWidth: '100px', width: 'auto', height: 'auto', maxWidth: '180px' }} size='small'>
-                                <InputLabel id="tasks-after-label">Tasks After</InputLabel>
+                                <InputLabel id="tasks-after-label">Tasks to do After</InputLabel>
                                 <Select
                                     name="tasksAfter"
-                                    label="Tasks After"
+                                    label="Tasks to do After"
                                     multiple
                                     value={tasksAfterIds || []}
                                     onChange={handleInputChange}
