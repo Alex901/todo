@@ -270,6 +270,7 @@ const GroupProvider = ({ children }) => {
 
     const editGroupList = async (listData) => {
         console.log(`DEBUG: editGroupList ${loggedInUser.activeList} for list ${listData.listName}`);
+    // check if user is Moderator else do same as editUserList
     }
 
 

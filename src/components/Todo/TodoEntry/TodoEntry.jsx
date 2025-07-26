@@ -350,7 +350,7 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
                                 <>
                                     {steps.map((step, index) => (
                                         <div key={index} className="step-entry" onClick={() => handleStepClick(step.id)}>
-                                            <p className="step-id"><strong>{`Step ${index + 1}`}</strong></p>
+                                            <p className="step-id"><strong>{`#${index + 1}`}</strong></p>
                                             <p className={`step-name ${step.isDone ? 'step-completed' : ''}`}>{step.taskName}</p>
                                         </div>
                                     ))}
@@ -503,7 +503,7 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
                             <div className="steps-container">
                                 {steps.map((step, index) => (
                                     <div key={index} className="step-entry" onClick={() => handleStepClick(step.id)}>
-                                        <p className="step-id"><strong>{`Step ${index + 1}`}</strong></p>
+                                        <p className="step-id"><strong>{`#${index + 1}`}</strong></p>
                                         <p className={`step-name ${step.isDone ? 'step-completed' : ''}`}>{step.taskName}</p>
                                     </div>
                                 ))}
@@ -628,7 +628,7 @@ const TodoEntry = ({ type, todoData, onEdit }) => { //This is not good, should u
                             <div className="steps-container">
                                 {steps.map((step, index) => (
                                     <div key={index} className="step-entry" onClick={() => handleStepClick(step.id)}>
-                                        <p className="step-id"><strong>{`Step ${index + 1}`}</strong></p>
+                                        <p className="step-id"><strong>{`#${index + 1}`}</strong></p>
                                         <p className={`step-name-doing ${step.isDone ? 'step-completed' : ''}`}>{step.taskName}</p>
                                     </div>
                                 ))}
