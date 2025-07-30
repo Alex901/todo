@@ -5,10 +5,10 @@ import { useTodoContext } from '../../../contexts/todoContexts';
 import { useUserContext } from '../../../contexts/UserContext';
 //import Select from 'react-select';
 import { toast } from 'react-toastify';
-import { Switch, TextField, Button, InputAdornment, IconButton, FormControl, InputLabel, Select, MenuItem, Checkbox, FormControlLabel, Chip, Collapse } from '@mui/material';
+import { Switch, TextField, Button, InputAdornment, IconButton, FormControl, InputLabel, Select, MenuItem, Checkbox, FormControlLabel, Chip, Collapse, Tooltip } from '@mui/material';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
 import Icon from '@mdi/react';
-import { mdiDelete, mdiDeleteEmpty } from '@mdi/js';
+import { mdiDelete, mdiDeleteEmpty, mdiInformation } from '@mdi/js';
 import { useTranslation } from "react-i18next";
 import BaseModal from './BaseModal/BaseModal';
 import { CSSTransition, TransitionGroup } from 'react-transition-group';
@@ -49,7 +49,7 @@ const TodoModal = ({ isOpen, onRequestClose, initialData }) => {
     const [selectedTasksBefore, setSelectedTasksBefore] = useState([]);
     const [selectedTasksAfter, setSelectedTasksAfter] = useState([]);
     const [constraints, setConstraints] = useState({ min: null, max: null });
-
+    const [useDynamicSteps, setUseDynamicSteps] = useState(newTaskData.dynamicSteps?.isEnabled || false);
 
     useEffect(() => {
         if (initialData) {
@@ -63,35 +63,49 @@ const TodoModal = ({ isOpen, onRequestClose, initialData }) => {
 
     const step = useDynamicStep(newTaskData.estimatedTime || 0);
 
-    useEffect(() => {
-        setNewTaskData(prevData => ({
-            ...prevData,
-            ...(repeatable ? {
-                repeatable: true,
-                repeatInterval: '',
-                repeatDays: [],
-                repeatMonthlyOption: '',
-                repeatYearlyOption: '',
-                repeatUntill: null,
-                repeatTimes: null,
-                repeatableEmoji: '😊',
-                repeatNotify: false,
-                tasksAfter: [],
-                tasksBefore: [],
-            } : {
-                repeatable: undefined,
-                repeatInterval: undefined,
-                repeatDays: undefined,
-                repeatMonthlyOption: undefined,
-                repeatYearlyOption: undefined,
-                repeatUntill: undefined,
-                repeatTimes: undefined,
-                repeatableEmoji: undefined,
-                repeatNotify: undefined,
-                repeatableLongestStreak: undefined,
-            })
-        }));
-    }, [repeatable]);
+useEffect(() => {
+    // Only update if repeatable is true or useDynamicSteps changes
+    setNewTaskData((prevData) => ({
+        ...prevData,
+        ...(repeatable ? {
+            repeatable: true,
+            repeatInterval: prevData.repeatInterval || '',
+            repeatDays: prevData.repeatDays || [],
+            repeatMonthlyOption: prevData.repeatMonthlyOption || '',
+            repeatYearlyOption: prevData.repeatYearlyOption || '',
+            repeatUntill: prevData.repeatUntill || null,
+            repeatTimes: prevData.repeatTimes || null,
+            repeatableEmoji: prevData.repeatableEmoji || '😊',
+            repeatNotify: prevData.repeatNotify || false,
+            tasksAfter: prevData.tasksAfter || [],
+            tasksBefore: prevData.tasksBefore || [],
+        } : {
+            repeatable: undefined,
+            repeatInterval: undefined,
+            repeatDays: undefined,
+            repeatMonthlyOption: undefined,
+            repeatYearlyOption: undefined,
+            repeatUntill: undefined,
+            repeatTimes: undefined,
+            repeatableEmoji: undefined,
+            repeatNotify: undefined,
+            repeatableLongestStreak: undefined,
+        }),
+        ...(useDynamicSteps ? { // Add dynamicSteps only if useDynamicSteps is true
+            dynamicSteps: {
+                isEnabled: true,
+                increment: prevData.dynamicSteps?.increment || 1, // Preserve existing values or set defaults
+                totalPrice: prevData.dynamicSteps?.totalPrice || 0, // Preserve existing values or set defaults
+                incrementInterval: prevData.dynamicSteps?.incrementInterval || 'per repeat', // Preserve existing values or set defaults
+            },
+        } : {
+            dynamicSteps: undefined, // Remove dynamicSteps if useDynamicSteps is false
+        }),
+    }));
+}, [repeatable, useDynamicSteps]);
+
+    // console.log("DEBUG - New Task Data: ", newTaskData);
+    console.log("DEBUG - setDynamicSteps: ", useDynamicSteps);
 
     useEffect(() => {
         const filteredTasks = todoList.filter(task => {
@@ -212,6 +226,7 @@ const TodoModal = ({ isOpen, onRequestClose, initialData }) => {
             [event.target.name]: event.target.checked,
         });
     };
+    
 
     const handleRepeatableChange = (event) => {
         setRepeatability(event.target.checked);
@@ -403,7 +418,6 @@ const TodoModal = ({ isOpen, onRequestClose, initialData }) => {
 
 
     return (
-
         <BaseModal
             isOpen={isOpen}
             onRequestClose={handleRequestClose}
@@ -696,61 +710,64 @@ const TodoModal = ({ isOpen, onRequestClose, initialData }) => {
                                     ))}
                                 </Select>
                             </FormControl>
-
-
-
                         </div>
-                        <div className="tags-container-create" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%', gap: '20px', flexWrap: 'wrap' }}>
-                            <FormControl variant="outlined" style={{ minWidth: '100px', width: 'auto', height: 'auto' }} size='small'>
-                                <InputLabel id="tags-label">Tags</InputLabel>
-                                <Select
 
-                                    multiple
-                                    size="small"
-                                    value={newTaskData.tags}
-                                    onChange={handleTagChange}
-                                    name='tags'
-                                    renderValue={(selected) => (
+                        {!repeatable && (
+                            <div className="tags-container-create" style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', width: '100%', gap: '20px', flexWrap: 'wrap' }}>
+                                <FormControl variant="outlined" style={{ minWidth: '100px', width: 'auto', height: 'auto' }} size='small'>
+                                    <InputLabel id="tags-label">Tags</InputLabel>
+                                    <Select
 
-                                        <div style={{ display: 'flex', flexWrap: 'wrap' }}>
-                                            {selected.map((tag) => (
-                                                <Chip
-                                                    key={tag.label}
-                                                    label={tag.label}
-                                                    style={{ backgroundColor: tag.color, color: tag.textColor, margin: '2px', flexBasis: '20%' }}
-                                                />
-                                            ))}
-                                        </div>
-                                    )}
-                                >
-                                    {loggedInUser && loggedInUser.myLists && loggedInUser.myLists.filter(list => list.listName === loggedInUser.activeList).map((list) => (
-                                        list.tags.map((tag) => (
-                                            <MenuItem key={tag.label} value={tag}>
-                                                <Chip
-                                                    key={tag.label}
-                                                    label={tag.label}
-                                                    clickable
-                                                    onClick={() => handleAddChip(tag)}
-                                                    style={{ backgroundColor: tag.color, color: tag.textColor }}
-                                                />
-                                            </MenuItem>
-                                        ))
-                                    ))}
-                                </Select>
-                            </FormControl>
-                            <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
-                                <FormControlLabel
-                                    control={
-                                        <Checkbox
-                                            id='isUrgent'
-                                            name='isUrgent'
-                                            onChange={handleCheckboxChange}
-                                        />
-                                    }
-                                    label="Urgent?"
-                                />
+                                        multiple
+                                        size="small"
+                                        value={newTaskData.tags}
+                                        onChange={handleTagChange}
+                                        name='tags'
+                                        renderValue={(selected) => (
+
+                                            <div style={{ display: 'flex', flexWrap: 'wrap' }}>
+                                                {selected.map((tag) => (
+                                                    <Chip
+                                                        key={tag.label}
+                                                        label={tag.label}
+                                                        style={{ backgroundColor: tag.color, color: tag.textColor, margin: '2px', flexBasis: '20%' }}
+                                                    />
+                                                ))}
+                                            </div>
+                                        )}
+                                    >
+                                        {loggedInUser && loggedInUser.myLists && loggedInUser.myLists.filter(list => list.listName === loggedInUser.activeList).map((list) => (
+                                            list.tags.map((tag) => (
+                                                <MenuItem key={tag.label} value={tag}>
+                                                    <Chip
+                                                        key={tag.label}
+                                                        label={tag.label}
+                                                        clickable
+                                                        onClick={() => handleAddChip(tag)}
+                                                        style={{ backgroundColor: tag.color, color: tag.textColor }}
+                                                    />
+                                                </MenuItem>
+                                            ))
+                                        ))}
+                                    </Select>
+                                </FormControl>
+
+                                <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
+                                    <FormControlLabel
+                                        control={
+                                            <Checkbox
+                                                id='isUrgent'
+                                                name='isUrgent'
+                                                onChange={handleCheckboxChange}
+                                            />
+                                        }
+                                        label="Urgent?"
+                                    />
+                                </div>
+
                             </div>
-                        </div>
+                        )}
+
                         {!repeatable && (
                             <div className="linked-tasks-container">
                                 <FormControl className="linked-tasks-form-control" style={{ minWidth: '100px', width: 'auto', height: 'auto' }} size='small'>
@@ -790,6 +807,105 @@ const TodoModal = ({ isOpen, onRequestClose, initialData }) => {
                                     </Select>
                                 </FormControl>
                             </div>
+                        )}
+
+
+
+                        {repeatable && (
+                            <>
+                                <hr style={{ width: '80%', margin: '10px auto' }} />
+                                {/* Dynamic Steps Checkbox */}
+                                <CSSTransition
+                                    in={repeatable}
+                                    timeout={300}
+                                    classNames="fade"
+                                    unmountOnExit
+                                >
+                                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', gap: '5px', marginBottom: '10px' }}>
+                                        <Checkbox
+                                            checked={useDynamicSteps}
+                                            onChange={(event) => setUseDynamicSteps(event.target.checked)}
+                                            name="dynamicSteps"
+                                            color="primary"
+                                            style={{
+                                                width: '40px', // Set width
+                                                height: '40px', // Set height
+                                                padding: '5px', // Add padding
+                                            }}
+                                        />
+                                        <span style={{ fontSize: '16px', fontWeight: '500', marginRight: '5px' }}>Enable Dynamic Steps</span>
+                                        <Tooltip title="This will dynamically increase the number of repetitions for steps where applicable.">
+                                            <IconButton style={{ padding: '0' }}> {/* Compact the icon button */}
+                                                <Icon className="information-icon" path={mdiInformation} size={1.2} />
+                                            </IconButton>
+                                        </Tooltip>
+                                    </div>
+                                </CSSTransition>
+
+                                {/* Dynamic Steps Options */}
+                                <CSSTransition
+                                    in={useDynamicSteps}
+                                    timeout={300}
+                                    classNames="fade"
+                                    unmountOnExit
+                                >
+                                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '20px', marginBottom: '10px' }}>
+                                        {/* Increment Percentage */}
+                                        <FormControl variant="outlined" size="small" style={{ minWidth: '120px' }}>
+                                            <InputLabel id="increment-label">Increment (%)</InputLabel>
+                                            <Select
+                                                labelId="increment-label"
+                                                id="increment"
+                                                value={newTaskData.dynamicSteps?.increment || 1}
+                                                onChange={(event) =>
+                                                    setNewTaskData((prevData) => ({
+                                                        ...prevData,
+                                                        dynamicSteps: {
+                                                            ...prevData.dynamicSteps,
+                                                            increment: event.target.value,
+                                                        },
+                                                    }))
+                                                }
+                                                label="Increment (%)"
+                                            >
+                                                {[1, 5, 10, 15, 20, 25, 50, 75, 100].map((value) => (
+                                                    <MenuItem key={value} value={value}>
+                                                        {value}%
+                                                    </MenuItem>
+                                                ))}
+                                            </Select>
+                                        </FormControl>
+
+                                        {/* Increment Interval */}
+                                        <FormControl variant="outlined" size="small" style={{ minWidth: '150px' }}>
+                                            <InputLabel id="increment-interval-label">Increment Interval</InputLabel>
+                                            <Select
+                                                labelId="increment-interval-label"
+                                                id="increment-interval"
+                                                value={newTaskData.dynamicSteps?.incrementInterval || 'per repeat'}
+                                                onChange={(event) =>
+                                                    setNewTaskData((prevData) => ({
+                                                        ...prevData,
+                                                        dynamicSteps: {
+                                                            ...prevData.dynamicSteps,
+                                                            incrementInterval: event.target.value,
+                                                        },
+                                                    }))
+                                                }
+                                                label="Increment Interval"
+                                            >
+                                                {['per repeat', 'per day', 'per week', 'per month', 'per year'].map((interval) => (
+                                                    <MenuItem key={interval} value={interval}>
+                                                        {interval}
+                                                    </MenuItem>
+                                                ))}
+                                            </Select>
+                                        </FormControl>
+
+                                    </div>
+
+                                </CSSTransition>
+                            </>
                         )}
 
                         <hr style={{ width: '80%', margin: '10px auto' }} />

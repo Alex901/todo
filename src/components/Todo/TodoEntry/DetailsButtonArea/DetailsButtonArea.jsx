@@ -42,11 +42,13 @@ const DetailsButtonArea = ({ onAddTaskBefore, onSimplifyTask, onAddTaskAfter, ta
                     </button>
                 </Tooltip>
             </div>
+            {isTodoModalOpen && ( 
             <TodoModal
                 isOpen={isTodoModalOpen}
                 onRequestClose={handleCloseModal}
                 initialData={modalData}
             />
+            )}
         </div>
     );
 };

@@ -788,10 +788,12 @@ const AnythingList = ({ type, setType }) => {
                             !activeList.completed ? (
                                 <div className="button-view">
                                     <TodoButton onClick={handleClick} />
-                                    <TodoModal
-                                        isOpen={isModalOpen}
-                                        onRequestClose={handleCloseSubmitModal}
-                                    />
+                                    {isModalOpen && (
+                                        <TodoModal
+                                            isOpen={isModalOpen}
+                                            onRequestClose={handleCloseSubmitModal}
+                                        />
+                                    )}
                                 </div>
                             ) : (
                                 <div className="button-view">

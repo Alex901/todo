@@ -15,7 +15,7 @@ const CurrencyArea = () => {
         <div className="currency-area">
           
             <span className="currency">
-            {currency != null ? parseFloat(currency).toFixed(0) : ' '}
+            {currency != null ? parseFloat(currency).toFixed(1) : ' '}
         </span>
           
             <Tooltip title="Productivity token" arrow>

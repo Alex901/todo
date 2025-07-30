@@ -233,7 +233,7 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
 
     const handleSubmit = () => {
         event.preventDefault();
-        console.log("TodoModal -> newTaskData", taskData);
+        console.log("EditModal -> newTaskData", taskData);
         if (!taskData.task.trim()) {
             setErrorMessage('You need to enter a task name');
             return;

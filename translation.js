@@ -27,47 +27,29 @@ function saveTranslations() {
 
 function extractStrings(code, filename) {
     const strings = new Set();
-    // console.log("Code being parsed:", code); // Log the code being parsed
 
-    // Regular expression to match strings within "", '', or ``
+    // Regular expression to match strings within "", '', or `` (including multi-line strings)
     const regex = /(["'`])(?:(?=(\\?))\2.)*?\1/g;
 
-    // Regular expression to match lines that contain only HTML tags with no text content or a single character between them
-    const emptyHtmlTags = /^(\s*<[^>]+>\s*[^<]?\s*)+$/;
-
-    // Regular expression to match the pattern {t("...")}
-    const translationPattern = /\{t\(["'`].*?["'`]\)\}/;
-
-    // Regular expression to match HTML tags
-    const htmlTagPattern = /<[^>]*>/g;
-
-    // Regular expression to match a single character between HTML tags
-    const singleCharBetweenTags = /<[^>]*>[^<]<[^>]*>/g;
-
-    // Regular expression to match className attributes
-    const classNamePattern = /className=['"][^'"]*['"]/g;
+    // Regular expression to match content between HTML tags
+    const tagContentRegex = />([^<]+)</g;
 
     // Split the code into lines
     const lines = code.split('\n');
 
-    // Iterate over each line
-    lines.forEach((line, index) => {
-        const trimmedLine = line.trim();
-        // Check if the line starts with 'import', contains 'from' followed by a space or quotes, contains only HTML tags with no text content or a single character between them, or matches the translation pattern
-        if (!trimmedLine.startsWith('import') && !/\bfrom\s+['"]/.test(trimmedLine) && !emptyHtmlTags.test(trimmedLine) && !translationPattern.test(trimmedLine)) {
-            let match;
-            // Extract all strings within "", '', or `` that are not part of HTML tags, do not have a single character between HTML tags, and are not preceded by className
-            while ((match = regex.exec(line)) !== null) {
-                if (!htmlTagPattern.test(match[0]) && !singleCharBetweenTags.test(line) && !classNamePattern.test(line)) {
-                    strings.add(match[0].slice(1, -1)); // Remove the quotes
-                }
-            }
-            // Extract strings between >< if any
-            const tagContentRegex = />([^<]+)</g;
-            while ((match = tagContentRegex.exec(line)) !== null) {
-                if (match[1].trim().length > 1) {
-                    strings.add(match[1].trim());
-                }
+    lines.forEach((line) => {
+        let match;
+
+        // Extract all strings within "", '', or `` (including multi-line strings)
+        while ((match = regex.exec(line)) !== null) {
+            strings.add(match[0].slice(1, -1)); // Remove the quotes
+        }
+
+        // Extract strings between HTML tags
+        while ((match = tagContentRegex.exec(line)) !== null) {
+            const content = match[1].trim();
+            if (content.length > 1) {
+                strings.add(content);
             }
         }
     });

@@ -373,33 +373,6 @@ const TodoProvider = ({ children }) => {
     checkLogin();
   }
 
-  //Helper function to easilly update my database, this is quite dumb
-  const updateDatabase = async () => {
-    try {
-      const updatedData = {
-        owner: 'Alzner',
-        steps: [],
-        dueDate: new Date(),
-        inList: ['all', 'TaskForge'],
-        isUrgent: false,
-        priority: 'NORMAL',
-        description: null,
-        difficulty: 'EASY',
-        estimatedTime: null,
-      };
-
-      const response = await axios.patch(`${BASE_URL}/api/update`, updatedData);
-      if (response.status === 200) {
-        console.log("Database updated successfully");
-      } else {
-        console.error("Error updating database: ", response.statusText);
-      }
-    } catch (error) {
-      console.error("Error updating database: ", error);
-    }
-  }
-
-
   //Find task with id -> step id and set it to completed
   const setStepCompleted = async (taskId, stepId) => {
     const userId = loggedInUser._id;
