@@ -79,6 +79,18 @@ const TodoModal = ({ isOpen, onRequestClose, initialData }) => {
                 repeatNotify: prevData.repeatNotify || false,
                 tasksAfter: prevData.tasksAfter || [],
                 tasksBefore: prevData.tasksBefore || [],
+                ...(useDynamicSteps ? { // Add dynamicSteps only if useDynamicSteps is true
+                    dynamicSteps: {
+                        isEnabled: true,
+                        increment: prevData.dynamicSteps?.increment || 1, // Preserve existing values or set defaults
+                        totalPrice: prevData.dynamicSteps?.totalPrice || 0, // Preserve existing values or set defaults
+                        incrementInterval: prevData.dynamicSteps?.incrementInterval || 'per repeat', // Preserve existing values or set defaults
+                    },
+                } : {
+                    dynamicSteps: {
+                        isEnabled: false,
+                    }, // Remove dynamicSteps if useDynamicSteps is false
+                }),
             } : {
                 repeatable: undefined,
                 repeatInterval: undefined,
@@ -90,17 +102,9 @@ const TodoModal = ({ isOpen, onRequestClose, initialData }) => {
                 repeatableEmoji: undefined,
                 repeatNotify: undefined,
                 repeatableLongestStreak: undefined,
+                dynamicSteps: undefined,
             }),
-            ...(useDynamicSteps ? { // Add dynamicSteps only if useDynamicSteps is true
-                dynamicSteps: {
-                    isEnabled: true,
-                    increment: prevData.dynamicSteps?.increment || 1, // Preserve existing values or set defaults
-                    totalPrice: prevData.dynamicSteps?.totalPrice || 0, // Preserve existing values or set defaults
-                    incrementInterval: prevData.dynamicSteps?.incrementInterval || 'per repeat', // Preserve existing values or set defaults
-                },
-            } : {
-                dynamicSteps: undefined, // Remove dynamicSteps if useDynamicSteps is false
-            }),
+
         }));
     }, [repeatable, useDynamicSteps]);
 
@@ -310,12 +314,32 @@ const TodoModal = ({ isOpen, onRequestClose, initialData }) => {
     };
 
     const handleInputChangeStep = (id, event) => {
-        setNewTaskData(prevData => ({
-            ...prevData,
-            steps: prevData.steps.map(step =>
+        setNewTaskData((prevData) => {
+            const updatedSteps = prevData.steps.map((step) =>
                 step.id === id ? { ...step, taskName: event.target.value } : step
-            ),
-        }));
+            );
+
+            const eligibleSteps = updatedSteps.filter((step) => {
+                const match = step.taskName.match(/(\d+)/); // Check for numeric values
+                return match && parseInt(match[1], 10) > 0; // Ensure numeric value is greater than 0
+            });
+
+            const totalPrice = parseFloat((eligibleSteps.length * 0.1).toFixed(1));
+
+            return {
+                ...prevData,
+                steps: updatedSteps.map((step) => {
+                    const match = step.taskName.match(/(\d+)/); // Extract numeric value
+                    return match && parseInt(match[1], 10) > 0
+                        ? { ...step, reps: parseInt(match[1], 10) } // Save numeric value in `reps`
+                        : { ...step, reps: 0 }; // Default to 0 for non-eligible steps
+                }),
+                dynamicSteps: {
+                    ...prevData.dynamicSteps,
+                    totalPrice, // Update totalPrice
+                },
+            };
+        });
     };
 
     const handleDiffChange = (selectedOption) => {
@@ -416,7 +440,6 @@ const TodoModal = ({ isOpen, onRequestClose, initialData }) => {
         // Update the state with the new constraints
         setConstraints({ min, max });
     }, [selectedTasksBefore, selectedTasksAfter, todoList]);
-
 
     return (
         <BaseModal
@@ -843,6 +866,8 @@ const TodoModal = ({ isOpen, onRequestClose, initialData }) => {
                                     </div>
                                 </CSSTransition>
 
+
+
                                 {/* Dynamic Steps Options */}
                                 <CSSTransition
                                     in={useDynamicSteps}
@@ -869,7 +894,7 @@ const TodoModal = ({ isOpen, onRequestClose, initialData }) => {
                                                 }
                                                 label="Increment (%)"
                                             >
-                                                {[1, 5, 10, 15, 20, 25, 50, 75, 100].map((value) => (
+                                                {[1, 3, 5, 10, 15, 30, 50, 75, 100].map((value) => (
                                                     <MenuItem key={value} value={value}>
                                                         {value}%
                                                     </MenuItem>
@@ -905,7 +930,22 @@ const TodoModal = ({ isOpen, onRequestClose, initialData }) => {
 
                                     </div>
 
+
+
                                 </CSSTransition>
+                                {useDynamicSteps && (
+                                    <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                        <p style={{ fontSize: '16px', fontWeight: '500', marginRight: '5px', marginBottom: '0px' }}>
+                                            Total Price: {newTaskData.dynamicSteps?.totalPrice || 0}
+                                        </p>
+                                        <img
+                                            src="\currency-beta.png"
+                                            alt="coin"
+                                            style={{ width: '20px', height: '20px', marginLeft: '5px', marginRight: '5px' }}
+                                        />
+                                        <span style={{ fontSize: '16px', fontWeight: '500' }}>/repeat</span>
+                                    </div>
+                                )}
                             </>
                         )}
 

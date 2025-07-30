@@ -191,12 +191,17 @@ const TodoProvider = ({ children }) => {
         inListNew: inListNewTmp,
         tasksBefore: newTaskData.tasksBefore || [],
         tasksAfter: newTaskData.tasksAfter || [],
-
       };
       // console.log("DEBUG -- NewTodo", newTodo);
       // console.log("addTodo: newTodo", newTodo);
       if (newTaskData.repeatable) {
         Object.assign(newTodo, {
+          dynamicSteps: {
+            isEnabled: newTaskData.dynamicSteps?.isEnabled || false,
+            increment: newTaskData.dynamicSteps?.increment || 1,
+            totalPrice: newTaskData.dynamicSteps?.totalPrice || 0,
+            incrementInterval: newTaskData.dynamicSteps?.incrementInterval || 'per repeat',
+          },
           repeatable: newTaskData.repeatable,
           repeatInterval: newTaskData.repeatInterval,
           repeatableEmoji: newTaskData.repeatableEmoji,
