@@ -63,49 +63,49 @@ const TodoModal = ({ isOpen, onRequestClose, initialData }) => {
 
     const step = useDynamicStep(newTaskData.estimatedTime || 0);
 
-useEffect(() => {
-    // Only update if repeatable is true or useDynamicSteps changes
-    setNewTaskData((prevData) => ({
-        ...prevData,
-        ...(repeatable ? {
-            repeatable: true,
-            repeatInterval: prevData.repeatInterval || '',
-            repeatDays: prevData.repeatDays || [],
-            repeatMonthlyOption: prevData.repeatMonthlyOption || '',
-            repeatYearlyOption: prevData.repeatYearlyOption || '',
-            repeatUntill: prevData.repeatUntill || null,
-            repeatTimes: prevData.repeatTimes || null,
-            repeatableEmoji: prevData.repeatableEmoji || '😊',
-            repeatNotify: prevData.repeatNotify || false,
-            tasksAfter: prevData.tasksAfter || [],
-            tasksBefore: prevData.tasksBefore || [],
-        } : {
-            repeatable: undefined,
-            repeatInterval: undefined,
-            repeatDays: undefined,
-            repeatMonthlyOption: undefined,
-            repeatYearlyOption: undefined,
-            repeatUntill: undefined,
-            repeatTimes: undefined,
-            repeatableEmoji: undefined,
-            repeatNotify: undefined,
-            repeatableLongestStreak: undefined,
-        }),
-        ...(useDynamicSteps ? { // Add dynamicSteps only if useDynamicSteps is true
-            dynamicSteps: {
-                isEnabled: true,
-                increment: prevData.dynamicSteps?.increment || 1, // Preserve existing values or set defaults
-                totalPrice: prevData.dynamicSteps?.totalPrice || 0, // Preserve existing values or set defaults
-                incrementInterval: prevData.dynamicSteps?.incrementInterval || 'per repeat', // Preserve existing values or set defaults
-            },
-        } : {
-            dynamicSteps: undefined, // Remove dynamicSteps if useDynamicSteps is false
-        }),
-    }));
-}, [repeatable, useDynamicSteps]);
+    useEffect(() => {
+        // Only update if repeatable is true or useDynamicSteps changes
+        setNewTaskData((prevData) => ({
+            ...prevData,
+            ...(repeatable ? {
+                repeatable: true,
+                repeatInterval: prevData.repeatInterval || '',
+                repeatDays: prevData.repeatDays || [],
+                repeatMonthlyOption: prevData.repeatMonthlyOption || '',
+                repeatYearlyOption: prevData.repeatYearlyOption || '',
+                repeatUntill: prevData.repeatUntill || null,
+                repeatTimes: prevData.repeatTimes || null,
+                repeatableEmoji: prevData.repeatableEmoji || '😊',
+                repeatNotify: prevData.repeatNotify || false,
+                tasksAfter: prevData.tasksAfter || [],
+                tasksBefore: prevData.tasksBefore || [],
+            } : {
+                repeatable: undefined,
+                repeatInterval: undefined,
+                repeatDays: undefined,
+                repeatMonthlyOption: undefined,
+                repeatYearlyOption: undefined,
+                repeatUntill: undefined,
+                repeatTimes: undefined,
+                repeatableEmoji: undefined,
+                repeatNotify: undefined,
+                repeatableLongestStreak: undefined,
+            }),
+            ...(useDynamicSteps ? { // Add dynamicSteps only if useDynamicSteps is true
+                dynamicSteps: {
+                    isEnabled: true,
+                    increment: prevData.dynamicSteps?.increment || 1, // Preserve existing values or set defaults
+                    totalPrice: prevData.dynamicSteps?.totalPrice || 0, // Preserve existing values or set defaults
+                    incrementInterval: prevData.dynamicSteps?.incrementInterval || 'per repeat', // Preserve existing values or set defaults
+                },
+            } : {
+                dynamicSteps: undefined, // Remove dynamicSteps if useDynamicSteps is false
+            }),
+        }));
+    }, [repeatable, useDynamicSteps]);
 
     // console.log("DEBUG - New Task Data: ", newTaskData);
-    console.log("DEBUG - setDynamicSteps: ", useDynamicSteps);
+    console.log("DEBUG - newTaskData: ", newTaskData);
 
     useEffect(() => {
         const filteredTasks = todoList.filter(task => {
@@ -226,7 +226,7 @@ useEffect(() => {
             [event.target.name]: event.target.checked,
         });
     };
-    
+
 
     const handleRepeatableChange = (event) => {
         setRepeatability(event.target.checked);
@@ -296,13 +296,15 @@ useEffect(() => {
 
     const handleAddStep = () => {
         if (newTaskData.steps.length < 20) {
-            setNewTaskData(prevData => ({
+            setNewTaskData((prevData) => ({
                 ...prevData,
-                steps: [...prevData.steps, { id: prevData.steps.length + 1, taskName: '', isDone: false }]
+                steps: [...prevData.steps, { id: Date.now(), taskName: '', isDone: false }], // Use Date.now() for unique IDs
             }));
         } else {
             setErrorMessage('You can max have 20 steps');
-            setTimeout(() => { setErrorMessage('') }, 5000);
+            setTimeout(() => {
+                setErrorMessage('');
+            }, 5000);
             return;
         }
     };
@@ -342,14 +344,13 @@ useEffect(() => {
     };
 
     const handleDeleteStep = (stepId) => {
-        setNewTaskData(prevState => {
-            const updatedSteps = prevState.steps.filter(step => step.id !== stepId).map((step, index) => ({
-                ...step,
-                id: index + 1
-            }));
+        console.log("Delete step", stepId);
+        setNewTaskData((prevState) => {
+            const updatedSteps = prevState.steps.filter((step) => step.id !== stepId);
+            console.log("Updated steps:", updatedSteps);
             return {
                 ...prevState,
-                steps: updatedSteps
+                steps: updatedSteps,
             };
         });
     };
@@ -915,50 +916,56 @@ useEffect(() => {
                                 {(provided) => (
                                     <div
                                         className="steps"
-                                        style={{ width: '100%', justifyContent: 'left' }}
+                                        style={{ width: '100%', justifyContent: 'flex-start' }}
                                         {...provided.droppableProps}
                                         ref={provided.innerRef}
                                     >
                                         <TransitionGroup>
                                             {newTaskData.steps.map((step, index) => (
-                                                <Draggable key={step.id} draggableId={String(step.id)} index={index}>
-                                                    {(provided) => (
-                                                        <div
-                                                            className="drag"
-                                                            ref={provided.innerRef}
-                                                            {...provided.draggableProps}
-                                                            {...provided.dragHandleProps}
-                                                            style={{
-                                                                transform: 'none',
-                                                                display: 'flex',
-                                                                flexDirection: 'row',
-                                                                alignItems: 'center',
-                                                                ...provided.draggableProps.style,
-                                                            }}
-                                                        >
-                                                            <label style={{ display: 'flex', alignItems: 'center' }}>{`#${index + 1}`}</label>
-                                                            <input
-                                                                className="create-modal-input"
-                                                                type="text"
-                                                                placeholder={`Enter step title`}
-                                                                onChange={(event) => handleInputChangeStep(step.id, event)}
-                                                                value={step.taskName}
-                                                                maxLength="50"
-                                                            />
+                                                <CSSTransition
+                                                    key={step.id}
+                                                    timeout={500}
+                                                    classNames="step"
+                                                >
+                                                    <Draggable key={step.id} draggableId={String(step.id)} index={index}>
+                                                        {(provided) => (
                                                             <div
-                                                                onMouseEnter={() => setHoveredStepId(step.id)}
-                                                                onMouseLeave={() => setHoveredStepId(null)}
+                                                                className="drag"
+                                                                ref={provided.innerRef}
+                                                                {...provided.draggableProps}
+                                                                {...provided.dragHandleProps}
+                                                                style={{
+                                                                    transform: 'none',
+                                                                    display: 'flex',
+                                                                    flexDirection: 'row',
+                                                                    alignItems: 'center',
+                                                                    ...provided.draggableProps.style,
+                                                                }}
                                                             >
-                                                                <Icon
-                                                                    path={hoveredStepId === step.id ? mdiDeleteEmpty : mdiDelete}
-                                                                    size={1.2}
-                                                                    color={hoveredStepId === step.id ? 'red' : 'gray'}
-                                                                    onClick={() => handleDeleteStep(step.id)}
+                                                                <label style={{ display: 'flex', alignItems: 'center' }}>{`#${index + 1}`}</label>
+                                                                <input
+                                                                    className="create-modal-input"
+                                                                    type="text"
+                                                                    placeholder={`Enter step title`}
+                                                                    onChange={(event) => handleInputChangeStep(step.id, event)}
+                                                                    value={step.taskName || ''}
+                                                                    maxLength="50"
                                                                 />
+                                                                <div
+                                                                    onMouseEnter={() => setHoveredStepId(step.id)}
+                                                                    onMouseLeave={() => setHoveredStepId(null)}
+                                                                >
+                                                                    <Icon
+                                                                        path={hoveredStepId === step.id ? mdiDeleteEmpty : mdiDelete}
+                                                                        size={1.2}
+                                                                        color={hoveredStepId === step.id ? 'red' : 'gray'}
+                                                                        onClick={() => handleDeleteStep(step.id)}
+                                                                    />
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    )}
-                                                </Draggable>
+                                                        )}
+                                                    </Draggable>
+                                                </CSSTransition>
                                             ))}
                                         </TransitionGroup>
                                         {provided.placeholder}
