@@ -15,6 +15,7 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import EmojiSelector from '../../UtilityComponents/EmojiSelector/EmojiSelector';
 import useDynamicStep from '../../../CustomHooks/UseDynamicStep';
 import { formatTime, getDateConstraints } from '../../../utils/timeUtils';
+import { calculateDynamicSteps } from '../../../utils/EntryUtils/StepUtils';
 
 
 ReactModal.setAppElement('#root');
@@ -108,7 +109,6 @@ const TodoModal = ({ isOpen, onRequestClose, initialData }) => {
         }));
     }, [repeatable, useDynamicSteps]);
 
-    // console.log("DEBUG - New Task Data: ", newTaskData);
     console.log("DEBUG - newTaskData: ", newTaskData);
 
     useEffect(() => {
@@ -313,34 +313,33 @@ const TodoModal = ({ isOpen, onRequestClose, initialData }) => {
         }
     };
 
-    const handleInputChangeStep = (id, event) => {
-        setNewTaskData((prevData) => {
-            const updatedSteps = prevData.steps.map((step) =>
-                step.id === id ? { ...step, taskName: event.target.value } : step
-            );
+const handleInputChangeStep = (id, event) => {
+    setNewTaskData((prevData) => {
+        const updatedSteps = prevData.steps.map((step) =>
+            step.id === id ? { ...step, taskName: event.target.value } : step
+        );
 
-            const eligibleSteps = updatedSteps.filter((step) => {
-                const match = step.taskName.match(/(\d+)/); // Check for numeric values
-                return match && parseInt(match[1], 10) > 0; // Ensure numeric value is greater than 0
-            });
-
-            const totalPrice = parseFloat((eligibleSteps.length * 0.1).toFixed(1));
+        // Only calculate dynamic steps if the task is repeatable and dynamicSteps is enabled
+        if (prevData.repeatable && prevData.dynamicSteps?.isEnabled) {
+            const { updatedSteps: finalSteps, totalPrice } = calculateDynamicSteps(updatedSteps);
 
             return {
                 ...prevData,
-                steps: updatedSteps.map((step) => {
-                    const match = step.taskName.match(/(\d+)/); // Extract numeric value
-                    return match && parseInt(match[1], 10) > 0
-                        ? { ...step, reps: parseInt(match[1], 10) } // Save numeric value in `reps`
-                        : { ...step, reps: 0 }; // Default to 0 for non-eligible steps
-                }),
+                steps: finalSteps,
                 dynamicSteps: {
                     ...prevData.dynamicSteps,
                     totalPrice, // Update totalPrice
                 },
             };
-        });
-    };
+        }
+
+        // If not repeatable or dynamicSteps is disabled, just update the steps
+        return {
+            ...prevData,
+            steps: updatedSteps,
+        };
+    });
+};
 
     const handleDiffChange = (selectedOption) => {
         setNewTaskData({

@@ -3,8 +3,8 @@ import BaseModal from '../BaseModal/BaseModal';
 import './EditModal.css'
 import { useTodoContext } from '../../../../contexts/todoContexts';
 import { useUserContext } from '../../../../contexts/UserContext';
-import { mdiDelete, mdiDeleteEmpty } from '@mdi/js';
-import { TextField, Button, InputAdornment, IconButton, FormControl, InputLabel, Select, MenuItem, Checkbox, FormControlLabel, Chip, Switch } from '@mui/material';
+import { mdiDelete, mdiDeleteEmpty, mdiInformation  } from '@mdi/js';
+import { Tooltip, TextField, Button, InputAdornment, IconButton, FormControl, InputLabel, Select, MenuItem, Checkbox, FormControlLabel, Chip, Switch } from '@mui/material';
 import Icon from '@mdi/react';
 import { toast } from 'react-toastify';
 import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd';
@@ -73,10 +73,11 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
             ...(editData.repeatInterval === 'yearly' ? { repeatYearlyOption: editData.repeatYearlyOption || 'start' } : {}),
             repeatUntil: editData.repeatUntil || '',
             repeatableEmoji: editData.repeatableEmoji || '',
+            dynamicSteps: editData.dynamicSteps || undefined,
         } : {})
     });
 
-    // console.log("DEBUG - EditModal -> taskData", taskData);
+    console.log("DEBUG - EditModal -> taskData", taskData);
 
     useEffect(() => {
         const filteredTasks = todoList.filter(task => {
@@ -863,6 +864,123 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
                                 </Select>
                             </FormControl>
                         </div>
+                    )}
+
+                    {taskData.repeatable && (
+                        <>
+                            <hr style={{ width: '80%', margin: '10px auto' }} />
+                            {/* Dynamic Steps Checkbox */}
+                            <CSSTransition
+                                in={taskData.repeatable}
+                                timeout={300}
+                                classNames="fade"
+                                unmountOnExit
+                            >
+                                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'flex-start', gap: '5px', marginBottom: '10px' }}>
+                                    <Checkbox
+                                        checked={taskData.dynamicSteps?.isEnabled || false}
+                                        onChange={(event) =>
+                                            setTaskData((prevData) => ({
+                                                ...prevData,
+                                                dynamicSteps: {
+                                                    ...prevData.dynamicSteps,
+                                                    isEnabled: event.target.checked,
+                                                },
+                                            }))
+                                        }
+                                        name="dynamicSteps"
+                                        color="primary"
+                                        style={{
+                                            width: '40px',
+                                            height: '40px',
+                                            padding: '5px',
+                                        }}
+                                    />
+                                    <span style={{ fontSize: '16px', fontWeight: '500', marginRight: '5px' }}>Enable Dynamic Steps</span>
+                                    <Tooltip title="This will dynamically increase the number of repetitions for steps where applicable.">
+                                        <IconButton style={{ padding: '0' }}>
+                                            <Icon className="information-icon" path={mdiInformation} size={1.2} />
+                                        </IconButton>
+                                    </Tooltip>
+                                </div>
+                            </CSSTransition>
+
+                            {/* Dynamic Steps Options */}
+                            <CSSTransition
+                                in={taskData.dynamicSteps?.isEnabled}
+                                timeout={300}
+                                classNames="fade"
+                                unmountOnExit
+                            >
+                                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center', gap: '20px', marginBottom: '10px' }}>
+                                    {/* Increment Percentage */}
+                                    <FormControl variant="outlined" size="small" style={{ minWidth: '120px' }}>
+                                        <InputLabel id="increment-label">Increment (%)</InputLabel>
+                                        <Select
+                                            labelId="increment-label"
+                                            id="increment"
+                                            value={taskData.dynamicSteps?.increment || 1}
+                                            onChange={(event) =>
+                                                setTaskData((prevData) => ({
+                                                    ...prevData,
+                                                    dynamicSteps: {
+                                                        ...prevData.dynamicSteps,
+                                                        increment: event.target.value,
+                                                    },
+                                                }))
+                                            }
+                                            label="Increment (%)"
+                                        >
+                                            {[1, 3, 5, 10, 15, 30, 50, 75, 100].map((value) => (
+                                                <MenuItem key={value} value={value}>
+                                                    {value}%
+                                                </MenuItem>
+                                            ))}
+                                        </Select>
+                                    </FormControl>
+
+                                    {/* Increment Interval */}
+                                    <FormControl variant="outlined" size="small" style={{ minWidth: '150px' }}>
+                                        <InputLabel id="increment-interval-label">Increment Interval</InputLabel>
+                                        <Select
+                                            labelId="increment-interval-label"
+                                            id="increment-interval"
+                                            value={taskData.dynamicSteps?.incrementInterval || 'per repeat'}
+                                            onChange={(event) =>
+                                                setTaskData((prevData) => ({
+                                                    ...prevData,
+                                                    dynamicSteps: {
+                                                        ...prevData.dynamicSteps,
+                                                        incrementInterval: event.target.value,
+                                                    },
+                                                }))
+                                            }
+                                            label="Increment Interval"
+                                        >
+                                            {['per repeat', 'per day', 'per week', 'per month', 'per year'].map((interval) => (
+                                                <MenuItem key={interval} value={interval}>
+                                                    {interval}
+                                                </MenuItem>
+                                            ))}
+                                        </Select>
+                                    </FormControl>
+                                </div>
+                            </CSSTransition>
+
+                            {taskData.dynamicSteps?.isEnabled && (
+                                <div style={{ display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
+                                    <p style={{ fontSize: '16px', fontWeight: '500', marginRight: '5px', marginBottom: '0px' }}>
+                                        Total Price: {taskData.dynamicSteps?.totalPrice || 0}
+                                    </p>
+                                    <img
+                                        src="\currency-beta.png"
+                                        alt="coin"
+                                        style={{ width: '20px', height: '20px', marginLeft: '5px', marginRight: '5px' }}
+                                    />
+                                    <span style={{ fontSize: '16px', fontWeight: '500' }}>/repeat</span>
+                                </div>
+                            )}
+                        </>
                     )}
 
 
