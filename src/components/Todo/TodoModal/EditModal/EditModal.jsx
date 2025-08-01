@@ -3,7 +3,7 @@ import BaseModal from '../BaseModal/BaseModal';
 import './EditModal.css'
 import { useTodoContext } from '../../../../contexts/todoContexts';
 import { useUserContext } from '../../../../contexts/UserContext';
-import { mdiDelete, mdiDeleteEmpty, mdiInformation  } from '@mdi/js';
+import { mdiDelete, mdiDeleteEmpty, mdiInformation } from '@mdi/js';
 import { Tooltip, TextField, Button, InputAdornment, IconButton, FormControl, InputLabel, Select, MenuItem, Checkbox, FormControlLabel, Chip, Switch } from '@mui/material';
 import Icon from '@mdi/react';
 import { toast } from 'react-toastify';
@@ -12,6 +12,7 @@ import { CSSTransition, TransitionGroup } from 'react-transition-group';
 import EmojiSelector from '../../../UtilityComponents/EmojiSelector/EmojiSelector';
 import useDynamicStep from '../../../../CustomHooks/UseDynamicStep';
 import { formatTime, getDateConstraints } from '../../../../utils/timeUtils';
+import { calculateDynamicSteps } from '../../../../utils/EntryUtils/StepUtils';
 
 
 const EditModal = ({ isOpen, onRequestClose, editData }) => {
@@ -86,7 +87,7 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
         setFilteredList(filteredTasks);
     }, [todoList, loggedInUser.activeList]);
 
-    const step = useDynamicStep(taskData.estimatedTime);
+    const step = useDynamicStep(taskData.estimatedTime); //Super bad name, lol
 
     const optionsListNames = isLoggedIn && loggedInUser.myLists
         ? loggedInUser.myLists
@@ -306,12 +307,31 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
     }
 
     const handleInputChangeStep = (id, event) => {
-        setTaskData(prevData => ({
-            ...prevData,
-            steps: prevData.steps.map(step =>
+        setTaskData((prevData) => {
+            const updatedSteps = prevData.steps.map((step) =>
                 step._id === id ? { ...step, taskName: event.target.value } : step
-            )
-        }));
+            );
+
+            // Only calculate dynamic steps if the task is repeatable and dynamicSteps is enabled
+            if (prevData.repeatable && prevData.dynamicSteps?.isEnabled) {
+                const { updatedSteps: finalSteps, totalPrice } = calculateDynamicSteps(updatedSteps);
+
+                return {
+                    ...prevData,
+                    steps: finalSteps,
+                    dynamicSteps: {
+                        ...prevData.dynamicSteps,
+                        totalPrice, // Update totalPrice
+                    },
+                };
+            }
+
+            // If not repeatable or dynamicSteps is disabled, just update the steps
+            return {
+                ...prevData,
+                steps: updatedSteps,
+            };
+        });
     };
 
     const handleAddStep = () => {

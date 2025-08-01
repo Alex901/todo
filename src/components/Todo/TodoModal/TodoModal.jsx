@@ -109,7 +109,7 @@ const TodoModal = ({ isOpen, onRequestClose, initialData }) => {
         }));
     }, [repeatable, useDynamicSteps]);
 
-    console.log("DEBUG - newTaskData: ", newTaskData);
+    // console.log("DEBUG - newTaskData: ", newTaskData);
 
     useEffect(() => {
         const filteredTasks = todoList.filter(task => {
