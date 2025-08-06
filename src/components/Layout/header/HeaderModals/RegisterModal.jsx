@@ -63,7 +63,7 @@ const LoginModal = ({ isOpen, onRequestClose, openLoginModal }) => {
             const userData = { username: username, email: email, password: password };
             console.log("RegisterModal> handleregister: ", userData);
             registerNewUser(userData);
-            toast.success(`Registration successfull!`);
+            toast.success(`Registration successfull! Activation link sent to your email: ${email}`);
             setEmail("");
             setUsername("");
             setPassword("");
