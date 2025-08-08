@@ -268,10 +268,43 @@ const GroupProvider = ({ children }) => {
         }
     };
 
-    const editGroupList = async (listData) => {
-        console.log(`DEBUG: editGroupList ${loggedInUser.activeList} for list ${listData.listName}`);
-    // check if user is Moderator else do same as editUserList
-    }
+    const editGroupList = async (listToEdit_id, listData) => {
+        console.log("DEBUG: editGroupList for list ", listToEdit_id);
+        console.log("DEBUG: listData: ", listData);
+
+        try {
+            const response = await axios.patch(
+                `${BASE_URL}/groups/editGroupList`,
+                {
+                    listId: listToEdit_id, // ID of the list to edit
+                    ...listData,          // Data to update the list
+                    userId: loggedInUser._id, // Include the logged-in user's ID for authentication
+                },
+                { withCredentials: true }
+            );
+
+            if (response.status === 200) {
+                toast.success("Group list updated successfully");
+                checkLogin(); // Refresh user data
+            }
+        } catch (error) {
+            if (error.response) {
+                if (error.response.status === 403) {
+                    toast.error("You do not have permission to edit this list");
+                } else if (error.response.status === 404) {
+                    toast.error("Group or list not found");
+                } else if (error.response.status === 500) {
+                    toast.error("Internal server error");
+                } else {
+                    toast.error("Error updating group list");
+                }
+            } else if (error.request) {
+                toast.error("No response from server");
+            } else {
+                toast.error("Error updating group list");
+            }
+        }
+    };
 
 
 
