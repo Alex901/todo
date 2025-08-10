@@ -65,7 +65,7 @@ const GroupProvider = ({ children }) => {
     };
 
     const createGroup = async (groupData) => { //TODO: Error handling
-        console.log("DEBUG: groupData: ", groupData);
+        // console.log("DEBUG: groupData: ", groupData);
         if (groupData.listName === '') {
             groupData.listName = groupData.name + "'s list";
         }
@@ -110,8 +110,8 @@ const GroupProvider = ({ children }) => {
     const updateGroupInfo = async (groupData) => {
         const { _id, name, description, visibility } = groupData;
         const updatedData = { name, description, visibility };
-        console.log("DEBUG: _id: ", _id);
-        console.log("DEBUG: updatedData: ", updatedData);
+        // console.log("DEBUG: _id: ", _id);
+        // console.log("DEBUG: updatedData: ", updatedData);
 
         try {
             const response = await axios.put(`${BASE_URL}/groups/updateGroupInfo/${_id}`, updatedData, { withCredentials: true });
@@ -126,7 +126,7 @@ const GroupProvider = ({ children }) => {
     }
 
     const leaveGroup = async (group) => {
-        console.log(`DEBUG: leaveGroup ${group.name}`);
+        // console.log(`DEBUG: leaveGroup ${group.name}`);
 
         try {
             const response = await axios.put(
@@ -184,7 +184,7 @@ const GroupProvider = ({ children }) => {
     };
 
     const deleteGroup = async (group) => {
-        console.log(`DEBUG: deleteGroup for group ${group.name}`);
+        // console.log(`DEBUG: deleteGroup for group ${group.name}`);
         try {
             const response = await axios.delete(`${BASE_URL}/groups/deleteGroup/${group._id}`, { withCredentials: true });
             if (response.status === 200) {
@@ -211,7 +211,7 @@ const GroupProvider = ({ children }) => {
 
 
     const removeUserFromGroup = async (groupId, userId) => {
-        console.log(`DEBUG: removeUserFromGroup ${userId} from group ${groupId}`);
+        // console.log(`DEBUG: removeUserFromGroup ${userId} from group ${groupId}`);
 
         try {
             const response = await axios.put(
@@ -241,8 +241,8 @@ const GroupProvider = ({ children }) => {
     };
 
     const createGroupList = async (groupId, listData) => {
-        console.log(`DEBUG: createGroupList for group ${groupId}`);
-        console.log(`DEBUG: listData: `, listData);
+        // console.log(`DEBUG: createGroupList for group ${groupId}`);
+        // console.log(`DEBUG: listData: `, listData);
         try {
             const response = await axios.post(`${BASE_URL}/groups/createGroupList/${groupId}`, listData, { withCredentials: true });
             if (response.status === 200) {
@@ -269,8 +269,8 @@ const GroupProvider = ({ children }) => {
     };
 
     const editGroupList = async (listToEdit_id, listData) => {
-        console.log("DEBUG: editGroupList for list ", listToEdit_id);
-        console.log("DEBUG: listData: ", listData);
+        // console.log("DEBUG: editGroupList for list ", listToEdit_id);
+        // console.log("DEBUG: listData: ", listData);
 
         try {
             const response = await axios.patch(

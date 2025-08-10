@@ -78,7 +78,7 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
         } : {})
     });
 
-    console.log("DEBUG - EditModal -> taskData", taskData);
+    // console.log("DEBUG - EditModal -> taskData", taskData);
 
     useEffect(() => {
         const filteredTasks = todoList.filter(task => {
@@ -260,7 +260,7 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
             cleanedTaskData.dueDate = null;
         }
 
-        console.log("DEBUG - cleanedTaskData", cleanedTaskData);
+        // console.log("DEBUG - cleanedTaskData", cleanedTaskData);
         editTodo(cleanedTaskData);
         toast.success('Changes saved');
         setSelectedTasksBefore([]);
@@ -276,7 +276,7 @@ const EditModal = ({ isOpen, onRequestClose, editData }) => {
     }
 
     const handleEmojiSelect = (emoji) => {
-        console.log("DEBUG - SelectedEmoji: ", emoji);
+        // console.log("DEBUG - SelectedEmoji: ", emoji);
         setTaskData(prevData => ({
             ...prevData,
             repeatableEmoji: emoji

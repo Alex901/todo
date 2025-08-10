@@ -95,8 +95,8 @@ const wordToNumbers = (word, language = 'en') => {
         }
     }
 
-    console.log(`DEBUG W2N - Converted word "${word}" to number: ${total + current}`);
-    console.log(`DEBUG W2N - Language used: ${language}`);
+    // console.log(`DEBUG W2N - Converted word "${word}" to number: ${total + current}`);
+    // console.log(`DEBUG W2N - Language used: ${language}`);
 
     return total + current;
 };

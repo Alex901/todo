@@ -102,11 +102,11 @@ const GroupModal = ({ isOpen, onClose }) => {
                 cancelConfirmation();
                 return;
             }
-            console.log("DEBUG: delete group: ", selectedGroup);
+            // console.log("DEBUG: delete group: ", selectedGroup);
             leaveGroup(selectedGroup);
             deleteGroup(selectedGroup);
         } else if (confirmationAction === "remove-member") {
-            console.log("DEBUG: remove member: ", selectedUser, selectedGroup);
+            // console.log("DEBUG: remove member: ", selectedUser, selectedGroup);
             removeUserFromGroup(selectedGroup._id, selectedUser.member_id);
         }
         setConfirmationAction(null);
@@ -141,18 +141,18 @@ const GroupModal = ({ isOpen, onClose }) => {
 
         if (groupData.name === '') {
             setCreateGroupError("Group name is required");
-            console.log("DEBUG: groupData.name: ", groupData.name);
+            // console.log("DEBUG: groupData.name: ", groupData.name);
             return;
         }
         const users = groupData.users; //separate the users from the groupData
-        console.log("DEBUG: users: ", users);
+        // console.log("DEBUG: users: ", users);
 
         groupData.users = []; //this is a dumb way of doing it, but it works
 
         groupData.owner = loggedInUser._id;
         const groupId = await createGroup(groupData); //Move to group context or nah? 
         if (users.length > 0) {
-            console.log("DEBUG: users GroupModal: createGroup: ", users);
+            // console.log("DEBUG: users GroupModal: createGroup: ", users);
             users.forEach(user => {
                 inviteToGroup(loggedInUser, user, groupId); //invite the user to the group
             });

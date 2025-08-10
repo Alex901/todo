@@ -352,7 +352,7 @@ const UserProvider = ({ children }) => {
     }
 
     const updateProfilePicture = async (file) => {
-        console.log("DEBUG: update profile picture for loggedInUser: ", file);
+        // console.log("DEBUG: update profile picture for loggedInUser: ", file);
 
         const formData = new FormData();
         formData.append('avatar', file);
@@ -464,7 +464,7 @@ const UserProvider = ({ children }) => {
     }
 
     const updateSettings = async (settingName, value) => {
-        console.log("DEBUG: update settings for loggedInUser: ", settingName, value);
+        // console.log("DEBUG: update settings for loggedInUser: ", settingName, value);
         try {
             if (!isLoggedIn) {
                 console.log("User not logged in");
@@ -475,10 +475,10 @@ const UserProvider = ({ children }) => {
             if (response.status === 200) {
                 //toast.success("Settings updated");
                 if (settingName === "groupOnly" && value === true) {
-                    console.log("DEBUG: groupOnly is true, setting active list to group list");
+                    // console.log("DEBUG: groupOnly is true, setting active list to group list");
                     const groupList = loggedInUser.myLists.find(list => list.ownerModel === "Group").listName;
                     const groupListNameCapitalized = groupList.charAt(0).toUpperCase() + groupList.slice(1);
-                    console.log("DEBUG: groupList: ", groupListNameCapitalized);
+                    // console.log("DEBUG: groupList: ", groupListNameCapitalized);
                     if (groupList) {
                         setActiveList(groupList);
                     }

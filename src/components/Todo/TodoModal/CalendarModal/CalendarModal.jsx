@@ -297,12 +297,12 @@ const CalendarModal = ({ isOpen, onClose }) => {
 
     // Drag and drop logic, consider moving to a separate file
     const handleDragEnd = (result) => {
-        console.log("DEBUG -- handleDragEnd -- result", result);
+        // console.log("DEBUG -- handleDragEnd -- result", result);
         if (!result.destination) return;
 
         const { source, destination } = result;
-        console.log("DEBUG -- handleDragEnd -- source", source);
-        console.log("DEBUG -- handleDragEnd -- destination", destination);
+        // console.log("DEBUG -- handleDragEnd -- source", source);
+        // console.log("DEBUG -- handleDragEnd -- destination", destination);
 
         // If the task is dropped in the same place, do nothing
         if (destination.droppableId === source.droppableId) {
@@ -317,7 +317,7 @@ const CalendarModal = ({ isOpen, onClose }) => {
         // Task has been dragged to another component
         if (destination.droppableId === 'noDeadlineTasks') {
             const updatedTask = { ...droppedTask, dueDate: null };
-            console.log("DEBUG -- updated task -- noDeadlineTasks", updatedTask);
+            // console.log("DEBUG -- updated task -- noDeadlineTasks", updatedTask);
             // editTodo(updatedTask);
         } else if (destination.droppableId.startsWith('calendar-day')) {
             const destinationDate = new Date(destination.droppableId.replace('calendar-day:', '').split(':')[0]);
@@ -349,7 +349,7 @@ const CalendarModal = ({ isOpen, onClose }) => {
         setDraggedItem(null);
         setPlaceholderIndex(null);
 
-        console.log("DEBUG -- handleDragEnd -- result end", result);
+        // console.log("DEBUG -- handleDragEnd -- result end", result);
     };
 
 
@@ -403,7 +403,7 @@ const CalendarModal = ({ isOpen, onClose }) => {
             })
         ];
 
-        console.log("DEBUG -- dayTasks -- getUncompletedTasksCount", dayTasks);
+        // console.log("DEBUG -- dayTasks -- getUncompletedTasksCount", dayTasks);
 
         const repeatableTasks = dayTasks.filter(task => task.repeatable && !task.completed).length;
         const nonRepeatableTasks = dayTasks.filter(task => !task.repeatable && !task.completed).length;

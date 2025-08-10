@@ -4,10 +4,10 @@ export const generateMimicTask = (task, startDate, endDate, allList, includeGrou
     const repeatUntilDate = task.repeatUntil ? new Date(task.repeatUntil) : new Date(endDate);
     endDate.setHours(23, 59, 59, 999);
 
- /*    console.log('DEBUG -- generateMimicTask -- task', task);
-    console.log('DEBUG -- generateMimicTask -- allList', allList);
-    console.log('DEBUG -- generateMimicTask -- includeGroup', includeGroup);
-    console.log('DEBUG -- generateMimicTask -- loggedInUserID', loggedInUserID); */
+    // console.log('DEBUG -- generateMimicTask -- task', task);
+    // console.log('DEBUG -- generateMimicTask -- allList', allList);
+    // console.log('DEBUG -- generateMimicTask -- includeGroup', includeGroup);
+    // console.log('DEBUG -- generateMimicTask -- loggedInUserID', loggedInUserID);
 
 
     while (currentDate <= endDate && currentDate <= repeatUntilDate) {
@@ -35,10 +35,10 @@ export const generateMimicTask = (task, startDate, endDate, allList, includeGrou
     }
 
     const updatedInListNew = includeGroup && task.owner !== loggedInUserID
-    ? task.inListNew.some(list => list.listName === 'all')
-        ? task.inListNew
-        : [...task.inListNew, allList]
-    : task.inListNew;    
+        ? task.inListNew.some(list => list.listName === 'all')
+            ? task.inListNew
+            : [...task.inListNew, allList]
+        : task.inListNew;
 
     return dates.map(date => ({
         _id: `${task._id}-${date.getTime()}`, // Combine task._id with the timestamp of the date

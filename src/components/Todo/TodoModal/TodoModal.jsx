@@ -178,8 +178,8 @@ const TodoModal = ({ isOpen, onRequestClose, initialData }) => {
 
         // Handle array fields like tasksBefore and tasksAfter
         if (name === 'tasksBefore' || name === 'tasksAfter') {
-            console.log("DEBUG -- It is a linked task")
-            console.log("DEBUG - Name: ", name, " Value: ", value);
+            // console.log("DEBUG -- It is a linked task")
+            // console.log("DEBUG - Name: ", name, " Value: ", value);
             setNewTaskData((prevData) => ({
                 ...prevData,
                 [name]: Array.isArray(value) ? value : [value],
