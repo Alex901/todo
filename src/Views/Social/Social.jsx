@@ -30,7 +30,7 @@ const Social = () => {
                     <Card maxWidth={'80em'} padding={'0px'}>
                         <h2>Wall</h2>
                     </Card>
-                    <Card maxWidth={'20em'} padding={'10px'}>
+                    <Card maxWidth={'30em'} padding={'10px'}>
                         <ContactList />
                     </Card>
                 </div>

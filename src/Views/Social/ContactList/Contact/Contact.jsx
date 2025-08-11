@@ -2,11 +2,14 @@ import React from 'react';
 import './Contact.css';
 import { mdiChatPlusOutline, mdiAccountPlus, mdiEmailFastOutline } from '@mdi/js'; // mdiEmailFastOutline for sent requests
 import Icon from '@mdi/react';
+import { useNotificationContext } from '../../../../contexts/NotificationContexts';
 
 const Contact = ({ user, isContact, isRequestSent }) => {
+    const { contactRequest } = useNotificationContext();
+
     // Function placeholders for actions
     const handleAddContact = () => {
-        console.log(`Add friend: ${user.username}`);
+        contactRequest(user._id);
     };
 
     const handleShowProfile = () => {
@@ -34,7 +37,7 @@ const Contact = ({ user, isContact, isRequestSent }) => {
             <div className="contact-actions">
                 {isContact ? (
                     <div
-                        className="icon-button"
+                        className="contact-icon-button"
                         onClick={(e) => {
                             e.stopPropagation(); // Prevent triggering the parent click
                             handleOpenChat();
@@ -48,7 +51,7 @@ const Contact = ({ user, isContact, isRequestSent }) => {
                     </div>
                 ) : (
                     <div
-                        className="icon-button"
+                        className="contact-icon-button"
                         onClick={(e) => {
                             e.stopPropagation(); // Prevent triggering the parent click
                             handleAddContact();

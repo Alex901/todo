@@ -48,7 +48,7 @@
 }
 
 /* Icon button styling */
-.icon-button {
+.contact-icon-button {
     display: flex;
     align-items: center;
     justify-content: center;
@@ -60,30 +60,27 @@
     transition: background-color 0.3s ease, transform 0.2s ease;
 }
 
-.icon-button:hover {
+.contact-icon-button:hover {
     background-color: var(--primary-color); /* Use your platform's primary color */
     transform: scale(1.1); /* Slightly enlarge on hover */
 }
 
-.icon-button svg {
+.contact-icon-button svg {
     color: #666; /* Default icon color */
     transition: color 0.3s ease;
 }
 
-.icon-button:hover svg {
+.contact-icon-button:hover svg {
     color: #fff; /* Change icon color on hover */
 }
 
-.icon-button.sent-request {
+.contact-icon-button.sent-request {
     background-color: #ffffff; /* Gray background for sent requests */
     cursor: default; /* No pointer cursor */
 }
 
-.icon-button.sent-request:hover {
-    background-color: #ffffff; /* Keep the same color on hover */
-    transform: none; /* Disable hover effects */
+.sent-request {
+    margin-right: 8px;
 }
 
-.icon-button.sent-request svg {
-    color: #666; /* Gray icon color for sent requests */
-}
+

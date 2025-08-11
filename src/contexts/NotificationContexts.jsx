@@ -349,12 +349,13 @@ const NotificationProvider = ({ children }) => {
 
     };
 
-    const contactRequest = (userId) => {
+    const contactRequest = async (userId) => {
         // Function to send a contact request
         try {
-            const response = axios.post(`${BASE_URL}/notifications/contact-request`, { from: loggedInUser._id, to: userId }, { withCredentials: true });
+            const response = await axios.post(`${BASE_URL}/notifications/contact-request`, { from: loggedInUser._id, to: userId }, { withCredentials: true });
             if(response.status === 200) {
                 toast.success("Contact request sent successfully");
+                checkLogin();
             }
         } catch (error) {
             console.error("Error sending contact request: ", error);

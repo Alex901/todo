@@ -4,7 +4,7 @@
     grid-template-columns: 2fr 2fr 1fr; /* Profile and Groups: 2fr each, Contacts: 1fr */
     grid-template-rows: auto; /* Rows adjust automatically */
     gap: 10px; /* Consistent gap between cards */
-    max-width: 80em; /* Total width of the grid */
+    max-width: 120em; /* Total width of the grid */
     margin: 0 auto; /* Center the grid horizontally */
     height: 100%; /* Ensure the grid stretches to fit content */
     align-items: start; /* Align items at the start of their rows */

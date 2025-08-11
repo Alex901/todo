@@ -29,7 +29,7 @@ const ContactList = () => {
                 )}
             </div>
 
-            <h6>All Users</h6>
+            <h6>Contact Suggestions</h6>
             <div className="users-section">
                 {userList?.length > 0 ? (
                     filteredUsers.map((user) => (
