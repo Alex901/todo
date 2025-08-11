@@ -66,8 +66,8 @@ const NotificationsButton = ({ isLoggedIn, userNotifications, isMobile, classNam
                 paddingLeft: isMobile ? '5px' : '10px',
                 marginTop: isMobile ? '0px' : '5px',
                 marginLeft: isMobile ? '-18px' : '0px',
-                backgroundColor: 'rgba(240, 237, 237, 0.5)', // Semi-transparent background
-                backdropFilter: 'blur(10px)', // Blur effect
+        backgroundColor: notifications.length > 0 ? 'rgba(240, 237, 237, 0.5)' : '#ffffff', // Dynamic background color
+        backdropFilter: notifications.length > 0 ? 'blur(10px)' : 'none', // Blur effect only if there are notifications
                 maxHeight: isMobile ? 'calc(100vh - 100px)' : '400px',
               },
             }}
