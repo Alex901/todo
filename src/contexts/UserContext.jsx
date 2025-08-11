@@ -366,7 +366,8 @@ const UserProvider = ({ children }) => {
             const response = await axios.patch(`${BASE_URL}/users/updateprofilepicture/${_id}`, formData, {
                 headers: {
                     'Content-Type': 'multipart/form-data'
-                }
+                },
+                withCredentials: true
             });
             if (response.status === 200) {
                 console.log("Profile picture updated: ", response.data);

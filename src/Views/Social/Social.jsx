@@ -2,11 +2,12 @@ import React, { useState, useEffect } from 'react';
 import Card from '../../components/Layout/card/Card';
 import './Social.css';
 import { useUserContext } from '../../contexts/UserContext';
+import ContactList from './ContactList/ContactList';
 
 const Social = () => {
     const { loggedInUser } = useUserContext();
     const [score, setScore] = useState(loggedInUser?.settings?.score || 0); // Correctly initialize useState
-    console.log("Current Score:", score);
+    // console.log("Current Score:", score);
 
     return (
         <>
@@ -29,8 +30,8 @@ const Social = () => {
                     <Card maxWidth={'80em'} padding={'0px'}>
                         <h2>Wall</h2>
                     </Card>
-                    <Card maxWidth={'20em'} padding={'0px'}>
-                        <h2>Contacts</h2>
+                    <Card maxWidth={'20em'} padding={'10px'}>
+                        <ContactList />
                     </Card>
                 </div>
             )}

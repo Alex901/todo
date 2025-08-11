@@ -80,6 +80,10 @@ const FirstTimeLoginModal = ({ open, onClose }) => {
             const response = await editUser({ username }, oldPassword, newPassword);
             if (response.status === 200) {
                 onClose();
+                setUsername('');
+                setOldPassword('');
+                setNewPassword('');
+                setConfirmPassword('');
             }
         } catch (error) {
             setError('Wrong password, please try again');

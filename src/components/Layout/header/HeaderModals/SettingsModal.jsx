@@ -12,6 +12,7 @@ import AdminPopper from './AdminPopper/AdminPopper';
 import ScoreArea from '../ScoreArea/ScoreArea';
 import CurrencyArea from '../CurrencyArea/CurrencyArea';
 import { useMediaQuery } from '@mui/material';
+import { toast } from 'react-toastify';
 import imageCompression from 'browser-image-compression';
 
 const SettingsModal = ({ isOpen, onClose }) => {

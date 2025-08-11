@@ -294,7 +294,7 @@ const NotificationProvider = ({ children }) => {
     }
 
     //TODO: notify user about the outcome
-    const acceptRequestToJoinGroup = (notificationToDelete, groupToAddUserTo, userToAddToGroup) => {
+    const acceptRequestToJoinGroup = (notificationToDelete, groupToAddUserTo, userToAddToGroup, contactRequest) => {
 
         addUserToGroup(groupToAddUserTo, userToAddToGroup);
 
@@ -349,11 +349,35 @@ const NotificationProvider = ({ children }) => {
 
     };
 
+    const contactRequest = (userId) => {
+        // Function to send a contact request
+        try {
+            const response = axios.post(`${BASE_URL}/notifications/contact-request`, { from: loggedInUser._id, to: userId }, { withCredentials: true });
+            if(response.status === 200) {
+                toast.success("Contact request sent successfully");
+            }
+        } catch (error) {
+            console.error("Error sending contact request: ", error);
+            if (error.response) {
+                console.error(error.response.data);
+                console.error(error.response.status);
+                console.error(error.response.headers);
+                toast.error("Error sending contact request: unknown error");
+            } else if (error.request) {
+                console.error(error.request);
+                toast.error("Error sending contact request: No response from the server");
+            } else {
+                toast.error("Error sending contact request: unknown error");
+                console.error('Error', error.message);
+            }
+        }
+        console.log(`Sending contact request to user: ${userId} from loggedInUser: ${loggedInUser._id}`);
+    };
 
     return (
         <NotificationContexts.Provider value={{
             inviteToGroup, userNotifications, acceptGroupInvite, declineGroupInvite,
-            requestToJoinGroup, declineRequestToJoinGroup, acceptRequestToJoinGroup, resolveNotification
+            requestToJoinGroup, declineRequestToJoinGroup, acceptRequestToJoinGroup, resolveNotification, contactRequest
         }}>
             {children}
         </NotificationContexts.Provider>

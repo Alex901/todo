@@ -1,0 +1,89 @@
+.contact {
+    display: flex;
+    align-items: center;
+    padding: 10px;
+    background-color: #fff;
+    border-radius: 5px;
+    margin-bottom: 10px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    cursor: pointer; /* Make the entire contact clickable */
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.contact.hoverable:hover {
+    background-color: #f0f0f0; /* Light gray background on hover */
+    transform: scale(1.02); /* Slightly enlarge on hover */
+}
+
+.contact-avatar img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-right: 10px;
+}
+
+.contact-info {
+    flex: 1;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.contact-username {
+    font-size: 1.1rem; /* Slightly larger font size */
+    color: #444; /* Slightly darker color for better contrast */
+    margin: 0; /* Remove default margin */
+    line-height: 1.2; /* Adjust line height for better spacing */
+}
+
+.contact-info p {
+    margin: 0; /* Ensure no extra spacing */
+}
+
+.contact-actions {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+/* Icon button styling */
+.icon-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background-color: #e0e0e0; /* Default gray background */
+    cursor: pointer;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.icon-button:hover {
+    background-color: var(--primary-color); /* Use your platform's primary color */
+    transform: scale(1.1); /* Slightly enlarge on hover */
+}
+
+.icon-button svg {
+    color: #666; /* Default icon color */
+    transition: color 0.3s ease;
+}
+
+.icon-button:hover svg {
+    color: #fff; /* Change icon color on hover */
+}
+
+.icon-button.sent-request {
+    background-color: #ffffff; /* Gray background for sent requests */
+    cursor: default; /* No pointer cursor */
+}
+
+.icon-button.sent-request:hover {
+    background-color: #ffffff; /* Keep the same color on hover */
+    transform: none; /* Disable hover effects */
+}
+
+.icon-button.sent-request svg {
+    color: #666; /* Gray icon color for sent requests */
+}
