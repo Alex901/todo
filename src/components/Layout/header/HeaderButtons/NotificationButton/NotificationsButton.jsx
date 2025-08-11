@@ -62,10 +62,10 @@ const NotificationsButton = ({ isLoggedIn, userNotifications, isMobile, classNam
               style: {
                 borderRadius: '20px',
                 padding: '5px',
-                paddingRight: isMobile ? '0px' : '10px',
-                paddingLeft: isMobile ? '0px' : '5px',
+                paddingRight: isMobile ? '5px' : '10px',
+                paddingLeft: isMobile ? '5px' : '10px',
                 marginTop: isMobile ? '0px' : '5px',
-                marginLeft: isMobile ? '-15px' : '0px',
+                marginLeft: isMobile ? '-18px' : '0px',
                 backgroundColor: 'rgba(240, 237, 237, 0.5)', // Semi-transparent background
                 backdropFilter: 'blur(10px)', // Blur effect
                 maxHeight: isMobile ? 'calc(100vh - 100px)' : '400px',

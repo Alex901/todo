@@ -1,3 +1,14 @@
+/* Hide scrollbar for the notification menu */
+.MuiPaper-root {
+    scrollbar-width: none; /* For Firefox */
+    -ms-overflow-style: none; /* For Internet Explorer and Edge */
+}
+
+/* For WebKit browsers (Chrome, Edge, Safari) */
+.MuiPaper-root::-webkit-scrollbar {
+    display: none; /* Hides the scrollbar */
+}
+
 .icon-badge-container {
   position: relative;
   display: inline-block;
