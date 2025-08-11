@@ -60,12 +60,14 @@ const NotificationsButton = ({ isLoggedIn, userNotifications, isMobile, classNam
             }}
             PaperProps={{
               style: {
+                borderRadius: '20px',
                 padding: '5px',
                 paddingRight: isMobile ? '0px' : '10px',
                 paddingLeft: isMobile ? '0px' : '5px',
                 marginTop: isMobile ? '0px' : '5px',
                 marginLeft: isMobile ? '-15px' : '0px',
-                backgroundColor: '#f0eded',
+                backgroundColor: 'rgba(240, 237, 237, 0.5)', // Semi-transparent background
+                backdropFilter: 'blur(10px)', // Blur effect
                 maxHeight: isMobile ? 'calc(100vh - 100px)' : '400px',
               },
             }}
