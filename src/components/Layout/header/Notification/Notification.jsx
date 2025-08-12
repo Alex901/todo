@@ -12,7 +12,7 @@ const Notification = ({ notificationData, type, message, timestamp }) => {
   const firstWord = words.shift();
   const lastWord = words.pop();
 
-  
+
 
   const handleAcceptGroupInvite = () => {
     console.log(notificationData);
@@ -38,6 +38,13 @@ const Notification = ({ notificationData, type, message, timestamp }) => {
     setTimeout(() => resolveNotification(notificationData._id), 300);
   }
 
+  const handleAcceptContact = () => {
+    console.log(notificationData);
+  }
+
+  const handleDeclineContact = () => {
+    console.log(notificationData);
+  }
 
   if (type === 'group') {
     return (
@@ -122,7 +129,26 @@ const Notification = ({ notificationData, type, message, timestamp }) => {
         </div>
       </div>
     );
-
+  } else if (type === 'contact') {
+    return (
+      <div className={`notification-item ${isVisible ? '' : 'fade-out'}`}>
+        <p className='date'>{new Date(timestamp).toLocaleString()}</p>
+        <div className="message">
+          <p className="contact-title"><strong>Contact Request</strong></p>
+          <p className="contact-message">
+            {message}
+          </p>
+        </div>
+        <div className="button-container">
+          <button className="notification-button accept-notify" onClick={handleAcceptContact}>
+            <Icon path={mdiCheckCircle} size={1.2} />
+          </button>
+          <button className="notification-button decline-notify" onClick={handleDeclineContact}>
+            <Icon path={mdiCloseCircle} size={1.2} />
+          </button>
+        </div>
+      </div>
+    );
   }
 
   // Handle other types of notifications in the future
