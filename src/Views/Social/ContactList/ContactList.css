@@ -1,0 +1,13 @@
+.contact-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+
+
+.no-contacts-message,
+.no-users-message {
+    text-align: center;
+    color: #999;
+}

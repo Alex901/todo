@@ -378,13 +378,74 @@ const NotificationProvider = ({ children }) => {
     const acceptContactRequest = async (notificationData) => {
         console.log("DEBUG: acceptContactRequest: ", notificationData);
 
-      
+        // Extract relevant data
+        const { _id, from, to } = notificationData;
+        const payload = {
+            notificationId: _id, // Notification to delete
+            from, // Sender of the contact request
+            to: to[0], // Recipient of the contact request
+        };
+
+        try {
+            const response = await axios.post(
+                `${BASE_URL}/notifications/accept-contact-request`,
+                payload,
+                { withCredentials: true }
+            );
+
+            if (response.status === 200) {
+                toast.success("Contact request accepted");
+                checkLogin();
+            }
+        } catch (error) {
+            console.error("Error accepting contact request: ", error);
+
+            if (error.response) {
+                const { status, data } = error.response;
+
+                // Handle specific status codes
+                switch (status) {
+                    case 400:
+                        toast.error("Invalid notification data. Please try again.");
+                        break;
+                    case 401:
+                        toast.error("Unauthorized. Please log in and try again.");
+                        break;
+                    case 404:
+                        if (data.message.includes('Notification')) {
+                            toast.error("Notification not found. It may have already been resolved.");
+                        } else if (data.message.includes('Sender')) {
+                            toast.error("Sender user not found. The user may no longer exist.");
+                        } else if (data.message.includes('Recipient')) {
+                            toast.error("Recipient user not found. The user may no longer exist.");
+                        } else {
+                            toast.error("Resource not found.");
+                        }
+                        break;
+                    case 500:
+                        toast.error("Internal server error. Please try again later.");
+                        break;
+                    default:
+                        toast.error("An unexpected error occurred.");
+                }
+
+                console.error("Response data:", data);
+            } else if (error.request) {
+                // No response received
+                console.error("No response received:", error.request);
+                toast.error("No response from the server. Please check your connection.");
+            } else {
+                // Other errors
+                console.error("Error:", error.message);
+                toast.error("An unexpected error occurred. Please try again.");
+            }
+        }
     };
 
     const declineContactRequest = async (notificationData) => {
         console.log("DEBUG: declineContactRequest: ", notificationData);
 
-          try {
+        try {
             const response = await axios.post(
                 `${BASE_URL}/notifications/decline-contact-request`,
                 { notificationData },

@@ -15,10 +15,11 @@ const ContactList = () => {
         );
     }, [userList, loggedInUser]);
 
+    console.log("DEBUG: loggendInUser", loggedInUser);
 
     return (
         <div className="contact-list">
-            <h6>Your Contacts</h6>
+            <h6>Your top Contacts</h6>
             <div className="contacts-section">
                 {loggedInUser?.contacts?.length > 0 ? (
                     loggedInUser.contacts.map((contact) => (
