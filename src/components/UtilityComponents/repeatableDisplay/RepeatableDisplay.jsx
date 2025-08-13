@@ -35,6 +35,8 @@ const RepeatableDisplay = () => {
     const completedTasks = listToday.filter(task => task.completed !== null).length;
     const ongoingTasks = listToday.filter(task => task.isStarted && !task.completed).length;
 
+    console.log("DEBUG: Total task ", listToday);
+
     return (
         <>
             {listToday.length > 0 && (

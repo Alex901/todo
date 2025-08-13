@@ -7,12 +7,10 @@ import Feedback from "react-bootstrap/esm/Feedback";
 
 const Notification = ({ notificationData, type, message, timestamp }) => {
   const [isVisible, setIsVisible] = useState(true);
-  const { acceptGroupInvite, declineGroupInvite, declineRequestToJoinGroup, acceptRequestToJoinGroup, resolveNotification } = useNotificationContext();
+  const { acceptGroupInvite, declineGroupInvite, declineRequestToJoinGroup, acceptRequestToJoinGroup, resolveNotification, declineContactRequest, acceptContactRequest } = useNotificationContext();
   const words = message.split(' ');
   const firstWord = words.shift();
   const lastWord = words.pop();
-
-
 
   const handleAcceptGroupInvite = () => {
     console.log(notificationData);
@@ -39,11 +37,13 @@ const Notification = ({ notificationData, type, message, timestamp }) => {
   }
 
   const handleAcceptContact = () => {
-    console.log(notificationData);
+    setIsVisible(false);
+    setTimeout(() => acceptContactRequest(notificationData), 300);
   }
 
   const handleDeclineContact = () => {
-    console.log(notificationData);
+    setIsVisible(false);
+    setTimeout(() => declineContactRequest(notificationData), 300);
   }
 
   if (type === 'group') {
