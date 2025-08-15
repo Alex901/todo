@@ -13,8 +13,8 @@ const Notification = ({ notificationData, type, message, timestamp }) => {
   const lastWord = words.pop();
 
   const handleAcceptGroupInvite = () => {
-    console.log(notificationData);
-    acceptGroupInvite(notificationData._id, notificationData.group);
+    setIsVisible(false);
+    setTimeout(() => acceptGroupInvite(notificationData._id, notificationData.group), 300);
   }
 
   const handleDeclineGroupInvite = () => {
@@ -23,12 +23,14 @@ const Notification = ({ notificationData, type, message, timestamp }) => {
   }
 
   const handleAcceptUser = () => {
-    console.log(notificationData);
-    acceptRequestToJoinGroup(notificationData._id, notificationData.group, notificationData.from)
+    setIsVisible(false);
+    setTimeout(() => 
+      acceptRequestToJoinGroup(notificationData._id, notificationData.group, notificationData.from), 300);
   }
 
   const handleDeclineUser = () => {
-    declineRequestToJoinGroup(notificationData._id, notificationData.from);
+    setIsVisible(false);
+    setTimeout(() => declineRequestToJoinGroup(notificationData._id, notificationData.from), 300);
   }
 
   const handleResolveNotification = () => {
