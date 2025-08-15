@@ -5,6 +5,7 @@ import './index.css'
 import { TodoProvider } from './contexts/todoContexts.jsx'
 import { UserProvider } from './contexts/UserContext.jsx'
 import { GroupProvider } from './contexts/GroupContexts.jsx';
+import { CommunicationProvider } from './contexts/CommunicationContext.jsx';
 import { NotificationProvider } from './contexts/NotificationContexts.jsx';
 import { FeedbackProvider } from './contexts/FeedbackContext.jsx';
 import { ToastContainer, toast } from 'react-toastify';
@@ -86,6 +87,7 @@ function Main() {
             <TodoProvider>
               <NotificationProvider>
                 <FeedbackProvider>
+                  <CommunicationProvider>
                   <ToastContainer
                     newestOnTop={true}
                     theme='colored'
@@ -98,6 +100,7 @@ function Main() {
                   />
                   <TodoDrawer />
                   <App />
+                  </CommunicationProvider>
                 </FeedbackProvider>
               </NotificationProvider>
 

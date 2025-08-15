@@ -140,14 +140,14 @@ const LoginModal = ({ isOpen, onRequestClose, openRegisterModal }) => {
                     (If you don't already have an Habitforge account, this action will create one for you.)
                 </p>
                 <div className="social-icons-login">
-                    <IconButton className="social-icon-login google">
-                        <Icon path={mdiGoogle} size={1.5} onClick={handleLoginWithGoogle} />
+                    <IconButton className="social-icon-login google" onClick={handleLoginWithGoogle}>
+                        <Icon path={mdiGoogle} size={1.5} />
                     </IconButton>
-                    <IconButton className="social-icon-login facebook">
-                        <Icon path={mdiFacebook} size={1.5} onClick={handleLoginWithFacebook} />
+                    <IconButton className="social-icon-login facebook" onClick={handleLoginWithFacebook}>
+                        <Icon path={mdiFacebook} size={1.5}  />
                     </IconButton>
-                    <IconButton className="social-icon-login github">
-                        <Icon path={mdiGit} size={1.5} onClick={handleLoginWithGithub} />
+                    <IconButton className="social-icon-login github" onClick={handleLoginWithGithub}>
+                        <Icon path={mdiGit} size={1.5}  />
                     </IconButton>
                 </div>
             </div>

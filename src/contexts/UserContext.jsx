@@ -3,7 +3,6 @@ import React, { createContext, useContext, useState, useEffect } from "react";
 import axios from "axios";
 import { useTodoContext } from "./todoContexts";
 import { toast } from "react-toastify";
-import { use } from "react";
 
 let BASE_URL;
 
@@ -465,7 +464,7 @@ const UserProvider = ({ children }) => {
     }
 
     const updateSettings = async (settingName, value) => {
-        // console.log("DEBUG: update settings for loggedInUser: ", settingName, value);
+        console.log("DEBUG: update settings for loggedInUser: ", settingName, value);
         try {
             if (!isLoggedIn) {
                 console.log("User not logged in");
@@ -635,6 +634,17 @@ const loginWithGithub = async () => {
     // }
 };
 
+const updateChatWidgetPosition = async (newPosition) => {
+    try {
+        // Update the chat widget position in the user settings
+        await axios.patch(`${BASE_URL}/users/update-chat-widget-position/${loggedInUser._id}`, {
+            chatWidgetPosition: newPosition
+        });
+        console.log("Chat widget position updated successfully");
+    } catch (error) {
+        console.error("Error updating chat widget position", error);
+    }
+};
 
     return (
         <UserContext.Provider value={{
@@ -642,7 +652,7 @@ const loginWithGithub = async () => {
             setLoggedInUser, setActiveList, createList, deleteList, toggleUrgent, addTag,
             deleteTag, updateProfilePicture, editUser, checkLogin, toggleShowDetails,
             updateSettings, editUserList, deleteUser, completeProject, reviveProject, loginWithGoogle,
-            loginWithFacebook, loginWithGithub
+            loginWithFacebook, loginWithGithub, updateChatWidgetPosition
         }} >
             {children}
         </UserContext.Provider>

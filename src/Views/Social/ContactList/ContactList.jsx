@@ -15,7 +15,17 @@ const ContactList = () => {
         );
     }, [userList, loggedInUser]);
 
-    console.log("DEBUG: loggendInUser", loggedInUser);
+    // Check if a chat exists between the logged-in user and a contact
+    const hasChatWithContact = (contactId) => {
+        return loggedInUser.chats.some((chat) => {
+            const participantIds = chat.participants.map((participant) => participant.toString());
+            return (
+                participantIds.length === 2 &&
+                participantIds.includes(loggedInUser._id.toString()) &&
+                participantIds.includes(contactId.toString())
+            );
+        });
+    };
 
     return (
         <div className="contact-list">
@@ -23,7 +33,12 @@ const ContactList = () => {
             <div className="contacts-section">
                 {loggedInUser?.contacts?.length > 0 ? (
                     loggedInUser.contacts.map((contact) => (
-                        <Contact key={contact._id} user={contact} isContact={true} />
+                        <Contact
+                            key={contact._id}
+                            user={contact}
+                            isContact={true}
+                            hasChat={hasChatWithContact(contact._id)} // Pass hasChat prop
+                        />
                     ))
                 ) : (
                     <p className="no-contacts-message">You don't have any contacts yet.</p>
@@ -34,8 +49,13 @@ const ContactList = () => {
             <div className="users-section">
                 {userList?.length > 0 ? (
                     filteredUsers.map((user) => (
-                        <Contact key={user._id} user={user} isContact={false} 
-                        isRequestSent={loggedInUser.contactRequests.includes(user._id)}/>
+                        <Contact
+                            key={user._id}
+                            user={user}
+                            isContact={false}
+                            isRequestSent={loggedInUser.contactRequests.includes(user._id)}
+                            hasChat={hasChatWithContact(user._id)} // Pass hasChat prop
+                        />
                     ))
                 ) : (
                     <p className="no-users-message">No users found.</p>

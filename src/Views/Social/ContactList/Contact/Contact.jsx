@@ -1,11 +1,21 @@
-import React from 'react';
+import React, { useState } from 'react';
 import './Contact.css';
-import { mdiChatPlusOutline, mdiAccountPlus, mdiEmailFastOutline } from '@mdi/js'; // mdiEmailFastOutline for sent requests
+import {
+    mdiChatPlusOutline,
+    mdiChatPlus,
+    mdiChat,
+    mdiChatProcessingOutline,
+    mdiAccountPlus,
+    mdiEmailFastOutline,
+} from '@mdi/js';
 import Icon from '@mdi/react';
 import { useNotificationContext } from '../../../../contexts/NotificationContexts';
+import { useCommunicationContext } from '../../../../contexts/CommunicationContext';
 
-const Contact = ({ user, isContact, isRequestSent }) => {
+const Contact = ({ user, isContact, isRequestSent, hasChat }) => {
     const { contactRequest } = useNotificationContext();
+    const { createNewChat } = useCommunicationContext();
+    const [isHovered, setIsHovered] = useState(false); // Track hover state
 
     // Function placeholders for actions
     const handleAddContact = () => {
@@ -20,10 +30,21 @@ const Contact = ({ user, isContact, isRequestSent }) => {
         console.log(`Open chat with: ${user.username}`);
     };
 
+    // Determine the icon based on hover state and chat existence
+    const getIconPath = () => {
+        if (hasChat) {
+            return isHovered ? mdiChatProcessingOutline : mdiChat;
+        } else {
+            return isHovered ? mdiChatPlusOutline : mdiChatPlus;
+        }
+    };
+
     return (
         <div
             className="contact hoverable"
             onClick={handleShowProfile} // Default action when clicking the contact
+            onMouseEnter={() => setIsHovered(true)} // Set hover state to true
+            onMouseLeave={() => setIsHovered(false)} // Set hover state to false
         >
             <div className="contact-avatar">
                 <img
@@ -43,7 +64,7 @@ const Contact = ({ user, isContact, isRequestSent }) => {
                             handleOpenChat();
                         }}
                     >
-                        <Icon path={mdiChatPlusOutline} size={1} title="Open Chat" />
+                        <Icon path={getIconPath()} size={1} title="Open Chat" />
                     </div>
                 ) : isRequestSent ? (
                     <div className="sent-request">

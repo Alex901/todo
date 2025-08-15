@@ -1,0 +1,35 @@
+.chat-widget {
+    position: absolute;
+    z-index: 1000;
+    cursor: grab;
+}
+
+.chat-icon {
+    position: relative;
+    background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent background */
+    color: #007bff; /* Primary color for the icon */
+    border: 2px solid #bec0c3; /* Clear border */
+    border-radius: 50%; /* Circular shape */
+    width: 50px; /* Slightly larger size for better visibility */
+    height: 50px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
+    transition: transform 0.2s ease, box-shadow 0.2s ease; /* Smooth hover effect */
+}
+
+.chat-icon:hover {
+    transform: scale(1.1); /* Slightly enlarge on hover */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); /* More pronounced shadow on hover */
+    background-color: rgba(255, 255, 255, 1); /* Fully opaque background on hover */
+}
+
+.chat-icon:active {
+    transform: scale(0.95); /* Slightly shrink on click for feedback */
+}
+
+.chat-badge {
+    font-size: 0.8rem; /* Adjust badge font size */
+    font-weight: bold;
+}

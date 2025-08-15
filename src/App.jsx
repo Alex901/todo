@@ -43,7 +43,8 @@ import CalendarModal from './components/Todo/TodoModal/CalendarModal/CalendarMod
 import HeaderMenu from './components/Layout/HeaderMenu/HeaderMenu'
 import Dashboard from './Views/Dashboard/Dashboard'
 import Social from './Views/Social/Social'
-
+import ChatWidget from './components/Chat/ChatWidget/ChatWidget'
+import ChatArea from './components/Chat/ChatArea/ChatArea'
 //TODO: Eventually everything within the Card-tag, should be made into its own component.
 function App() {
   const [activeView, setActiveView] = useState('todo');
@@ -83,6 +84,7 @@ function App() {
   const [view, setView] = useState(loggedInUser?.settings?.activeView);
   const isMobile = useMediaQuery('(max-width:800px)');
 
+
   useEffect(() => {
     // Fetch the active view from the server only once when the user logs in
     if (loggedInUser?.settings?.activeView && view === null) {
@@ -92,18 +94,18 @@ function App() {
     }
   }, [loggedInUser]);
 
-const handleViewChange = async (newView) => {
+  const handleViewChange = async (newView) => {
     // console.log("DEBUG -- changing view to: ", newView);
     setView(newView); // Optimistically update the view
-    
+
     try {
-        await updateSettings("activeView", newView); // Wait for backend confirmation
+      await updateSettings("activeView", newView); // Wait for backend confirmation
     } catch (error) {
-        console.error("Failed to update view on backend:", error);
-        // Revert to the previous view if the backend update fails
-        setView(previousView => previousView);
+      console.error("Failed to update view on backend:", error);
+      // Revert to the previous view if the backend update fails
+      setView(previousView => previousView);
     }
-};
+  };
 
   const handleOpenDrawer = () => setDrawerOpen(true);
   const handleCloseDrawer = () => setDrawerOpen(false);
@@ -538,578 +540,578 @@ const handleViewChange = async (newView) => {
       case 'social':
         return <Social />;
       case 'list':
-       default:
-       return (
-        <>
-        <Card>
-            <div className='nav' style={{ display: 'flex', flexDirection: 'column' }}>
+      default:
+        return (
+          <>
+            <Card isMobile={isMobile}>
+              <div className='nav' style={{ display: 'flex', flexDirection: 'column' }}>
 
 
-              {isMobile ? (
-                <BottomDrawer isOpen={isDrawerOpen} onClose={handleCloseDrawer} listName={loggedInUser.activeList} >
-                  {/* First row */}
-                  {isLoggedIn && (
-                    <div className={`listSelection${isMobile ? '-mobile' : ''}`}>
-                      <div className={`list-selection-settings${isMobile ? '-mobile' : ''}`}>
-                        <div className={`list-checkbox-container${isMobile ? '-mobile' : ''}`}>
-                          {loggedInUser.groups.length > 0 && (
-                            <FormControlLabel
-                              control={
-                                <Checkbox
-                                  checked={isGroupOnlySelected}
-                                  onChange={toggleGroupOnly}
+                {isMobile ? (
+                  <BottomDrawer isOpen={isDrawerOpen} onClose={handleCloseDrawer} listName={loggedInUser.activeList} >
+                    {/* First row */}
+                    {isLoggedIn && (
+                      <div className={`listSelection${isMobile ? '-mobile' : ''}`}>
+                        <div className={`list-selection-settings${isMobile ? '-mobile' : ''}`}>
+                          <div className={`list-checkbox-container${isMobile ? '-mobile' : ''}`}>
+                            {loggedInUser.groups.length > 0 && (
+                              <FormControlLabel
+                                control={
+                                  <Checkbox
+                                    checked={isGroupOnlySelected}
+                                    onChange={toggleGroupOnly}
+                                  />
+                                }
+                                label="Show groups only"
+                              />
+                            )}
+                          </div>
+                        </div>
+                        <FormControl variant='standard' style={{ width: '22em', margin: '10px' }}>
+                          <InputLabel id="active-list-label" style={{ fontWeight: 'bold' }}>Active Project </InputLabel>
+                          <Select
+                            labelId="active-list-label"
+                            label="Active listt"
+                            className={`select-list${isMobile ? '-mobile' : ''}`}
+                            size='small'
+                            value={loggedInUser.activeList || ""}
+                            onChange={handleListChange}
+                          >
+                            {loggedInUser.myLists && loggedInUser.myLists
+                              .filter(list => !isGroupOnlySelected || list.ownerModel === "Group")
+                              .map(list => {
+                                const todoCount = getListTodoCount(list.listName);
+                                const doingCount = getListDoingCount(list.listName);
+                                const doneCount = getListDoneCount(list.listName);
+                                return (
+                                  <MenuItem key={list.listName} value={list.listName}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+                                      <div>{list.listName.charAt(0).toUpperCase() + list.listName.slice(1)}</div>
+                                      <div>{`(${todoCount},${doingCount},${doneCount})`}</div>
+                                    </div>
+                                  </MenuItem>
+                                );
+                              })}
+                          </Select>
+                        </FormControl>
+
+                        <div className={`icon-buttons${isMobile ? '-mobile' : ''}`}>
+                          <div className={`icon-button add${isMobile ? '-mobile' : ''}`}
+                            onClick={openCreateListModal}
+                            style={{ marginLeft: 10 }}
+                          >
+                            <Icon path={mdiPlus} size={1.6} />
+                          </div>
+
+                          <div
+                            className={`icon-button edit${isMobile ? '-mobile' : ''}`}
+                            onClick={() => openEditListModal(loggedInUser.myLists.find(list => list.listName === loggedInUser.activeList))}
+                            onMouseEnter={() => setIsEditHovered(true)}
+                            onMouseLeave={() => setIsEditHovered(false)}
+                          >
+                            <Icon path={isEditHovered ? mdiPencil : mdiTextBoxEditOutline} size={1.4} />
+                          </div>
+
+                          <div className={`icon-button description${isMobile ? '-mobile' : ''}`} onClick={toggleDetails}>
+                            <Icon path={isShowDetailsSelected ? mdiArchiveArrowUpOutline : mdiArchiveArrowDownOutline} size={1.4} />
+                          </div>
+
+
+                          <div className={`icon-button export${isMobile ? '-mobile' : ''}`} onClick={openExportModal}>
+                            <Icon path={mdiFileExport} size={1.2} />
+                          </div>
+
+
+                          <div
+                            className={`icon-button delete${isMobile ? '-mobile' : ''}`}
+                            onClick={openDeleteListModal}
+                            onMouseEnter={() => setIsDeleteHovered(true)}
+                            onMouseLeave={() => setIsDeleteHovered(false)}
+                          >
+                            <Icon path={isDeleteHovered ? mdiDeleteEmpty : mdiDelete} size={1.4} />
+                          </div>
+
+                          <div className={`list-details-section${isMobile ? '-mobile' : ''}`}>
+                          </div>
+                        </div>
+
+
+                      </div>
+                    )}
+
+                    {isShowDetailsSelected && (
+                      <div className={`details-rows${isMobile ? '-mobile' : ''}`}>
+                        <div className={`details-container${isMobile ? '-mobile' : ''}`}>
+                          {activeList?.description ? (
+                            <div className={`list-description-div${isMobile ? '-mobile' : ''}`} >
+                              <strong className={`list-description-title${isMobile ? '-mobile' : ''}`}>Goal</strong>
+                              <br />
+                              <span className={`list-description-text${isMobile ? '-mobile' : ''}`}>
+                                {activeList.description}
+                              </span>
+                            </div>
+                          ) : null}
+                          <div className={`details-grid${isMobile ? '-mobile' : ''}`} style={{ flex: 2 }}>
+                            <Tooltip title="Owner of this project">
+                              <div>
+                                <Icon path={mdiBadgeAccountOutline} size={1.2} />
+                                {activeList?.type === 'userList' ? activeList?.owner.username : activeList?.owner.name}
+                              </div>
+                            </Tooltip>
+                            <Tooltip title="Type of list, Group or Personal">
+                              <div>
+                                <Icon className={`details-icon${isMobile ? '-mobile' : ''}`} path={mdiFormatListBulletedType} size={1.2} />
+                                {activeList?.ownerModel === 'User' ? 'Personal' : 'Group'}
+                              </div>
+                            </Tooltip>
+                            <Tooltip title="Date when the list was created">
+                              <div>
+                                <Icon path={mdiFolderPlusOutline} size={1.2} />
+                                {activeList?.createdAt ? formatDate(activeList.createdAt) : 'N/A'}
+                              </div>
+                            </Tooltip>
+                            <Tooltip title="Visibility of the list">
+                              <div>
+                                <Icon path={mdiEyeOutline} size={1.2} />
+                                {activeList?.visibility}
+                              </div>
+                            </Tooltip>
+                            <Tooltip title="Estimated time to complete the project">
+                              <div>
+                                <Icon path={mdiTimerCheckOutline} size={1.2} />
+                                {totalTimeToComplete || 'N/A'}
+                              </div>
+                            </Tooltip>
+                            <Tooltip title="Date when the list was last modified">
+                              <div>
+                                <Icon path={mdiWrenchClock} size={1.2} />
+                                {activeList?.updatedAt ? formatDate(activeList.updatedAt) : 'N/A'}
+                              </div>
+                            </Tooltip>
+                            <Tooltip title="Total time spent on the project">
+                              <div>
+                                <Icon path={mdiTimelineClockOutline} size={1.2} />
+                                {totalTimeSpent || 'N/A'}
+                              </div>
+                            </Tooltip>
+                          </div>
+                        </div>
+
+                      </div>
+                    )}
+
+                    {isLoggedIn && (
+                      <div className={`functions-container${isMobile ? '-mobile' : ''}`} ref={containerRef} style={{}}>
+                        <div className={`progress-bar-container${isMobile ? '-mobile' : ''}`} style={{ width: `${progressBarWidth + 20}%` }}>
+                          {loggedInUser.activeList === 'today' ? (
+                            <RepeatableDisplay />
+                          ) : (
+                            <ProgressArea tasksInActiveList={entriesInActiveList} />
+                          )}
+                        </div>
+
+
+                      </div>
+                    )}
+
+                    <ExportListModal isOpen={isOpenListModalOpen} onClose={closeExportListModal} />
+
+
+                    {isLoggedIn && (
+                      <div className={`tags-container${isMobile ? '-mobile' : ''}`}>
+                        <div className={`tags${isMobile ? '-mobile' : ''}`} style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' }}>
+                          {loggedInUser.myLists
+                            .find(list => list.listName === loggedInUser.activeList)?.tags.slice(0, showAll ? undefined : 3)
+                            .map((tag, index) => {
+                              return (
+                                <Chip
+                                  key={index}
+                                  label={tag.label}
+                                  className={`chip${isMobile ? '-mobile' : ''}`}
+                                  style={{
+                                    background: `linear-gradient(135deg, ${tag.color} 25%, ${tag.color} 75%)`,
+                                    boxShadow: `0 3px 5px 2px rgba(255, 105, 135, .3), inset 0 1px 2px rgba(255, 255, 255, 0.3)`,
+                                    color: tag.textColor,
+                                  }}
+                                  onDelete={() => deleteTag(tag._id, tag)}
+                                  deleteIcon={
+                                    <Icon
+                                      path={mdiCloseCircle}
+                                      size={1}
+                                      color={tag.textColor}
+                                      className={`delete-icon${isMobile ? '-mobile' : ''}`} // Apply CSS class
+                                    />
+                                  }
+                                  sx={{
+                                    margin: '0.5em',
+                                    height: '2em',
+                                    '&:hover': {
+                                      transform: 'scale(1.1)',
+                                      boxShadow: `0 3px 5px 2px rgba(255, 105, 135, .6), inset 0 1px 2px rgba(255, 255, 255, 0.5)`,
+                                      border: '1px solid rgba(255, 255, 255, 0.3)',
+                                    },
+                                  }}
                                 />
-                              }
-                              label="Show groups only"
+                              );
+                            })}
+
+                          <div style={{ display: 'flex', justifyContent: 'center', padding: '5px' }}>
+                            <Chip
+                              ref={newTagAnchorRef}
+                              label="Add tag"
+                              variant="outlined"
+                              onClick={setIsNewTagPopperOpen.bind(this, !isNewTagPopperOpen)}
+                              className={`add-tag${isMobile ? '-mobile' : ''}`}
+                              sx={{
+                                border: '2px dotted',
+                                borderColor: 'action.active',
+                                width: '8em',
+                                height: '2em',
+                                cursor: 'pointer',
+                                margin: 'auto',
+                                '&:hover': {
+                                  backgroundImage: 'none',
+                                  border: '1px solid',
+                                },
+                              }}
+                            />
+                          </div>
+
+                          {loggedInUser.myLists.find(list => list.listName === loggedInUser.activeList).tags.length > 3 && (
+                            <Chip
+                              label={showAll ? 'Show fewer' : 'Show all'}
+                              onClick={() => setShowAll(!showAll)}
+                              variant="outlined"
+                              sx={{
+                                border: 'none',
+                                margin: '0.5em',
+                                height: '2em',
+                                cursor: 'pointer',
+                                '&:hover': {
+                                  transform: 'scale(1.1)',
+                                  fontWeight: 'bold',
+                                },
+                              }}
                             />
                           )}
                         </div>
                       </div>
-                      <FormControl variant='standard' style={{ width: '22em', margin: '10px' }}>
-                        <InputLabel id="active-list-label" style={{ fontWeight: 'bold' }}>Active Project </InputLabel>
-                        <Select
-                          labelId="active-list-label"
-                          label="Active listt"
-                          className={`select-list${isMobile ? '-mobile' : ''}`}
-                          size='small'
-                          value={loggedInUser.activeList || ""}
-                          onChange={handleListChange}
-                        >
-                          {loggedInUser.myLists && loggedInUser.myLists
-                            .filter(list => !isGroupOnlySelected || list.ownerModel === "Group")
-                            .map(list => {
-                              const todoCount = getListTodoCount(list.listName);
-                              const doingCount = getListDoingCount(list.listName);
-                              const doneCount = getListDoneCount(list.listName);
-                              return (
-                                <MenuItem key={list.listName} value={list.listName}>
-                                  <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-                                    <div>{list.listName.charAt(0).toUpperCase() + list.listName.slice(1)}</div>
-                                    <div>{`(${todoCount},${doingCount},${doneCount})`}</div>
-                                  </div>
-                                </MenuItem>
-                              );
-                            })}
-                        </Select>
-                      </FormControl>
-
-                      <div className={`icon-buttons${isMobile ? '-mobile' : ''}`}>
-                        <div className={`icon-button add${isMobile ? '-mobile' : ''}`}
-                          onClick={openCreateListModal}
-                          style={{ marginLeft: 10 }}
-                        >
-                          <Icon path={mdiPlus} size={1.6} />
-                        </div>
-
-                        <div
-                          className={`icon-button edit${isMobile ? '-mobile' : ''}`}
-                          onClick={() => openEditListModal(loggedInUser.myLists.find(list => list.listName === loggedInUser.activeList))}
-                          onMouseEnter={() => setIsEditHovered(true)}
-                          onMouseLeave={() => setIsEditHovered(false)}
-                        >
-                          <Icon path={isEditHovered ? mdiPencil : mdiTextBoxEditOutline} size={1.4} />
-                        </div>
-
-                        <div className={`icon-button description${isMobile ? '-mobile' : ''}`} onClick={toggleDetails}>
-                          <Icon path={isShowDetailsSelected ? mdiArchiveArrowUpOutline : mdiArchiveArrowDownOutline} size={1.4} />
-                        </div>
-
-
-                        <div className={`icon-button export${isMobile ? '-mobile' : ''}`} onClick={openExportModal}>
-                          <Icon path={mdiFileExport} size={1.2} />
-                        </div>
-
-
-                        <div
-                          className={`icon-button delete${isMobile ? '-mobile' : ''}`}
-                          onClick={openDeleteListModal}
-                          onMouseEnter={() => setIsDeleteHovered(true)}
-                          onMouseLeave={() => setIsDeleteHovered(false)}
-                        >
-                          <Icon path={isDeleteHovered ? mdiDeleteEmpty : mdiDelete} size={1.4} />
-                        </div>
-
-                        <div className={`list-details-section${isMobile ? '-mobile' : ''}`}>
-                        </div>
-                      </div>
-
-
-                    </div>
-                  )}
-
-                  {isShowDetailsSelected && (
-                    <div className={`details-rows${isMobile ? '-mobile' : ''}`}>
-                      <div className={`details-container${isMobile ? '-mobile' : ''}`}>
-                        {activeList?.description ? (
-                          <div className={`list-description-div${isMobile ? '-mobile' : ''}`} >
-                            <strong className={`list-description-title${isMobile ? '-mobile' : ''}`}>Goal</strong>
-                            <br />
-                            <span className={`list-description-text${isMobile ? '-mobile' : ''}`}>
-                              {activeList.description}
-                            </span>
+                    )}
+                    <Popper open={isNewTagPopperOpen} ref={popperRef} anchorEl={newTagAnchorRef.current} placement='top' className="popper-content-mobile">
+                      <div className={`new-tag-popper-container${isMobile ? '-mobile' : ''}`}>
+                        <h5 style={{ margin: '8px', marginBottom: '8px' }}>Create new tag</h5>
+                        <form className={`new-tag-popper-form${isMobile ? '-mobile' : ''}`} onSubmit={handleNewTagSubmit}>
+                          <div className={`new-tag-inputs${isMobile ? '-mobile' : ''}`}>
+                            <TextField label="Tag name" variant="outlined" size="small" />
+                            <ColorPickerButton webSafeColors={webSafeColors} selectedColor={selectedColor} handleColorSelect={handleColorChange} />
                           </div>
-                        ) : null}
-                        <div className={`details-grid${isMobile ? '-mobile' : ''}`} style={{ flex: 2 }}>
-                          <Tooltip title="Owner of this project">
-                            <div>
-                              <Icon path={mdiBadgeAccountOutline} size={1.2} />
-                              {activeList?.type === 'userList' ? activeList?.owner.username : activeList?.owner.name}
-                            </div>
-                          </Tooltip>
-                          <Tooltip title="Type of list, Group or Personal">
-                            <div>
-                              <Icon className={`details-icon${isMobile ? '-mobile' : ''}`} path={mdiFormatListBulletedType} size={1.2} />
-                              {activeList?.ownerModel === 'User' ? 'Personal' : 'Group'}
-                            </div>
-                          </Tooltip>
-                          <Tooltip title="Date when the list was created">
-                            <div>
-                              <Icon path={mdiFolderPlusOutline} size={1.2} />
-                              {activeList?.createdAt ? formatDate(activeList.createdAt) : 'N/A'}
-                            </div>
-                          </Tooltip>
-                          <Tooltip title="Visibility of the list">
-                            <div>
-                              <Icon path={mdiEyeOutline} size={1.2} />
-                              {activeList?.visibility}
-                            </div>
-                          </Tooltip>
-                          <Tooltip title="Estimated time to complete the project">
-                            <div>
-                              <Icon path={mdiTimerCheckOutline} size={1.2} />
-                              {totalTimeToComplete || 'N/A'}
-                            </div>
-                          </Tooltip>
-                          <Tooltip title="Date when the list was last modified">
-                            <div>
-                              <Icon path={mdiWrenchClock} size={1.2} />
-                              {activeList?.updatedAt ? formatDate(activeList.updatedAt) : 'N/A'}
-                            </div>
-                          </Tooltip>
-                          <Tooltip title="Total time spent on the project">
-                            <div>
-                              <Icon path={mdiTimelineClockOutline} size={1.2} />
-                              {totalTimeSpent || 'N/A'}
-                            </div>
-                          </Tooltip>
-                        </div>
+                          <Button type="submit" variant="contained" >
+                            Submit
+                          </Button>
+                        </form>
                       </div>
+                    </Popper>
 
-                    </div>
-                  )}
-
-                  {isLoggedIn && (
-                    <div className={`functions-container${isMobile ? '-mobile' : ''}`} ref={containerRef} style={{}}>
-                      <div className={`progress-bar-container${isMobile ? '-mobile' : ''}`} style={{ width: `${progressBarWidth + 20}%` }}>
-                        {loggedInUser.activeList === 'today' ? (
-                          <RepeatableDisplay />
-                        ) : (
-                          <ProgressArea tasksInActiveList={entriesInActiveList} />
-                        )}
-                      </div>
-
-
-                    </div>
-                  )}
-
-                  <ExportListModal isOpen={isOpenListModalOpen} onClose={closeExportListModal} />
-
-
-                  {isLoggedIn && (
-                    <div className={`tags-container${isMobile ? '-mobile' : ''}`}>
-                      <div className={`tags${isMobile ? '-mobile' : ''}`} style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' }}>
-                        {loggedInUser.myLists
-                          .find(list => list.listName === loggedInUser.activeList)?.tags.slice(0, showAll ? undefined : 3)
-                          .map((tag, index) => {
-                            return (
-                              <Chip
-                                key={index}
-                                label={tag.label}
-                                className={`chip${isMobile ? '-mobile' : ''}`}
-                                style={{
-                                  background: `linear-gradient(135deg, ${tag.color} 25%, ${tag.color} 75%)`,
-                                  boxShadow: `0 3px 5px 2px rgba(255, 105, 135, .3), inset 0 1px 2px rgba(255, 255, 255, 0.3)`,
-                                  color: tag.textColor,
-                                }}
-                                onDelete={() => deleteTag(tag._id, tag)}
-                                deleteIcon={
-                                  <Icon
-                                    path={mdiCloseCircle}
-                                    size={1}
-                                    color={tag.textColor}
-                                    className={`delete-icon${isMobile ? '-mobile' : ''}`} // Apply CSS class
+                  </BottomDrawer>
+                ) : (
+                  <>
+                    {isLoggedIn && (
+                      <div className="listSelection">
+                        <div className="list-selection-settings">
+                          <div className="list-checkbox-container">
+                            {loggedInUser.groups.length > 0 && (
+                              <FormControlLabel
+                                control={
+                                  <Checkbox
+                                    checked={isGroupOnlySelected}
+                                    onChange={toggleGroupOnly}
                                   />
                                 }
-                                sx={{
-                                  margin: '0.5em',
-                                  height: '2em',
-                                  '&:hover': {
-                                    transform: 'scale(1.1)',
-                                    boxShadow: `0 3px 5px 2px rgba(255, 105, 135, .6), inset 0 1px 2px rgba(255, 255, 255, 0.5)`,
-                                    border: '1px solid rgba(255, 255, 255, 0.3)',
-                                  },
-                                }}
+                                label="Show groups only"
                               />
-                            );
-                          })}
+                            )}
+                          </div>
+                        </div>
+                        <FormControl variant='standard' style={{ width: '22em', margin: '10px' }}>
+                          <InputLabel id="active-list-label" style={{ fontWeight: 'bold' }}>Active Project </InputLabel>
+                          <Select
+                            labelId="active-list-label"
+                            label="Active listt"
+                            className="select-list"
+                            size='small'
+                            value={loggedInUser.activeList || ""}
+                            onChange={handleListChange}
+                          >
 
-                        <div style={{ display: 'flex', justifyContent: 'center', padding:'5px' }}>
-                          <Chip
-                            ref={newTagAnchorRef}
-                            label="Add tag"
-                            variant="outlined"
-                            onClick={setIsNewTagPopperOpen.bind(this, !isNewTagPopperOpen)}
-                            className={`add-tag${isMobile ? '-mobile' : ''}`}
-                            sx={{
-                              border: '2px dotted',
-                              borderColor: 'action.active',
-                              width: '8em',
-                              height: '2em',
-                              cursor: 'pointer',
-                              margin: 'auto',
-                              '&:hover': {
-                                backgroundImage: 'none',
-                                border: '1px solid',
-                              },
-                            }}
-                          />
+                            {loggedInUser.myLists && loggedInUser.myLists
+                              .filter(list => !isGroupOnlySelected || list.ownerModel === "Group")
+                              .map(list => {
+                                const todoCount = getListTodoCount(list.listName);
+                                const doingCount = getListDoingCount(list.listName);
+                                const doneCount = getListDoneCount(list.listName);
+                                return (
+                                  <MenuItem key={list.listName} value={list.listName}>
+                                    <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
+                                      <div>{list.listName.charAt(0).toUpperCase() + list.listName.slice(1)}</div>
+                                      <div>{`(${todoCount},${doingCount},${doneCount})`}</div>
+                                    </div>
+                                  </MenuItem>
+                                );
+                              })}
+                          </Select>
+                        </FormControl>
+
+                        <div className="icon-buttons">
+                          <div className="icon-button add"
+                            onClick={openCreateListModal}
+                            style={{ marginLeft: 10 }}
+                          >
+                            <Icon path={mdiPlus} size={1.6} />
+                          </div>
+
+                          <div
+                            className="icon-button edit"
+                            onClick={() => openEditListModal(loggedInUser.myLists.find(list => list.listName === loggedInUser.activeList))}
+                            onMouseEnter={() => setIsEditHovered(true)}
+                            onMouseLeave={() => setIsEditHovered(false)}
+
+                          >
+                            <Icon path={isEditHovered ? mdiPencil : mdiTextBoxEditOutline} size={1.4} />
+                          </div>
+
+                          <div className="icon-button description" onClick={toggleDetails}>
+                            <Icon path={isShowDetailsSelected ? mdiArchiveArrowUpOutline : mdiArchiveArrowDownOutline} size={1.4} />
+                          </div>
+
+                          <div className="icon-button export" onClick={openExportModal}>
+                            <Icon path={mdiFileExport} size={1.2} />
+                          </div>
+
+
+                          <div
+                            className="icon-button delete"
+                            onClick={openDeleteListModal}
+                            onMouseEnter={() => setIsDeleteHovered(true)}
+                            onMouseLeave={() => setIsDeleteHovered(false)}
+                          >
+                            <Icon path={isDeleteHovered ? mdiDeleteEmpty : mdiDelete} size={1.4} />
+                          </div>
+
+                          <div className="list-details-section">
+                          </div>
                         </div>
 
-                        {loggedInUser.myLists.find(list => list.listName === loggedInUser.activeList).tags.length > 3 && (
-                          <Chip
-                            label={showAll ? 'Show fewer' : 'Show all'}
-                            onClick={() => setShowAll(!showAll)}
-                            variant="outlined"
-                            sx={{
-                              border: 'none',
-                              margin: '0.5em',
-                              height: '2em',
-                              cursor: 'pointer',
-                              '&:hover': {
-                                transform: 'scale(1.1)',
-                                fontWeight: 'bold',
-                              },
-                            }}
-                          />
-                        )}
+
                       </div>
-                    </div>
-                  )}
-                  <Popper open={isNewTagPopperOpen} ref={popperRef} anchorEl={newTagAnchorRef.current} placement='top' className="popper-content-mobile">
-                    <div className={`new-tag-popper-container${isMobile ? '-mobile' : ''}`}>
-                      <h5 style={{ margin: '8px', marginBottom: '8px' }}>Create new tag</h5>
-                      <form className={`new-tag-popper-form${isMobile ? '-mobile' : ''}`} onSubmit={handleNewTagSubmit}>
-                        <div className={`new-tag-inputs${isMobile ? '-mobile' : ''}`}>
-                          <TextField label="Tag name" variant="outlined" size="small" />
-                          <ColorPickerButton webSafeColors={webSafeColors} selectedColor={selectedColor} handleColorSelect={handleColorChange} />
-                        </div>
-                        <Button type="submit" variant="contained" >
-                          Submit
-                        </Button>
-                      </form>
-                    </div>
-                  </Popper>
+                    )}
 
-                </BottomDrawer>
-              ) : (
-                <>
-                  {isLoggedIn && (
-                    <div className="listSelection">
-                      <div className="list-selection-settings">
-                        <div className="list-checkbox-container">
-                          {loggedInUser.groups.length > 0 && (
-                            <FormControlLabel
-                              control={
-                                <Checkbox
-                                  checked={isGroupOnlySelected}
-                                  onChange={toggleGroupOnly}
+
+
+                    {isShowDetailsSelected && (
+                      <div className="details-rows">
+                        <div className="details-container">
+                          {activeList?.description ? (
+                            <div style={{ flex: 1 }}>
+                              <strong className="list-description-title">Goal</strong>
+                              <br />
+                              <span className="list-description-text">
+                                {activeList.description}
+                              </span>
+                            </div>
+                          ) : null}
+                          <div className="details-grid" style={{ flex: 2 }}>
+                            <Tooltip title="Owner of this project">
+                              <div>
+                                <Icon path={mdiBadgeAccountOutline} size={1.2} />
+                                {activeList?.type === 'userList' ? activeList?.owner.username : activeList?.owner.name}
+                              </div>
+                            </Tooltip>
+                            <Tooltip title="Type of list, Group or Personal">
+                              <div>
+                                <Icon className="details-icon" path={mdiFormatListBulletedType} size={1.2} />
+                                {activeList?.ownerModel === 'User' ? 'Personal' : 'Group'}
+                              </div>
+                            </Tooltip>
+                            <Tooltip title="Date when the list was created">
+                              <div>
+                                <Icon path={mdiFolderPlusOutline} size={1.2} />
+                                {activeList?.createdAt ? formatDate(activeList.createdAt) : 'N/A'}
+                              </div>
+                            </Tooltip>
+                            <Tooltip title="Visibility of the list">
+                              <div>
+                                <Icon path={mdiEyeOutline} size={1.2} />
+                                {activeList?.visibility}
+                              </div>
+                            </Tooltip>
+                            <Tooltip title="Estimated time to complete the project">
+                              <div>
+                                <Icon path={mdiTimerCheckOutline} size={1.2} />
+                                {totalTimeToComplete || 'N/A'}
+                              </div>
+                            </Tooltip>
+                            <Tooltip title="Date when the list was last modified">
+                              <div>
+                                <Icon path={mdiWrenchClock} size={1.2} />
+                                {activeList?.updatedAt ? formatDate(activeList.updatedAt) : 'N/A'}
+                              </div>
+                            </Tooltip>
+                            <Tooltip title="Total time spent on the project">
+                              <div>
+                                <Icon path={mdiTimelineClockOutline} size={1.2} />
+                                {totalTimeSpent || 'N/A'}
+                              </div>
+                            </Tooltip>
+                          </div>
+
+                        </div>
+
+
+                        <div className="details-settings">
+                          {loggedInUser.activeList === 'today' ? (
+                            <RepeatableDisplay />
+                          ) : (
+                            <ProgressArea tasksInActiveList={entriesInActiveList} />
+                          )}
+                        </div>
+                      </div>
+
+                    )}
+
+                    {isLoggedIn && (
+
+                      <div className="tags-container">
+                        <div className='tags' style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' }}>
+
+                          {loggedInUser.myLists
+                            .find(list => list.listName === loggedInUser.activeList)?.tags.slice(0, showAll ? undefined : 3)
+                            .map((tag, index) => {
+                              return (
+                                <Chip
+                                  key={index}
+                                  label={tag.label}
+                                  className="chip"
+                                  style={{
+                                    background: `linear-gradient(135deg, ${tag.color} 25%, ${tag.color} 75%)`,
+                                    boxShadow: `0 3px 5px 2px rgba(255, 105, 135, .3), inset 0 1px 2px rgba(255, 255, 255, 0.3)`,
+                                    color: tag.textColor,
+                                  }}
+                                  onDelete={() => deleteTag(tag._id, tag)}
+                                  deleteIcon={
+                                    <Icon
+                                      path={mdiCloseCircle}
+                                      size={1}
+                                      color={tag.textColor}
+                                      className="delete-icon" // Apply CSS class
+                                    />
+                                  }
+                                  sx={{
+                                    margin: '0.5em',
+                                    height: '2em',
+                                    '&:hover': {
+                                      transform: 'scale(1.1)',
+                                      boxShadow: `0 3px 5px 2px rgba(255, 105, 135, .6), inset 0 1px 2px rgba(255, 255, 255, 0.5)`,
+                                      border: '1px solid rgba(255, 255, 255, 0.3)',
+                                    },
+                                  }}
                                 />
-                              }
-                              label="Show groups only"
+                              );
+                            })}
+
+                          <div style={{ display: 'flex', justifyContent: 'center', padding: '5px' }}>
+                            <Chip
+                              ref={newTagAnchorRef}
+                              label="Add tag"
+                              variant="outlined"
+                              onClick={setIsNewTagPopperOpen.bind(this, !isNewTagPopperOpen)}
+                              className='add-tag'
+                              sx={{
+                                border: '2px dotted',
+                                borderColor: 'action.active',
+                                width: '8em',
+                                height: '2em',
+                                cursor: 'pointer',
+                                margin: 'auto',
+                                '&:hover': {
+                                  backgroundImage: 'none',
+                                  border: '1px solid',
+                                },
+                              }}
+                            />
+                          </div>
+
+                          {loggedInUser.myLists.find(list => list.listName === loggedInUser.activeList).tags.length > 3 && (
+                            <Chip
+                              label={showAll ? 'Show fewer' : 'Show all'}
+                              onClick={() => setShowAll(!showAll)}
+                              variant="outlined"
+                              sx={{
+                                border: 'none',
+                                margin: '0.5em',
+                                height: '2em',
+                                cursor: 'pointer',
+                                '&:hover': {
+                                  transform: 'scale(1.1)',
+                                  fontWeight: 'bold',
+                                },
+                              }}
                             />
                           )}
                         </div>
                       </div>
-                      <FormControl variant='standard' style={{ width: '22em', margin: '10px' }}>
-                        <InputLabel id="active-list-label" style={{ fontWeight: 'bold' }}>Active Project </InputLabel>
-                        <Select
-                          labelId="active-list-label"
-                          label="Active listt"
-                          className="select-list"
-                          size='small'
-                          value={loggedInUser.activeList || ""}
-                          onChange={handleListChange}
-                        >
-
-                          {loggedInUser.myLists && loggedInUser.myLists
-                            .filter(list => !isGroupOnlySelected || list.ownerModel === "Group")
-                            .map(list => {
-                              const todoCount = getListTodoCount(list.listName);
-                              const doingCount = getListDoingCount(list.listName);
-                              const doneCount = getListDoneCount(list.listName);
-                              return (
-                                <MenuItem key={list.listName} value={list.listName}>
-                                  <div style={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
-                                    <div>{list.listName.charAt(0).toUpperCase() + list.listName.slice(1)}</div>
-                                    <div>{`(${todoCount},${doingCount},${doneCount})`}</div>
-                                  </div>
-                                </MenuItem>
-                              );
-                            })}
-                        </Select>
-                      </FormControl>
-
-                      <div className="icon-buttons">
-                        <div className="icon-button add"
-                          onClick={openCreateListModal}
-                          style={{ marginLeft: 10 }}
-                        >
-                          <Icon path={mdiPlus} size={1.6} />
-                        </div>
-
-                        <div
-                          className="icon-button edit"
-                          onClick={() => openEditListModal(loggedInUser.myLists.find(list => list.listName === loggedInUser.activeList))}
-                          onMouseEnter={() => setIsEditHovered(true)}
-                          onMouseLeave={() => setIsEditHovered(false)}
-
-                        >
-                          <Icon path={isEditHovered ? mdiPencil : mdiTextBoxEditOutline} size={1.4} />
-                        </div>
-
-                        <div className="icon-button description" onClick={toggleDetails}>
-                          <Icon path={isShowDetailsSelected ? mdiArchiveArrowUpOutline : mdiArchiveArrowDownOutline} size={1.4} />
-                        </div>
-
-                        <div className="icon-button export" onClick={openExportModal}>
-                          <Icon path={mdiFileExport} size={1.2} />
-                        </div>
-
-
-                        <div
-                          className="icon-button delete"
-                          onClick={openDeleteListModal}
-                          onMouseEnter={() => setIsDeleteHovered(true)}
-                          onMouseLeave={() => setIsDeleteHovered(false)}
-                        >
-                          <Icon path={isDeleteHovered ? mdiDeleteEmpty : mdiDelete} size={1.4} />
-                        </div>
-
-                        <div className="list-details-section">
-                        </div>
-                      </div>
-
-
-                    </div>
-                  )}
-
-
-
-                  {isShowDetailsSelected && (
-                    <div className="details-rows">
-                      <div className="details-container">
-                        {activeList?.description ? (
-                          <div style={{ flex: 1 }}>
-                            <strong className="list-description-title">Goal</strong>
-                            <br />
-                            <span className="list-description-text">
-                              {activeList.description}
-                            </span>
+                    )}
+                    <Popper open={isNewTagPopperOpen} ref={popperRef} anchorEl={newTagAnchorRef.current} placement='bottom'>
+                      <div className='new-tag-popper-container'>
+                        <h5 style={{ margin: '8px', marginBottom: '8px' }}>Create new tag</h5>
+                        <form className='new-tag-popper-form' onSubmit={handleNewTagSubmit}>
+                          <div className="new-tag-inputs">
+                            <TextField label="Tag name" variant="outlined" size="small" />
+                            <ColorPickerButton webSafeColors={webSafeColors} selectedColor={selectedColor} handleColorSelect={handleColorChange} />
                           </div>
-                        ) : null}
-                        <div className="details-grid" style={{ flex: 2 }}>
-                          <Tooltip title="Owner of this project">
-                            <div>
-                              <Icon path={mdiBadgeAccountOutline} size={1.2} />
-                              {activeList?.type === 'userList' ? activeList?.owner.username : activeList?.owner.name}
-                            </div>
-                          </Tooltip>
-                          <Tooltip title="Type of list, Group or Personal">
-                            <div>
-                              <Icon className="details-icon" path={mdiFormatListBulletedType} size={1.2} />
-                              {activeList?.ownerModel === 'User' ? 'Personal' : 'Group'}
-                            </div>
-                          </Tooltip>
-                          <Tooltip title="Date when the list was created">
-                            <div>
-                              <Icon path={mdiFolderPlusOutline} size={1.2} />
-                              {activeList?.createdAt ? formatDate(activeList.createdAt) : 'N/A'}
-                            </div>
-                          </Tooltip>
-                          <Tooltip title="Visibility of the list">
-                            <div>
-                              <Icon path={mdiEyeOutline} size={1.2} />
-                              {activeList?.visibility}
-                            </div>
-                          </Tooltip>
-                          <Tooltip title="Estimated time to complete the project">
-                            <div>
-                              <Icon path={mdiTimerCheckOutline} size={1.2} />
-                              {totalTimeToComplete || 'N/A'}
-                            </div>
-                          </Tooltip>
-                          <Tooltip title="Date when the list was last modified">
-                            <div>
-                              <Icon path={mdiWrenchClock} size={1.2} />
-                              {activeList?.updatedAt ? formatDate(activeList.updatedAt) : 'N/A'}
-                            </div>
-                          </Tooltip>
-                          <Tooltip title="Total time spent on the project">
-                            <div>
-                              <Icon path={mdiTimelineClockOutline} size={1.2} />
-                              {totalTimeSpent || 'N/A'}
-                            </div>
-                          </Tooltip>
-                        </div>
-
+                          <Button type="submit" variant="contained" >
+                            Submit
+                          </Button>
+                        </form>
                       </div>
-
-
-                      <div className="details-settings">
-                        {loggedInUser.activeList === 'today' ? (
-                          <RepeatableDisplay />
-                        ) : (
-                          <ProgressArea tasksInActiveList={entriesInActiveList} />
-                        )}
-                      </div>
-                    </div>
-
-                  )}
-
-                  {isLoggedIn && (
-
-                    <div className="tags-container">
-                      <div className='tags' style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', justifyContent: 'center' }}>
-
-                        {loggedInUser.myLists
-                          .find(list => list.listName === loggedInUser.activeList)?.tags.slice(0, showAll ? undefined : 3)
-                          .map((tag, index) => {
-                            return (
-                              <Chip
-                                key={index}
-                                label={tag.label}
-                                className="chip"
-                                style={{
-                                  background: `linear-gradient(135deg, ${tag.color} 25%, ${tag.color} 75%)`,
-                                  boxShadow: `0 3px 5px 2px rgba(255, 105, 135, .3), inset 0 1px 2px rgba(255, 255, 255, 0.3)`,
-                                  color: tag.textColor,
-                                }}
-                                onDelete={() => deleteTag(tag._id, tag)}
-                                deleteIcon={
-                                  <Icon
-                                    path={mdiCloseCircle}
-                                    size={1}
-                                    color={tag.textColor}
-                                    className="delete-icon" // Apply CSS class
-                                  />
-                                }
-                                sx={{
-                                  margin: '0.5em',
-                                  height: '2em',
-                                  '&:hover': {
-                                    transform: 'scale(1.1)',
-                                    boxShadow: `0 3px 5px 2px rgba(255, 105, 135, .6), inset 0 1px 2px rgba(255, 255, 255, 0.5)`,
-                                    border: '1px solid rgba(255, 255, 255, 0.3)',
-                                  },
-                                }}
-                              />
-                            );
-                          })}
-
-                        <div style={{ display: 'flex', justifyContent: 'center', padding:'5px' }}>
-                          <Chip
-                            ref={newTagAnchorRef}
-                            label="Add tag"
-                            variant="outlined"
-                            onClick={setIsNewTagPopperOpen.bind(this, !isNewTagPopperOpen)}
-                            className='add-tag'
-                            sx={{
-                              border: '2px dotted',
-                              borderColor: 'action.active',
-                              width: '8em',
-                              height: '2em',
-                              cursor: 'pointer',
-                              margin: 'auto',
-                              '&:hover': {
-                                backgroundImage: 'none',
-                                border: '1px solid',
-                              },
-                            }}
-                          />
-                        </div>
-
-                        {loggedInUser.myLists.find(list => list.listName === loggedInUser.activeList).tags.length > 3 && (
-                          <Chip
-                            label={showAll ? 'Show fewer' : 'Show all'}
-                            onClick={() => setShowAll(!showAll)}
-                            variant="outlined"
-                            sx={{
-                              border: 'none',
-                              margin: '0.5em',
-                              height: '2em',
-                              cursor: 'pointer',
-                              '&:hover': {
-                                transform: 'scale(1.1)',
-                                fontWeight: 'bold',
-                              },
-                            }}
-                          />
-                        )}
-                      </div>
-                    </div>
-                  )}
-                  <Popper open={isNewTagPopperOpen} ref={popperRef} anchorEl={newTagAnchorRef.current} placement='bottom'>
-                    <div className='new-tag-popper-container'>
-                      <h5 style={{ margin: '8px', marginBottom: '8px' }}>Create new tag</h5>
-                      <form className='new-tag-popper-form' onSubmit={handleNewTagSubmit}>
-                        <div className="new-tag-inputs">
-                          <TextField label="Tag name" variant="outlined" size="small" />
-                          <ColorPickerButton webSafeColors={webSafeColors} selectedColor={selectedColor} handleColorSelect={handleColorChange} />
-                        </div>
-                        <Button type="submit" variant="contained" >
-                          Submit
-                        </Button>
-                      </form>
-                    </div>
-                  </Popper>
-                </>
-              )}
+                    </Popper>
+                  </>
+                )}
 
 
 
 
-            </div>
+              </div>
 
-            <CreateListModal
-              isOpen={isCreateListModalOpen}
-              onRequestClose={closeCreateListModal}
+              <CreateListModal
+                isOpen={isCreateListModalOpen}
+                onRequestClose={closeCreateListModal}
 
-            />
+              />
 
-            <EditListModal
-              isOpen={isEditListModalOpen}
-              onRequestClose={CloseEditListModal}
-              listData={loggedInUser.myLists.find(list => list.listName === loggedInUser.activeList)}
-            />
+              <EditListModal
+                isOpen={isEditListModalOpen}
+                onRequestClose={CloseEditListModal}
+                listData={loggedInUser.myLists.find(list => list.listName === loggedInUser.activeList)}
+              />
 
-            <DeleteListModal
-              isOpen={isdDeleteListModalOpen}
-              onRequestClose={handleCloseDeleteListModal}
-              listName={loggedInUser.activeList}
-              onDelete={(event) => {
-                event.preventDefault();
-                handleDelete(loggedInUser.myLists.find(list => list.listName === loggedInUser.activeList), event);
-              }}
-              onCancel={handleCloseDeleteListModal}
-              errorMessage={deleteListError}
-            />
+              <DeleteListModal
+                isOpen={isdDeleteListModalOpen}
+                onRequestClose={handleCloseDeleteListModal}
+                listName={loggedInUser.activeList}
+                onDelete={(event) => {
+                  event.preventDefault();
+                  handleDelete(loggedInUser.myLists.find(list => list.listName === loggedInUser.activeList), event);
+                }}
+                onCancel={handleCloseDeleteListModal}
+                errorMessage={deleteListError}
+              />
 
-            <ExportListModal isOpen={isOpenListModalOpen} onClose={closeExportListModal} />
+              <ExportListModal isOpen={isOpenListModalOpen} onClose={closeExportListModal} />
 
-              </Card>
-              <Card>
-                
-              <div className='sticky-container'> 
+            </Card>
+            <Card isMobile={isMobile}>
+
+              <div className='sticky-container'>
                 <div style={{ display: 'flex', justifyContent: 'center', position: 'sticky', top: 0, marginBottom: '-1px' }}>
                   <button className="navButton" onClick={switchTodoView} style={{
                     background: activeView === 'todo' ? '#eaeaef' : '#E65151',
@@ -1130,19 +1132,17 @@ const handleViewChange = async (newView) => {
                   }}> Review ({isLoggedIn ? getActiveListDoneCount() : getDoneCount()}) </button>
                 </div>
               </div>
-            <AnythingList type={activeView} setType={setActiveView} />
-            {isMobile && (
-              <div className="bottom-drawer-button-wrapper">
-                <BottomDrawerButton listName={loggedInUser.activeList} onOpen={handleOpenDrawer} user={loggedInUser} />
-              </div>
-            )}
-          </Card>
-        </>
+              <AnythingList type={activeView} setType={setActiveView} />
+              {isMobile && (
+                <div className="bottom-drawer-button-wrapper">
+                  <BottomDrawerButton listName={loggedInUser.activeList} onOpen={handleOpenDrawer} user={loggedInUser} />
+                </div>
+              )}
+            </Card>
+          </>
         )
-       }
+    }
   }
-
-
 
   return (
 
@@ -1152,13 +1152,13 @@ const handleViewChange = async (newView) => {
         {isLoggedIn && <Header />}
       </div>
       {loggedInUser && !isMobile && (
-         <HeaderMenu
-         openGroupModal={() => openGroupModal()}
-         openVoteModal={() => openVoteModal()}
-         openCalendarModal={() => openCalendarModal()}
-         activeView={view}
-         onViewChange={handleViewChange}
-     />
+        <HeaderMenu
+          openGroupModal={() => openGroupModal()}
+          openVoteModal={() => openVoteModal()}
+          openCalendarModal={() => openCalendarModal()}
+          activeView={view}
+          onViewChange={handleViewChange}
+        />
       )}
       <>
         <CookieConsent />
@@ -1167,13 +1167,15 @@ const handleViewChange = async (newView) => {
       {isLoggedIn && (
 
         <div className="content fade-in-content" style={{ display: 'flex', flexDirection: 'column', gap: '3px' }}>
-          {renderView()}         
+          {renderView()}
         </div>
       )}
       {!isLoggedIn && !loggedInUser && <LandingPage />}
       <GroupModal isOpen={isGroupModalOpen} onClose={closeGroupModal} />
       <VoteModal isOpen={isVoteModalOpen} onClose={closeVoteModal} />
       <CalendarModal isOpen={isCalendarModalOpen} onClose={closeCalendarModal} />
+
+      {isLoggedIn && !isMobile && loggedInUser.settings.score > 1000 && <ChatWidget />}
     </div>
   )
 }
